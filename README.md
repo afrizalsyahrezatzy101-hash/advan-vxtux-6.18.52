@@ -73,6 +73,8 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 | 1 | Panfrost open-source GPU driver replacing vendor Mali Gondul DDK |
 | **103** | **Total tracked desu! (≧▽≦)** |
 
+> **Status kompilasi 2026-10-10 (jujur, tanpa klaim berlebih):** 10 entri benar-benar dibangun di device (bukti `.ko` tercatat di tabel di atas); sisanya *verified-in-tree* (sumber + rule `obj-` + Kconfig + baris CONFIG di fragmen). Sesi ini menutup tiga kelas cacat build **tanpa device**: (a) `sprd-gsp` dari 9 modul terpisah menjadi 1 modul komposit, (b) modul modem debug-log `sprd_mipi.ko` mendarat berikut header `sprd_sysdump.h` yang hilang (tanpa itu `sprd_cp_dump.c` tidak bisa dikompilasi), (c) empat stopper lagi: `depends on MISC_DEVICE` dan `depends on FIRMWARE_LOADER` (simbol tidak ada di 6.18), `early_param()` di dalam modul, dan `<video/*.h>` yang butuh `-I$(srctree)/include/uapi`. **Belum ada rebuild device setelah perubahan ini** — jadi “103/103 compile-verified” TIDAK diklaim.
+
 ---
 
 ## 📋 Inventory per entri | Full 103 List desu~
@@ -107,7 +109,7 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 | 26 | `leds-sc27xx-bltc` | [drivers/leds/leds-sc27xx-bltc.c](6.18.52-VXTux-UMS512/drivers/leds/leds-sc27xx-bltc.c) | LEDS_SC27XX_BLTC=y + DT sc2730-bltc node |
 | 27 | `ledtrig-pattern` | [drivers/leds/trigger/ledtrig-pattern.c](6.18.52-VXTux-UMS512/drivers/leds/trigger/ledtrig-pattern.c) | LEDS_TRIGGER_PATTERN=y mainline |
 | 28 | `mcdt_hw` | [drivers/sound/soc/sprd/mcdt/mcdt_r1p0/mcdt_hw.c](6.18.52-VXTux-UMS512/drivers/sound/soc/sprd/mcdt/mcdt_r1p0/mcdt_hw.c) | Resolved through `sprd_mcdt_*` symbols |
-| 29 | `mipi_driver` | [drivers/unisoc_platform/debug_log/sharkl5/mipi_driver.c](6.18.52-VXTux-UMS512/drivers/unisoc_platform/debug_log/sharkl5/mipi_driver.c) | Noble substitute via radare2+ghidra (Tier B) |
+| 29 | `mipi_driver` | [drivers/unisoc_platform/debug_log/sharkl5/mipi_driver.c](6.18.52-VXTux-UMS512/drivers/unisoc_platform/debug_log/sharkl5/mipi_driver.c) | Noble substitute via radare2+ghidra (Tier B). **Stub saja — TIDAK ikut dibangun**: `sharkl5/` tidak punya Makefile, jadi berkas ini bukti niat, bukan bukti build. Modul yang benar-benar dibangun = trio inti di `debug_log/` (lihat #81) |
 | 30 | `misc_sprd_uid` | [drivers/soc/sprd/soc_id/sprd_uid.c](6.18.52-VXTux-UMS512/drivers/soc/sprd/soc_id/sprd_uid.c) | Tier A |
 | 31 | `musb_hdrc` | [drivers/usb/musb/musb_core.c](6.18.52-VXTux-UMS512/drivers/usb/musb/musb_core.c) | USB_MUSB_HDRC=y verified 2026-10-09 |
 | 32 | `musb_sprd` | [drivers/usb/musb/musb_sprd_vxtux.c](6.18.52-VXTux-UMS512/drivers/usb/musb/musb_sprd_vxtux.c) | USB_MUSB_SPRD_VXTUX=y added 2026-10-09; of_match + DT node aligned |
@@ -140,7 +142,7 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 | 59 | `sprd-dma` | [drivers/dma/sprd-dma.c](6.18.52-VXTux-UMS512/drivers/dma/sprd-dma.c) | Tier A; same source path as previous entry |
 | 60 | `sprd-dmaengine-pcm` | [drivers/sound/soc/sprd/platform_include/sprd-dmaengine-pcm.h](6.18.52-VXTux-UMS512/drivers/sound/soc/sprd/platform_include/sprd-dmaengine-pcm.h) | Header-only; Tier B |
 | 61 | `sprd-drm` | [drivers/gpu/drm/sprd/sprd_drm.c](6.18.52-VXTux-UMS512/drivers/gpu/drm/sprd/sprd_drm.c) | Tier A |
-| 62 | `sprd-gsp` | [drivers/gpu/drm/sprd/gsp/gsp_dev.c](6.18.52-VXTux-UMS512/drivers/gpu/drm/sprd/gsp/gsp_dev.c) | Tier A |
+| 62 | `sprd-gsp` | [drivers/gpu/drm/sprd/gsp/gsp_dev.c](6.18.52-VXTux-UMS512/drivers/gpu/drm/sprd/gsp/gsp_dev.c) | `CONFIG_DRM_SPRD_GSP=m`. **Wiring diperbaiki 2026-10-10**: dulu satu baris `obj-$(CONFIG_DRM_SPRD_GSP) += 9 objek` = sembilan modul terpisah yang saling menunjuk simbol `gsp_core_*` yang tidak di-export (modpost: undefined) — kini satu modul komposit `sprd-gsp.ko` (pola sama dengan vsp). Kompilasi menunggu build device |
 | 63 | `sprd-ion` | [drivers/dma-buf/sprd/sprd_ion.c](6.18.52-VXTux-UMS512/drivers/dma-buf/sprd/sprd_ion.c) | Tier A; **Compile terverifikasi device: `sprd_ion.ko` 62 KB (gcc 16.2.1)** — fix build: `CONFIG_SPRD_ION` dideklarasi (undeclared → olddefconfig drop), `MODULE_IMPORT_NS(DMA_BUF)`, `struct ion_phy_data` direstore |
 | 64 | `sprd-platform-pcm-routing` | [drivers/sound/soc/sprd/platform/sprd-platform-pcm-routing.c](6.18.52-VXTux-UMS512/drivers/sound/soc/sprd/platform/sprd-platform-pcm-routing.c) | Tier A |
 | 65 | `sprd-top-dvfs` | [drivers/devfreq/sprd/sprd-top-dvfs.c](6.18.52-VXTux-UMS512/drivers/devfreq/sprd/sprd-top-dvfs.c) | Tier A |
@@ -159,7 +161,7 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 | 78 | `sprd_fm` | [drivers/net/wireless/sprd/sprdwcn/fm/driver/fm_sdio/fmdrv_main.c](6.18.52-VXTux-UMS512/drivers/net/wireless/sprd/sprdwcn/fm/driver/fm_sdio/fmdrv_main.c) | Tier A; 4/4 objects, zero compile errors per ledger |
 | 79 | `sprd_gpu_cooling` | [drivers/thermal/sprd/sprd_gpu_cooling.c](6.18.52-VXTux-UMS512/drivers/thermal/sprd/sprd_gpu_cooling.c) | Tier A |
 | 80 | `sprd_map` | [drivers/misc/sprd/sprd_map.c](6.18.52-VXTux-UMS512/drivers/misc/sprd/sprd_map.c) | Tier A |
-| 81 | `sprd_mipi` | [drivers/unisoc_platform/debug_log/sharkl5/sprd_mipi.c](6.18.52-VXTux-UMS512/drivers/unisoc_platform/debug_log/sharkl5/sprd_mipi.c) | Noble substitute via radare2+ghidra (Tier B) |
+| 81 | `sprd_mipi` | [drivers/unisoc_platform/debug_log/Makefile](6.18.52-VXTux-UMS512/drivers/unisoc_platform/debug_log/Makefile) | Modem debug-log core, diport 2026-10-10 dari donor `bocchi_unisoc54` (`core.c` + `sysfs.c` + `serdes.c`); modul komposit `sprd_mipi.ko`, `CONFIG_SPRD_MODEM_DEBUG=y`. Ekspor: `dbg_log_device_register`, `dbg_log_sysfs_init`, `serdes_enable`. Varian per-SoC `sharkl5/` belum diport. Kompilasi menunggu build device |
 | 82 | `sprd_pmic_syscon` | [drivers/soc/sprd/pmic_syscon/sprd_pmic_syscon.c](6.18.52-VXTux-UMS512/drivers/soc/sprd/pmic_syscon/sprd_pmic_syscon.c) | Tier A |
 | 83 | `sprd_pmic_wdt` | [drivers/watchdog/sprd_wdt.c](6.18.52-VXTux-UMS512/drivers/watchdog/sprd_wdt.c) | Linked by symbol-family evidence |
 | 84 | `sprd_sensor` | [drivers/media/platform/sprd/sensors/sprd_sensor/Makefile](6.18.52-VXTux-UMS512/drivers/media/platform/sprd/sensors/sprd_sensor/Makefile) | Tier A sensor framework; multiple source files |
@@ -221,6 +223,12 @@ make -j8 O=buildd ARCH=arm64 CC=gcc Image modules                            # k
 Catatan build device: (1) setiap edit `.config`/Kconfig wajib `syncconfig` dulu — `M=` build tidak refresh `auto.conf`; (2) simbol antar-modul di-merge dari `Module.symvers` lokal tiap dir ke `buildd/Module.symvers`; (3) file hasil sync host→device strip CRLF dulu (hapus karakter CR di akhir setiap baris); (4) setelah build gagal di sebuah dir, `rm -f *.o` sebelum rebuild (`.o` partial bisa dianggap up-to-date → modpost "truncated").
 
 ## 📝 Changelog | 変更履歴
+
+### 2026-10-10 — perbaikan wiring + donor baru (build device belum dijalankan)
+- **`sprd-gsp` = 1 modul komposit.** `CONFIG_DRM_SPRD_GSP=m` + sembilan objek di satu baris `obj-` = sembilan modul terpisah; `gsp_core.c` tidak mengekspor satu pun simbol `gsp_core_*` (nol `EXPORT_SYMBOL` di direktori itu) sehingga modpost gagal undefined dan minta `MODULE_LICENSE` per objek. Donor 5.4 (`fork_t618`) memakai `obj-y` sehingga tidak pernah menyentuh batas modul. Kini `sprd-gsp-objs` (nama modul = nama blob vendor) dengan objek subdirektori ditulis lewat path relatif; `gsp_interface/Makefile` + `gsp_lite_r2p0/Makefile` tidak lagi di-descend. `sprd_drm_gsp.h` juga dijaga `CONFIG_DRM_SPRD_GSP_MODULE` (tristate `=m` mendefinisikan ejaan itu, bukan `CONFIG_DRM_SPRD_GSP`) supaya stub inline tidak bentrok dengan badan aslinya. 26 baris `MODULE_LICENSE("GPL");` yang sebelumnya tertanam **di dalam blok komentar lisensi** (no-op) dibuang — lisensi cukup satu, di `gsp_dev.c`.
+- **Donor baru terpakai: `bocchi_unisoc54` `drivers/unisoc_platform/debug_log/`** (via `work/donors_20260930/`). Yang diambil hanya trio inti; varian `sharkl5/` sengaja belum karena butuh register DBG_APB/MM_AHB_GEN_CLK_CFG yang headernya belum ada. Ikut masuk `include/linux/soc/sprd/sprd_sysdump.h` — berkas itu diminta `drivers/soc/sprd/modem/cp_dump/sprd_cp_dump.c`, jadi sebelum ini driver itu tidak bisa dikompilasi.
+- **Empat stopper build lain** (kelas “gagal senyap”): `drivers/sprd/flash/Kconfig` `MISC_DEVICE` (simbol tidak ada → driver mustahil aktif) → `HAS_IOMEM`; `drivers/soc/sprd/modem/Kconfig` `FIRMWARE_LOADER` → `FW_LOADER`; `sprd_cproc.c` `early_param()` (tidak ada di jalur modul 6.18) → `module_param_named(modem, ...)`; `cpp/` + `sprd_sensor/` Makefile dapat `-I$(srctree)/include/uapi` untuk `<video/*.h>`.
+- **Batas jujur:** semua di atas = review statis (host ini tanpa toolchain ARM64, build selalu di device). Perlu satu build device untuk menaikkan tally compile-verified.
 
 ### 2026-10-09 — tree restore + gap closing
 - **Tree restored**: commit deblob sempat over-prune 37.103 file (semua DTS, drivers/gpu, dma-buf, iio, media, iommu, clk, crypto, block, defconfig). Dipulihkan penuh dari branch codespace + `.config` port (`dac18ecfa`). Nol file hilang permanen.
