@@ -258,3 +258,9 @@ obj-$(CONFIG_TRUSTY)		+= trusty/
 # SPRD camera flash HAL (blob: sprd_flash_drv). Ported 2026-10-04 from the
 # vendor sources in work/donorcatalog/mods-sprd/.../flash/flash_drv/.
 obj-y += sprd/
+
+
+# Unisoc platform: modem debug log core (blob vendor sprd_mipi.ko). Diport
+# 2026-10-10 dari work/donors_20260930/bocchi_unisoc54/drivers/unisoc_platform/
+# debug_log/. Hanya trio inti (core/sysfs/serdes); varian per-SoC belum diport.
+obj-$(CONFIG_SPRD_MODEM_DEBUG) += unisoc_platform/

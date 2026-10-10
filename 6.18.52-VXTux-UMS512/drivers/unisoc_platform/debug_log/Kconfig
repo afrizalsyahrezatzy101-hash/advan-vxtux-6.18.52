@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: GPL-2.0
+# Modem debug log core (blob vendor: sprd_mipi.ko).
+# Donor: work/donors_20260930/bocchi_unisoc54/drivers/unisoc_platform/debug_log/
+# Hanya trio inti yang diport di sini: core.c + sysfs.c + serdes.c.
+# Varian per-SoC (sharkl5/main.c + phy.c, dan kawan-kawannya) TIDAK diport
+# di tick ini: mereka memakai register DBG_APB / MM_AHB_GEN_CLK_CFG yang belum
+# ada di include/dt-bindings/soc/sprd,sharkl5pro-{regs,mask}.h pohon ini
+# (header itu hasil RE sprd_sensor.ko, hanya mencakup jalur CSI).
+# Tanpa konsumen, modul ini tetap sah: ia mendaftarkan class "modem" dan
+# mengekspor dbg_log_device_register()/dbg_log_sysfs_init()/serdes_enable()
+# yang diminta blob, dan tidak menyentuh register apa pun sampai sebuah
+# driver per-SoC memanggilnya.
+config SPRD_MODEM_DEBUG
+	tristate "Spreadtrum SoC Modem Debug Log Driver"
+	depends on OF
+	default n
+	help
+	  Spreadtrum modem debug log is a module that
+	  just for modem engineers to catch modem debug
+	  logs through MIPI D-PHY interface.
+
+	  Ini substitusi sumber-terbuka untuk blob vendor sprd_mipi.ko
+	  (modinfo: description="Add modem dbg log attribute nodes for
+	  userspace"). Diekspor: dbg_log_device_register,
+	  dbg_log_sysfs_init, dbg_log_channel_sel, dbg_log_is_freq_valid,
+	  dbg_log_fill_freq_array, dbg_log_get_valid_channel, serdes_enable.

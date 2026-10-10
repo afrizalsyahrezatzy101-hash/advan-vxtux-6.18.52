@@ -254,6 +254,8 @@ source "drivers/cdx/Kconfig"
 
 endmenu
 
+source "drivers/unisoc_platform/Kconfig"
+
 config SPRD_FLASH_DRV
 	bool "Spreadtrum camera flash HAL"
 	help

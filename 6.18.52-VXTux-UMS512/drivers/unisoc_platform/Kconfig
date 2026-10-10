@@ -1,0 +1,2 @@
+# SPDX-License-Identifier: GPL-2.0
+source "drivers/unisoc_platform/debug_log/Kconfig"

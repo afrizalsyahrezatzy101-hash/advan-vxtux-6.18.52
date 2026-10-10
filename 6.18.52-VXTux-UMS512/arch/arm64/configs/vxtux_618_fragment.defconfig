@@ -1189,3 +1189,11 @@ CONFIG_ION_IPC_TRUSTY=y
 # port donor unisoc_battery.c). DT satu-profil -> fallback donor: id 0.
 # Lulus build device 2026-10-09 (exit 0, sprd_battery_info.ko).
 CONFIG_SPRD_BATTERY_INFO=m
+
+# Modem debug log core (blob vendor sprd_mipi.ko). Diport 2026-10-10 dari donor
+# bocchi_unisoc54 drivers/unisoc_platform/debug_log/{core,sysfs,serdes}.c.
+# Hanya trio inti; varian per-SoC (sharkl5/main.c+phy.c) TIDAK diport karena
+# butuh register DBG_APB/MM_AHB_GEN_CLK_CFG yang tidak ada di header
+# sprd,sharkl5pro-{regs,mask}.h pohon ini. Modul ini tidak menyentuh register
+# apa pun sampai ada driver per-SoC yang memanggil dbg_log_device_register().
+CONFIG_SPRD_MODEM_DEBUG=y
