@@ -21,6 +21,7 @@
 #include <linux/io.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/init.h>
 #include <linux/miscdevice.h>
 #include <linux/mm.h>
 #include <linux/of_address.h>
@@ -243,15 +244,16 @@ static ssize_t sprd_cproc_seg_dump(u32 base,
 	return total;
 }
 
-static int __init early_mode(char *str)
-{
-	if (!memcmp("shutdown", str, 8))
-		cp_boot_mode = 1;
-
-	return 0;
-}
-
-early_param("modem", early_mode);
+/*
+ * Boot-time "modem=" handler. 5.4 had early_param(); in 6.18 early_param only
+ * exists in the #ifndef MODULE branch of <linux/init.h> (init.h:379-383), so
+ * inside a module the macro is undefined and the call fails to compile.
+ * A module_parameter is the honest equivalent that survives as a module:
+ * insmod sprd_cproc.ko modem=shutdown sets cp_boot_mode the same way the
+ * vendor's cmdline=modem.shutdown did. Deviation is deliberate, documented.
+ */
+module_param_named(modem, cp_boot_mode, int, 0400);
+MODULE_PARM_DESC(modem, "1 = shutdown boot mode (vendor early_param modem.shutdown)");
 
 static int sprd_cproc_open(struct inode *inode, struct file *filp)
 {
