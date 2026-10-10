@@ -1,1 +1,1 @@
-obj-$(CONFIG_DRM_SPRD_GSP) += gsp_interface_pike2.o
+gsp_core-objs += gsp_interface_pike2.o

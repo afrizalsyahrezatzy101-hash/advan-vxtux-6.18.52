@@ -13,6 +13,7 @@
 
 #include <linux/dma-direction.h>
 #include <linux/dma-buf.h>
+MODULE_IMPORT_NS(DMA_BUF);
 #include <linux/sprd_iommu.h>
 #include <linux/sprd_ion.h>
 #include <drm/gsp_cfg.h>
