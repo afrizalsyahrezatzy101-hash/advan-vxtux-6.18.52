@@ -476,8 +476,32 @@ int sprd_iommu_unmap(struct device *dev, struct sprd_iommu_unmap_data *data)
 	return 0;
 }
 
+/*
+ * sprd_iommu_map_with_idx() / sprd_iommu_unmap_with_idx() -- the 5.4 vendor
+ * driver used @idx to pick one of several per-device subnodes (the VDSP
+ * client maps through a different iommu hardware context than the GSP one).
+ * In 6.18 there is a single domain per device, handed out by the iommu core
+ * from the DT `iommus` property, so no subnode exists to select: @idx is kept
+ * in the signature for client source compatibility and intentionally unused.
+ * Build 2026-10-14: without these two modpost reported
+ * "sprd_iommu_map_with_idx [sprd_vdsp.ko] undefined".
+ */
+int sprd_iommu_map_with_idx(struct device *dev,
+			     struct sprd_iommu_map_data *data, int idx)
+{
+	return sprd_iommu_map(dev, data);
+}
+
+int sprd_iommu_unmap_with_idx(struct device *dev,
+			       struct sprd_iommu_unmap_data *data, int idx)
+{
+	return sprd_iommu_unmap(dev, data);
+}
+
 EXPORT_SYMBOL(sprd_iommu_map);
 EXPORT_SYMBOL(sprd_iommu_unmap);
+EXPORT_SYMBOL(sprd_iommu_map_with_idx);
+EXPORT_SYMBOL(sprd_iommu_unmap_with_idx);
 
 /*
  * sprd_iommu_attach_device() -- declared in include/linux/sprd_iommu.h and

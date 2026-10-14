@@ -1074,6 +1074,33 @@ charger@6b {
 			polling-delay = <0>;
 			thermal-sensors = <&generic_adc_thermal>;
 		};
+
+		/* Zona PMIC tsensor. 1:1 dari DTB stok (fdt.dts:5869-5881):
+		 * osctsen-thmzone thermal-sensors = <0xc3 0x00> (id 0 = OSC),
+		 * outtsen-thmzone thermal-sensors = <0xc3 0x01> (id 1 = OUT),
+		 * 0xc3 = tsensor@1b34 = &pmic_tsensor di sc2730.dtsi.
+		 * devm_thermal_of_zone_register(pdev->dev, id) mencocokkan
+		 * node PARENT (tsensor@1b34) + id, jadi phandle yang dirujuk
+		 * di sini memang parent, bukan osc_tsensor/tout_tsensor.
+		 * polling-delay = 0 persis stok (sensor PMIC, dibaca on-demand).
+		 *
+		 * BATAS BUKTI (jujur): mendaftarkan zona belum berarti zona
+		 * terisi -- probe sc27xx_tsensor keluar lebih awal kalau
+		 * /chosen/bootargs tidak memuat "androidboot.mode=cali"
+		 * (perilaku blob vendor, lihat komentar di sc2730.dtsi).
+		 * Yang node ini buktikan: driver BISA bind ke hardware.
+		 */
+		osctsen-thmzone {
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&pmic_tsensor 0>;
+		};
+
+		outtsen-thmzone {
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&pmic_tsensor 1>;
+		};
 	};
 };
 

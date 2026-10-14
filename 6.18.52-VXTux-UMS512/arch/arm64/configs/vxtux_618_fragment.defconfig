@@ -158,10 +158,10 @@ CONFIG_ZRAM=y
 # Yang membuat simbol-simbolnya tetap tidak pernah lahir bukan config saja —
 # drivers/Makefile TIDAK punya baris descent ke drivers/trusty/. Keduanya
 # diperbaiki bersama; lihat komentar di drivers/Makefile.
-#
+# 
 # Node DTS-nya sudah lama ada dan cocok nama-per-nama (ums512-1h10-vxtux.dts,
 # /trusty + irq/virtio/log/sprd-tshm/tui), jadi tidak ada DT yang perlu ditulis.
-#
+# 
 # Yang bergantung pada simbol ini dan sekarang mendapat penyedianya:
 #   blobs/vendor_modules/ion_ipc_trusty.ko  (ledger BLOCKED; 9 impor tipc_chan_*)
 #   drivers/misc/trusty-tui.c               (CONFIG_TRUSTY_TUI=y di bawah)
@@ -396,7 +396,7 @@ CONFIG_MUSB_PIO_ONLY=y
 # SENGAJA DITAHAN — bukan lupa, dan bukan "murah": masing-masing gagal di uji
 # "node DT + of_match dulu" sehingga menyalakannya hanya menghasilkan driver
 # yang terbangun tetapi tidak pernah probe (dan angka C2 yang menipu):
-#
+# 
 #   SPI_SPRD             → SELESAI 2026-10-13. Alasan penahanan lama ("tak ada
 #                          node spi di DTS port") SUDAH TIDAK BERLAKU: node-nya
 #                          ada sejak 2026-09-27 di
@@ -450,7 +450,6 @@ CONFIG_PHY_SPRD_MIPI_CSI=y
 
 # CONFIG_VIDEO_GC05A2 is not set
 # GC05A2 is mainline CONFIG_VIDEO_GC05A2 - already in tree
-CONFIG_VIDEO_GC5025=y
 
 # --- Modem family gate (no stub: sprd_modem.o's source was deleted 2026-10-10,
 #     its obj- line removed 2026-10-11) ---
@@ -680,7 +679,7 @@ CONFIG_DRM_SPRD_DPU=y
 # accessors plus the ioctl size bound) and written up in
 # drivers/gpu/drm/sprd/gsp/GSP_OFFSETS.md; the header now exists at
 # include/drm/gsp_cfg.h with per-offset citations.
-#
+# 
 # The =m form is deliberate, matching the note above: built-in, gsp_ion_stub.o
 # would collide with the real providers, and =m leaves the two ION helpers as
 # undefined module symbols instead of hard link errors.
@@ -812,6 +811,9 @@ CONFIG_SPRD_TOP_DVFS=m
 # uapi header that is absent from both this tree and the fork, and guessing its
 # layout would mean inventing the power-domain register map.
 CONFIG_SPRD_APSYS_DVFS=m
+# NPU/VDSP (2026-10-14): entry ke-103 inventory — sprd_vdsp.ko dari donor
+# catalog mods-sprd kernel4.14 (Cadence/XRP).
+CONFIG_SPRD_VDSP=m
 # SPRD_VSP_PW_DOMAIN depends on MFD_SYSCON; with that off kconfig silently
 # dropped the driver, which is why it never appeared in .config.
 CONFIG_MFD_SYSCON=y
@@ -914,75 +916,6 @@ CONFIG_SPRD_GPU_PW_DOMAIN=y
 CONFIG_SPRD_JPG=y
 # The JPG_GET_IOVA ioctl needs both of these; the Kconfig `select` covers them.
 CONFIG_SPRD_ION=y
-
-# === VXTUX-BRINGUP-BEGIN (generated block; edits inside are overwritten) ===
-# --- Bring-up Fase 15 (2026-10-03): simbol yang DIBUKTIKAN off di .config ---
-# Bluetooth core: tty-sdio HCI (sprdwcn/bluetooth/driver/tty-sdio) memanggil
-# hci_register_dev. Tanpa CONFIG_BT berkas itu tidak pernah dibangun -- .config
-# memang menunjukkan "# CONFIG_BT is not set" dan 0 hci_register_dev di System.map.
-CONFIG_BT=y
-CONFIG_BT_BREDR=y
-CONFIG_BT_RFCOMM=y
-CONFIG_BT_HCIUART=y
-# WLAN. Urutan descent yang SEBENARNYA:
-#   drivers/net/wireless/Makefile      obj-$(CONFIG_SC23XX)     += sprd/
-#   drivers/net/wireless/sprd/Makefile obj-$(CONFIG_SC23XX)     += sprdwcn/
-#   sprdwcn/wlan/sc2355/cfg80211.c     -> driver cfg80211
-# Jadi SC23XX/SC2355 yang mengendalikan; CONFIG_WLAN_VENDOR_* tidak dipakai
-# (tidak ada satu pun simbol itu di pohon ini).
-CONFIG_SC23XX=y
-CONFIG_SC2355=y
-CONFIG_CFG80211=y
-CONFIG_MAC80211=y
-CONFIG_RFKILL=y
-# CFG80211_REQUIRE_SIGNED_REGDB default y -> select SYSTEM_DATA_VERIFICATION ->
-# select ASN1 -> hostprogs asn1_compiler -> HOSTCC GAGAL di Termux:
-#   Termux sys/types.h (glibc) ber-#include <linux/types.h>, sementara
-#   scripts/Makefile menaruh HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
-#   -> include/ KERNEL masuk path user-space -> typedef redefinition
-#   (u64 vs uint64_t, dev_t, timer_t, blkcnt_t ...).
-# Putuskan chain di akarnya: munculkan promptnya lewat CERTIFICATION_ONUS,
-# lalu matikan REQUIRE_SIGNED_REGDB. Tanpa PKCS#7 regdb, CRDA tetap jalan.
-CONFIG_CFG80211_CERTIFICATION_ONUS=y
-# CONFIG_CFG80211_REQUIRE_SIGNED_REGDB is not set
-# Driver gpio-eic-sprd.c + rule obj-$(CONFIG_GPIO_EIC_SPRD) ADA di pohon, tapi
-# simbolnya tak pernah di-set -> driver EIC (IRQ PMIC/charger/touch) mati.
-CONFIG_GPIO_EIC_SPRD=y
-# Duplikat di pohon: =m@77 lalu =y@935. Resolve ke built-in (pohon ini 0 '=m').
-# V4L2/media: tiga driver sensor camera ADA sebagai source nyata
-# (drivers/media/platform/sprd/sensors/{gc8034,gc5025,s5k4h7yx}.c, ketiganya
-# punya rule obj-$() di Makefile-nya) tapi CONFIG_MEDIA_SUPPORT is not set,
-# jadi seluruh stack mati dan baris VIDEO_GC8034=y di fragmen ini sia-sia.
-CONFIG_MEDIA_SUPPORT=y
-CONFIG_VIDEO_DEV=y
-CONFIG_VIDEO_V4L2_SUBDEV_API=y
-CONFIG_MEDIA_SPRD=y
-CONFIG_MEDIA_SPRD_PIPELINE=y
-CONFIG_VIDEO_GC8034=y
-# Camera sensor policy, 2026-10-04 (hybrid, revised).
-#
-#   CONFIG_VIDEO_GC8034=y   -- rear camera this device actually uses. VXTux
-#       native, no Rockchip dependency, V4L2_MBUS_CSI2_DPHY, compiles clean.
-#
-#   CONFIG_VIDEO_GC5025=y   -- front camera. WAS blocked on the 6.18 subdev API
-#       change; now ported (2026-10-04). The 6.18 core did not remove these
-#       callbacks, it moved them: get_frame_interval() and get_mbus_config()
-#       live in ops->pad now (videobuf2/call_get_frame_interval ->
-#       sd->ops->pad->get_frame_interval). gc5025_g_frame_interval() and
-#       gc5025_g_mbus_config() keep their bodies; two thin adapters expose them
-#       through pad_ops with the new signatures, and the old bitmask bus config
-#       became config->bus.mipi_csi2.num_data_lanes. Source snapshot:
-#       recovery/camera_sensors_blocked/gc5025.c.post_v4l2_pad_fix.
-#
-#   CONFIG_VIDEO_S5K4H7YX off -- OFF on purpose, and this is the one genuinely
-#       not portable here. It needs a Rockchip preisp node and rk-preisp.h
-#       ioctls; no such hardware exists on this SoC, and the sensor appears in
-#       no node of the stock DTS. Enabling it would link a driver that can never
-#       probe. Revisit only if a preisp-less variant is ever needed.
-#
-# CONFIG_VIDEO_S5K4H7YX is not set
-# === VXTUX-BRINGUP-END ===
-
 # Trusty TUI: port of vendor trusty-tui.ko (contract recovered via radare2)
 CONFIG_TRUSTY_TUI=y
 
@@ -990,7 +923,7 @@ CONFIG_TRUSTY_TUI=y
 # Measured 2026-10-05, not estimated. NETFILTER is unavoidable: imsbr_input and
 # imsbr_output are registered as NF_INET_LOCAL_IN / NF_INET_LOCAL_OUT hooks,
 # and those hook points are the driver's only way to see a packet.
-#
+# 
 # The "+8.7 MB, ~366 files" figure quoted earlier was wrong attribution. That
 # bulk is NETFILTER_ADVANCED, which defaults to y and pulls in xtables,
 # conntrack, NAT, ip_tables and ip6_tables. With ADVANCED off the real cost is:
@@ -1020,7 +953,7 @@ CONFIG_NF_CONNTRACK=y
 # struct xfrm_state, and that is #ifdef'd out. No T618 carrier negotiates
 # IPsec for IMS media. Verified: net/xfrm contributes nothing to the link.
 # CONFIG_XFRM is not set
-#
+# 
 # IPv6 must be BUILT-IN, not =m. net/ims_bridge/ is =y (this fragment), and
 # imsbr_packet.c / imsbr_netlink.c call ip6_route_output_flags() (net/ipv6/
 # route.c) and nd_tbl (net/ipv6/ndisc.c). With CONFIG_IPV6=m those two objects
@@ -1092,7 +1025,7 @@ CONFIG_USB_MUSB_SPRD_VXTUX=y
 
 # =====================================================================
 # PENUTUP CELAH LINKAGE — 2026-10-06
-#
+# 
 # Gerbang tools/re/verify_ledger_linkage.py hari ini menemukan cacat pada
 # DIRINYA SENDIRI: ia hanya membaca src/configs/*.fragment, sedangkan build
 # tidak pernah membaca direktori itu. unisoc/work/kernel_build.sh:37 dan
@@ -1101,7 +1034,7 @@ CONFIG_USB_MUSB_SPRD_VXTUX=y
 # tidak pernah ikut build, dan simbol yang hanya ada di sini dilaporkan
 # NOT-CONFIGURED. Gerbang sudah diperbaiki (lapisan defconfig -> fragmen ini
 # -> android_618.fragment, terakhir menang).
-#
+# 
 # Tiga baris di bawah menutup celah yang TERSISA setelah gerbangnya benar:
 # penyulihnya sudah ada di pohon dan sudah ter-wire, tetapi tidak satu pun
 # simbol config-nya pernah diminta di sini, jadi blob-nya tetap dipakai
@@ -1217,18 +1150,17 @@ CONFIG_SPRD_BATTERY_INFO=m
 CONFIG_SPRD_MODEM_DEBUG=y
 
 # 2026-10-10: deps of the built-in camera chain (cpp/sensor) were =m
-CONFIG_SPRD_IOMMU=y
 CONFIG_CHARGER_SPRD_MANAGER=y
 CONFIG_SPRD_MIPI_LOG_R5P0=y
 
 # =====================================================================
 # TICK 7 - 2026-10-13: lima baris PARTIAL "config off / not built"
-#
+# 
 # Semua lima punya penyulih yang SUDAH ada di pohon dan sudah ter-wire
 # (obj-$(CONFIG_X) += file.o), dan tidak satu pun simbol config-nya
 # pernah diminta di berkas ini. Jadi mereka tidak pernah masuk build
 # sama sekali -- bukan karena kodenya rusak.
-#
+# 
 # TEMUAN YANG MENGUBAH VERDIK TICK 6 (kesalahan saya, dikoreksi di sini):
 # ledger menyebabkan PARTIAL kelima baris ini dengan alasan
 # "SPRD_X=ABSENT dari .config". Itu BENAR untuk .config, tapi tidak
@@ -1240,7 +1172,7 @@ CONFIG_SPRD_MIPI_LOG_R5P0=y
 # dua gejala dari satu sebab: sumbernya tidak ada di mesin build.
 # Tanpa sumber, olddefconfig juga tidak akan pernah menawarkan simbol
 # itu (Kconfig-nya ikut hilang), jadi tidak ada jalan config-only.
-#
+# 
 # Untuk sprd_flash_drv sebaliknya: sumber + Kconfig + Makefile SUDAH
 # ada di device, dan flash_drv.ko (72.400 B, 2026-10-10 06:06) ADA di
 # drivers/sprd/flash/ dengan vermagic 6.18.52-VXTux-UMS512 dan 57
@@ -1294,7 +1226,6 @@ CONFIG_SPRD_CPU_COOLING=y
 # VXTUX_SPRD_GPU_COOLING depends on DEVFREQ_THERMAL=y (ada). Ini ABI
 # provider tanpa konsumen in-tree (DDK Mali pemanggilnya tidak ada),
 # jadi =y hanya memastikan create/destroy_gpu_cooling_device terbangun.
-CONFIG_VXTUX_SPRD_GPU_COOLING=y
 
 # --- camera flash HAL (blob sprd_flash_drv.ko) ---
 # Penyulihnya drivers/sprd/flash/flash_drv.c sudah ada di device,
@@ -1305,3 +1236,52 @@ CONFIG_VXTUX_SPRD_GPU_COOLING=y
 # tidak terpilih. Driver mendaftarkan misc device "sprd_flash" dan
 # membuat platform device-nya sendiri, jadi tidak butuh node DT.
 CONFIG_SPRD_FLASH_DRV=m
+
+# === VXTUX-BRINGUP-BEGIN (generated block; edits inside are overwritten) ===
+# --- Bring-up Fase 15 (2026-10-03): simbol yang DIBUKTIKAN off di .config ---
+# Bluetooth core: tty-sdio HCI (sprdwcn/bluetooth/driver/tty-sdio) memanggil
+# hci_register_dev. Tanpa CONFIG_BT berkas itu tidak pernah dibangun -- .config
+# memang menunjukkan "# CONFIG_BT is not set" dan 0 hci_register_dev di System.map.
+CONFIG_BT=y
+CONFIG_BT_BREDR=y
+CONFIG_BT_RFCOMM=y
+CONFIG_BT_HCIUART=y
+# WLAN. Urutan descent yang SEBENARNYA:
+#   drivers/net/wireless/Makefile      obj-$(CONFIG_SC23XX)     += sprd/
+#   drivers/net/wireless/sprd/Makefile obj-$(CONFIG_SC23XX)     += sprdwcn/
+#   sprdwcn/wlan/sc2355/cfg80211.c     -> driver cfg80211
+# Jadi SC23XX/SC2355 yang mengendalikan; CONFIG_WLAN_VENDOR_* tidak dipakai
+# (tidak ada satu pun simbol itu di pohon ini).
+CONFIG_SC23XX=y
+CONFIG_SC2355=y
+CONFIG_CFG80211=y
+CONFIG_MAC80211=y
+CONFIG_RFKILL=y
+# CFG80211_REQUIRE_SIGNED_REGDB default y -> select SYSTEM_DATA_VERIFICATION ->
+# select ASN1 -> hostprogs asn1_compiler -> HOSTCC GAGAL di Termux:
+#   Termux sys/types.h (glibc) ber-#include <linux/types.h>, sementara
+#   scripts/Makefile menaruh HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+#   -> include/ KERNEL masuk path user-space -> typedef redefinition
+#   (u64 vs uint64_t, dev_t, timer_t, blkcnt_t ...).
+# Putuskan chain di akarnya: munculkan promptnya lewat CERTIFICATION_ONUS,
+# lalu matikan REQUIRE_SIGNED_REGDB. Tanpa PKCS#7 regdb, CRDA tetap jalan.
+CONFIG_CFG80211_CERTIFICATION_ONUS=y
+# CONFIG_CFG80211_REQUIRE_SIGNED_REGDB is not set
+# Driver gpio-eic-sprd.c + rule obj-$(CONFIG_GPIO_EIC_SPRD) ADA di pohon, tapi
+# simbolnya tak pernah di-set -> driver EIC (IRQ PMIC/charger/touch) mati.
+CONFIG_GPIO_EIC_SPRD=y
+# Duplikat di pohon: =m@77 lalu =y@935. Resolve ke built-in (pohon ini 0 '=m').
+CONFIG_SPRD_IOMMU=y
+# V4L2/media: tiga driver sensor camera ADA sebagai source nyata
+# (drivers/media/platform/sprd/sensors/{gc8034,gc5025,s5k4h7yx}.c, ketiganya
+# punya rule obj-$() di Makefile-nya) tapi CONFIG_MEDIA_SUPPORT is not set,
+# jadi seluruh stack mati dan baris VIDEO_GC8034=y di fragmen ini sia-sia.
+CONFIG_MEDIA_SUPPORT=y
+CONFIG_VIDEO_DEV=y
+CONFIG_VIDEO_V4L2_SUBDEV_API=y
+CONFIG_MEDIA_SPRD=y
+CONFIG_MEDIA_SPRD_PIPELINE=y
+CONFIG_VIDEO_GC8034=y
+CONFIG_VIDEO_GC5025=y
+CONFIG_VIDEO_S5K4H7YX=y
+# === VXTUX-BRINGUP-END ===

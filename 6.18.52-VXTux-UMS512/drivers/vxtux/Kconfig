@@ -51,4 +51,8 @@ source "drivers/vxtux/thermal/Kconfig"
 # extcon untuk glue MUSB sharkl5pro; sumber GPL tidak ada → kelas re-only).
 source "drivers/vxtux/usb/Kconfig"
 
+# NPU/VDSP (2026-10-14): sprd_vdsp — donor 4.14 Cadence/XRP, firmware
+# vdsp_firmware.bin. Menutup entry terakhir inventory103 (102 -> 103).
+source "drivers/vxtux/npu/vdsp/Kconfig"
+
 endif # VXTUX_DRIVERS

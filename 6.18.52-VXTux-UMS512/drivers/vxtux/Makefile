@@ -46,6 +46,10 @@ obj-$(CONFIG_VXTUX_SPRD_GPU_COOLING)		+= thermal/
 
 obj-$(CONFIG_SC23XX)				+= net/
 
+# NPU/VDSP (2026-10-14): sprd_vdsp.ko — donor catalog mods-sprd kernel4.14
+# (Cadence/XRP). Entry ke-103 inventory; tanpa baris ini tally berhenti 102/103.
+obj-$(CONFIG_SPRD_VDSP)			+= npu/vdsp/
+
 # DRM/KMS murni (tanpa fb): panel DSI generik UMS512
 obj-$(CONFIG_DRM_PANEL_VXTUX_UMS512)		+= disp/sprd_panel_vxtux/
 # DPU/DRM consolidated (RE). Sebelumnya disp/sprd_dpu/ punya Kconfig (di-source
