@@ -195,6 +195,8 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 | 103 | `panfrost` | [drivers/gpu/drm/panfrost/panfrost_gpu.c](6.18.52-VXTux-UMS512/drivers/gpu/drm/panfrost/panfrost_gpu.c) | Separate open-source GPU driver; Mali-G52 MP2 / Gondul replacement |
 
 > **Legenda & status verifikasi desu~:** "Tier A" = sumber + simbol + config terverifikasi ada di tree; "Tier B" = bukti simbol/reverse-engineering (radare2/ghidra); "Mainline" = kode upstream 6.18 apa adanya. **13 entri sudah LULUS kompilasi penuh di device** (gcc 16.2.1, artix proot — compiler asli kernel, exit 0, nol undefined symbol; 2026-10-15): `sprd_vsp.ko` 231 KB, `cpp.ko` 321 KB, `sprd-iommu.ko` 81 KB, `sprd_ion.ko` 62 KB, `sprd_camsys_pw_domain.ko` 95 KB, `sprd_vsp_pw_domain.ko` 52 KB, `sprd_battery_info.ko` 96 KB, `wcn_core.ko` (composite), `sprdwl.ko` 2,5 MB, `sprd_jpg.ko` 156 KB, **`sprd_vdsp.ko` 913.568 byte** (TICK7), **`sprd-gsp.ko` 767.488 byte** (TICK9), **`novatek_ts_spi.ko` 512.584 byte** (TICK9). **`sprd_flash_drv` + `spi-sprd` closed via System.map** (TICK9): 14 + 23 simbol build-in di `work/sysmaps/System.map.builddmed.20261014_2218` (md5 `82055ecc...`). Sisanya verified-in-tree (config + DT + sumber ada); bukti runtime (probe dmesg) menunggu boot kernel custom 6.18.52 di hardware — device sedang sidang.
+>
+> 📋 **40 driver relevan Advan T1030** dikategorikan per-fungsi di [`docs/DRIVERS_RELEVANT.md`](docs/DRIVERS_RELEVANT.md): A) Boot-Critical (8), B) Daily Functionality (14), C) SIPC/Modem (10), D) Sensor/PM/Thermal (11). Sumber bukti: `kolist.1012b.txt` (1.424 `.ko`), `System.map.builddmed.20261014_2218` md5 `82055ecc…`.
 
 ---
 
