@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/sipc/Kconfig — kerangka SIPC Unisoc (port fork GPL 5.4 -> 6.18)
+#
+# Sumber GPL: fork Samsung Tab A8 (T618) drivers/soc/sprd/modem/sipc/
+# (C) Spreadtrum Communications Inc. — dipakai ulang di bawah GPL-2.0.
+#
+# Fondasi rantai audio/WCN/modem: SIPC = shared-memory IPC ke CP/DSP.
+# Konsumen: drivers/misc/sprd_audio (AGDSP), drivers/misc/sprdwcn, modem.
+
+config SPRD_MAILBOX
+	bool "Unisoc vendor mailbox client API (over mainline sprd-mailbox)"
+	depends on SPRD_MBOX && MAILBOX
+	default y
+	help
+	  Implementasi ulang API mailbox vendor Unisoc (mbox_raw_sent,
+	  mbox_just_sent, mbox_register_irq_handle, mbox_unregister_irq_handle,
+	  mbox_core_fifo_full) di atas kerangka mailbox generic mainline
+	  (drivers/mailbox/sprd-mailbox.c).
+
+	  Kenapa perlu: database RE 103 blob (blob_audit_syms.csv) membuktikan
+	  fungsi-fungsi ini tidak diekspor blob vendor mana pun — asalnya adalah
+	  vmlinux stok 5.4 (built-in). Tanpa shim ini semua konsumen SIPC/audio
+	  tidak bisa dibangun (dan kalau dipaksa, panggilan mailbox jadi no-op).
+
+config SPRD_SIPC
+	bool "Spreadtrum SIPC (AP <-> CP/DSP shared memory IPC)"
+	depends on SPRD_MAILBOX
+	default n
+	help
+	  Kerangka SIPC vendor: sipc.o smsg.o smem.o sbuf.o sblock.o +
+	  debugfs. Port 5.4 -> 6.18 (access_ok tanpa tipe, timer_setup).
+	  Menyediakan smsg_ch_open/smsg_send/smsg_recv, smem_alloc,
+	  sbuf_* dan sblock_* yang dipakai audio AGDSP, WCN, dan modem.
+
+# ---------------------------------------------------------------- ZOMBIE
+# SPRD_SIPC_SPIPE/SPOOL/SETH = transport MODEM (pipe & pool di atas sbuf/
+# sblock; SETH = ethernet-over-shared-memory). Deklarasi ini DIPERTAHANKAN
+# sebagai nama permukaan vendor, tetapi TIDAK ADA SUMBER di pohon ini: nol
+# arm Makefile, nol rujukan .c/.h. Menyalakannya di config = klaim palsu.
+# Terdeteksi `tools/re/audit_wiring.py` kelas CONFIG-ZOMBIE (2026-09-22) dan
+# dimatikan di `src/configs/vxtux_618_fragment.defconfig`. Jangan set =y
+# sebelum transport-nya benar-benar diporting.
+
+config SPRD_SIPC_SPIPE
+	tristate "SPRD pipe driver based on SBUF (UNPORTED: no source in tree)"
+	depends on SPRD_SIPC
+	default n
+
+config SPRD_SIPC_SPOOL
+	tristate "SPRD pool driver based on SBLOCK (UNPORTED: no source in tree)"
+	depends on SPRD_SIPC
+	default n
+
+config SPRD_SIPC_SETH
+	tristate "SPRD Ethernet over shared memory (SETH)"
+	depends on SPRD_SIPC
+	default n
+
+config SPRD_SIPC_ZERO_COPY_SIPX
+	bool "SIPX zero-copy transport (UNPORTED: sipx.c belum ada di pohon)"
+	depends on SPRD_SIPC
+	default n
+	help
+	  Jangan dinyalakan sampai sipx.c diport: sipc_debugfs.c memanggil
+	  sipx_init_debugfs() di dalam #ifdef simbol ini, dan fungsi itu hanya
+	  ada di sipx.c (sumber fork: gpl-source/fork_t618/.../modem/sipc/sipx.c).
+
+config SPRD_SIPC_SWCNBLK
+	tristate "WCN block transport on SIPC"
+	depends on SPRD_SIPC
+	default n
+	help
+	  Transport SBLK khusus WCN (swcnblk.o, komposit sendiri: hanya memanggil
+	  simbol ekspor inti SIPC yang built-in). Modular agar bisa di-insmod
+	  dan diuji satu per satu (mis. boot QEMU + insmod chain).

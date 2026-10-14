@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/Kconfig — reverse-engineered / upstream-restored drivers
+# LinDroid/VXTux v1.0 (design gen 3.0) — UMS512 (T618)
+#
+# Sesi 15 Sep 2026: triage RE membuktikan blob GPU & touch = tree publik GPL.
+# gx/mali_kbase dan touch/hx83102e kini DDK utuh (MALI_MIDGARD /
+# TOUCHSCREEN_HIMAX_*) — sisanya tetap skeleton RE (default n).
+
+menuconfig VXTUX_DRIVERS
+	bool "VXTux reverse-engineered drivers (UMS512)"
+	default n
+	help
+	  Driver hasil reverse engineering blob vendor Advan/UMS512, ditulis ulang
+	  100% sebagai C official-style. Semua default n; aktifkan satu per satu
+	  dan uji boot sebelum daily.
+
+if VXTUX_DRIVERS
+
+source "drivers/vxtux/touch/hx83102e/Kconfig"
+source "drivers/vxtux/gpu/mali_kbase/Kconfig"
+source "drivers/vxtux/sensor/sensorhub/Kconfig"
+# VXTUX_SC27XX_FUELGAUGE (drivers/vxtux/power/fuel_gauge) DIHAPUS 2026-09-18:
+# isinya hanya stub — probe yang hanya mencetak log tanpa mendaftarkan
+# power_supply, dan sprd_battery_get_info() yang selalu mengembalikan nol —
+# sementara tidak ada sumber vendor fuel gauge di repo ini untuk
+# mengimplementasikannya (gpl-source hanya memuat DTS baterai dan binding
+# mainline). Batere papan ini dilayani mainline drivermem `sc27xx_fuel_gauge.c`
+# via CONFIG_FUEL_GAUGE_SC27XX=y (compatible "sprd,sc2731-fgu").
+source "drivers/vxtux/touch/chipone_tddi/Kconfig"
+source "drivers/vxtux/mm/hybridswap/Kconfig"
+source "drivers/vxtux/trusty/Kconfig"
+source "drivers/vxtux/disp/sprd_dpu/Kconfig"
+source "drivers/vxtux/disp/sprd_panel_vxtux/Kconfig"
+source "drivers/vxtux/soc/Kconfig"
+source "drivers/vxtux/sipc/Kconfig"
+source "drivers/vxtux/misc/Kconfig"
+source "drivers/vxtux/audio/Kconfig"
+source "drivers/vxtux/sound/Kconfig"
+# B43 (2026-09-26): penyedia ABI untuk modul blob vendor 5.4 — global arm64
+# (cpu_hwcaps/keys/const_caps_ready/kimage_vaddr/cpu_number), handler CFI
+# __ubsan_handle_cfi_check_fail_abort, dan shim cfg80211_get_bss.
+# BUILT-IN (=y), bukan modul: lihat alasan teknis di dalam Kconfig-nya.
+source "drivers/vxtux/vendor_abi/Kconfig"
+source "drivers/vxtux/net/Kconfig"
+# Model daya GPU hasil RE (2026-09-19): sprd_gpu_cooling. Provider ABI
+# create/destroy_gpu_cooling_device untuk devfreq_cooling.
+source "drivers/vxtux/thermal/Kconfig"
+
+# B40 (2026-09-26): USB pendukung hasil RE — sc27xx_typec (provider
+# extcon untuk glue MUSB sharkl5pro; sumber GPL tidak ada → kelas re-only).
+source "drivers/vxtux/usb/Kconfig"
+
+endif # VXTUX_DRIVERS

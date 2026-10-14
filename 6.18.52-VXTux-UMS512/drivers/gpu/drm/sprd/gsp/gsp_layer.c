@@ -13,13 +13,19 @@
 
 #include <linux/dma-direction.h>
 #include <linux/dma-buf.h>
-MODULE_IMPORT_NS(DMA_BUF);
 #include <linux/sprd_iommu.h>
 #include <linux/sprd_ion.h>
 #include <drm/gsp_cfg.h>
 #include "gsp_debug.h"
 #include "gsp_layer.h"
 #include <linux/ion.h>
+
+/* 6.18: the macro lives in <linux/export.h> (via module.h), so it must come
+ * after the includes, and the namespace is a STRING literal since 5.15.
+ * The old unquoted mid-include form failed with:
+ *   gsp_layer.c:16:18: error: expected ',' or ';' before 'DMA_BUF'
+ * Same fix class as sprd_ion.c:601. */
+MODULE_IMPORT_NS("DMA_BUF");
 
 
 int gsp_layer_to_type(struct gsp_layer *layer)

@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0
+# drivers/vxtux/soc/Kconfig — driver SoC Unisoc hasil port (fork GPL)
+
+source "drivers/vxtux/soc/usbpinmux/Kconfig"
+source "drivers/vxtux/soc/pmic_syscon/Kconfig"
+source "drivers/vxtux/soc/soc_id/Kconfig"
+source "drivers/vxtux/soc/hwfeature/Kconfig"
+source "drivers/vxtux/soc/cache_efuse/Kconfig"
+source "drivers/vxtux/soc/power_manager/Kconfig"
+
+source "drivers/vxtux/soc/modem/Kconfig"

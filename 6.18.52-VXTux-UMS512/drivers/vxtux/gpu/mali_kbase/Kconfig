@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# gpu/mali_kbase/Kconfig — titik sambung DDK ARM valhall r34p0-01eac0 (GPL)
+# LinDroid/VXTux v1.0 — UMS512 (T618)
+#
+# DDK lengkap ada di ./kbase/ (Kbuild self-contained, gaya ARM upstream).
+# Sesi 15 Sep 2026: blob mali_gondul.ko = DDK r34p0-01eac0 (UK 11.31) —
+# sumber GPL publik dipulihkan 100%; blob tinggal pembanding ABI.
+#
+# Semua simbol config didefinisikan di kbase/Kconfig (menuconfig
+# MALI_MIDGARD + MALI_PLATFORM_NAME="devicetree" default VXTux).
+# DT node stok: sprd,mali-gondul / sprd,mali-gondulC — sudah ditambahkan
+# ke kbase_dt_ids di mali_kbase_core_linux.c.
+
+source "drivers/vxtux/gpu/mali_kbase/kbase/Kconfig"

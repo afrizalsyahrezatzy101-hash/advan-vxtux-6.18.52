@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-2.0
+# CATATAN KONFIG (18 Sep 2026): semula `depends on TRUSTY && VXTUX_DRIVERS`,
+# padahal 6.18 mainline TIDAK punya simbol TRUSTY (diverifikasi: tak ada
+# `config TRUSTY` di seluruh pohon; drivers/trusty tidak ada, yang ada hanya
+# drivers/tee). Akibatnya simbol ini mustahil hidup dan baris =y di defconfig
+# dibuang olddefconfig tanpa pesan. Bila trusty-ipc masuk ke pohon, dep itu
+# harus dikembalikan; disp_ca.c sendiri sudah fail-gracefully tanpa TEE.
+config VXTUX_TRUSTY_DISP
+	tristate "VXTux: Trusty display-CA helpers (RE)"
+	depends on VXTUX_DRIVERS
+	default n
+	help
+	  Helper disp_ca_* untuk jalur Trusty TEE display (proven stub build v4;
+	  provider asli = disp_trusty.c saat TRUSTY_VIRTIO_IPC=y). Port resmi
+	  ini menggantikan stub — fail-gracefully tanpa TEE.

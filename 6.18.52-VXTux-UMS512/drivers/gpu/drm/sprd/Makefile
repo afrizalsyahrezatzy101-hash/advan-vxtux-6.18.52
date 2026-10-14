@@ -3,8 +3,13 @@
 sprd-drm-y := sprd_drm.o \
 	sprd_dpu.o \
 	sprd_dsi.o \
-	megacores_pll.o \
-	disp_notify.o
+	megacores_pll.o
+
+# VXTux: disp_notify.o sengaja TIDAK ikut modul ini. Salinannya sudah ada
+# di drivers/vxtux/disp_notify.c (obj-y -> vmlinux) dan kedua salinan mengekspor
+# vxtux_disp_notify_list / vxtux_usb_notify_list -> modpost "exported twice".
+# Tidak ada file di sprd-drm yang merujuk list itu, jadi konsumen (himax,
+# chipone) cukup pakai ekspor vmlinux.
 
 obj-$(CONFIG_DRM_SPRD) += sprd-drm.o
 

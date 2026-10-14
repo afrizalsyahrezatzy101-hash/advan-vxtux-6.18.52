@@ -158,6 +158,19 @@
 #define BIT_AON_APB_CSI_2L_RCTL			0x10
 #define BIT_AON_APB_CSI_2P2L_RCTL		0x01
 #define BIT_AON_APB_CSI_2P2L_DBG_TRIMBG		0x30
-#define MASK_AON_APB_RF_CGM_CPHY_CFG_EN		0x480000
+
+/*
+ * A second definition of MASK_AON_APB_RF_CGM_CPHY_CFG_EN (0x480000) that
+ * used to sit here was REMOVED 2026-10-11: the preprocessor honours the
+ * last definition, so csi_mipi_clk_enable/_disable in csi_api.c -- the only
+ * live consumer -- silently compiled against 0x480000. Evidence that
+ * 0x00008000 (BIT(15), the definition above) is correct: the vendor ASIC
+ * header chip_sharkl5pro/aon_apb.h:655 "BIT_AON_APB_CGM_CPHY_CFG_EN
+ * ( BIT(15) )", and the blob itself uses mask 0x8000 at offset 0x13c.
+ * 0x480000 is a real blob constant, but of a DIFFERENT field pair:
+ * BIT(19) and BIT(22), the 0xB4 TESTCLR_S_EN/TESTCLR_M_EN pair (see
+ * the correction table at the top of this file). The value was right,
+ * the name was wrong -- and the name is what the code compiled against.
+ */
 
 #endif /* _DT_BINDINGS_SOC_SPRD_SHARKL5PRO_MASK_H */

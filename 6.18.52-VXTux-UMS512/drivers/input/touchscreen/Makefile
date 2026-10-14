@@ -70,23 +70,14 @@ obj-$(CONFIG_TOUCHSCREEN_MSG2638)	+= msg2638.o
 obj-$(CONFIG_TOUCHSCREEN_MTOUCH)	+= mtouch.o
 obj-$(CONFIG_TOUCHSCREEN_MK712)		+= mk712.o
 obj-$(CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS)	+= novatek-nvt-ts.o
-# Dihapus 2026-10-06: baris ini dulu berbunyi
-#   obj-$(CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI) += novatek-nvt-ts-spi.o
-# Simbol CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI TIDAK PERNAH didefinisikan di
-# Kconfig mana pun -- dicek seluruh pohon, dan satu-satunya kemunculannya
-# adalah baris Makefile itu sendiri. Jadi aturan itu tidak pernah bisa terpicu:
-# kbuild hanya mengevaluasinya jadi kosong tanpa peringatan, dan src/configs
-# yang menulis "CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI=y" dibuang olddefconfig
-# tanpa pesan. Berkas novatek-nvt-ts-spi.c sendiri juga BUKAN driver SPI:
-# isinya novatek-nvt-ts.c yang hanya diganti satu baris (i2c .name menjadi
-# "novatek-nvt-ts-spi"), 354 baris keduanya, masih #include <linux/i2c.h>,
-# masih module_i2c_driver(), dan of_match-nya hanya "novatek,nt11205-ts" /
-# "novatek,nt36672a-ts" -- sedangkan node DT papan adalah SPI dengan
-# compatible "novatek,NVT-ts-spi" (ums512-1h10-vxtux.dts:654). Karena itu
-# penyulih untuk blob novatek_ts_spi.ko BELUM ADA dan jalur yang benar adalah
-# membangun driver SPI dari RE blob-nya, bukan menambahkan simbol Kconfig
-# untuk berkas yang salah bus ini. Lihat work/blob_map/ledger.json baris
-# novatek_ts_spi.
+# Selesai 2026-10-13 (tick #8): penyulih untuk blob novatek_ts_spi.ko kini ADA.
+# Jalur yang benar ternyata RE blob (simbolnya tak ter-strip, cocok 1:1 dengan
+# keluarga NT36xxx publik) + donor Realme RMX1911, BUKAN menambahkan simbol
+# Kconfig untuk berkas novatek-nvt-ts-spi.c yang lama -- berkas palsu itu sudah
+# dihapus. Driver SPI sejati ada di novatek_nvt_ts_spi/ dan membangun satu
+# modul komposit bernama novatek_ts_spi.ko. Lihat work/blob_map/ledger.json
+# baris novatek_ts_spi.
+obj-$(CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI) += novatek_nvt_ts_spi/
 obj-$(CONFIG_TOUCHSCREEN_HP600)		+= hp680_ts_input.o
 obj-$(CONFIG_TOUCHSCREEN_HP7XX)		+= jornada720_ts.o
 obj-$(CONFIG_TOUCHSCREEN_IPAQ_MICRO)	+= ipaq-micro-ts.o

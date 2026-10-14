@@ -396,9 +396,17 @@ CONFIG_MUSB_PIO_ONLY=y
 # SENGAJA DITAHAN — bukan lupa, dan bukan "murah": masing-masing gagal di uji
 # "node DT + of_match dulu" sehingga menyalakannya hanya menghasilkan driver
 # yang terbangun tetapi tidak pernah probe (dan angka C2 yang menipu):
-#   SPI_SPRD             → tak ada node spi di DTS port (4 kemunculan "spi"
-#                          hanyalah hwspinlock); of_match menunggu node
-#                          "sprd,sc9860-spi" yang belum ditulis.
+#
+#   SPI_SPRD             → SELESAI 2026-10-13. Alasan penahanan lama ("tak ada
+#                          node spi di DTS port") SUDAH TIDAK BERLAKU: node-nya
+#                          ada sejak 2026-09-27 di
+#                          ums512-1h10-vxtux.dts:639 `spi1: spi@70900000`
+#                          compatible "sprd,ums512-spi","sprd,sc9860-spi",
+#                          status okay, clock enable/spi/source lengkap, plus
+#                          anak `touchscreen@0`. of_match driver
+#                          (spi-sprd.c:1067) adalah "sprd,sc9860-spi" — cocok.
+#                          DTS port sudah disinkronkan dengan fdt_live.dtb stok
+#                          (spi@900000 status okay + touchscreen novatek).
 #   SPRD_WATCHDOG        → tak ada node wdt; sc2730.dtsi:31 secara sadar tidak
 #                          menulis node untuk blok yang belum punya driver.
 #   CHARGER_BQ256XX      → SELESAI 2026-10-06. Node-nya SUDAH ada:
@@ -444,7 +452,8 @@ CONFIG_PHY_SPRD_MIPI_CSI=y
 # GC05A2 is mainline CONFIG_VIDEO_GC05A2 - already in tree
 CONFIG_VIDEO_GC5025=y
 
-# --- Modem stub driver ---
+# --- Modem family gate (no stub: sprd_modem.o's source was deleted 2026-10-10,
+#     its obj- line removed 2026-10-11) ---
 CONFIG_SPRD_MODEM=y
 # Modem control-processor stack. Port 2026-10-04.
 #   CONFIG_SPRD_CPROC        -> /proc/cptl/{start,stop,status,mini_dump}
@@ -453,8 +462,7 @@ CONFIG_SPRD_MODEM=y
 #                               reverse engineering that binary: no ioctls).
 #   CONFIG_SPRD_CP_DUMP      -> /dev/cp_dump, also referenced by modem_control.
 #   CONFIG_SPRD_MODEM_LOADER -> cdev+ioctl modem image loader (SCI1/MECPV).
-# Without these three, CONFIG_SPRD_MODEM above built only sprd_modem.o and
-# /proc/cptl could never exist.
+# These three are the real drivers; SPRD_MODEM only gates the descent.
 CONFIG_SPRD_CPROC=y
 CONFIG_SPRD_CP_DUMP=y
 CONFIG_SPRD_MODEM_LOADER=y
@@ -525,6 +533,9 @@ CONFIG_V4L2_SUBDEV_API=y
 # =====================================================================
 CONFIG_TOUCHSCREEN_HIMAX_HX83112B=y
 CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS=y
+# tick #8 2026-10-13: penyulih novatek_ts_spi.ko (RE blob + donor RMX1911).
+# =m agar parity dengan blob vendor (novatek_ts_spi.ko dimuat via modprobe).
+CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI=m
 
 # =====================================================================
 # MAXIMUM SENSORS/IIO KERNEL-SIDE
@@ -647,7 +658,6 @@ CONFIG_PINCTRL_SPRD_SHARKL5PRO=y
 CONFIG_SPRD_THERMAL=y
 CONFIG_GPIO_PMIC_EIC_SPRD=y
 CONFIG_USB_GADGET_SPRD=y
-CONFIG_CHARGER_SPRD_MANAGER=y
 
 # =====================================================================
 # MAXIMUM GPU/DISPLAY KERNEL-SIDE
@@ -939,7 +949,6 @@ CONFIG_CFG80211_CERTIFICATION_ONUS=y
 # simbolnya tak pernah di-set -> driver EIC (IRQ PMIC/charger/touch) mati.
 CONFIG_GPIO_EIC_SPRD=y
 # Duplikat di pohon: =m@77 lalu =y@935. Resolve ke built-in (pohon ini 0 '=m').
-CONFIG_SPRD_IOMMU=y
 # V4L2/media: tiga driver sensor camera ADA sebagai source nyata
 # (drivers/media/platform/sprd/sensors/{gc8034,gc5025,s5k4h7yx}.c, ketiganya
 # punya rule obj-$() di Makefile-nya) tapi CONFIG_MEDIA_SUPPORT is not set,
@@ -1011,6 +1020,20 @@ CONFIG_NF_CONNTRACK=y
 # struct xfrm_state, and that is #ifdef'd out. No T618 carrier negotiates
 # IPsec for IMS media. Verified: net/xfrm contributes nothing to the link.
 # CONFIG_XFRM is not set
+#
+# IPv6 must be BUILT-IN, not =m. net/ims_bridge/ is =y (this fragment), and
+# imsbr_packet.c / imsbr_netlink.c call ip6_route_output_flags() (net/ipv6/
+# route.c) and nd_tbl (net/ipv6/ndisc.c). With CONFIG_IPV6=m those two objects
+# land in ipv6.ko, so a built-in caller leaves both symbols undefined and the
+# vmlinux link dies at LD vmlinux.o. Measured 2026-10-12 (build_1012a.log,
+# VMLINUX_RC=2): "net/ims_bridge/imsbr_packet.o: in function 'ip6_route_output':
+# undefined reference to 'ip6_route_output_flags'" plus the same for nd_tbl,
+# accompanied by lld "Unexpected GOT/PLT entries detected!" noise that
+# disappears once the symbol resolves. The fragment never mentioned IPV6, so
+# kconfig's own "default m" produced the =m; both stock vendor configs
+# (sprd_sharkl5Pro_defconfig:970, unisoc_fuzz_ums512_defconfig:956) ship
+# CONFIG_IPV6=y, so this is the shipping configuration, not a workaround.
+CONFIG_IPV6=y
 
 CONFIG_SPRD_IMS_BRIDGE=y
 # Eighth object. Debug-only: exposes transit counters under debugfs.
@@ -1190,10 +1213,95 @@ CONFIG_ION_IPC_TRUSTY=y
 # Lulus build device 2026-10-09 (exit 0, sprd_battery_info.ko).
 CONFIG_SPRD_BATTERY_INFO=m
 
-# Modem debug log core (blob vendor sprd_mipi.ko). Diport 2026-10-10 dari donor
-# bocchi_unisoc54 drivers/unisoc_platform/debug_log/{core,sysfs,serdes}.c.
-# Hanya trio inti; varian per-SoC (sharkl5/main.c+phy.c) TIDAK diport karena
-# butuh register DBG_APB/MM_AHB_GEN_CLK_CFG yang tidak ada di header
-# sprd,sharkl5pro-{regs,mask}.h pohon ini. Modul ini tidak menyentuh register
-# apa pun sampai ada driver per-SoC yang memanggil dbg_log_device_register().
+# sprd_mipi modem debug log (unisoc_platform/debug_log), 2026-10-10
 CONFIG_SPRD_MODEM_DEBUG=y
+
+# 2026-10-10: deps of the built-in camera chain (cpp/sensor) were =m
+CONFIG_SPRD_IOMMU=y
+CONFIG_CHARGER_SPRD_MANAGER=y
+CONFIG_SPRD_MIPI_LOG_R5P0=y
+
+# =====================================================================
+# TICK 7 - 2026-10-13: lima baris PARTIAL "config off / not built"
+#
+# Semua lima punya penyulih yang SUDAH ada di pohon dan sudah ter-wire
+# (obj-$(CONFIG_X) += file.o), dan tidak satu pun simbol config-nya
+# pernah diminta di berkas ini. Jadi mereka tidak pernah masuk build
+# sama sekali -- bukan karena kodenya rusak.
+#
+# TEMUAN YANG MENGUBAH VERDIK TICK 6 (kesalahan saya, dikoreksi di sini):
+# ledger menyebabkan PARTIAL kelima baris ini dengan alasan
+# "SPRD_X=ABSENT dari .config". Itu BENAR untuk .config, tapi tidak
+# lengkap: untuk sc27xx_tsensor_thermal / sprd_soc_thm /
+# sprd_cpu_cooling / sprd_gpu_cooling penyebab sebenarnya adalah
+# direktori drivers/thermal/sprd/ TIDAK PERNAH SAMPAI KE DEVICE --
+# 0 dari 7 berkasnya ada di pohon device per 2026-10-13 13:45. Jadi
+# "ABSENT dari .config" dan "tak pernah dibuat di output dir" adalah
+# dua gejala dari satu sebab: sumbernya tidak ada di mesin build.
+# Tanpa sumber, olddefconfig juga tidak akan pernah menawarkan simbol
+# itu (Kconfig-nya ikut hilang), jadi tidak ada jalan config-only.
+#
+# Untuk sprd_flash_drv sebaliknya: sumber + Kconfig + Makefile SUDAH
+# ada di device, dan flash_drv.ko (72.400 B, 2026-10-10 06:06) ADA di
+# drivers/sprd/flash/ dengan vermagic 6.18.52-VXTux-UMS512 dan 57
+# simbol terdefinisi termasuk sprd_flash_ctrl/register/get_info/cfg.
+# Jadi baris itu BUKAN "not built" -- artefaknya ada, di pohon SUMBER,
+# bukan di output dir. Sensus modul wajib menyebut akar pencariannya
+# (pelajaran yang sama seperti .ko devfreq di tick 6).
+# =====================================================================
+
+# --- SPI controller (blob spi-sprd.ko) ---
+# Node DT-nya ADA dan sudah dari overlay pabrik: ums512-1h10-vxtux.dts:639
+# spi1: spi@70900000, compatible "sprd,ums512-spi","sprd,sc9860-spi",
+# status okay, clock enable/spi/source lengkap, anak touchscreen@0.
+# of_match driver (drivers/spi/spi-sprd.c:1067) = "sprd,sc9860-spi" --
+# cocok. Alasan penahanan lama di blok SENGAJA DITAHAN ("tak ada node
+# spi di DTS port") sudah tidak berlaku sejak 2026-09-27.
+# =y (bukan =m) karena ini bus controller: konsumennya (touchscreen SPI)
+# harus bisa probe saat boot, dan =m menuntut urutan insmod manual.
+# deps: ARCH_SPRD=y (defconfig), SPI_MASTER=y.
+CONFIG_SPI_SPRD=y
+
+# --- PMIC tsensor bridge (blob sc27xx_tsensor_thermal.ko) ---
+# deps terpenuhi di config 16:35: OF=y, REGMAP=y, MFD_SC27XX_PMIC=y.
+# CATATAN JUJUR dari Kconfig-nya sendiri: driver hanya mendaftarkan
+# thermal zone kalau /chosen/bootargs memuat "androidboot.mode=cali";
+# kalau tidak, probe mengembalikan 0 tanpa mendaftarkan apa pun. Itu
+# perilaku blob vendor, bukan stub. Jadi =y di sini menutup celah
+# LINKAGE (simbolnya terbangun + ter-link), BUKAN klaim "suhu terbaca".
+CONFIG_SPRD_TSENSOR_THERMAL=y
+
+# --- virtual thermal zone aggregator (blob sprd_soc_thm.ko) ---
+# depends on OF saja, dan OF=y. "virtual-thermal" melaporkan MAXIMUM
+# dari beberapa zona nyata yang dirujuk properti "thmzone-cells";
+# node DT-nya belum ada di pohon port, jadi probe-nya akan gagal
+# -ENODEV. =y di sini = bukti linkage, bukan bukti probe.
+CONFIG_SPRD_SOC_THM=y
+
+# --- CPU cooling dengan model daya statis (blob sprd_cpu_cooling.ko) ---
+# depends on OF && CPU_FREQ && PM_OPP -- ketiganya =y di config 16:35.
+# Dua batasan yang tertulis di Kconfig-nya dan harus ikut terbaca:
+# blob mengekspor cpu_isolate_funs() untuk menerima dua penunjuk dari
+# driver hotplug Unisoc yang TIDAK ada di pohon ini (penunjuknya NULL,
+# fallback ke hotplug CPU biasa), dan trimming eFuse blok 15 tidak
+# dibaca (pembaca OTP Spreadtrum absen). late_initcall-nya sengaja
+# mengembalikan 0 walau gagal supaya tidak mematikan boot.
+# Node /cooling-devices belum ada di DTS port -> probe akan gagal,
+# jadi ini juga bukti linkage, bukan probe.
+CONFIG_SPRD_CPU_COOLING=y
+
+# --- GPU cooling power model (blob sprd_gpu_cooling.ko) ---
+# VXTUX_SPRD_GPU_COOLING depends on DEVFREQ_THERMAL=y (ada). Ini ABI
+# provider tanpa konsumen in-tree (DDK Mali pemanggilnya tidak ada),
+# jadi =y hanya memastikan create/destroy_gpu_cooling_device terbangun.
+CONFIG_VXTUX_SPRD_GPU_COOLING=y
+
+# --- camera flash HAL (blob sprd_flash_drv.ko) ---
+# Penyulihnya drivers/sprd/flash/flash_drv.c sudah ada di device,
+# Kconfig-nya (drivers/sprd/flash/Kconfig) tristate depends on
+# HAS_IOMEM=y. Baris ini meminta simbolnya secara eksplisit supaya
+# build berikutnya membangunnya sebagai modul (=m, sama seperti build
+# 2026-10-10 yang menghasilkan flash_drv.ko) alih-alih meninggalkannya
+# tidak terpilih. Driver mendaftarkan misc device "sprd_flash" dan
+# membuat platform device-nya sendiri, jadi tidak butuh node DT.
+CONFIG_SPRD_FLASH_DRV=m

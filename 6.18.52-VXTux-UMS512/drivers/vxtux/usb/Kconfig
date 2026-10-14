@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/usb — port driver USB pendukung hasil RE/blob.
+
+menu "VXTux USB (RE ports)"
+	depends on VXTUX_DRIVERS
+
+config VXTUX_SC27XX_TYPEC
+	tristate "Unisoc SC27xx Type-C port controller (RE port)"
+	depends on TYPEC && EXTCON && (MFD_SC27XX_PMIC || COMPILE_TEST)
+	default n
+	help
+	  Controller Type-C/DRP di dalam PMIC SC27xx (SC2730 pada papan ini),
+	  hasil RE dari blob vendor sc27xx_typec.ko (5.4) — sumber GPL tidak
+	  ditemukan di pohon mana pun (kelas re-only). Ekspose:
+	  - extcon provider (EXTCON_USB / EXTCON_USB_HOST) untuk glue MUSB
+	    (sprd,sharkl5pro-musb) dan charger;
+	  - port Type-C class (typec_register_port) + sysfs
+	    typec_cc_polarity_role.
+	  Node DT = replika FDT stok anak PMIC: reg <0x380>, interrupts
+	  <0x8> (parent PMIC), sprd,mode <2>, nvmem typec_cc1_cal/cc2_cal.
+	  Bila =m, modulnya bernama sc27xx_typec.
+
+config VXTUX_SPRD_U_ETHER
+	tristate "Unisoc sprd_u_ether ABI provider (RE port)"
+	depends on USB_U_ETHER
+	default n
+	help
+	  Penyedia ABI fork `sprd_u_ether` (basis u_ether.c 5.4.210) di atas
+	  u_ether 6.18: 20 x `sprd_gether_*` + 4 helper SG/limit multi-paket
+	  (gether_enable_sg, gether_is_sg_enabled, gether_update_dl_max_xfer_size,
+	  gether_update_dl_max_pkts_per_xfer).
+	  Peran: menutup 18 dari 24 backlog modul sprd_usb_f_rndis (kelas
+	  PROVIDER-BLOB) sehingga rantai RNDIS vendor bisa di-link ke pohon
+	  6.18. 20 nama pertama delegasi 1:1 ke ekspor mainline (bukan stub);
+	  SG/limit disimpan sebagai state per-port karena u_ether 6.18 tidak
+	  punya API itu. Batas jujur: MESIN transfer SG-nya belum ada (jalur
+	  data u_ether masih jalur copy) — lihat kepala berkas untuk bukti.
+	  Bila =m, modulnya bernama sprd_u_ether (sama dgn blob vendor).
+
+config VXTUX_SPRD_F_RNDIS
+	tristate "Unisoc sprd_usb_f_rndis ABI provider (RE port)"
+	depends on USB_F_RNDIS && VXTUX_SPRD_U_ETHER
+	default n
+	help
+	  Penyedia ABI fork `sprd_usb_f_rndis` (basis f_rndis.c + rndis.c
+	  5.4.210, 16 nama `sprd_rndis_*`) di atas library rndis 6.18:
+	  15 delegasi 1:1 + rndis_borrow_net + sprd_rndis_set_max_pkt_xfer.
+	  Sengaja TIDAK mendaftarkan instance configfs: blob vendor memakai
+	  nama fungsi "rndis" (alias usbfunc:rndis) yang identik dengan
+	  f_rndis.c mainline, jadi pendaftar kedua hanya akan gagal.
+	  Bila =m, modulnya bernama sprd_usb_f_rndis (sama dgn blob vendor).
+
+endmenu

@@ -17,8 +17,5 @@ sprd_sensor-y += csi2/sprd/receiver_r3p0/csi_api.o csi2/sprd/receiver_r3p0/csi_d
 
 ccflags-y += -I$(src)
 ccflags-y += -I$(src)/csi2/sprd/receiver_r3p0
-# The vendor sources spell their uapi headers <video/sprd_sensor_k.h> and
-# <video/sprd_mmsys_pw_domain.h>. In the 6.18 tree those live under
-# include/uapi/video/, which is NOT on the default include path. The 5.4 donor
-# Makefile resolved them the same way; add the uapi root so <video/X.h> finds them.
 ccflags-y += -I$(srctree)/include/uapi
+sprd_sensor-$(CONFIG_COMPAT) += compat_sensor_drv.o

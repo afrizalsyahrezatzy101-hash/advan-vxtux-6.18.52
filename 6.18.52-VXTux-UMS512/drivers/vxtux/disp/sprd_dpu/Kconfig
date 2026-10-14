@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# CATATAN KONFIG (18 Sep 2026): DRM_MIPI_DSI dan DRM_KMS_HELPER adalah simbol
+# HIDDEN (tanpa prompt), jadi menulisnya langsung di defconfig akan dibuang
+# olddefconfig tanpa pesan. Panel VXTux (DRM_PANEL_VXTUX_UMS512) bergantung pada
+# DRM_MIPI_DSI, sehingga jalur DSI inilah yang harus mem-select-nya — bukan
+# mengandalkan defconfig.
+#
+# PENTING: satu `config` hanya boleh punya SATU blok `help`. Kesalahan
+# "defined with more than one help text" muncul di kconfig saat blok help kedua
+# ditambahkan (pernah terjadi 18 Sep 2026 dan mematikan `make defconfig`).
+config VXTUX_SPRD_DPU
+	tristate "VXTux: sprd DPU/DRM consolidated patches (RE)"
+	depends on DRM && VXTUX_DRIVERS
+	select DRM_MIPI_DSI
+	select DRM_KMS_HELPER
+	default n
+	help
+	  Konsolidasi patch proven build v4: XR24/XB24 -> RB/UV switch,
+	  primary-only plane guard, FBC enabled=0 sweep, fbdev generic setup.
+	  Target: patch fork 5.4 dipindah ke struktur resmi + siap port 6.18.

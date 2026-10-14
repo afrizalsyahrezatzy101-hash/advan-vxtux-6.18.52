@@ -1,0 +1,18 @@
+# Build artifacts that leaked in from device-synced trees (drivers/vxtux etc.)
+# kbuild outputs *.o/*.ko/*.mod/.*.cmd in-tree when M= builds run on-device.
+*.o
+*.ko
+*.mod
+*.cmd
+.*.cmd
+*.mod.c
+Module.symvers
+modules.order
+.tmp_versions/
+
+# Tick/session backups and sync payloads - never belong in the tree.
+*.bak_*
+*.orig
+*.bak
+port_sync*.tar
+tmp_build*.sh

@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0
+config VXTUX_HYBRIDSWAP_REF
+	tristate "VXTux: hybridswap (OPLUS) reference port (RE)"
+	depends on SWAP && ZSMALLOC && VXTUX_DRIVERS
+	default n
+	help
+	  Port referensi hybridswap OPLUS (blob: hyb.o) — fitur memory-management
+	  tambahan, BUKAN boot-kritis. Blob rusak di fork (struct #if konflik,
+	  proven Fase 9B) — port ini membersihkannya sebagai dokumentasi hidup.
+	  Tetap n kecuali riset zram/zswap UMS512.
