@@ -308,6 +308,13 @@ CONFIG_KALLSYMS_ALL=y
 # get_real_power untuk DEVFREQ_THERMAL. =y karena ekspornya harus sudah ada
 # saat Panfrost probe (pemakai tunggal GPU kini; dulu disiapkan untuk driver lain).
 CONFIG_VXTUX_SPRD_GPU_COOLING=y
+CONFIG_SPRD_GPU_COOLING=y
+# === TICK11 (2026-10-15) — aktivasi NV-A yang sumber ada tapi config off ===
+# SC27XX_TSENSOR: TICK10 thermal DT (pmic_tsensor + osctsen/outtsen-thmzone)
+CONFIG_SC27XX_TSENSOR=m
+# SPRD_U_ETHER + SPRD_USB_F_RNDIS: USB gadget SPRD (sources ada di tree)
+CONFIG_SPRD_U_ETHER=m
+CONFIG_SPRD_USB_F_RNDIS=m
 
 # ================================================================
 # DE-BLOB ACTIVATION (2026-09-22) — nyalakan driver MAINLINE yang
