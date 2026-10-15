@@ -105,6 +105,21 @@ int sprd_sensor_k_write_regtab(struct sensor_reg_tab_tag *p_reg_table,
 int sprd_sensor_write_i2c(struct sensor_i2c_tag *i2c_tab, int sensor_id);
 int sprd_sensor_read_i2c(struct sensor_i2c_tag *i2c_tab, int sensor_id);
 int sprd_sensor_write_muti_i2c(struct sensor_muti_aec_i2c_tag *muti_aec_i2c);
+/*
+ * 2026-10-10: these four were static helpers that did copy_from_user(arg)
+ * themselves. The 32-bit compat path cannot build a user-space buffer any
+ * more (compat_alloc_user_space() is gone since 5.12), so the copy now
+ * happens in the ioctl dispatcher and these take a kernel-side struct.
+ * compat_sensor_drv.c calls them after translating the 32-bit layout.
+ */
+int sprd_sensor_io_write_i2c_regs(struct sprd_sensor_file_tag *p_file,
+				  struct sensor_reg_tab_tag *regTab);
+int sprd_sensor_io_grc_write_i2c(struct sprd_sensor_file_tag *p_file,
+				 struct sensor_i2c_tag *i2c_tab);
+int sprd_sensor_io_grc_read_i2c(struct sprd_sensor_file_tag *p_file,
+				struct sensor_i2c_tag *i2c_tab);
+int sprd_sensor_io_muti_write_i2c(struct sprd_sensor_file_tag *p_file,
+				  struct sensor_muti_aec_i2c_tag *aec_i2c_tab);
 void sprd_sensor_unregister_driver(void);
 int sprd_sensor_find_dcam_id(int sensor_id);
 #endif

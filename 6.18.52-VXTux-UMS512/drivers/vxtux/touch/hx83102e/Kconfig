@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# touch/hx83102e/Kconfig — titik sambung hxchipset Himax resmi (GPL)
+# LinDroid/VXTux v1.0 — panel hx83102e (Advan T1030, DSI-1 1200x2000)
+#
+# RE 15 Sep 2026: blob hxchipset_83102e.ko = tree Himax "hxcommon" publik
+# (func names identik: himax_chip_common_probe/_hx83102_init/dll).
+# Source resmi: framework HimaxSoftware/HX83112 + himax_ic_HX83102 dari
+# MotorolaMobilityLLC/kernel-sprd (GPL) — lengkap di ./hxchipset/.
+#
+# Simbol TOUCHSCREEN_HIMAX_* (COMMON, IC_*, DEBUG, INSPECT, ...) didefinisikan
+# di hxchipset/Kconfig — di sini hanya simbol induk yang hilang dari tree.
+#
+# Untuk build device ini, set di defconfig (KOREKSI 18 Sep 2026):
+#   CONFIG_TOUCHSCREEN_HIMAX_CHIPSET=y
+#   CONFIG_TOUCHSCREEN_HIMAX_COMMON=y
+#   CONFIG_TOUCHSCREEN_HIMAX_INCELL=y
+#   CONFIG_TOUCHSCREEN_HIMAX_IC_HX83102=y
+# Kenapa =y dan bukan =m: tipe IC dipilih lewat `choice`, dan `choice` di
+# Kconfig selalu bool sehingga tidak bisa hidup bila induknya bernilai m.
+# Dengan COMMON=m, choice-nya tak pernah tampil, INCELL jadi n, dan
+# IC_HX83102 (depends on INCELL) ikut mati -> driver tidak dikompilasi sama
+# sekali tanpa pesan. Dibuktikan tools/re/gate_fragment.py (gerbang D2).
+# DT binding stok sudah match: himax,hxcommon (himax_platform.c:1274).
+
+menuconfig TOUCHSCREEN_HIMAX_CHIPSET
+	tristate "Himax hxchipset touchscreen (VXTux UMS512 hx83102e)"
+	default n
+	help
+	  Framework hxcommon Himax untuk panel HX83102E pada Advan T1030.
+	  Say M untuk module (hxchipset_83102e.ko — nama sama seperti stock).
+
+source "drivers/vxtux/touch/hx83102e/hxchipset/Kconfig"

@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/npu/vdsp/Kconfig
+
+config SPRD_VDSP
+	tristate "Sprd VDSP driver (NPU/video DSP, blob sprd_vdsp.ko)"
+	default n
+	help
+	  Driver DSP video/NPU Unisoc — firmware loader Cadence XRP (xvp),
+	  komunikasi IPI, DVFS glue, dan jalur trusty faceid. Firmware
+	  vdsp_firmware.bin tersedia di /vendor/firmware perangkat ini.
+
+	  Port dari donor catalog mods-sprd/sprd/kernel4.14/npu/vdsp (GPL,
+	  modul donor bernama sprd_vdsp) ke tree 6.18; file donor dipertahankan
+	  apa adanya, perubahan API dilakukan minimal.
+
+	  Ini entry ke-103 (terakhir) inventory modul: tanpa konfigurasi ini
+	  tally compile berhenti di 102/103. Catatan jujur: varian donor ini
+	  memuat inti XRP tanpa subsistem memory/iommu userspace-buffer yang
+	  dimiliki varian vendor 5.4 (lihat docs/ledger sprd_vdsp).

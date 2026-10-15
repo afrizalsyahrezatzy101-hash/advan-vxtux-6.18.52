@@ -790,6 +790,9 @@ int sched_setscheduler(struct task_struct *p, int policy,
 {
 	return _sched_setscheduler(p, policy, param, true);
 }
+/* VXTux: vendor driver (gsp_core.c, wcn_sipc.c) memanggil sched_setscheduler
+ * dari modul =m; upstream tak meng-export, modpost gagal "undefined!". */
+EXPORT_SYMBOL(sched_setscheduler);
 
 int sched_setattr(struct task_struct *p, const struct sched_attr *attr)
 {

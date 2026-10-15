@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: GPL-2.0
+# RE 15 Sep 2026: sensorhub TIDAK blob — modul sensorhub.ko (53248 B, Live)
+# di device adalah build fork sendiri (ada di blobs/our_build_v4/ + overlay
+# Magisk vxtux_kmods). get_hardware_info_data = simbol built-in vmlinux
+# (kallsyms: hardware_info_open/show/fops, t/d — bukan export modul).
+# Kesimpulan: provider sensor/hw-info 100% dari source fork GPL — folder ini
+# jadi WRAPPER tipis (bukan RE), atau langsung pakai vxtux_stubs.
+config VXTUX_SENSORHUB
+	tristate "VXTux: sensorhub hw-info provider (wrapper GPL fork)"
+	depends on VXTUX_DRIVERS
+	default n
+	help
+	  Bukan blob RE — sensorhub.ko proven berasal dari fork GPL sendiri
+	  (vermagic build v4 identik, ada di Magisk overlay). get_hardware_info_data
+	  tersedia sebagai built-in (kallsyms hardware_info_*). Folder ini hanya
+	  jembatan simbol untuk fuel_gauge/tddi/tp bila dibutuhkan; default n.

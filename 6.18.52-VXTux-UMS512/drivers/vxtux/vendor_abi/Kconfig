@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/vendor_abi — penyedia ABI untuk modul blob vendor 5.4.
+
+config VXTUX_VENDOR_ABI
+	bool "Penyedia ABI global arm64 5.4 + handler CFI (modul blob vendor)"
+	depends on ARM64
+	default n
+	help
+	  Modul blob vendor (5.4.210) mengimpor simbol yang di 6.18 sudah
+	  tidak ada. Provider ini menyediakannya lagi dengan semantik 5.4,
+	  semua diekspor EXPORT_SYMBOL (bukan _GPL) seperti kernel vendor,
+	  dan dibangun BUILT-IN (=y) — bukan =m — karena:
+	    * `kimage_vaddr` harus menunjuk _text milik image kernel (simbol
+	      image tidak bisa direferensikan dari modul);
+	    * `cpu_number` per-CPU harus hidup di area per-CPU kernel, agar
+	      referensi antar-modul resolve seperti 5.4 (arch/arm64/kernel/
+	      smp.c 5.4: DEFINE_PER_CPU_READ_MOSTLY + EXPORT_PER_CPU_SYMBOL).
+	  Simbol yang dipasang (bukti lengkap di kepala tiap berkas):
+	    cpu_hwcaps, cpu_hwcap_keys, arm64_const_caps_ready
+	    kimage_vaddr, cpu_number
+	    __ubsan_handle_cfi_check_fail_abort
+	    cfg80211_get_bss (bila CFG80211 aktif)
+	  Batas jujur: ini penyedia ABI untuk BLOB, bukan pengganti kebijakan
+	  DE-SHIM sumber (include/vxtux/compat_618.h tetap dihapus dan dijaga
+	  tools/re/verify_compat_618.py). Lihat docs/vendor_abi_20260926.md.
+
+config VXTUX_VENDOR_ABI_CFG80211
+	tristate "Shim cfg80211_get_bss 5.4 (nilai mengikuti CFG80211)"
+	depends on VXTUX_VENDOR_ABI && CFG80211
+	default CFG80211
+	help
+	  Blob vendor 5.4 (sprd_wlan_combo) mengimpor cfg80211_get_bss(); di 6.18
+	  fungsi itu static inline yang memanggil __cfg80211_get_bss milik
+	  net/wireless/ — lihat kepala vendor_abi_cfg80211.c untuk bukti oracle.
+
+	  Nilai simbol ini SENGAJA MENGIKUTI CFG80211, bukan built-in mutlak,
+	  karena dua kasus terukur berbeda:
+	    * CFG80211=y -> shim =y. Simbol __cfg80211_get_bss milik image
+	      (built-in), jadi shim built-in menyelesaikannya saat link vmlinux.
+	    * CFG80211=m -> shim =m (modul vendor_abi_cfg80211.ko). Inilah defect
+	      B45 (2026-09-27): penyedia =y sementara CFG80211=m membuat link
+	      vmlinux gagal —
+	        ld.lld: error: undefined symbol: __cfg80211_get_bss
+	        >>> referenced by vendor_abi_cfg80211.c:53
+	      (relink2 device 2026-09-27 00:04; CFG80211=m di r9 DAN r10-qemu,
+	      jadi jalur built-in selalu salah untuk papan ini).
+
+	  Batas jujur: sebagai modul, simbol cfg80211_get_bss hanya tersedia
+	  SETELAH modul ini dimuat — modul blob yang mengimpornya harus dimuat
+	  sesudahnya (softdep/modules-load.d belum dibuat; butuh bukti blob benar
+	  diuji di device). Bila CFG80211=n, shim tidak dibangun sama sekali.

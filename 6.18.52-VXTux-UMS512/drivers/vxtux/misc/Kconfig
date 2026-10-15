@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0
+# drivers/vxtux/misc/Kconfig — driver misc Unisoc hasil port (fork GPL)
+
+source "drivers/vxtux/misc/sprd_map/Kconfig"

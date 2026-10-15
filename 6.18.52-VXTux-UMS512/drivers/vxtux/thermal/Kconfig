@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/thermal/Kconfig — model daya GPU hasil RE
+
+config VXTUX_SPRD_GPU_COOLING
+	tristate "Spreadtrum GPU devfreq cooling power model (RE)"
+	depends on DEVFREQ_THERMAL
+	help
+	  Model daya GPU Unisoc (SPRD) untuk devfreq_cooling, direkonstruksi
+	  dari blob vendor sprd_gpu_cooling.ko (Android 13 / kernel 5.4.210).
+
+	  Menyediakan dua ekspor yang sama dengan blob:
+	    create_gpu_cooling_device()  -- dipanggil driver GPU
+	    destroy_gpu_cooling_device()
+	  Model memakai koefisien DT dari node "sprd,mali-power-model"
+	  (sprd,temp-scale / sprd,voltage-scale / sprd,core-base /
+	   sprd,dynamic-core ...) dan suhu dari zona termal "gpu-thmzone".
+
+	  Hasil RE bit-eksak (C == assembly blob) dibuktikan oleh
+	  tools/re/re_gpu_cooling_model.py; koefisien papan diambil dari
+	  blobs/fdt_live.dtb via tools/re/re_fdt_gpu_cooling.py.
+
+	  Driver ini provider ABI tanpa konsumen in-tree (DDK Mali yang
+	  memanggilnya tidak ada di pohon ini). Default n.

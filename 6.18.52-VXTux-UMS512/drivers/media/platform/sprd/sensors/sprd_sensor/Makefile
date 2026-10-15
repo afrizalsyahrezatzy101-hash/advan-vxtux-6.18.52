@@ -17,3 +17,5 @@ sprd_sensor-y += csi2/sprd/receiver_r3p0/csi_api.o csi2/sprd/receiver_r3p0/csi_d
 
 ccflags-y += -I$(src)
 ccflags-y += -I$(src)/csi2/sprd/receiver_r3p0
+ccflags-y += -I$(srctree)/include/uapi
+sprd_sensor-$(CONFIG_COMPAT) += compat_sensor_drv.o

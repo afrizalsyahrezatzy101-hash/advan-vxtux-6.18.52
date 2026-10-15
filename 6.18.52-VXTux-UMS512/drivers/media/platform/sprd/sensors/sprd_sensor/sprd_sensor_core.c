@@ -369,21 +369,13 @@ static int sprd_sensor_io_write_i2c(struct sprd_sensor_file_tag *p_file,
 	return ret;
 }
 
-static int sprd_sensor_io_write_i2c_regs(struct sprd_sensor_file_tag *p_file,
-					 unsigned long arg)
+int sprd_sensor_io_write_i2c_regs(struct sprd_sensor_file_tag *p_file,
+				  struct sensor_reg_tab_tag *regTab)
 {
-	int ret = 0;
-	struct sensor_reg_tab_tag regTab;
-
 	if (csi_pattern)
 		return 0;
 
-	ret = copy_from_user(&regTab, (struct sensor_reg_tab_tag *)arg,
-			     sizeof(regTab));
-	if (ret == 0)
-		ret = sprd_sensor_write_regtab(&regTab, p_file->sensor_id);
-
-	return ret;
+	return sprd_sensor_write_regtab(regTab, p_file->sensor_id);
 }
 
 static int sprd_sensor_io_if_cfg(struct sprd_sensor_file_tag *p_file,
@@ -432,55 +424,31 @@ static int sprd_sensor_io_if_switch(struct sprd_sensor_file_tag *p_file,
 	return ret;
 }
 
-static int sprd_sensor_io_grc_write_i2c(struct sprd_sensor_file_tag *p_file,
-					unsigned long arg)
+int sprd_sensor_io_grc_write_i2c(struct sprd_sensor_file_tag *p_file,
+				 struct sensor_i2c_tag *i2c_tab)
 {
-	int ret = 0;
-	struct sensor_i2c_tag i2c_tab;
-
 	if (csi_pattern)
 		return 0;
 
-	ret = copy_from_user(&i2c_tab, (struct sensor_i2c_tag *)arg,
-			     sizeof(i2c_tab));
-	if (ret == 0)
-		ret = sprd_sensor_write_i2c(&i2c_tab, p_file->sensor_id);
-
-	return ret;
+	return sprd_sensor_write_i2c(i2c_tab, p_file->sensor_id);
 }
 
-static int sprd_sensor_io_grc_read_i2c(struct sprd_sensor_file_tag *p_file,
-				       unsigned long arg)
+int sprd_sensor_io_grc_read_i2c(struct sprd_sensor_file_tag *p_file,
+				struct sensor_i2c_tag *i2c_tab)
 {
-	int ret = 0;
-	struct sensor_i2c_tag i2c_tab;
-
 	if (csi_pattern)
 		return 0;
 
-	ret = copy_from_user(&i2c_tab, (struct sensor_i2c_tag *)arg,
-			     sizeof(i2c_tab));
-	if (ret == 0)
-		ret = sprd_sensor_read_i2c(&i2c_tab, p_file->sensor_id);
-
-	return ret;
+	return sprd_sensor_read_i2c(i2c_tab, p_file->sensor_id);
 }
 
-static int sprd_sensor_io_muti_write_i2c(struct sprd_sensor_file_tag *p_file,
-					unsigned long arg)
+int sprd_sensor_io_muti_write_i2c(struct sprd_sensor_file_tag *p_file,
+				  struct sensor_muti_aec_i2c_tag *aec_i2c_tab)
 {
-	int ret = 0;
-	struct sensor_muti_aec_i2c_tag aec_i2c_tab;
-
 	if (csi_pattern)
 		return 0;
 
-	ret = copy_from_user(&aec_i2c_tab, (void __user *)arg,
-			     sizeof(aec_i2c_tab));
-	if (ret == 0)
-		ret = sprd_sensor_write_muti_i2c(&aec_i2c_tab);
-
-	return ret;
+	return sprd_sensor_write_muti_i2c(aec_i2c_tab);
 }
 
 static int sprd_sensor_io_power_cfg(struct sprd_sensor_file_tag *p_file,
@@ -567,8 +535,16 @@ static long sprd_sensor_file_ioctl(struct file *file, unsigned int cmd,
 		ret = sprd_sensor_io_write_i2c(p_file, arg);
 		break;
 	case SENSOR_IO_I2C_WRITE_REGS:
-		ret = sprd_sensor_io_write_i2c_regs(p_file, arg);
+	{
+		struct sensor_reg_tab_tag regTab;
+
+		ret = copy_from_user(&regTab,
+				     (struct sensor_reg_tab_tag __user *)arg,
+				     sizeof(regTab));
+		if (ret == 0)
+			ret = sprd_sensor_io_write_i2c_regs(p_file, &regTab);
 		break;
+	}
 	case SENSOR_IO_IF_CFG:
 		ret = sprd_sensor_io_if_cfg(p_file, arg);
 		break;
@@ -576,14 +552,38 @@ static long sprd_sensor_file_ioctl(struct file *file, unsigned int cmd,
 		ret = sprd_sensor_io_if_switch(p_file, arg);
 		break;
 	case SENSOR_IO_GRC_I2C_WRITE:
-		ret = sprd_sensor_io_grc_write_i2c(p_file, arg);
+	{
+		struct sensor_i2c_tag i2c_tab;
+
+		ret = copy_from_user(&i2c_tab,
+				     (struct sensor_i2c_tag __user *)arg,
+				     sizeof(i2c_tab));
+		if (ret == 0)
+			ret = sprd_sensor_io_grc_write_i2c(p_file, &i2c_tab);
 		break;
+	}
 	case SENSOR_IO_GRC_I2C_READ:
-		ret = sprd_sensor_io_grc_read_i2c(p_file, arg);
+	{
+		struct sensor_i2c_tag i2c_tab;
+
+		ret = copy_from_user(&i2c_tab,
+				     (struct sensor_i2c_tag __user *)arg,
+				     sizeof(i2c_tab));
+		if (ret == 0)
+			ret = sprd_sensor_io_grc_read_i2c(p_file, &i2c_tab);
 		break;
+	}
 	case SENSOR_IO_MUTI_I2C_WRITE:
-		ret = sprd_sensor_io_muti_write_i2c(p_file, arg);
+	{
+		struct sensor_muti_aec_i2c_tag aec_i2c_tab;
+
+		ret = copy_from_user(&aec_i2c_tab,
+				     (struct sensor_muti_aec_i2c_tag __user *)arg,
+				     sizeof(aec_i2c_tab));
+		if (ret == 0)
+			ret = sprd_sensor_io_muti_write_i2c(p_file, &aec_i2c_tab);
 		break;
+	}
 	case SENSOR_IO_POWER_CFG:
 		ret = sprd_sensor_io_power_cfg(p_file, arg);
 		break;

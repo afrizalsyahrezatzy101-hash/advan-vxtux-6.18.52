@@ -28,8 +28,11 @@
  *    sehingga node-nya sengaja dinamai persis seperti itu. Inilah kenapa
  *    namanya bukan `power-controller@1800` / `poweroff@1820` seperti di DTS
  *    vendor.
- *  - tsensor/pd/smpl/watchdog/7sreset belum punya driver mainline,
- *    jadi sengaja tidak ditulis di sini (jangan bikin node yang menggantung).
+ *  - tsensor SUDAH ditulis di sini sejak 2026-10-14 (pmic_tsensor):
+ *    driver sc27xx_tsensor_thermal sudah diport + ter-build, jadi
+ *    alasan lama "belum punya driver mainline" tidak berlaku lagi.
+ *    pd/smpl/watchdog/7sreset tetap belum punya driver, jadi tetap
+ *    tidak ditulis (jangan bikin node yang menggantung).
  *  - B40 (2026-09-26): typec@380 MASUK — driver-nya kini ada
  *    (drivers/vxtux/usb/sc27xx_typec.c, RE port dari blob vendor).
  *    Angka 1:1 dari FDT stok (blobs/fdt_live.dtb):
@@ -347,6 +350,45 @@
 				regulator-min-microvolt = <1200000>;
 				regulator-max-microvolt = <3750000>;
 				regulator-ramp-delay = <25000>;
+			};
+		};
+
+		/*
+		 * PMIC tsensor. Dibuat 2026-10-14: alasan di header berkas
+		 * ini ("tsensor belum punya driver mainline") sudah USANG --
+		 * drivers/thermal/sprd/sc27xx_tsensor_thermal.c sudah diport
+		 * dan ter-build (sc27xx_tsensor_thermal.ko, 29 simbol).
+		 *
+		 * Kontrak 1:1 dari DTB stok (fdt.dts:1972) DAN dari donor
+		 * vendor (v3-lindroid3/fork_t618/.../sc2730.dtsi:461):
+		 * parent reg = base 0x1b34; anak reg = id sensor (0=OSC,
+		 * 1=OUT). Driver mengambil regmap dari dev.parent, jadi
+		 * tidak perlu mfd_cell. Anak WAJIB ada: probe melakukan
+		 * for_each_child_of_node(np, sen_child) dan membaca reg
+		 * tiap anak sebagai id, lalu mendaftarkan zona thermal per
+		 * id lewat devm_thermal_of_zone_register (yang mencocokkan
+		 * node PARENT + id, lihat zona osctsen/outtsen-thmzone).
+		 *
+		 * CATATAN RUNTIME (perilaku blob, bukan cacat): probe
+		 * mewajibkan "androidboot.mode=cali" di /chosen/bootargs;
+		 * tanpa itu driver keluar dengan dev_warn dan mendaftarkan
+		 * NOL zona. Jadi node ini membuat driver BISA bind, bukan
+		 * jaminan zona muncul -- level bind, belum level probe
+		 * penuh.
+		 */
+		pmic_tsensor: tsensor@1b34 {
+			compatible = "sprd,sc27xx-tsensor", "sprd,sc2730-tsensor";
+			#thermal-sensor-cells = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x1b34>;
+
+			osc_tsensor: osc-tsensor@0 {
+				reg = <0>;
+			};
+
+			tout_tsensor: tout-tsensor@1 {
+				reg = <1>;
 			};
 		};
 

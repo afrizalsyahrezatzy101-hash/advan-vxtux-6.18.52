@@ -1,0 +1,114 @@
+#
+# Spreadtrum WCN device (NEW )configuration
+#
+menu "Spreadtrum WCN Device Drivers (VXTux port)"
+config SC23XX
+	bool "SC23XX chip Support"
+	#depends on MMC
+	default n
+	help
+	  This is support wcn chip for spreadtrum.
+	  if you want to use 23xx series wcn chip of spreadtrum.
+	  please say "y".
+
+# CATATAN (18 Sep 2026): simbol ini HILANG di port padahal dipakai sumber dan
+# vendor Kconfig punya. `include/wcn_glb.h` memilih header register chip lewat
+# `#ifdef CONFIG_SC2355`; tanpa simbol ini tak satu pun `*_glb.h` ikut ter-include
+# sehingga puluhan makro register (GNSS_CP_START_ADDR, DCACHE_REG_BASE,
+# DUMP_PACKET_SIZE, FIRMWARE_MAX_SIZE, SYNC_ADDR, REG_CP_SLP_CTL, ...) hilang
+# dan kompilasi wcn/platform + wcn/sleep gagal. Papan ini SC2355 (DTS device:
+# "sprd,sc2355-sdio-wifi"; blob wcn_bsp.ko penuh string sdiohal_*).
+config SC2355
+	bool "SC2355 chip Support"
+	depends on SC23XX
+	default n
+	help
+	  Dukungan chip WCN SC2355 (dipakai Advan Tab VX Lite T1030/UMS512).
+	  Menyalakan ini membuat wcn_glb.h menyertakan sc2355_glb.h.
+
+config WCN_INTEG
+	tristate "WCN Integrated chip Support"
+	depends on SC23XX
+	default n
+	help
+	  This is support wcn chip for spreadtrum.
+	  If you want to use WCN integrated chip of spreadtrum.
+	  Please say "y".
+
+config UMW2652
+	tristate "UMW2652 chip Support (tidak dipakai T618)"
+	depends on SC23XX
+	default n
+	help
+	  Varian chip PCIe/dual-bin — biarkan n di papan T618.
+
+config UMW2653
+	tristate "UMW2653 chip Support (tidak dipakai T618)"
+	depends on SC23XX
+	default n
+	help
+	  Varian chip SWD/debug — biarkan n di papan T618.
+
+config SC2342_I
+	tristate "SC2342 integrated chip Support (tidak dipakai T618)"
+	depends on WCN_INTEG
+	default n
+	help
+	  Varian chip lain — biarkan n di papan T618.
+
+config UMW2631_I
+	tristate "UMW2631 integrated chip Support (tidak dipakai T618)"
+	depends on WCN_INTEG
+	default n
+	help
+	  Varian chip lain — biarkan n di papan T618.
+
+# ---------------------------------------------------------------------------
+# Bluetooth (sprdbt_tty) + FM (sprd_fm)
+#
+# Simbol, nama modul, dan daftar objek diambil APA ADANYA dari pohon dalam-tree
+# referensi (gpl-source/hadenix_ums512_wcn/drivers/wcn/{Kconfig,bluetooth,fm}),
+# yang memakai `obj-$(CONFIG_WCN_BLUETOOTH)` / `obj-$(CONFIG_WCN_FM)` — bukan
+# dari Makefile/Kbuild vendor generasi-external yang memakai `obj-m` + variabel
+# lingkungan BSP_BOARD_UNISOC_WCN_SOCKET.
+#
+# Keduanya `tristate` dan di fragmen diset `=m`: blob aslinya memang modul
+# (sprdbt_tty.ko, sprd_fm.ko), jadi bentuk modul yang benar — sekaligus
+# menghasilkan .ko yang bisa diperiksa modinfo/vermagic.
+
+config WCN_BLUETOOTH
+	tristate "Spreadtrum WCN bluetooth driver (sprdbt_tty)"
+	depends on SC23XX
+	default n
+	help
+	  BT HCI di atas tty-sdio. Menggantikan blob sprdbt_tty.ko (5.4.210).
+	  Sumber: wcn/bluetooth/driver/tty-sdio (generasi 4.14).
+
+config WCN_FM
+	tristate "Spreadtrum WCN FM driver (sprd_fm)"
+	depends on SC23XX
+	default n
+	help
+	  Radio FM MARLIN3. Menggantikan blob sprd_fm.ko.
+	  Sumber: wcn/fm/driver/fm_sdio (generasi lebih tua dari blob).
+
+# sprd's SDIO device driver based on SC2355...,etc
+source "drivers/vxtux/net/wireless/sprdwcn/sdio/Kconfig"
+
+# sprd's SIPC device driver based on WCN_INTEG...,etc
+source "drivers/vxtux/net/wireless/sprdwcn/sipc/Kconfig"
+
+# sprd's sleep device driver based on SC2355...,etc
+source "drivers/vxtux/net/wireless/sprdwcn/sleep/Kconfig"
+
+# sprd's wcn platform driver based on SC2355/SC2342...,etc
+source "drivers/vxtux/net/wireless/sprdwcn/platform/Kconfig"
+# Varian bus PCIe (2026-09-19): SEBELUMNYA tidak pernah di-source, sehingga
+# WCN_PCIE tak dikenal kconfig dan 8 .c di pcie/ mustahil dibangun.
+source "drivers/vxtux/net/wireless/sprdwcn/pcie/Kconfig"
+
+# WLAN SC2355 (2026-10-09): sumber ada di repo, belum pernah
+# di-source di device -> CONFIG_WCN_WLAN tak dikenal, wlan/ tak ter-descend.
+source "drivers/vxtux/net/wireless/sprdwcn/wlan/Kconfig"
+
+endmenu

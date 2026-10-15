@@ -1,6 +1,6 @@
 config SPRD_MODEM
 	tristate "Unisoc Modem driver (stub)"
-	depends on FIRMWARE_LOADER
+	depends on FW_LOADER
 	help
 	  Modem driver for Unisoc UMS512/T618.
 	  Loads modem firmware from partition and provides

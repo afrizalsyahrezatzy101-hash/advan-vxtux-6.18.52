@@ -1,6 +1,6 @@
 config SPRD_FLASH_DRV
 	tristate "Spreadtrum camera flash HAL"
-	depends on MISC_DEVICE
+	depends on HAS_IOMEM
 	help
 	  Registration HAL between the ISP camera stack and the per-chip flash
 	  drivers. Ported 2026-10-04 from the vendor sources in

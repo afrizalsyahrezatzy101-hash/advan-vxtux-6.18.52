@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0
+config DRM_PANEL_VXTUX_UMS512
+	tristate "VXTux generic MIPI-DSI panel (UMS512 1200x2000)"
+	depends on DRM && DRM_MIPI_DSI && OF
+	help
+	  Panel MIPI-DSI generik untuk tablet UMS512 (Advan Tab VX Lite T1030).
+	  Melengkapi jalur DRM/KMS murni: DPU (CRTC/plane) -> DSI host -> panel
+	  (connector). Mode default 1200x2000; timings/init-sequence vendor
+	  menyusul dari DT stok (lihat docs/drm_kms_map.md).

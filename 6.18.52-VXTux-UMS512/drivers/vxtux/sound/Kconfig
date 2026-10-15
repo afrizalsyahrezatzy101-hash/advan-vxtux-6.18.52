@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/sound/Kconfig — subsistem sound VXTux
+
+source "drivers/vxtux/sound/asoc/Kconfig"

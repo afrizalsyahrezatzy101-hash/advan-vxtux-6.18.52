@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# touch/chipone_tddi/Kconfig — chipone-tddi publik (GPL)
+# LinDroid/VXTux v1.0 — TP alternatif kedua (device ini memakai hx83102e;
+# chipone = varian panel pada unit lain / referensi).
+#
+# Sesi 5: source publik dipulihkan dari realme C30 fork (Android R, 35 file
+# cts_* — Chipone Touch Solution). Skeleton shim lama → attic/.
+# Makefile upstream: obj-$(CONFIG_TOUCHSCREEN_CHIPONE) += chipone-tddi.o
+
+config TOUCHSCREEN_CHIPONE
+	tristate "Chipone TDDI touchscreen (VXTux referensi)"
+	depends on I2C && INPUT && VXTUX_DRIVERS
+	default n
+	help
+	  Tree publik chipone-tddi (cts_*). Tidak dipakai di unit T1030 ini
+	  (panel hx83102e) — di-build sebagai referensi/dukung varian panel
+	  lain. DT compatible stok blob: cek blobs/re_notes/.

@@ -14,3 +14,6 @@ obj-$(CONFIG_SPRD_CPP) += cpp.o
 # supaya resolve. (Bug ini ketemu saat build device 2026-10-09: compile
 # gagal "sprd_mm.h: No such file" padahal file ada di direktori yang sama.)
 ccflags-y += -I$(src)
+# cpp_core.c spells its uapi header <video/sprd_mmsys_pw_domain.h>; in 6.18
+# that lives under include/uapi/video/, which is not on the default include path.
+ccflags-y += -I$(srctree)/include/uapi

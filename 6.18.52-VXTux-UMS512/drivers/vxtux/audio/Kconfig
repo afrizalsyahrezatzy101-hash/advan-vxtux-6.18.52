@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/audio/Kconfig — infrastruktur audio Unisoc (AGDSP/AGCP)
+# Port 5.4 -> 6.18 dari fork GPL Samsung T618: drivers/misc/sprd_audio/.
+#
+# STATUS (bertahap): source sudah di tangan (GPL), build baru diaktifkan setelah
+# API 6.18 tiap sub-sistem selesai diuji. Default n semua supaya Image tetap
+# bisa dibangun sementara port berjalan.
+#
+# Rantai dependensi (dari RE sym_router: sym_D blob -> provider):
+#   SPRD_MAILBOX (shim) -> SPRD_AUDIO_MEMORY_MANAGER -> SPRD_AUDIO_AGDSP_ACCESS
+#   -> SPRD_AUDIO_SIPC -> SPRD_AUDIO_DSP_DUMP / SPRD_AUDIO_SAUDIO
+#   -> SPRD_AUDIO_CPBOOT / SPRD_HW_DEVICE_DVFS_AGCP
+
+menuconfig SPRD_AUDIO_INFRA
+	bool "Unisoc audio infrastructure (AGDSP/AGCP, VXTux port)"
+	depends on SPRD_MAILBOX
+	default n
+	help
+	  Infrastruktur audio Unisoc: akses AGDSP, manajer memori audio, SIPC ke
+	  DSP, pipe, DSP dump, boot & DVFS AudioCP. Wajib untuk jalur audio VBC
+	  (sound/soc/sprd) — tanpa ini, driver codec/card hanya bisa dibangun
+	  tetapi tidak bisa mengakses DSP.
+
+if SPRD_AUDIO_INFRA
+
+config SPRD_AUDIO_MEMORY_MANAGER
+	bool "Unisoc audio memory manager (audio_mem)"
+	select GENERIC_ALLOCATOR
+	default n
+
+config SPRD_AUDIO_AGDSP_ACCESS
+	bool "Unisoc AGDSP access driver"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	default n
+
+config SPRD_AUDIO_SIPC
+	bool "Unisoc audio SIPC (audiosipc)"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	default n
+	help
+	  Port fork GPL drivers/misc/sprd_audio/audiosipc: kanal SIPC ke AGDSP
+	  (aud_smsg_*, aud_send_cmd*, aud_ipc_ch_open/close). Menyediakan simbol
+	  yang di modul vendor diekspor blob audio_sipc.ko.
+
+config SPRD_AUDIO_DSP_DUMP
+	tristate "Unisoc audio DSP dump + sblock"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	help
+	  Modular (dengan audio_sblock.o jadi komposit dua-objek) agar bisa
+	  di-insmod/diuji satu per satu di QEMU.
+	default n
+
+config SPRD_AUDIO_SAUDIO
+	tristate "Unisoc saudio (audio control node)"
+	depends on SPRD_AUDIO_SIPC
+	default n
+
+config SPRD_AUDIO_CPBOOT
+	bool "Unisoc AGCP boot driver"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	default n
+
+config SPRD_AUDIO_PIPE
+	bool "Unisoc audio pipe"
+	depends on SPRD_AUDIO_SIPC
+	default n
+	help
+	  Port fork GPL drivers/misc/sprd_audio/audio_pipe: channel chardev
+	  voice/effect/recordproc/bthal di atas audio SIPC.
+
+config SPRD_HW_DEVICE_DVFS_AGCP
+	bool "Unisoc AGCP DVFS driver"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	default n
+
+config SPRD_AUDIO_MCDT
+	bool "Unisoc MCDT hardware (mcdt_hw, r1p0/r2p0)"
+	depends on SPRD_AUDIO_MEMORY_MANAGER
+	default n
+
+config SPRD_AUDIO_VOICE_TRIGGER
+	bool "Unisoc voice trigger node"
+	depends on SPRD_AUDIO_SIPC
+	default n
+
+# Varian MCDT r2p0 (2026-09-19): deklarasinya dipindah ke Kconfig sendiri
+# supaya simbol yang dipakai mcdt_r2p0/Makefile tidak lagi hantu.
+source "drivers/vxtux/audio/mcdt/Kconfig"
+
+endif # SPRD_AUDIO_INFRA

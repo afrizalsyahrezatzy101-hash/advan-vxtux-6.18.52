@@ -1424,4 +1424,25 @@ config TOUCHSCREEN_HIMAX_HX83112B
 	  To compile this driver as a module, choose M here: the
 	  module will be called himax_hx83112b.
 
+config TOUCHSCREEN_NOVATEK_NVT_TS_SPI
+	tristate "Novatek NT36xxx SPI touchscreen (VXTux port)"
+	depends on SPI
+	depends on OF
+	help
+	  VXTux port of the Novatek NT36525B SPI touchscreen driver family
+	  (nt36xxx core + fw_update + ext_proc + mp_ctrlram). The stock
+	  novatek_ts_spi.ko blob is unstripped and its symbols matched the
+	  public NT36xxx family 1:1, so this is a real RE port: a Realme
+	  RMX1911 5.4 donor tree adapted to 6.18 (proc_ops, void .remove,
+	  ktime_get_ts64, of_get_named_gpio; vendor ODM notifiers stripped).
+	  Matches DT compatible "novatek,NVT-ts-spi" (ums512-1h10-vxtux.dts)
+	  and builds one composite module named novatek_ts_spi.ko - a
+	  drop-in replacement for the vendor blob. Firmware is requested
+	  via request_firmware("novatek_ts_fw.bin"), same as stock.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called novatek_ts_spi.
+
 endif

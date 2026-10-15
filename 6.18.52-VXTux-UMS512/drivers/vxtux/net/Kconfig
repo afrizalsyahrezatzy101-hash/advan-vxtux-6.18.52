@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# drivers/vxtux/net/Kconfig — subsistem jaringan VXTux
+#
+# Sumber tunggal untuk WCN: pohon sprdwcn sudah membawa Kconfig sendiri
+# (menu "Spreadtrum WCN Device Drivers (VXTux port)") dengan penjaga
+# SC23XX / WCN_INTEG / SDIOHAL.
+source "drivers/vxtux/net/wireless/sprdwcn/Kconfig"
