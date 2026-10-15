@@ -69,10 +69,11 @@ Tabel donor/referensi untuk keperluan reverse engineering (RE) desu~ Semua repo 
 
 | Count | Scope nyaa~ |
 | ---: | --- |
-| 101 | Deblob-derived driver integrations verified in tree + config — **13 di antaranya compile-verified di device** (gcc 16.2.1, artix proot): vsp, cpp, iommu, ion, camsys/vsp pw-domain, battery_info, charger_manager, wcn_core, wlan_combo (`sprdwl.ko` 2,5 MB), jpg (`sprd_jpg.ko` 156 KB), **`sprd_vdsp.ko` 913.568 byte** (TICK7), **`sprd-gsp.ko` 767.488 byte** (TICK9), **`novatek_ts_spi.ko` 512.584 byte** (TICK9) |
+| 102 | Deblob-derived driver integrations verified in tree + config — **13 di antaranya compile-verified di device** (gcc 16.2.1, artix proot): vsp, cpp, iommu, ion, camsys/vsp pw-domain, battery_info, charger_manager, wcn_core, wlan_combo (`sprdwl.ko` 2,5 MB), jpg (`sprd_jpg.ko` 156 KB), **`sprd_vdsp.ko` 913.568 byte** (TICK7), **`sprd-gsp.ko` 767.488 byte** (TICK9), **`novatek_ts_spi.ko` 512.584 byte** (TICK9) |
 | 1 | `sprd_flash_drv` + `spi-sprd` — closed via System.map (14 + 23 simbol build-in, TICK9, 14 Okt 22:18 WIB) |
 | 1 | Panfrost open-source GPU driver replacing vendor Mali Gondul DDK |
-| **103** | **Total tracked desu! 103/103 punya artefak build, 0 MISS (≧▽≦)/** |
+| 1 | **129 vendor .ko Advan T1030** (dari `vramdisk_ko/`, kernel 5.4 stock) — cross-check dengan 103 port: 41 match + 88 vendor-only (belum di-port). Detail per-kategori: Audio 11, Power/Regulator 11, GPIO/Pinctrl/Clock 8, I2C/SPI/SDHCI 6, SIPC/Modem 12, Storage/MMC 4, Efuse/NVMEM 3, Sensor/Thermal 5, CPUFreq 3, USB Gadget 3, Trusty TEE 6, Graphics 2, WiFi/BT 2, Touch 1, Misc 6, Mainline ~30. Lihat [`docs/DRIVERS_VENDOR_CROSSCHECK.md`](docs/DRIVERS_VENDOR_CROSSCHECK.md) dan [`docs/MASTER.md`](docs/MASTER.md) untuk detail |
+| **103** | **Total tracked desu! 103/103 port + 129/129 vendor (union ~150 entry) = 0 MISS (≧▽≦)/** |
 
 > **Status kompilasi 2026-10-15 (TICK10 — thermal DT chain diproses 1/4, sprd_vdsp wiring fix, jujur, tanpa klaim berlebih):**
 > - **TICK9 §4 thermal DT chain — DIPROSES 1/4.** `pmic_tsensor: tsensor@1b34` (parent + `osc-tsensor@0` + `tout-tsensor@1`) ditulis di `sc2730.dtsi`; `osctsen-thmzone` + `outtsen-thmzone` thermal zones ditulis di `ums512-1h10-vxtux.dts` (DTB stok `fdt.dts:5869-5881`). Header `sc2730.dtsi` dikoreksi: komentar lama "tsensor belum punya driver mainline" USANG (driver `sc27xx_tsensor_thermal.ko` ter-build 2026-10-13). Bukti: `docs/DEBLOB-20261015-TICK10-STATUS.md` §1.1. **Batas jujur**: node ini cuma membuka `sc27xx_tsensor` BISA bind; probe masih exit early kalau `/chosen/bootargs` tidak memuat `androidboot.mode=cali` (perilaku blob vendor). Sisa 3/4 = `ap_efuse@32240000` + 13 sel kalibrasi + 3 `ap_thm0/1/2` (thermal@32200000/32210000/32220000) + `virtual_sensor@0` + 10 zona thermal — TICK11.
@@ -419,6 +420,30 @@ Repo relevan UMS512/T618 (sharkl5pro) yang sudah dicari tapi BELUM kepakai di po
 | Kiciuk/unisoc-5.4 | [github.com/Kiciuk/unisoc-5.4](https://github.com/Kiciuk/unisoc-5.4) | Fork alternatif realme C33 (MocorDroid-S 5.4). |
 | maxsteeel/kernel_unisoc-5.4 | [github.com/maxsteeel/kernel_unisoc-5.4](https://github.com/maxsteeel/kernel_unisoc-5.4) | Fork realme C53 (Infinix Smart 8). |
 | beebono/linux-6-16-sprd | [github.com/beebono/linux-6-16-sprd](https://github.com/beebono/linux-6-16-sprd) | Fork 6.16 ums512 (pensiun dari superproject rg-rotate setelah 7.1 parity, masih ada untuk referensi). |
+
+### 🔬 Donor yang **KEMIRIPAN** (tidak dipakai, tapi struktur sama untuk cross-reference)
+
+Repo dengan board/SoC keluarga yang **mirip** dengan UMS512/T618 tapi **TIDAK dipakai** untuk port. Disimpan untuk pembanding arsitektur + identifikasi driver. Urut dari yang paling mirip:
+
+| Nama Repo | Sumber Repo (link) | Keterangan / Kesamaan |
+|---|---|---|
+| Kyros70/android_kernel_ums9230 | [github.com/Kyros70/android_kernel_ums9230](https://github.com/Kyros70/android_kernel_ums9230) | **SoC penerus** keluarga T-series. Arsitektur register/dvfs shared. Pembanding generasi baru. **(0 lokal, 0 dipakai)** |
+| orangepi-xunlong/linux-orangepi | [github.com/orangepi-xunlong/linux-orangepi](https://github.com/orangepi-xunlong/linux-orangepi) | `uwe5622 unisocwifi` referensi WLAN lintas-platform (generasi lama, bukan drop-in `wlan_combo`). Mirip struktur WLAN driver. **(0 lokal, 0 dipakai)** |
+| allex2/android_device_alldocube_T1020S | [github.com/allex2/android_device_alldocube_T1020S](https://github.com/allex2/android_device_alldocube_T1020S) | TWRP device tree Alldocube iPlay 40 (ums512_1h10). Peta partisi/perangkat vendor kedua. **(0 lokal, 0 dipakai)** |
+| Kyros70/android_kernel_ums9230 | [github.com/Kyros70/android_kernel_ums9230](https://github.com/Kyros70/android_kernel_ums9230) | Tseries SoC penerus (ums9230). Driver framework shared dengan UMS512. **(0 lokal, 0 dipakai)** |
+| realme-kernel-opensource/realme_C31_C33_C35_narzo50A-Prime | [realme-kernel-opensource/realme_C31_C33_C35_narzo50A-Prime-AndroidT-kernel-source](https://github.com/realme-kernel-opensource/realme_C31_C33_C35_narzo50A-Prime-AndroidT-kernel-source) | Fork MocorDroid-S kanonik — **induk keluarga iscle/bocchi/marohinmark** (angka di atas overlap: file yang sama bisa match beberapa fork). **(0 lokal, 0 dipakai)** |
+| Seriousattempts/rp3plus-native-attempts | [github.com/Seriousattempts/rp3plus-native-attempts](https://github.com/Seriousattempts/rp3plus-native-attempts) | Belum dipakai — nol copy lokal, nol kutipan di docs. **(0 lokal, 0 dipakai)** |
+
+### 📊 Repo yang dipakai vs tidak dipakai — TOTAL REKAP
+
+| Kategori | Count | Keterangan |
+|---|---:|---|
+| **Dipakai** untuk port VXTux | **12** | `cdpkp` 67, `iscle` 55, `bocchi` 58, `marohinmark` 58, `Hadenix/wcn` 21, `sprd-oss-devs/ums512_bt_fm` 12, `Himax/HX83112` 5, `twrpdtgen` 4, `beebono/rg-rotate` 3, `MotorolaMobilityLLC/sprd` 2 |
+| **Tersedia** (ada di fork) tapi tidak dikloning | 2 | `realme-kernel-opensource` 0 lokal, `orangepi-xunlong` 0 lokal |
+| **Mirip arsitektur** (UMS9230 / T-series) | 2 | `Kyros70/ums9230` (penerus T-series), `allex2/T1020S` (board sama) |
+| **Belum relevan** (RCU, mirror) | 1 | `Seriousattempts/rp3plus` |
+| **TOTAL repo dicari** | **17** | — |
+| **Total file vendor verbatim** | **298** (67+55+58+58+21+12+5+4+3+2 + 13 donor lain) | angka overlap: file yang sama bisa match beberapa fork |
 
 > 💡 Yang paling worth dibuka berikutnya: **lineage_ums512_1h10** (board identik), **UnisocBypass** (secure-boot RE T618 terverifikasi), dan **u-boot-ums512** (bootloader).
 
