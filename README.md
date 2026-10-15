@@ -241,6 +241,120 @@ make -j8 O=buildd ARCH=arm64 CC=gcc Image modules                            # k
 
 Catatan build device: (1) setiap edit `.config`/Kconfig wajib `syncconfig` dulu — `M=` build tidak refresh `auto.conf`; (2) simbol antar-modul di-merge dari `Module.symvers` lokal tiap dir ke `buildd/Module.symvers`; (3) file hasil sync host→device strip CRLF dulu (hapus karakter CR di akhir setiap baris); (4) setelah build gagal di sebuah dir, `rm -f *.o` sebelum rebuild (`.o` partial bisa dianggap up-to-date → modpost "truncated").
 
+## 📊 Appendix A — 103 (port) × 129 (vendor) Cross-Check
+
+Konsolidasi dari dua sumber data driver:
+- **103 driver port** (inventory `README.md` atas): driver hasil porting/kernel 6.18.52-VXTux-UMS512
+- **129 driver vendor** (dari `dumped/re/hidden/vramdisk_ko/`): driver board-specific Unisoc T618/UMS512 dari vendor_ramdisk_stock Advan T1030 (kernel 5.4 stock)
+
+### A.1 Statistik cross-check
+
+| Sumber | Total | Match | Tidak match | Catatan |
+|---|---:|---:|---:|---|
+| **Port 103** (kernel 6.18) | 103 | **90** (ada di vendor) | **13** (NV) | Dilihat dari perspektif port |
+| **Vendor 129** (kernel 5.4) | 129 | **41** (ada di port) | **88** (vendor-only) | Dilihat dari perspektif vendor |
+| **Gabungan unik** | ~150 | — | — | Ada overlap (misal `core.ko` di vendor = `wcn_core.ko` di port) |
+
+**Penjelasan asimetri**:
+- **90 V dari port** = driver yang dibuild/port dan ada di vendor Advan. (lebih besar dari 41 match vendor→port karena satu entry port bisa match banyak nama vendor, e.g. `wcn_bsp` + `wcn_core` di vendor match 1 entry port `core`).
+- **41 V dari vendor** = driver vendor yang ada di port 103.
+- **88 vendor-only** = driver yang dipakai Advan stock tapi BELUM di-port ke 6.18 (untuk kerja berikutnya).
+- **13 NV dari port** = driver di port yang TIDAK ada di vendor (kategori A/B/D/E).
+
+### A.2 Klasifikasi 13 NV entries (dari perspektif port)
+
+| # | Ledger ID | Vendor match | Kategori | Sebab |
+|---:|---|---|:---:|---|
+| 45 | `sc27xx_tsensor_thermal` | NONE (vendor engga punya; TICK10 retro-fit DT) | **A** | Driver baru dari mainline/DT — ditulis TICK10 |
+| 65 | `sprd-top-dvfs` | apsys-dvfs.ko (1 modul dipecah jadi 3 di port) | **C** | Vendor composite: apsys-dvfs.ko = top + cp + ddr |
+| 73 | `sprd_cp_dvfs` | sprd_audcp_dvfs.ko (alias) | **C** | Vendor sprd_cp_dvfs = sprd_audcp_dvfs.ko. Entry ledger ambigu |
+| 75 | `sprd_cpu_cooling` | NONE (mainline cpu_cooling generic) | **A** | Driver baru (late_initcall, tanpa of_match_table) |
+| 76 | `sprd_ddr_dvfs` | apsys-dvfs.ko (alias dari top-dvfs) | **D** | Entry OBSOLETE: sumber engga ada, vendor engga punya. Seharusnya dihapus |
+| 79 | `sprd_gpu_cooling` | NONE (mainline gpu_cooling generic) | **A** | Driver baru (CONFIG_SPRD_GPU_COOLING=y built-in) |
+| 80 | `sprd_map` | NONE (vendor pakai ION/System.map) | **A** | Driver baru (sumber ION/System.map equivalent) |
+| 83 | `sprd_pmic_wdt` | sprd_wdt_fiq.ko (nama beda) | **D** | Entry OBSOLETE: sumber engga ada. Seharusnya diganti sprd_wdt_fiq |
+| 86 | `sprd_thermal` | NONE (BUILTIN =y) | **E** | BUILTIN ke vmlinux, engga jadi .ko |
+| 87 | `sprd_u_ether` | NONE (vendor engga aktifkan USB gadget) | **A** | Driver baru (USB Ethernet gadget) |
+| 88 | `sprd_usb_f_rndis` | NONE (vendor engga aktifkan USB gadget) | **A** | Driver baru (USB RNDIS gadget) |
+| 93 | `thermal-generic-adc` | NONE (mainline) | **E** | Mainline generic, NV by design |
+| 103 | `panfrost` | NONE (mainline GPU) | **E** | Mainline GPU driver, REPLACES vendor Mali Gondul DDK |
+
+**Ringkasan kategori (13 NV)**:
+- **A** (6) — Driver baru: `sc27xx_tsensor_thermal`, `sprd_cpu_cooling`, `sprd_gpu_cooling`, `sprd_map`, `sprd_u_ether`, `sprd_usb_f_rndis`
+- **C** (2) — Composite pecahan: `sprd-top-dvfs`, `sprd_cp_dvfs` (vendor punya 1 `apsys-dvfs.ko`)
+- **D** (2) — Entry obsolete: `sprd_ddr_dvfs`, `sprd_pmic_wdt` (sebaiknya dihapus atau diganti)
+- **E** (3) — Mainline/BUILTIN: `thermal-generic-adc`, `panfrost`, `sprd_thermal`
+
+### A.3 88 vendor-only (driver di vendor Advan, BELUM di-port)
+
+Driver yang dipakai Advan T1030 stock (kernel 5.4) tapi belum ada di port kernel 6.18.52 kita. Ini **beban kerja berikutnya**:
+
+**Kategori Clock/Regulator/GPIO** (5):
+- `clk-sprd.ko` — clock controller SPRD vendor
+- `ums512-clk.ko` — clock UMS512 (replacement `clk-sprd`)
+- `sc2730-regulator.ko` — regulator SC2730
+- `gpio-sprd.ko` + `gpio-eic-sprd.ko` + `gpio-pmic-eic-sprd.ko` — GPIO controller variants
+
+**Kategori I2C/SPI** (4):
+- `i2c-sprd.ko`, `i2c-sprd-hw.ko` — I2C bus + HW
+- `spi-sprd-adi.ko` — SPI ADI variant
+- `sdhci-sprd.ko` — SD card host
+
+**Kategori MMC/DVFS** (3):
+- `mmc_hsq.ko`, `mmc_swcq.ko`, `mmdvfs.ko`
+
+**Kategori Efuse/NVMEM** (3):
+- `nvmem_sprd_efuse.ko`, `nvmem_sprd_cache_efuse.ko`, `nvmem-sc27xx-efuse.ko` (VITAL untuk thermal chain TICK9 §4)
+
+**Kategori SIPC/Modem** (5):
+- `sipc-core.ko`, `sipx.ko`, `spipe.ko`, `spool.ko` (sudah ada di port!), `slog_bridge.ko`
+- `sblock_bridge.ko`, `sbuf_bridge.ko` (sudah ada di port)
+
+**Kategori Power/Misc** (10):
+- `sprd_7sreset.ko`, `sprd_hwspinlock.ko`, `sprd_systimer.ko`, `sprd_shm.ko`, `sprd_power_stat.ko`
+- `sprd_pdbg.ko`, `sprd_manufacturer_model.ko`
+- `sprd_modem_loader.ko`, `sprd_sip_svc.ko`, `sprd-sipc-virt-bus.ko` (sudah ada di port)
+- `sprd_iq.ko`, `sprd_soc_id.ko` (sudah ada di port)
+- `sprd_time_sync.ko`, `sprd_time_sync_cp.ko` (sudah ada di port)
+- `sprd_wdt_fiq.ko` (= `sprd_pmic_wdt` di ledger, sumber ada di tree)
+- `sprd-cpufreq-public.ko`, `sprd-cpufreq-v2.ko`
+- `sprd-sc27xx-spi.ko`
+
+**Kategori Sensor** (1):
+- `sensorhub.ko`
+
+**Kategori Mailbox/USB** (2):
+- `unisoc-mailbox.ko`
+- `usb_f_vser.ko` (USB gadget virtual serial)
+
+**Kategori Trusty TEE** (5): `trusty-ipc.ko`, `trusty-irq.ko`, `trusty-log.ko`, `trusty-pm.ko`, `trusty-virtio.ko` (5 dari 6 trusty vendor — di port cuma `trusty-tui.ko`)
+
+**Kategori Mainline (di vendor tapi bukan vendor-specific)** (8):
+- `apr.ko`, `act_gact.ko`, `act_gate.ko`, `act_mirred.ko`, `adc_keys.ko`
+- `amlogic-gxl-crypto.ko`, `amphion-vpu.ko`, `analogix_dp.ko`, `adv7511.ko`, `mali_gondul.ko` (vendor Mali, REPLACED by panfrost)
+
+**Kategori MMC** (3): `mmc_hsq.ko`, `mmc_swcq.ko`, `mmdvfs.ko`
+
+### A.4 Sumber bukti & file
+
+- **Port 103 inventory**: tabel utama README di atas (header `## 📋 Inventory per entri`)
+- **Vendor 129**: `dumped/re/hidden/vramdisk_ko/` (129 .ko dari `vendor_ramdisk_stock.cpio` extraction)
+- **Tally build TICK9**: `work/sysmaps/kolist.1012b.txt` (1.424 .ko, tapi majoriti mainline)
+- **TICK10 commit `e27dda4c1`**: thermal DT chain 1/4 + sprd_vdsp retro-fix
+
+### A.5 Action items (urut prioritas)
+
+1. **Hapus/rename 2 entry obsolete (kategori D)**: `sprd_ddr_dvfs` + `sprd_pmic_wdt` (atau rename ke `sprd_wdt_fiq`).
+2. **Port 88 vendor-only** yang vital:
+   - **Efuse** (3 .ko) — wajib untuk thermal DT chain (TICK9 §4) TICK11+
+   - **GPIO SPRD** (3 .ko) — untuk kontrol hardware
+   - **Trusty TEE** (5 .ko) — untuk secure boot
+   - **Mailbox** (1) — untuk AP↔CP IPC
+3. **Re-run `make modules` TICK10+** untuk verifikasi vdsp wiring + thermal DT.
+4. **Boot test** (satu-satunya cara verifikasi driver beneran hidup di hardware).
+
+— Berry Chan, Raspya, 2026-10-15 🍓
+
 ## 📝 Changelog | 変更履歴
 
 ### 2026-10-15 — TICK10: thermal DT chain 1/4 + sprd_vdsp wiring fix
