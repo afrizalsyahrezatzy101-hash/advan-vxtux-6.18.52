@@ -23,22 +23,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
           
-      - name: Apply enhanced config
+      - name: Build kernel Image
         run: |
           cd 6.18.52-VXTux-UMS512
           cp .config .config.original
           cp ../enhanced_config.cfg .config
-          
-      - name: Build kernel
-        run: |
-          cd 6.18.52-VXTux-UMS512
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc)
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
+          ls -la arch/arm64/boot/Image
+          file arch/arm64/boot/Image
           
-      - name: Upload artifacts
+      - name: Upload Image only
         uses: actions/upload-artifact@v4
         with:
-          name: v17-kernel-output
-          path: |
-            6.18.52-VXTux-UMS512/arch/arm64/boot/Image
-            6.18.52-VXTux-UMS512/arch/arm64/boot/dts/sprd/
+          name: v17-image-only
+          path: 6.18.52-VXTux-UMS512/arch/arm64/boot/Image
+          if-no-files-found: error
