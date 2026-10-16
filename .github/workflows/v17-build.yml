@@ -11,52 +11,44 @@ jobs:
     timeout-minutes: 90
     
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           ref: test1
           fetch-depth: 1
+          path: src
           
       - name: Install deps
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
           
-      - name: Apply enhanced config
-        run: |
-          cd 6.18.52-VXTux-UMS512
-          cp .config .config.original
-          cp ../enhanced_config.cfg .config
-          
       - name: Build kernel
         run: |
-          cd 6.18.52-VXTux-UMS512
+          cd src/6.18.52-VXTux-UMS512
+          # Apply enhanced config
+          cp .config .config.original
+          cp ../../enhanced_config.cfg .config 2>/dev/null || cp ../enhanced_config.cfg .config
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc)
-          echo "=== BUILD ARTIFACTS ==="
-          ls -la arch/arm64/boot/Image
-          ls -la arch/arm64/boot/dts/sprd/ 2>/dev/null | head -5
           
-      - name: Stage Image for commit
+      - name: Setup git output
         run: |
-          cd 6.18.52-VXTux-UMS512
-          # Copy Image out to repo root
-          mkdir -p ../output
-          cp arch/arm64/boot/Image ../output/v17_Image
-          # Don't copy dtbs (too many, small) - just list
-          ls arch/arm64/boot/dts/sprd/ 2>/dev/null | head > ../output/dtb_list.txt || echo "no dtbs"
-          cd ..
+          mkdir -p output
+          cp src/6.18.52-VXTux-UMS512/arch/arm64/boot/Image output/v17_Image
           ls -la output/
           
-      - name: Commit Image to v17-image branch
+      - name: Create new repo for output
         run: |
-          cd ..
+          # Use a separate clone of the repo for output
+          cd $GITHUB_WORKSPACE
           git config user.email "archanaberry101originally@gmail.com"
           git config user.name "Berry Chan"
-          # Switch to v17-image branch
-          git checkout -B v17-image
-          git add output/
-          # Use --allow-empty in case file is identical
-          git commit -m "V17 build artifact - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "no changes to commit"
-          # Push with no force
-          git push origin v17-image --force-with-lease || git push origin v17-image
+          # Create orphan branch
+          git checkout --orphan v17-images
+          git rm -rf . 2>/dev/null || true
+          cp -r output/. .
+          git add .
+          git commit -m "V17 Image build - $(date -u +%Y-%m-%dT%H:%M:%SZ)" --allow-empty
+          # Try to push
+          git push origin v17-images --force 2>&1 | head -20 || echo "PUSH_FAILED"
