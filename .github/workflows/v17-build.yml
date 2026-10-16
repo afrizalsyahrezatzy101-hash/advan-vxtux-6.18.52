@@ -8,14 +8,20 @@ on:
 jobs:
   build-v17:
     runs-on: ubuntu-22.04
-    timeout-minutes: 60
+    timeout-minutes: 90
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: test1
-          submodules: true
+          
+      - name: List repo
+        run: |
+          pwd
+          ls -la
+          echo "---"
+          ls -la 6.18.52-VXTux-UMS512/ | head -20
           
       - name: Install deps
         run: |
@@ -25,20 +31,42 @@ jobs:
       - name: Apply enhanced config
         run: |
           cd 6.18.52-VXTux-UMS512
-          # Backup and apply enhanced config
+          echo "=== Existing .config ==="
+          ls -la .config
+          head -5 .config
+          echo ""
+          echo "=== enhanced_config.cfg ==="
+          head -5 ../enhanced_config.cfg
+          echo ""
+          echo "=== Applying ==="
           cp .config .config.original
           cp ../enhanced_config.cfg .config
+          echo "=== After apply ==="
+          head -5 .config
+          wc -l .config
           
       - name: Build kernel
         run: |
           cd 6.18.52-VXTux-UMS512
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc)
+          # Use olddefconfig to fill in defaults
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig 2>&1 | tail -20
+          echo "=== Starting build ==="
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc) 2>&1 | tail -100
           
-      - name: Upload artifacts
+      - name: Upload artifacts (success)
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: v17-kernel-output
           path: |
             6.18.52-VXTux-UMS512/arch/arm64/boot/Image
             6.18.52-VXTux-UMS512/arch/arm64/boot/dts/sprd/
+            
+      - name: Upload logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-build-logs
+          path: |
+            6.18.52-VXTux-UMS512/.config
+            6.18.52-VXTux-UMS512/include/generated/autoconf.h
