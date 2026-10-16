@@ -1,0 +1,44 @@
+name: Build V17 VXTux Kernel
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, test1, v17-build]
+
+jobs:
+  build-v17:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: test1
+          submodules: true
+          
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
+          
+      - name: Apply enhanced config
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          # Backup and apply enhanced config
+          cp .config .config.original
+          cp ../enhanced_config.cfg .config
+          
+      - name: Build kernel
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc)
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-kernel-output
+          path: |
+            6.18.52-VXTux-UMS512/arch/arm64/boot/Image
+            6.18.52-VXTux-UMS512/arch/arm64/boot/dts/sprd/
