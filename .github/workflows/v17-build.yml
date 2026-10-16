@@ -33,22 +33,30 @@ jobs:
           cd 6.18.52-VXTux-UMS512
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs -j$(nproc)
+          echo "=== BUILD ARTIFACTS ==="
+          ls -la arch/arm64/boot/Image
+          ls -la arch/arm64/boot/dts/sprd/ 2>/dev/null | head -5
           
-      - name: Setup git for push
+      - name: Stage Image for commit
         run: |
-          git config user.email "archanaberry101originally@gmail.com"
-          git config user.name "Berry Chan"
-          
-      - name: Copy Image to root
-        run: |
-          mkdir -p output
-          cp 6.18.52-VXTux-UMS512/arch/arm64/boot/Image output/v17_Image
-          cp -r 6.18.52-VXTux-UMS512/arch/arm64/boot/dts/sprd/ output/v17_dtb/ 2>/dev/null || true
+          cd 6.18.52-VXTux-UMS512
+          # Copy Image out to repo root
+          mkdir -p ../output
+          cp arch/arm64/boot/Image ../output/v17_Image
+          # Don't copy dtbs (too many, small) - just list
+          ls arch/arm64/boot/dts/sprd/ 2>/dev/null | head > ../output/dtb_list.txt || echo "no dtbs"
+          cd ..
           ls -la output/
           
-      - name: Push to output branch
+      - name: Commit Image to v17-image branch
         run: |
-          git checkout -B v17-output
+          cd ..
+          git config user.email "archanaberry101originally@gmail.com"
+          git config user.name "Berry Chan"
+          # Switch to v17-image branch
+          git checkout -B v17-image
           git add output/
-          git commit -m "V17 build: Image $(date +%s)" || echo "no changes"
-          git push -f origin v17-output
+          # Use --allow-empty in case file is identical
+          git commit -m "V17 build artifact - $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "no changes to commit"
+          # Push with no force
+          git push origin v17-image --force-with-lease || git push origin v17-image
