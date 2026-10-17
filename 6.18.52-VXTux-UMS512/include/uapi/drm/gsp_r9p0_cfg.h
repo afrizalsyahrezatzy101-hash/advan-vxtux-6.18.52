@@ -9,13 +9,6 @@ typedef enum { false = 0, true = 1 } bool;
 
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 
-/* Compatibility typedef for userspace */
-#ifndef __cplusplus
-#ifndef bool
-typedef enum { false = 0, true = 1 } bool;
-#endif
-#endif
-
 /*
  * Copyright (C) 2020 Unisoc Inc.
  */
