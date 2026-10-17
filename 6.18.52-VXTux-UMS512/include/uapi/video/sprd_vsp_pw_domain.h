@@ -39,18 +39,18 @@ enum {
 	VSP_PW_DOMAIN_ON,
 };
 struct client_info_t {
-	_u8 pw_state;
-	_u8 pw_count;
+	__u8 pw_state;
+	__u8 pw_count;
 };
 
 struct vsp_pw_domain_info_t {
 	struct client_info_t pw_vsp_info[VSP_PW_DOMAIN_COUNT_MAX];
 	struct mutex client_lock;
-	_u8 vsp_pw_state;
+	__u8 vsp_pw_state;
 };
 
-int vsp_pw_on(_u8 client);
-int vsp_pw_off(_u8 client);
+int vsp_pw_on(__u8 client);
+int vsp_pw_off(__u8 client);
 int vsp_core_pw_on(void);
 int vsp_core_pw_off(void);
 
