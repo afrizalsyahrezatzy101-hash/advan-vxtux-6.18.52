@@ -26,10 +26,8 @@ jobs:
       - name: Fix permissions and apply config
         run: |
           cd 6.18.52-VXTux-UMS512
-          # Make all scripts executable
-          chmod +x scripts/*.sh
-          chmod +x scripts/basic/*.sh
-          chmod +x scripts/kconfig/*.sh
+          # Make all .sh files executable
+          find scripts/ -name '*.sh' -exec chmod +x {} +
           # Apply enhanced config
           cp .config .config.original
           cp ../enhanced_config.cfg .config
