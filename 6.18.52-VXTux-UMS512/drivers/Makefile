@@ -79,7 +79,8 @@ obj-y				+= dax/
 obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
 obj-$(CONFIG_NUBUS)		+= nubus/
 obj-y				+= cxl/
-obj-y				+= macintosh/
+# V18: macintosh removed (VXTux tree lacks drivers/macintosh/)
+# obj-y				+= macintosh/
 obj-y				+= scsi/
 obj-y				+= nvme/
 obj-$(CONFIG_ATA)		+= ata/
