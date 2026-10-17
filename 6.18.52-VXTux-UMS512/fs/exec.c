@@ -52,6 +52,7 @@
 #include <linux/namei.h>
 #include <linux/mount.h>
 #include <linux/security.h>
+#include <linux/berry_compat.h>
 #include <linux/syscalls.h>
 #include <linux/tsacct_kern.h>
 #include <linux/cn_proc.h>

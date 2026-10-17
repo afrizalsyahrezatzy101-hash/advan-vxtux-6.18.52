@@ -37,4 +37,14 @@ static inline void security_backing_file_free(struct file *f)
 #define FS_USERNS_DELEGATABLE FS_USERNS_MOUNT  /* fallback to old name */
 #endif
 
+
+/* ====== futex_exec_done (VXTux uses older name) ====== */
+#ifndef futex_exec_done
+static inline void futex_exec_done(struct mm_struct *mm)
+{
+    (void)mm;
+}
+#endif
+
 #endif /* _BERRY_COMPAT_H */
+
