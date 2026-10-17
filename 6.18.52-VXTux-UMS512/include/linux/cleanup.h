@@ -292,12 +292,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
 
 #define scoped_class(_name, var, args)                          \
 	for (CLASS(_name, var)(args);                           \
-	     __guard_ptr(_name)(&var) || !__is_cond_ptr(_name); \
-	     ({ goto __UNIQUE_ID(label); }))                   \
-		if (0) {                                        \
-__UNIQUE_ID(label):                                            \
-			break;                                  \
-		} else
+	     __guard_ptr(_name)(&var) || !__is_cond_ptr(_name);)
 
 /*
  * DEFINE_GUARD(name, type, lock, unlock):
