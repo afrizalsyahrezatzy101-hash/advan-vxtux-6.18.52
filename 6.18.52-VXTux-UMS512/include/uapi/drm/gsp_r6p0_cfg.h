@@ -1,3 +1,6 @@
+#ifndef _GSP_R6P0_CFG_H
+#define _GSP_R6P0_CFG_H
+#include <stdbool.h>
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Copyright (C) 2020 Unisoc Inc.
