@@ -3664,7 +3664,6 @@ static bool f2fs_has_stable_inodes(struct super_block *sb)
 	return true;
 }
 
-static unsigned int
 struct block_device **f2fs_get_devices(struct super_block *sb,
 		 unsigned int *num_devs)
 {
