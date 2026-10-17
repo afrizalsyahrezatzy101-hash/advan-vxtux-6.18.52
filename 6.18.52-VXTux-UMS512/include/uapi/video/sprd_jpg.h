@@ -19,6 +19,7 @@
 #ifndef _SPRD_JPG_H
 #define _SPRD_JPG_H
 
+#include <linux/types.h>
 #include <linux/ioctl.h>
 #ifdef CONFIG_COMPAT
 #include <linux/compat.h>
@@ -52,7 +53,7 @@ struct compat_jpg_iommu_map_data {
 
 struct jpg_iommu_map_data {
 	int fd;
-	size_t size;
+	__kernel_size_t size;
 	unsigned long iova_addr;
 };
 

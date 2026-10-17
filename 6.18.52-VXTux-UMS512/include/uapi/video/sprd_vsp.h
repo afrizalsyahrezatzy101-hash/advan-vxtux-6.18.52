@@ -15,6 +15,7 @@
 #ifndef _SPRD_VSP_H
 #define _SPRD_VSP_H
 
+#include <linux/types.h>
 #include <linux/ioctl.h>
 #include <linux/compat.h>
 
@@ -97,7 +98,7 @@ typedef enum {
 
 struct vsp_iommu_map_data {
 	int fd;
-	size_t size;
+	__kernel_size_t size;
 	unsigned long iova_addr;
 };
 
