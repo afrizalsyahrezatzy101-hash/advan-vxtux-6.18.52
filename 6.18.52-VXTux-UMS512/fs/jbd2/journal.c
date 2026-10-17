@@ -1529,7 +1529,7 @@ static journal_t *journal_init_common(struct block_device *bdev,
 	if (!journal)
 		return ERR_PTR(-ENOMEM);
 
-	lockdep_register_key(&journal->j_trans_commit_map);
+	lockdep_register_key(&journal->j_trans_commit_key);
 	journal->j_blocksize = blocksize;
 	journal->j_dev = bdev;
 	journal->j_fs_dev = fs_dev;
@@ -1611,7 +1611,7 @@ err_cleanup:
 	kfree(journal->j_wbuf);
 	jbd2_journal_destroy_revoke(journal);
 	journal_fail_superblock(journal);
-	lockdep_unregister_key(&journal->j_trans_commit_map);
+	lockdep_unregister_key(&journal->j_trans_commit_key);
 	kfree(journal);
 	return ERR_PTR(err);
 }
@@ -2188,7 +2188,7 @@ int jbd2_journal_destroy(journal_t *journal)
 		jbd2_journal_destroy_revoke(journal);
 	kfree(journal->j_fc_wbuf);
 	kfree(journal->j_wbuf);
-	lockdep_unregister_key(&journal->j_trans_commit_map);
+	lockdep_unregister_key(&journal->j_trans_commit_key);
 	kfree(journal);
 
 	return err;
