@@ -1,3 +1,12 @@
+#ifndef _BOOL_TYPEDEF_GUARD
+#define _BOOL_TYPEDEF_GUARD
+#ifndef __cplusplus
+#ifndef bool
+typedef enum { false = 0, true = 1 } bool;
+#endif
+#endif
+#endif
+
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Copyright (C) 2020 Unisoc Inc.
