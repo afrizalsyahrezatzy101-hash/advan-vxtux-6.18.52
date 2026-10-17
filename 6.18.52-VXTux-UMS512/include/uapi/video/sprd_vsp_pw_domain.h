@@ -45,7 +45,9 @@ struct client_info_t {
 
 struct vsp_pw_domain_info_t {
 	struct client_info_t pw_vsp_info[VSP_PW_DOMAIN_COUNT_MAX];
-	/* struct mutex client_lock; - removed for uapi */
+	struct {
+		int placeholder;  /* V18: replaces removed client_lock */
+	} client_lock;
 	__u8 vsp_pw_state;
 };
 

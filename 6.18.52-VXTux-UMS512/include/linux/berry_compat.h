@@ -52,6 +52,11 @@ static inline bool may_see_all_namespaces(void)
     return true;  /* Always allow - nsfs is read-only debug */
 }
 
+/* ====== PIDFD_INFO_SIZE_VER1 (VXTux only has VER0) ====== */
+#ifndef PIDFD_INFO_SIZE_VER1
+#define PIDFD_INFO_SIZE_VER1 PIDFD_INFO_SIZE_VER0
+#endif
+
 #endif /* _BERRY_COMPAT_H */
 
 
