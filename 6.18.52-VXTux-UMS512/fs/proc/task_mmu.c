@@ -28,6 +28,8 @@
 #include <asm/tlb.h>
 #include <asm/tlbflush.h>
 #include "internal.h"
+/* V17: forward decl - build_id_parse_file */
+int build_id_parse_file(const struct file *file, unsigned char *build_id, u32 buf_size);
 
 #define SENTINEL_VMA_END	-1
 #define SENTINEL_VMA_GATE	-2
