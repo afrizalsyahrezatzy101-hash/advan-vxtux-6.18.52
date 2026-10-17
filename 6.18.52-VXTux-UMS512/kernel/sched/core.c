@@ -97,6 +97,8 @@
 
 #include "../workqueue_internal.h"
 /* V17: disabled */ /* #include "../../io_uring/io-wq.h" */
+#include <linux/task_work.h>
+#define TWA_RESUME 0  /* V17: fallback */
 #include "../smpboot.h"
 #include "../locking/mutex.h"
 
