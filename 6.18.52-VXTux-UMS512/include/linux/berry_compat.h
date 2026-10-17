@@ -40,9 +40,9 @@ static inline void security_backing_file_free(struct file *f)
 
 /* ====== futex_exec_done (VXTux uses older name) ====== */
 #ifndef futex_exec_done
-static inline void futex_exec_done(struct mm_struct *mm)
+static inline void futex_exec_done(struct task_struct *tsk)
 {
-    (void)mm;
+    (void)tsk;
 }
 #endif
 
