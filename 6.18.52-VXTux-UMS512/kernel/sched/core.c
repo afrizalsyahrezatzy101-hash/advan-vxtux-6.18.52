@@ -96,7 +96,7 @@
 #include "smp.h"
 
 #include "../workqueue_internal.h"
-#include "../../io_uring/io-wq.h"
+/* V17: disabled */ /* #include "../../io_uring/io-wq.h" */
 #include "../smpboot.h"
 #include "../locking/mutex.h"
 
