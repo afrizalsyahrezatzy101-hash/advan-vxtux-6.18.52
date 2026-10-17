@@ -4490,7 +4490,7 @@ static struct pgv *alloc_pg_vec(struct tpacket_req *req, int order, bool tx_ring
 
 		if (tx_ring && !vec->deferred &&
 		    is_vmalloc_addr(pg_vec[i].buffer)) {
-			vec->deferred = kzalloc_obj(*vec->deferred,
+			vec->deferred = kzalloc(*vec->deferred,
 						    GFP_KERNEL | __GFP_NOWARN);
 			if (!vec->deferred)
 				goto out_free_pgvec;
