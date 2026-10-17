@@ -38,10 +38,9 @@
 #endif
 
 #define pr_fmt(fmt) "sprd-vsp-pw: " fmt
-/* V18: VSP mutex compat shim - must be GLOBAL, not inside any #if */
+/* V18: VSP mutex compat shim - struct comes from uapi header */
 #ifndef client_lock
 #define client_lock struct berry_vsp_mutex_compat
-struct berry_vsp_mutex_compat { unsigned long owner; int magic; };
 static inline void __berry_mutex_lock(struct berry_vsp_mutex_compat *m) { (void)m; }
 static inline void __berry_mutex_unlock(struct berry_vsp_mutex_compat *m) { (void)m; }
 static inline void __berry_mutex_init(struct berry_vsp_mutex_compat *m) { (void)m; }
