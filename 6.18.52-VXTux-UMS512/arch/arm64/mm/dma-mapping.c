@@ -50,5 +50,5 @@ void arch_setup_dma_ops(struct device *dev, bool coherent)
 
 	dev->dma_coherent = coherent;
 
-	xen_setup_dma_ops(dev);
+	/* V17: XEN disabled - was: xen_setup_dma_ops(dev); */
 }
