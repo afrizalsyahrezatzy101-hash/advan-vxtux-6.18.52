@@ -13,6 +13,7 @@
 #include <linux/splice.h>
 #include <linux/mm.h>
 #include <linux/security.h>
+#include <linux/berry_compat.h>
 
 #include "internal.h"
 

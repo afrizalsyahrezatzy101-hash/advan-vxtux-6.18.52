@@ -1,3 +1,23 @@
+/* V18: Define compat types if not already */
+#ifndef __SPRD_COMPAT_TYPES_DEFINED__
+#define __SPRD_COMPAT_TYPES_DEFINED__
+#ifndef compat_int_t
+typedef s32 compat_int_t;
+typedef s64 compat_int64_t;
+typedef u32 compat_uint_t;
+typedef u64 compat_uint64_t;
+typedef size_t compat_size_t;
+typedef ssize_t compat_ssize_t;
+typedef unsigned long compat_ulong_t;
+typedef long compat_long_t;
+typedef u32 compat_uptr_t;
+typedef s32 compat_pid_t;
+typedef u16 compat_uid_t;
+typedef u16 compat_gid_t;
+typedef u16 compat_mode_t;
+#endif
+#endif
+
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Recovered from the iscle_ums512 5.4 tree (work/donors_20260930/iscle_ums512),
