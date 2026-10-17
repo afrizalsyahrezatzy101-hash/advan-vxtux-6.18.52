@@ -57,6 +57,15 @@ static inline bool may_see_all_namespaces(void)
 #define PIDFD_INFO_SIZE_VER1 PIDFD_INFO_SIZE_VER0
 #endif
 
+/* ====== security_mmap_backing_file (VXTux doesn't have it) ====== */
+static inline int security_mmap_backing_file(struct vm_area_struct *vma,
+                                              struct file *file,
+                                              struct file *user_file)
+{
+    (void)vma; (void)file; (void)user_file;
+    return 0;
+}
+
 #endif /* _BERRY_COMPAT_H */
 
 
