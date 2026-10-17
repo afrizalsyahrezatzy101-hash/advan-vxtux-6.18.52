@@ -401,4 +401,20 @@ do {						\
 	*(_fsgid) = __cred->fsgid;		\
 } while(0)
 
+/* V17: missing DEFINE_CLASS for override_creds */
+#ifndef DEFINE_CLASS_OVERRIDE_CREDS
+static inline const struct cred *override_creds_constructor(const struct cred *new)
+{
+	return override_creds(new);
+}
+static inline void override_creds_destructor(const struct cred **old)
+{
+	if (*old)
+		revert_creds(*old);
+}
+DEFINE_CLASS(override_creds, const struct cred *,
+	    override_creds_constructor(new),
+	    override_creds_destructor(_T))
+#endif
+
 #endif /* _LINUX_CRED_H */
