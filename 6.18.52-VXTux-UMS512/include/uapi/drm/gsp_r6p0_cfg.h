@@ -25,13 +25,6 @@ typedef enum { false = 0, true = 1 } bool;
 #define R6P0_OSDSEC_NUM 1
 
 /*Original: B3B2B1B0*/
-/* Compatibility typedef for userspace */
-#ifndef __cplusplus
-#ifndef bool
-typedef enum { false = 0, true = 1 } bool;
-#endif
-#endif
-
 enum gsp_r6p0_word_endian {
 	GSP_R6P0_WORD_ENDN_0 = 0x00,	 /*B3B2B1B0*/
 	GSP_R6P0_WORD_ENDN_1,			/*B0B1B2B3*/
