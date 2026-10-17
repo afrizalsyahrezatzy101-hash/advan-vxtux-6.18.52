@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  * Recovered from the iscle_ums512 5.4 tree (work/donors_20260930/iscle_ums512),
  * the same UMS512 SoC. The port tree and the other two donors did not carry this

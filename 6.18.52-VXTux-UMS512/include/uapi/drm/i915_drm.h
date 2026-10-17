@@ -1,3 +1,4 @@
+#include <linux/types.h>
 #ifndef _BOOL_TYPEDEF_GUARD
 #define _BOOL_TYPEDEF_GUARD
 #ifndef __cplusplus

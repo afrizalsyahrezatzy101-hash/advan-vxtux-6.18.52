@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  *  IPv6 IOAM Lightweight Tunnel API
  *

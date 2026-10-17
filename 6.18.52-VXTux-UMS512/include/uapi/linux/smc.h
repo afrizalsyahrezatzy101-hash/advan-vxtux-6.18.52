@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  *  Shared Memory Communications over RDMA (SMC-R) and RoCE
  *

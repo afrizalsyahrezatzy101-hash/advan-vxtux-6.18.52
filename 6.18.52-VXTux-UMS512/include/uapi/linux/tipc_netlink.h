@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+
+#include <linux/types.h>
 /*
  * Copyright (c) 2014, Ericsson AB
  * All rights reserved.

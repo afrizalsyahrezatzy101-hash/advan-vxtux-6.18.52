@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /* Copyright (C) 2019 Netronome Systems, Inc. */
 
 #ifndef __LINUX_TC_MPLS_H

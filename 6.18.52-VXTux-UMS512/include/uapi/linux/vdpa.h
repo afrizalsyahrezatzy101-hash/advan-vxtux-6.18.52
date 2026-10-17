@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  * vdpa device management interface
  * Copyright (c) 2020 Mellanox Technologies Ltd. All rights reserved.
