@@ -1,23 +1,3 @@
-/* V18: Compat types - rely on __KERNEL__ + linux/compat.h for u32/u16 etc */
-/* V18: compat types - defs only, no include (linux/compat.h not in uapi path) */
-#ifndef __SPRD_COMPAT_TYPES_DEFINED__
-#define __SPRD_COMPAT_TYPES_DEFINED__
-#include <linux/types.h>
-typedef s32 compat_int_t;
-typedef s64 compat_int64_t;
-typedef u32 compat_uint_t;
-typedef u64 compat_uint64_t;
-typedef unsigned long compat_ulong_t;
-typedef long compat_long_t;
-typedef u32 compat_uptr_t;
-typedef s32 compat_pid_t;
-typedef u16 compat_uid_t;
-typedef u16 compat_gid_t;
-typedef u16 compat_mode_t;
-typedef u32 compat_size_t;
-typedef s32 compat_ssize_t;
-#endif
-
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Recovered from the iscle_ums512 5.4 tree (work/donors_20260930/iscle_ums512),
