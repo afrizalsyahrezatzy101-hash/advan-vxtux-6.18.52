@@ -23,17 +23,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
           
+      - name: Fix permissions and apply config
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          # Make all scripts executable
+          chmod +x scripts/*.sh
+          chmod +x scripts/basic/*.sh
+          chmod +x scripts/kconfig/*.sh
+          # Apply enhanced config
+          cp .config .config.original
+          cp ../enhanced_config.cfg .config
+          ls -la scripts/cc-version.sh
+          
       - name: Build kernel Image
         run: |
           cd 6.18.52-VXTux-UMS512
-          cp .config .config.original
-          cp ../enhanced_config.cfg .config
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
           ls -la arch/arm64/boot/Image
           file arch/arm64/boot/Image
           
-      - name: Upload Image only
+      - name: Upload Image
         uses: actions/upload-artifact@v4
         with:
           name: v17-image-only
