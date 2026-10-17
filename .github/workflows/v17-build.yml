@@ -36,6 +36,12 @@ jobs:
         run: |
           cd 6.18.52-VXTux-UMS512
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+      - name: Force clean stale .o files
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          # Remove cached object files that might reference removed code
+          find fs/f2fs fs/btrfs fs/fuse drivers/pmdomain/sprd -name "*.o" -delete 2>/dev/null || true
+          find fs/f2fs fs/btrfs fs/fuse drivers/pmdomain/sprd -name "*.cmd" -delete 2>/dev/null || true
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
           ls -la arch/arm64/boot/Image
           file arch/arm64/boot/Image
