@@ -36,7 +36,7 @@ jobs:
         run: |
           cd 6.18.52-VXTux-UMS512
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- mrproper && make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
           ls -la arch/arm64/boot/Image
           file arch/arm64/boot/Image
           
