@@ -14,6 +14,7 @@
 #include <linux/fs.h>
 #include <linux/filelock.h>
 #include <linux/security.h>
+#include <linux/security_backing_file_compat.h>
 #include <linux/cred.h>
 #include <linux/eventpoll.h>
 #include <linux/rcupdate.h>
