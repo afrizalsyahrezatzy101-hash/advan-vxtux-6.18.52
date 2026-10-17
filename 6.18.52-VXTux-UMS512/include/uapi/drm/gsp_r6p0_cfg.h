@@ -1,5 +1,4 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-#include <stdbool.h>
 /*
  * Copyright (C) 2020 Unisoc Inc.
  */
