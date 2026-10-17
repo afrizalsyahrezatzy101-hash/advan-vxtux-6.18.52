@@ -408,22 +408,6 @@ do {						\
 DEFINE_CLASS(override_creds, const struct cred *,
 		if (_T) revert_creds(_T),
 		override_creds(new), const struct cred *new)
-static inline const struct cred *class_override_creds_ovl_constructor(const struct cred *new)
-{
-	return override_creds(new);
-}
-static inline void class_override_creds_ovl_destructor(const struct cred **p)
-{
-	if (*p) revert_creds(*p);
-}
-static inline bool class_override_creds_ovl_is_conditional(void)
-{
-	return false;
-}
-static inline const struct cred **class_override_creds_ovl_lock_ptr(const struct cred **p)
-{
-	return p;
-}
 #endif
 
 #endif /* _LINUX_CRED_H */
