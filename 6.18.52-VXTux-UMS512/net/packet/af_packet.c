@@ -1725,7 +1725,7 @@ static int fanout_add(struct sock *sk, struct fanout_args *args)
 	if (type == PACKET_FANOUT_ROLLOVER ||
 	    (type_flags & PACKET_FANOUT_FLAG_ROLLOVER)) {
 		err = -ENOMEM;
-		rollover = kzalloc(sizeof(*rollover), GFP_KERNEL);
+		rollover = kzalloc(sizeof(*rollover, GFP_KERNEL), GFP_KERNEL);
 		if (!rollover)
 			goto out;
 		atomic_long_set(&rollover->num, 0);
