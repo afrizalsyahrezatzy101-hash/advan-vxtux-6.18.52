@@ -19,17 +19,10 @@
 #ifndef _CAM_PW_DOMAIN_H_
 #define _CAM_PW_DOMAIN_H_
 
-#include <linux/notifier.h>
-
 /* no need
  * int sprd_cam_pw_domain_init(struct platform_device *pdev);
  * int sprd_cam_pw_domain_deinit(void);
  */
-int sprd_cam_pw_on(void);
-int sprd_cam_pw_off(void);
-int sprd_cam_domain_eb(void);
-int sprd_cam_domain_disable(void);
-int sprd_cache_flush(void *work_buf_vaddr, int pase_size);
 
 /* power on/off call back function, use as follow:
  * 1: static int ssss_event(struct notifier_block *self, unsigned long event,
@@ -43,7 +36,5 @@ enum {
 	_E_PW_OFF = 0,
 	_E_PW_ON  = 1,
 };
-int sprd_mm_pw_notify_register(struct notifier_block *nb);
-int sprd_mm_pw_notify_unregister(struct notifier_block *nb);
 
 #endif /* _CAM_PW_DOMAIN_H_ */
