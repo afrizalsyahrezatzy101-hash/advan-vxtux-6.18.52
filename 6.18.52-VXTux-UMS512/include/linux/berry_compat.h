@@ -46,6 +46,12 @@ static inline void futex_exec_done(struct task_struct *tsk)
 }
 #endif
 
+/* ====== may_see_all_namespaces (VXTux doesn't export) ====== */
+static inline bool may_see_all_namespaces(void)
+{
+    return true;  /* Always allow - nsfs is read-only debug */
+}
+
 #endif /* _BERRY_COMPAT_H */
 
 

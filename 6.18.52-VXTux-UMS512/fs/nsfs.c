@@ -5,6 +5,7 @@
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
 #include <linux/proc_ns.h>
+#include <linux/berry_compat.h>
 #include <linux/magic.h>
 #include <linux/ktime.h>
 #include <linux/seq_file.h>
