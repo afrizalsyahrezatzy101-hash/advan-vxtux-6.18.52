@@ -730,7 +730,7 @@ static void snd_pcm_buffer_access_unlock(struct snd_pcm_runtime *runtime)
 }
 
 /* fill the PCM buffer with the current silence format; called from pcm_oss.c */
-int snd_pcm_runtime_buffer_set_silence(struct snd_pcm_runtime *runtime)
+void snd_pcm_runtime_buffer_set_silence(struct snd_pcm_runtime *runtime)
 {
 	int err;
 
@@ -741,7 +741,6 @@ int snd_pcm_runtime_buffer_set_silence(struct snd_pcm_runtime *runtime)
 		snd_pcm_format_set_silence(runtime->format, runtime->dma_area,
 					   bytes_to_samples(runtime, runtime->dma_bytes));
 	snd_pcm_buffer_access_unlock(runtime);
-	return 0;
 }
 EXPORT_SYMBOL_GPL(snd_pcm_runtime_buffer_set_silence);
 
