@@ -43,10 +43,16 @@
 #include <uapi/video/sprd_mmsys_pw_domain.h>
 
 #ifndef client_lock
-#define client_lock int
+#include <linux/mutex.h>
+#define client_lock struct berry_vsp_mutex_compat
+struct berry_vsp_mutex_compat { unsigned long owner; int magic; };
+static inline void __berry_mutex_lock(struct berry_vsp_mutex_compat *m) { (void)m; }
+static inline void __berry_mutex_unlock(struct berry_vsp_mutex_compat *m) { (void)m; }
+static inline void __berry_mutex_init(struct berry_vsp_mutex_compat *m) { (void)m; }
+#define mutex_lock(lock) __berry_mutex_lock(lock)
+#define mutex_unlock(lock) __berry_mutex_unlock(lock)
+#define mutex_init(lock) __berry_mutex_init(lock)
 #endif
-#define mutex_lock(lock) do { } while(0)
-#define mutex_unlock(lock) do { } while(0)
 
 #endif
 
