@@ -1,3 +1,4 @@
+#include <linux/wait.h>
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
  * Recovered from the iscle_ums512 5.4 tree, same UMS512 SoC. It carries the PMU_*
