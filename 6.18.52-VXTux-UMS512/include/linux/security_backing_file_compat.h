@@ -4,24 +4,31 @@
 
 #include <linux/fs.h>
 
-/* Stub out since VXTux 6.18 doesn't have this API */
 #ifdef CONFIG_SECURITY
+/* Match VXTux file_table.c call signatures:
+ *   security_backing_file_alloc(&ff->file, user_file)  -- struct file**
+ *   security_backing_file_free(&ff->file)              -- struct file*
+ */
 static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
 {
+    (void)backing;
+    (void)user;
     return 0;
 }
-static inline void security_backing_file_free(struct backing_file *bf)
+static inline void security_backing_file_free(struct file *f)
 {
-    /* no-op */
+    (void)f;
 }
 #else
 static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
 {
+    (void)backing;
+    (void)user;
     return 0;
 }
-static inline void security_backing_file_free(struct backing_file *bf)
+static inline void security_backing_file_free(struct file *f)
 {
-    /* no-op */
+    (void)f;
 }
 #endif
 
