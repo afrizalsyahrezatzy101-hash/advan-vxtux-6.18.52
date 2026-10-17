@@ -448,7 +448,7 @@ void ovl_revert_creds(const struct cred *old_cred);
 EXTEND_CLASS(override_creds, _ovl, ovl_override_creds(sb), struct super_block *sb)
 
 static inline const struct cred **class_override_creds_ovl_lock_ptr(const struct cred **p) { return p; }
-static inline int class_override_creds_ovl_is_conditional(void) { return 0; }
+static inline bool class_override_creds_ovl_is_conditional(void) { return false; }
 
 #define with_ovl_creds(sb) \
 	scoped_class(override_creds_ovl, __UNIQUE_ID(label), sb)

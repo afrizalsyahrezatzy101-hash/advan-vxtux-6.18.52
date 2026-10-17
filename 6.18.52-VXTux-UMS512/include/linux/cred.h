@@ -411,7 +411,7 @@ DEFINE_CLASS(override_creds, const struct cred *,
 
 /* Provide _lock_ptr, _is_conditional for the base class */
 static inline const struct cred **class_override_creds_lock_ptr(const struct cred **p) { return p; }
-static inline int class_override_creds_is_conditional(void) { return 0; }
+static inline bool class_override_creds_is_conditional(void) { return false; }
 #endif
 
 #endif /* _LINUX_CRED_H */
