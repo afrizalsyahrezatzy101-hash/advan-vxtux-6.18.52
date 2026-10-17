@@ -2210,6 +2210,8 @@ struct dir_context {
 	 * INT_MAX  unlimited
 	 */
 	int count;
+	/* V18: Added for newer kernel compat (VXTux 6.18) */
+	u32 dt_flags_mask;
 };
 
 /* If OR-ed with d_type, pending signals are not checked */

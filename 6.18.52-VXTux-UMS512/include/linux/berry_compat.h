@@ -46,14 +46,6 @@ static inline void futex_exec_done(struct task_struct *tsk)
 }
 #endif
 
-
-/* ====== dt_flags_mask (newer kernel field) ====== */
-#ifndef dt_flags_mask_compat_defined
-#define dt_flags_mask_compat_defined
-/* Define a no-op macro for readdir.c compatibility */
-#define dt_flags_mask dt_flags_mask_compat
-#endif
-
 #endif /* _BERRY_COMPAT_H */
 
 
