@@ -42,7 +42,24 @@
 #define VSP_SYNC_GSP                _IO(SPRD_VSP_IOCTL_MAGIC, 18)
 
 /* V18: Compat types - rely on __KERNEL__ + linux/compat.h for u32/u16 etc */
-#include <linux/compat.h>
+/* V18: compat types - defs only, no include (linux/compat.h not in uapi path) */
+#ifndef __SPRD_COMPAT_TYPES_DEFINED__
+#define __SPRD_COMPAT_TYPES_DEFINED__
+#include <linux/types.h>
+typedef s32 compat_int_t;
+typedef s64 compat_int64_t;
+typedef u32 compat_uint_t;
+typedef u64 compat_uint64_t;
+typedef unsigned long compat_ulong_t;
+typedef long compat_long_t;
+typedef u32 compat_uptr_t;
+typedef s32 compat_pid_t;
+typedef u16 compat_uid_t;
+typedef u16 compat_gid_t;
+typedef u16 compat_mode_t;
+typedef u32 compat_size_t;
+typedef s32 compat_ssize_t;
+#endif
 
 #ifdef CONFIG_COMPAT
 #define COMPAT_VSP_GET_IOVA    _IOWR(SPRD_VSP_IOCTL_MAGIC, 11, struct compat_vsp_iommu_map_data)
