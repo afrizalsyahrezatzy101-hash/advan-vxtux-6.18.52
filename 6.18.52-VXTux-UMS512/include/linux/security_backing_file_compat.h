@@ -1,19 +1,28 @@
-/* V18: Compat shim for security_backing_file_* declarations
- * Missing in some 6.18.x backports
- */
+/* V18: Compat shim for security_backing_file_* (missing in VXTux 6.18) */
 #ifndef _LINUX_SECURITY_BACKING_FILE_COMPAT_H
 #define _LINUX_SECURITY_BACKING_FILE_COMPAT_H
 
 #include <linux/fs.h>
-#include <linux/backing-file.h>
 
+/* Stub out since VXTux 6.18 doesn't have this API */
 #ifdef CONFIG_SECURITY
-#ifndef security_backing_file_alloc
-int security_backing_file_alloc(struct file **backing, const struct file *user);
+static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
+{
+    return 0;
+}
+static inline void security_backing_file_free(struct backing_file *bf)
+{
+    /* no-op */
+}
+#else
+static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
+{
+    return 0;
+}
+static inline void security_backing_file_free(struct backing_file *bf)
+{
+    /* no-op */
+}
 #endif
-#ifndef security_backing_file_free
-void security_backing_file_free(struct backing_file *bf);
-#endif
-#endif /* CONFIG_SECURITY */
 
 #endif /* _LINUX_SECURITY_BACKING_FILE_COMPAT_H */
