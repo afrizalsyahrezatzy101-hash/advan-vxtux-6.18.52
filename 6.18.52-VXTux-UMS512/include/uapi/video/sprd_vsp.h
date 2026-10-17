@@ -16,6 +16,24 @@
 #define _SPRD_VSP_H
 
 #include <linux/types.h>
+
+/* V18: compat types defs - safe inside _SPRD_VSP_H guard */
+#ifndef __SPRD_COMPAT_TYPES_DEFINED__
+#define __SPRD_COMPAT_TYPES_DEFINED__
+typedef s32 compat_int_t;
+typedef s64 compat_int64_t;
+typedef u32 compat_uint_t;
+typedef u64 compat_uint64_t;
+typedef unsigned long compat_ulong_t;
+typedef long compat_long_t;
+typedef u32 compat_uptr_t;
+typedef s32 compat_pid_t;
+typedef u16 compat_uid_t;
+typedef u16 compat_gid_t;
+typedef u16 compat_mode_t;
+typedef u32 compat_size_t;
+typedef s32 compat_ssize_t;
+#endif
 #include <linux/ioctl.h>
 
 #define SPRD_VSP_MAP_SIZE 0xA000
