@@ -50,6 +50,10 @@ struct berry_vsp_mutex_compat {
 	unsigned long owner;
 	int magic;
 };
+typedef struct berry_vsp_mutex_compat berry_client_lock_t;
+static inline void __berry_mutex_lock(berry_client_lock_t *m) { (void)m; }
+static inline void __berry_mutex_unlock(berry_client_lock_t *m) { (void)m; }
+static inline void __berry_mutex_init(berry_client_lock_t *m) { (void)m; }
 #endif
 
 struct vsp_pw_domain_info_t {
