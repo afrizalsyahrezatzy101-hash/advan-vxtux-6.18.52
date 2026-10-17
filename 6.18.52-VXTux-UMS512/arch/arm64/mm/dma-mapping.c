@@ -10,7 +10,7 @@
 #include <xen/xen.h>
 
 #include <asm/cacheflush.h>
-#include <asm/xen/xen-ops.h>
+/* XEN disabled in V17 build */ /* #include <asm/xen/xen-ops.h> */
 
 void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
 			      enum dma_data_direction dir)
