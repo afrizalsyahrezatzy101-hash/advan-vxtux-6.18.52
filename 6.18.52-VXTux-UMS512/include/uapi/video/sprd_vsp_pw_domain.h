@@ -49,9 +49,4 @@ struct vsp_pw_domain_info_t {
 	__u8 vsp_pw_state;
 };
 
-int vsp_pw_on(__u8 client);
-int vsp_pw_off(__u8 client);
-int vsp_core_pw_on(void);
-int vsp_core_pw_off(void);
-
 #endif
