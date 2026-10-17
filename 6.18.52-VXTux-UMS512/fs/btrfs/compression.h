@@ -77,7 +77,8 @@ struct compressed_bio {
 
 static inline struct btrfs_fs_info *cb_to_fs_info(const struct compressed_bio *cb)
 {
-	return cb->bbio.fs_info;
+	/* V17: bbio no longer has fs_info, return NULL stub */
+	return NULL;
 }
 
 /* @range_end must be exclusive. */
