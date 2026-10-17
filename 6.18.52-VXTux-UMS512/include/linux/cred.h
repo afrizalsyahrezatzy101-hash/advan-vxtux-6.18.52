@@ -401,16 +401,29 @@ do {						\
 	*(_fsgid) = __cred->fsgid;		\
 } while(0)
 
-/* V17: stub for override_creds class - simpler approach */
-typedef const struct cred *class_override_creds_t;
-static inline void class_override_creds_destructor(class_override_creds_t *p)
-{
-	if (*p)
-		revert_creds(*p);
-}
-static inline class_override_creds_t class_override_creds_constructor(const struct cred *new)
+/* V17: DEFINE_CLASS for override_creds - was missing in cred.h */
+#ifndef DEFINE_CLASS_OVERRIDE_CREDS_DONE
+#define DEFINE_CLASS_OVERRIDE_CREDS_DONE
+#include <linux/cleanup.h>
+DEFINE_CLASS(override_creds, const struct cred *,
+		if (_T) revert_creds(_T),
+		override_creds(new), const struct cred *new)
+static inline const struct cred *class_override_creds_ovl_constructor(const struct cred *new)
 {
 	return override_creds(new);
 }
+static inline void class_override_creds_ovl_destructor(const struct cred **p)
+{
+	if (*p) revert_creds(*p);
+}
+static inline bool class_override_creds_ovl_is_conditional(void)
+{
+	return false;
+}
+static inline const struct cred **class_override_creds_ovl_lock_ptr(const struct cred **p)
+{
+	return p;
+}
+#endif
 
 #endif /* _LINUX_CRED_H */
