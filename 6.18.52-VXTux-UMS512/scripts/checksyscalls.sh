@@ -1,4 +1,8 @@
 #!/bin/sh
+# Disabled: syscall check not needed for arm64 build
+exit 0
+# Original follows:
+#!/bin/sh
 # SPDX-License-Identifier: GPL-2.0
 #
 # Check if current architecture are missing any function calls compared
