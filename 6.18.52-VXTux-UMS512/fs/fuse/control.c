@@ -13,6 +13,10 @@
 #include <linux/fs_context.h>
 #include <linux/namei.h>
 
+/* V17: simple_remove_by_name decl */
+#include <linux/fs.h>
+
+
 #define FUSE_CTL_SUPER_MAGIC 0x65735543
 
 /*
