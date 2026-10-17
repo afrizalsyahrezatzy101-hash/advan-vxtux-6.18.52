@@ -28,10 +28,11 @@
 
 static unsigned int
 fscrypt_get_devices(struct super_block *sb,
-		    struct block_device *devs[FSCRYPT_MAX_DEVICES])
+		    struct block_device **devs)
 {
 	if (sb->s_cop->get_devices)
 		return sb->s_cop->get_devices(sb, devs);
+	devs[0] = sb->s_bdev;
 	devs[0] = sb->s_bdev;
 	return 1;
 }
