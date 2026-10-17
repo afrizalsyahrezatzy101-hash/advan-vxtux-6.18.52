@@ -676,4 +676,5 @@ struct extent_map *btrfs_create_io_em(struct btrfs_inode *inode, u64 start,
 				      const struct btrfs_file_extent *file_extent,
 				      int type);
 
+int btrfs_reset_extent_delalloc(struct btrfs_inode *inode, u64 start, u64 end, u64 max_extent_size, struct extent_changeset *cached_state);
 #endif
