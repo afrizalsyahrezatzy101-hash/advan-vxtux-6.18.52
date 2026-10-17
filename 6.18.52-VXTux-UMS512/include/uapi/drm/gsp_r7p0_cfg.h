@@ -7,6 +7,7 @@ typedef enum { false = 0, true = 1 } bool;
 #endif
 #endif
 
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Copyright (C) 2018 Spreadtrum Communications Inc.
  *
