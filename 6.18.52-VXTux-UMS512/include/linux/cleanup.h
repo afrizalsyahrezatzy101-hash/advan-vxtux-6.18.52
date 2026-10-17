@@ -293,9 +293,9 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
 #define scoped_class(_name, var, args)                          \
 	for (CLASS(_name, var)(args);                           \
 	     __guard_ptr(_name)(&var) || !__is_cond_ptr(_name); \
-	     ({ goto _label; }))                                \
+	     ({ goto _label##_name; }))                        \
 		if (0) {                                        \
-_label:                                                         \
+_label##_name:                                                 \
 			break;                                  \
 		} else
 
