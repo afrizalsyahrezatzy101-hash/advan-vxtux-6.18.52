@@ -1,3 +1,6 @@
+/* V17: SB_I_NO_DATA_INTEGRITY was missing */
+#define SB_I_NO_DATA_INTEGRITY (1<<16)
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_FS_H
 #define _LINUX_FS_H
