@@ -44,14 +44,14 @@ struct client_info_t {
 };
 
 /* V18: Define minimal mutex-like struct for uapi compatibility */
-struct berry_vsp_mutex {
+struct berry_vsp_mutex_compat {
 	unsigned long owner;
 	int magic;
 };
 
 struct vsp_pw_domain_info_t {
 	struct client_info_t pw_vsp_info[VSP_PW_DOMAIN_COUNT_MAX];
-	struct berry_vsp_mutex client_lock;  /* V18: restore for VSP driver */
+	struct berry_vsp_mutex_compat client_lock;  /* V18: restore for VSP driver */
 	__u8 vsp_pw_state;
 };
 
