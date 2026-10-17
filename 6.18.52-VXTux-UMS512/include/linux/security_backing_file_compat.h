@@ -4,12 +4,15 @@
 
 #include <linux/fs.h>
 
-#ifdef CONFIG_SECURITY
-/* Match VXTux file_table.c call signatures:
- *   security_backing_file_alloc(&ff->file, user_file)  -- struct file**
+/* VXTux 6.18 backing_file struct: contains struct file (NOT pointer)
+ * So &ff->file gives struct file* (not struct file**)
+ * 
+ * file_table.c calls:
+ *   security_backing_file_alloc(&ff->file, user_file)  -- struct file*, const struct file*
  *   security_backing_file_free(&ff->file)              -- struct file*
  */
-static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
+#ifdef CONFIG_SECURITY
+static inline int security_backing_file_alloc(struct file *backing, const struct file *user)
 {
     (void)backing;
     (void)user;
@@ -20,7 +23,7 @@ static inline void security_backing_file_free(struct file *f)
     (void)f;
 }
 #else
-static inline int security_backing_file_alloc(struct file **backing, const struct file *user)
+static inline int security_backing_file_alloc(struct file *backing, const struct file *user)
 {
     (void)backing;
     (void)user;
