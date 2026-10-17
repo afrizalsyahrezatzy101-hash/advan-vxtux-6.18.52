@@ -43,11 +43,14 @@ struct client_info_t {
 	__u8 pw_count;
 };
 
-/* V18: Define minimal mutex-like struct for uapi compatibility */
+/* V18: Guard against redefinition */
+#ifndef berry_vsp_mutex_compat_defined
+#define berry_vsp_mutex_compat_defined
 struct berry_vsp_mutex_compat {
 	unsigned long owner;
 	int magic;
 };
+#endif
 
 struct vsp_pw_domain_info_t {
 	struct client_info_t pw_vsp_info[VSP_PW_DOMAIN_COUNT_MAX];

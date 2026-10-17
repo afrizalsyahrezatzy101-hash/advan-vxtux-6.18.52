@@ -38,17 +38,21 @@
 #endif
 
 #define pr_fmt(fmt) "sprd-vsp-pw: " fmt
-#if IS_ENABLED(CONFIG_SPRD_VSP_CALL_CAM_PW_DOMAIN)
-#include <linux/platform_device.h>
-#include <uapi/video/sprd_mmsys_pw_domain.h>
+/* V18: VSP mutex compat shim - must be GLOBAL for both PW_DOMAIN and CALL_CAM */
+#ifndef berry_vsp_mutex_compat_defined
+#define berry_vsp_mutex_compat_defined
+struct berry_vsp_mutex_compat { unsigned long owner; int magic; };
 #endif
-
-/* V18: VSP mutex compat shim - struct comes from uapi header (included above) */
 #ifndef client_lock
 #define client_lock struct berry_vsp_mutex_compat
 static inline void __berry_mutex_lock(struct berry_vsp_mutex_compat *m) { (void)m; }
 static inline void __berry_mutex_unlock(struct berry_vsp_mutex_compat *m) { (void)m; }
 static inline void __berry_mutex_init(struct berry_vsp_mutex_compat *m) { (void)m; }
+#endif
+
+#if IS_ENABLED(CONFIG_SPRD_VSP_CALL_CAM_PW_DOMAIN)
+#include <linux/platform_device.h>
+#include <uapi/video/sprd_mmsys_pw_domain.h>
 #endif
 /* Override mutex macros globally so VSP driver compiles */
 #define mutex_lock(lock) __berry_mutex_lock(lock)
