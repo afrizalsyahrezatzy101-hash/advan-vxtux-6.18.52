@@ -31,6 +31,14 @@
 /* V17: forward decl - build_id_parse_file */
 int build_id_parse_file(const struct file *file, unsigned char *build_id, u32 buf_size);
 
+/* V17 fallbacks */
+#ifndef VM_MAYBE_GUARD
+#define VM_MAYBE_GUARD 0
+#endif
+#ifndef pmd_is_migration_entry
+#define pmd_is_migration_entry(pmd) is_migration_entry(pmd_to_swp_entry(pmd))
+#endif
+
 #define SENTINEL_VMA_END	-1
 #define SENTINEL_VMA_GATE	-2
 
