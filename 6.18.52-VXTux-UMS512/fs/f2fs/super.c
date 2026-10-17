@@ -40,6 +40,11 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/f2fs.h>
 
+#ifndef FSCRYPT_MAX_DEVICES
+#define FSCRYPT_MAX_DEVICES 8
+#endif
+
+
 static struct kmem_cache *f2fs_inode_cachep;
 
 #ifdef CONFIG_F2FS_FAULT_INJECTION
