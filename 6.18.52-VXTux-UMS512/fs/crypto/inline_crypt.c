@@ -22,6 +22,10 @@
 
 #include "fscrypt_private.h"
 
+#ifndef FSCRYPT_MAX_DEVICES
+#define FSCRYPT_MAX_DEVICES 8
+#endif
+
 static unsigned int
 fscrypt_get_devices(struct super_block *sb,
 		    struct block_device *devs[FSCRYPT_MAX_DEVICES])
