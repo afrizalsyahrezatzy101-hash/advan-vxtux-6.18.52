@@ -32,8 +32,6 @@ typedef __u32 compat_ulong_t;
 typedef __s32 compat_long_t;
 typedef __u32 compat_uptr_t;
 typedef __s32 compat_pid_t;
-typedef __u16 compat_uid_t;
-typedef __u16 compat_gid_t;
 typedef __u16 compat_mode_t;
 typedef __u32 compat_size_t;
 typedef __s32 compat_ssize_t;
