@@ -25,12 +25,12 @@ jobs:
       - name: Fix permissions and apply config
         run: |
           cd 6.18.52-VXTux-UMS512
-          # Make all .sh files executable
-          find scripts/ -name '*.sh' -exec chmod +x {} +
+          # Make ALL executable files in scripts/ executable (not just .sh)
+          find scripts/ -type f -exec chmod +x {} +
+          ls -la scripts/remove-stale-files
           # Apply enhanced config
           cp .config .config.original
           cp ../enhanced_config.cfg .config
-          ls -la scripts/cc-version.sh
           
       - name: Build kernel Image
         run: |
