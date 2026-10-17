@@ -75,6 +75,8 @@
 
 #include <linux/fsnotify_backend.h>
 #include "fsnotify.h"
+/* Forward declaration - was missing in original 6.18 */
+struct fsnotify_mark *fsnotify_next_mark(struct fsnotify_mark *mark);
 
 #define FSNOTIFY_REAPER_DELAY	(1)	/* 1 jiffy */
 
