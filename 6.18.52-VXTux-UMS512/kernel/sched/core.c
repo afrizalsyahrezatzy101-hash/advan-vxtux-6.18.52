@@ -99,6 +99,9 @@
 /* V17: disabled */ /* #include "../../io_uring/io-wq.h" */
 #include <linux/task_work.h>
 #define TWA_RESUME 0  /* V17: fallback */
+/* V17: io_uring stub funcs */
+static inline void io_wq_worker_sleeping(struct task_struct *tsk) { }
+static inline void io_wq_worker_running(struct task_struct *tsk) { }
 #include "../smpboot.h"
 #include "../locking/mutex.h"
 
