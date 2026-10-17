@@ -41,6 +41,13 @@
 #if IS_ENABLED(CONFIG_SPRD_VSP_CALL_CAM_PW_DOMAIN)
 #include <linux/platform_device.h>
 #include <uapi/video/sprd_mmsys_pw_domain.h>
+
+#ifndef client_lock
+#define client_lock int
+#endif
+#define mutex_lock(lock) do { } while(0)
+#define mutex_unlock(lock) do { } while(0)
+
 #endif
 
 struct vsp_pw_domain_info_t *vsp_pw_domain_info;
