@@ -154,7 +154,7 @@ static inline void sk_psock_msg_tot_len_add(struct sk_psock *psock, size_t v) {
 static inline int tcf_pedit_nkeys_locked(void *a, ...) { (void)a; return 0; }
 
 /* ====== tcf_action_valid (VXTux 6.18 missing) ====== */
-static inline bool tcf_action_valid(void *a, void *b) { (void)a; (void)b; return true; }
+static inline bool tcf_action_valid(void *a, ...) { (void)a; return true; }
 
 /* ====== sk_psock_msg_len (VXTux 6.18 missing) ====== */
 static inline int sk_psock_msg_len(struct sk_psock *psock) { (void)psock; return 0; }
