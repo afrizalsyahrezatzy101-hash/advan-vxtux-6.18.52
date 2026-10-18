@@ -151,7 +151,7 @@ static inline void sk_psock_msg_tot_len_add(struct sk_psock *psock, size_t v) {
 #endif
 
 /* ====== tcf_pedit_nkeys_locked (VXTux 6.18 missing) ====== */
-static inline int tcf_pedit_nkeys_locked(...) { return 0; }
+static inline int tcf_pedit_nkeys_locked(void *a, ...) { (void)a; return 0; }
 
 #endif /* _BERRY_COMPAT_H */
 
