@@ -119,7 +119,28 @@ static inline void qdisc_depth_set(void *q, int d) { (void)q; (void)d; }
 static inline void qdisc_depth_inc(void *q) { (void)q; }
 
 /* ====== kmalloc_obj (VXTux 6.18 missing) ====== */
-#define kmalloc_obj(obj, ...) kmalloc(sizeof(obj), ##__VA_ARGS__)
+static inline void *__berry_kmalloc_obj(size_t size, gfp_t flags) { return kmalloc(size, flags); }
+#define kmalloc_obj(obj, ...) __berry_kmalloc_obj(sizeof(obj), ##__VA_ARGS__, GFP_KERNEL)
+
+/* ====== sk_psock BPF stubs (VXTux 6.18 missing) ====== */
+struct sk_psock;
+static inline int sk_psock_dump_add(struct sk_psock *psock, struct sock *sk, void *p)
+{
+    (void)psock; (void)sk; (void)p;
+    return 0;
+}
+
+/* ====== sk_psock msg_tot_len accessor (VXTux 6.18 missing) ====== */
+static inline size_t sk_psock_msg_tot_len(struct sk_psock *psock) {
+    (void)psock; return 0;
+}
+static inline void sk_psock_msg_tot_len_set(struct sk_psock *psock, size_t v) {
+    (void)psock; (void)v;
+}
+static inline void sk_psock_msg_tot_len_add(struct sk_psock *psock, size_t v) {
+    (void)psock; (void)v;
+}
+#define msg_tot_len sk_psock_msg_tot_len
 
 #endif /* _BERRY_COMPAT_H */
 

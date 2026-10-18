@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 /* Copyright (c) 2017 - 2018 Covalent IO, Inc. http://covalent.io */
 
+#include <linux/berry_compat.h>
 #include <linux/skmsg.h>
 #include <linux/skbuff.h>
 #include <linux/scatterlist.h>
@@ -828,7 +829,7 @@ static void __sk_psock_purge_ingress_msg(struct sk_psock *psock)
 		sk_msg_free(psock->sk, msg);
 		kfree(msg);
 	}
-	WARN_ON_ONCE(psock->msg_tot_len);
+	WARN_ON_ONCE(psock->sk_psock_msg_tot_len(psk));
 }
 
 static void __sk_psock_zap_ingress(struct sk_psock *psock)
