@@ -40,6 +40,8 @@ jobs:
         run: |
           cd 6.18.52-VXTux-UMS512
           # Keeping cached object files so recompiles are faster (no delete)
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image -j$(nproc)
+          ls -la arch/arm64/boot/Image
           # Archive all built .o files for transport
           find fs/f2fs fs/btrfs fs/fuse drivers/pmdomain/sprd -name '*.o' -print0 | tar --null -czf berry-objs.tar.gz -T -
           ls -la berry-objs.tar.gz
@@ -49,4 +51,11 @@ jobs:
         with:
           name: v17-image-only
           path: 6.18.52-VXTux-UMS512/arch/arm64/boot/Image
+          if-no-files-found: error
+
+      - name: Upload .o archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-berry-objs
+          path: 6.18.52-VXTux-UMS512/berry-objs.tar.gz
           if-no-files-found: error
