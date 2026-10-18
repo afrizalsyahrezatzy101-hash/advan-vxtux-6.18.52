@@ -73,7 +73,7 @@ int nf_conntrack_broadcast_help(struct sk_buff *skb,
 	exp->class		  = NF_CT_EXPECT_CLASS_DEFAULT;
 	rcu_assign_pointer(exp->helper, helper);
 	exp->helper = NULL;
-	write_pnet(&exp->net, net);
+	/* VXTux 6.18 backport: exp->net not in upstream 6.18 */
 #ifdef CONFIG_NF_CONNTRACK_ZONES
 	exp->zone = ct->zone;
 #endif
