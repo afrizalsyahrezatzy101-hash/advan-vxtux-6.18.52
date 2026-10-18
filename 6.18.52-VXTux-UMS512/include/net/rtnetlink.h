@@ -200,7 +200,7 @@ struct rtnl_link_ops {
 };
 
 /* VXTux 6.18 backport: rtnl_dev_link_net_capable missing decl in header */
-bool rtnl_dev_link_net_capable(const struct net_device *dev, struct net *net);
+bool rtnl_dev_link_net_capable(const struct net_device *dev, const struct net *link_net);
 
 int rtnl_link_register(struct rtnl_link_ops *ops);
 void rtnl_link_unregister(struct rtnl_link_ops *ops);
