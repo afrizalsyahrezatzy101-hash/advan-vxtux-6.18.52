@@ -1257,7 +1257,7 @@ dev_cmp(struct nf_queue_entry *entry, unsigned long ifindex)
 	if (entry->bridge_dev && entry->bridge_dev->ifindex == ifindex)
 		return 1;
 #endif
-	if (entry->skb_dev && entry->skb_dev->ifindex == ifindex)
+	if (entry->skb && entry->skb->dev && entry->skb->dev->ifindex == ifindex)
 		return 1;
 	if (entry->state.in)
 		if (entry->state.in->ifindex == ifindex)
