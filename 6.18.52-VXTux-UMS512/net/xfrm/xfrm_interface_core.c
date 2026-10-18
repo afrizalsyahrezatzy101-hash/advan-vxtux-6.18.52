@@ -45,6 +45,15 @@
 #include <net/dst_metadata.h>
 #include <net/netns/generic.h>
 #include <linux/etherdevice.h>
+/* VXTux 6.18 backport: rtnl_dev_link_net_capable not in upstream 6.18 */
+static inline bool rtnl_dev_link_net_capable(const struct net_device *dev,
+					     const struct net *net)
+{
+	(void)dev; (void)net;
+	return true;
+}
+
+
 
 static int xfrmi_dev_init(struct net_device *dev);
 static void xfrmi_dev_setup(struct net_device *dev);

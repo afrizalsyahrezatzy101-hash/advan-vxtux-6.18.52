@@ -50,14 +50,6 @@
 #include <linux/skbuff_ref.h>
 
 #include <trace/events/tcp.h>
-/* VXTux 6.18 backport: vendor-only ACC-ECN stubs */
-#include <net/tcp.h>
-static inline u32 tcp_dst_advmss(const struct dst_entry *dst)
-{
-	/* VXTux 6.18: dst metric tcp_advmss was renamed/removed */
-	return dst ? dst->advmss : 0;
-}
-static inline void tcp_chrono_set(struct tcp_sock *tp, int type) { (void)tp; (void)type; }
 
 
 
