@@ -60,7 +60,7 @@ static void nf_queue_entry_release_refs(struct nf_queue_entry *entry)
 	struct nf_hook_state *state = &entry->state;
 
 	/* Release those devices we held, or Alexey will kill me. */
-	dev_put(skb->dev);
+	dev_put(entry->skb->dev);
 	dev_put(state->in);
 	dev_put(state->out);
 	if (state->sk)
@@ -115,7 +115,7 @@ bool nf_queue_entry_get_refs(struct nf_queue_entry *entry)
 	if (state->sk && !refcount_inc_not_zero(&state->sk->sk_refcnt))
 		return false;
 
-	dev_hold(skb->dev);
+	dev_hold(entry->skb->dev);
 	dev_hold(state->in);
 	dev_hold(state->out);
 
