@@ -12751,24 +12751,24 @@ void netdev_compute_master_upper_features(struct net_device *dev, bool update_he
 	netdev_for_each_lower_dev(dev, lower_dev, iter) {
 		gso_partial_features = netdev_increment_features(gso_partial_features,
 								 lower_dev->gso_partial_features,
-								 MASTER_UPPER_DEV_GSO_PARTIAL_FEATURES);
+								 0 /* MUP_DF_GSO */);
 
 		vlan_features = netdev_increment_features(vlan_features,
 							  lower_dev->vlan_features,
-							  MASTER_UPPER_DEV_VLAN_FEATURES);
+							  0 /* MUP_DF_VLAN */);
 
 		enc_features = netdev_increment_features(enc_features,
 							 lower_dev->hw_enc_features,
-							 MASTER_UPPER_DEV_ENC_FEATURES);
+							 0 /* MUP_DF_ENC */);
 
 		if (IS_ENABLED(CONFIG_XFRM_OFFLOAD))
 			xfrm_features = netdev_increment_features(xfrm_features,
 								  lower_dev->hw_enc_features,
-								  MASTER_UPPER_DEV_XFRM_FEATURES);
+								  0 /* MUP_DF_XFRM */);
 
 		mpls_features = netdev_increment_features(mpls_features,
 							  lower_dev->mpls_features,
-							  MASTER_UPPER_DEV_MPLS_FEATURES);
+							  0 /* MUP_DF_MPLS */);
 
 		dst_release_flag &= lower_dev->priv_flags;
 
