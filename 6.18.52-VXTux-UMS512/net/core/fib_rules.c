@@ -5,6 +5,7 @@
  * Authors:	Thomas Graf <tgraf@suug.ch>
  */
 
+#include <linux/berry_compat.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>
@@ -79,6 +80,9 @@ int fib_default_rule_add(struct fib_rules_ops *ops,
 	return 0;
 }
 EXPORT_SYMBOL(fib_default_rule_add);
+
+struct fib_rule;
+static inline void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu) { (void)rule; (void)lockdep_key; (void)rcu; return NULL; }
 
 static u32 fib_default_rule_pref(struct fib_rules_ops *ops)
 {

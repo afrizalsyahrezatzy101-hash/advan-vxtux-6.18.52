@@ -121,10 +121,7 @@ static inline void qdisc_depth_set(struct Qdisc *q, int d) { (void)q; (void)d; }
 static inline void qdisc_depth_inc(struct Qdisc *q) { (void)q; }
 
 /* ====== kmalloc_obj (VXTux 6.18 missing) ====== */
-static inline void *kmalloc_obj(size_t size, gfp_t flags)
-{
-    return kmalloc(size, flags);
-}
+#define kmalloc_obj(obj, flags) kmalloc(sizeof(obj), flags)
 
 #endif /* _BERRY_COMPAT_H */
 
