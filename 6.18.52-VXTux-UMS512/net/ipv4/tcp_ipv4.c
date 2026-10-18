@@ -91,6 +91,28 @@
 #include <linux/scatterlist.h>
 
 #include <trace/events/tcp.h>
+/* VXTux 6.18 backport: vendor-only secure_tcp_seq_and_ts_off / union tcp_seq_and_ts_off */
+struct tcp_seq_and_ts_off {
+	u32 seq;
+	u32 ts_off;
+};
+union tcp_seq_and_ts_off {
+	struct tcp_seq_and_ts_off off;
+	u64 both;
+};
+static inline union tcp_seq_and_ts_off secure_tcp_seq_and_ts_off(const struct net *net,
+								 __be32 saddr, __be32 daddr,
+								 __be16 sport, __be16 dport)
+{
+	union tcp_seq_and_ts_off ret;
+	(void)net; (void)saddr; (void)daddr; (void)sport; (void)dport;
+	ret.both = 0;
+	ret.off.seq = 0;
+	ret.off.ts_off = 0;
+	return ret;
+}
+
+
 
 #ifdef CONFIG_TCP_MD5SIG
 static int tcp_v4_md5_hash_hdr(char *md5_hash, const struct tcp_md5sig_key *key,
@@ -385,7 +407,7 @@ void tcp_v4_mtu_reduced(struct sock *sk)
 	/* Something is about to be wrong... Remember soft error
 	 * for the case, if this connection will not able to recover.
 	 */
-	dmtu = dst4_mtu(dst);
+	dmtu = dst_mtu(dst);
 	if (mtu < dmtu && ip_dont_fragment(sk, dst))
 		WRITE_ONCE(sk->sk_err_soft, EMSGSIZE);
 
@@ -1728,7 +1750,7 @@ const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops = {
 	.cookie_init_seq =	cookie_v4_init_sequence,
 #endif
 	.route_req	=	tcp_v4_route_req,
-	.init_seq_and_ts_off	=	tcp_v4_init_seq_and_ts_off,
+	/* VXTux 6.18 backport: init_seq_and_ts_off is vendor-only field */
 	.send_synack	=	tcp_v4_send_synack,
 };
 
@@ -1756,9 +1778,7 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 				  struct request_sock *req,
 				  struct dst_entry *dst,
 				  struct request_sock *req_unhash,
-				  bool *own_req,
-				  void (*opt_child_init)(struct sock *newsk,
-							 const struct sock *sk))
+				  bool *own_req)
 {
 	struct inet_request_sock *ireq;
 	bool found_dup_sk = false;
@@ -1816,7 +1836,7 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 #endif
 	tcp_ca_openreq_child(newsk, dst);
 
-	tcp_sync_mss(newsk, dst4_mtu(dst));
+	tcp_sync_mss(newsk, dst_mtu(dst));
 	newtp->advmss = tcp_mss_clamp(tcp_sk(sk), tcp_dst_advmss(dst));
 
 	tcp_initialize_rcv_mss(newsk);
@@ -2364,7 +2384,7 @@ process:
 	th = (const struct tcphdr *)skb->data;
 	iph = ip_hdr(skb);
 	tcp_v4_fill_cb(skb, iph, th);
-	TCP_SKB_CB(skb)->tcp_tw_isn = isn;
+	/* VXTux 6.18 backport: TCP_SKB_CB(skb)->tcp_tw_isn removed (vendor-only field) */ (void)isn;
 
 	skb->dev = NULL;
 
