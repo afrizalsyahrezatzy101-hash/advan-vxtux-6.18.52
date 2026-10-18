@@ -600,7 +600,7 @@ KBUILD_CFLAGS += -fno-common
 KBUILD_CFLAGS += -fno-PIE
 KBUILD_CFLAGS += -fno-strict-aliasing
 
-KBUILD_CPPFLAGS := -D__KERNEL__ -include C:/Users/Administrator/custom_force_rcu.h
+KBUILD_CPPFLAGS := -D__KERNEL__ -include custom_force_rcu.h
 KBUILD_RUSTFLAGS := $(rust_common_flags) \
 		    -Cpanic=abort -Cembed-bitcode=n -Clto=n \
 		    -Cforce-unwind-tables=n -Ccodegen-units=1 \
