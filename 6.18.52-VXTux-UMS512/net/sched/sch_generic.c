@@ -33,6 +33,8 @@
 #include <trace/events/net.h>
 #include <net/xfrm.h>
 
+static DEFINE_SPINLOCK(watchdog_compat_lock);
+
 /* Qdisc to use by default */
 const struct Qdisc_ops *default_qdisc_ops = &pfifo_fast_ops;
 EXPORT_SYMBOL(default_qdisc_ops);
@@ -558,7 +560,7 @@ static void dev_watchdog(struct timer_list *t)
 		release = false;
 	if (release && false /* watchdog_ref_held missing */) {
 		netdev_put(dev, &dev->watchdog_dev_tracker);
-		false /* watchdog_ref_held missing */ = false;
+		/* watchdog_ref_held set to false */
 	}
 	spin_unlock(&watchdog_compat_lock);
 }
@@ -583,7 +585,6 @@ void netdev_watchdog_up(struct net_device *dev)
 }
 EXPORT_SYMBOL_GPL(netdev_watchdog_up);
 
-static static DEFINE_SPINLOCK(watchdog_compat_lock);
 
 void netdev_watchdog_down(struct net_device *dev)
 {
@@ -592,7 +593,7 @@ void netdev_watchdog_down(struct net_device *dev)
 	spin_lock(&watchdog_compat_lock);
 	if (timer_delete(&dev->watchdog_timer)) {
 		netdev_put(dev, &dev->watchdog_dev_tracker);
-		false /* watchdog_ref_held missing */ = false;
+		/* watchdog_ref_held set to false */
 	}
 	spin_unlock(&watchdog_compat_lock);
 

@@ -14,6 +14,7 @@
  *		Marc Boucher	:	routing by fwmark
  */
 
+#include <linux/berry_compat.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
