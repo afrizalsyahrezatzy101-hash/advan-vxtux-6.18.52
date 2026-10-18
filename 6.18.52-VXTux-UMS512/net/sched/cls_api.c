@@ -9,6 +9,7 @@
  * Eduardo J. Blanco <ejbs@netlabs.com.uy> :990222: kmod support
  */
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
