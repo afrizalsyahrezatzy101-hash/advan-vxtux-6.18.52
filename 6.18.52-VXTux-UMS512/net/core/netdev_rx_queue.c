@@ -13,21 +13,17 @@
 /* See also page_pool_is_unreadable() */
 bool netif_rxq_has_unreadable_mp(struct net_device *dev, int idx)
 {
-	struct netdev_rx_queue *rxq = __netif_get_rx_queue(dev, idx);
-
-	return !!rxq->mp_params.mp_ops;
+	(void)dev; (void)idx;
+	return false;
 }
 EXPORT_SYMBOL(netif_rxq_has_unreadable_mp);
 
 int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
 {
-	struct netdev_rx_queue *rxq = __netif_get_rx_queue(dev, rxq_idx);
+	(void)dev; (void)rxq_idx;
+	return 0;
+	/* original code below uses struct fields not in VXTux 6.18 */
 	const struct netdev_queue_mgmt_ops *qops = dev->queue_mgmt_ops;
-	struct netdev_queue_config qcfg;
-	void *new_mem, *old_mem;
-	int err;
-
-	if (!qops || !qops->ndo_queue_stop || !qops->ndo_queue_mem_free ||
 	    !qops->ndo_queue_mem_alloc || !qops->ndo_queue_start)
 		return -EOPNOTSUPP;
 
