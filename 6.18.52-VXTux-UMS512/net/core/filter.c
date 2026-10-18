@@ -17,6 +17,7 @@
  * Kris Katterjohn - Added many additional checks in bpf_check_classic()
  */
 
+#include <linux/berry_compat.h>
 #include <linux/atomic.h>
 #include <linux/bpf_verifier.h>
 #include <linux/module.h>

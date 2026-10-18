@@ -82,6 +82,17 @@ static inline int soc_pcm_set_dai_params(void *dai, void *params)
     return 0;
 }
 
+/* ====== dev_xmit_recursion (VXTux 6.18 missing) ====== */
+static inline int dev_xmit_recursion(void) { return 0; }
+static inline void dev_xmit_recursion_inc(void) {}
+static inline void dev_xmit_recursion_dec(void) {}
+
+/* ====== sk_msg_sg_copy_assign (BPF msg shim) ====== */
+static inline void sk_msg_sg_copy_assign(void *msg, int i, void *from, int move_from)
+{
+    (void)msg; (void)i; (void)from; (void)move_from;
+}
+
 #endif /* _BERRY_COMPAT_H */
 
 
