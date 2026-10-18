@@ -143,15 +143,15 @@ static inline void sk_psock_msg_tot_len_add(struct sk_psock *psock, size_t v) {
 #define msg_tot_len sk_psock_msg_tot_len
 
 /* ====== TCA_ACT_FLAGS_AT_INGRESS_OR_CLSACT (VXTux 6.18 missing) ====== */
+#ifndef TCA_ACT_FLAGS_AT_CLSACT
+#define TCA_ACT_FLAGS_AT_CLSACT ((__u32)0x40)
+#endif
 #ifndef TCA_ACT_FLAGS_AT_INGRESS_OR_CLSACT
 #define TCA_ACT_FLAGS_AT_INGRESS_OR_CLSACT (TCA_ACT_FLAGS_AT_INGRESS | TCA_ACT_FLAGS_AT_CLSACT)
 #endif
 
 /* ====== tcf_pedit_nkeys_locked (VXTux 6.18 missing) ====== */
-static inline int tcf_pedit_nkeys_locked(void)
-{
-    return 0;
-}
+static inline int tcf_pedit_nkeys_locked(...) { return 0; }
 
 #endif /* _BERRY_COMPAT_H */
 

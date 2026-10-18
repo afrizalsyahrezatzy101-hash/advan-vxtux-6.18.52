@@ -573,3 +573,6 @@ static inline void skb_bpf_redirect_clear(struct sk_buff *skb)
 }
 #endif /* CONFIG_NET_SOCK_MSG */
 #endif /* _LINUX_SKMSG_H */
+
+/* Berry compat */
+static inline void sk_psock_msg_len_add(struct sk_psock *psock, int val) { (void)psock; (void)val; }

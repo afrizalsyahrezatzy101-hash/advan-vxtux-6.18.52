@@ -828,7 +828,7 @@ static void __sk_psock_purge_ingress_msg(struct sk_psock *psock)
 		sk_msg_free(psock->sk, msg);
 		kfree(msg);
 	}
-	WARN_ON_ONCE(psock->msg_tot_len);
+	WARN_ON_ONCE(sk_psock_msg_tot_len(psock));
 }
 
 static void __sk_psock_zap_ingress(struct sk_psock *psock)
