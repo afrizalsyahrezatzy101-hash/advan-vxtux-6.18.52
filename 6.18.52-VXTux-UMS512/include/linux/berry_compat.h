@@ -101,6 +101,10 @@ static inline struct net_device *netdev_get_by_index_lock(struct net *net, int i
 }
 static inline void netdev_get_by_index_unlock(void) {}
 
+/* ====== QCFG_RX_PAGE_SIZE & pp_memory_provider_params.rx_page_size ====== */
+#define QCFG_RX_PAGE_SIZE 0
+static inline int qops_ndo_default_qcfg(void *qops, void *qcfg) { (void)qops; (void)qcfg; return 0; }
+
 #endif /* _BERRY_COMPAT_H */
 
 

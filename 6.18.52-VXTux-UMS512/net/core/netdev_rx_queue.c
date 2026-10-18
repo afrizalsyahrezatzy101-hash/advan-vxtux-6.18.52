@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <linux/berry_compat.h>
 #include <linux/ethtool_netlink.h>
 #include <linux/netdevice.h>
 #include <net/netdev_lock.h>
