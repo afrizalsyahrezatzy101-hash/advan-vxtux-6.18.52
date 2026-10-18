@@ -162,6 +162,9 @@ static inline int sk_psock_msg_len(struct sk_psock *psock) { (void)psock; return
 /* ====== mini_qdisc_pair_inited (VXTux 6.18 missing) ====== */
 static inline bool mini_qdisc_pair_inited(void *a, ...) { (void)a; return true; }
 
+/* ====== skb_header_pointer_careful (VXTux 6.18 missing) ====== */
+static inline void *skb_header_pointer_careful(void *a, ...) { (void)a; return NULL; }
+
 #endif /* _BERRY_COMPAT_H */
 
 

@@ -23,6 +23,7 @@
  *	nfmark match added by Catalin(ux aka Dino) BOIE <catab at umbrella.ro>
  */
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 #include <linux/types.h>
