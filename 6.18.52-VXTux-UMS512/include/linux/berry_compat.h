@@ -159,6 +159,9 @@ static inline bool tcf_action_valid(void *a, ...) { (void)a; return true; }
 /* ====== sk_psock_msg_len (VXTux 6.18 missing) ====== */
 static inline int sk_psock_msg_len(struct sk_psock *psock) { (void)psock; return 0; }
 
+/* ====== mini_qdisc_pair_inited (VXTux 6.18 missing) ====== */
+static inline bool mini_qdisc_pair_inited(void *a, ...) { (void)a; return true; }
+
 #endif /* _BERRY_COMPAT_H */
 
 
