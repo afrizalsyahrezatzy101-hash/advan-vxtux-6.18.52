@@ -20,4 +20,4 @@ obj-$(CONFIG_MMC_SPI)			+= mmc_spi.o of_mmc_spi.o
 obj-$(CONFIG_MMC_CQHCI)			+= cqhci.o
 cqhci-y					+= cqhci-core.o
 cqhci-$(CONFIG_MMC_CRYPTO)		+= cqhci-crypto.o
-obj-$(CONFIG_MMC_HSQ)			+= mmc_hsq.o
+
