@@ -58,6 +58,9 @@ struct nf_conntrack_expect {
 #endif
 
 	struct rcu_head rcu;
+
+	/* VXTux 6.18 backport: assign_helper missing from upstream 6.18 */
+	bool			assign_helper;
 };
 
 static inline struct net *nf_ct_exp_net(struct nf_conntrack_expect *exp)
