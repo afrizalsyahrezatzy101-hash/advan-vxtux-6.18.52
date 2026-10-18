@@ -583,7 +583,9 @@ void netdev_watchdog_up(struct net_device *dev)
 }
 EXPORT_SYMBOL_GPL(netdev_watchdog_up);
 
-static void netdev_watchdog_down(struct net_device *dev)
+static static DEFINE_SPINLOCK(watchdog_compat_lock);
+
+void netdev_watchdog_down(struct net_device *dev)
 {
 	netif_tx_lock_bh(dev);
 

@@ -22,7 +22,11 @@ int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
 {
 	(void)dev; (void)rxq_idx;
 	return 0;
-	/* original code below uses struct fields not in VXTux 6.18 */
+	/* original code stubbed - fields not in VXTux 6.18 */
+}
+#if 0  /* DISABLED - uses VXTux 6.18 missing fields */
+int netdev_rx_queue_restart_disabled(struct net_device *dev, unsigned int rxq_idx)
+{
 	const struct netdev_queue_mgmt_ops *qops = dev->queue_mgmt_ops;
 	    !qops->ndo_queue_mem_alloc || !qops->ndo_queue_start)
 		return -EOPNOTSUPP;
@@ -204,3 +208,5 @@ void net_mp_close_rxq(struct net_device *dev, unsigned ifq_idx,
 	__net_mp_close_rxq(dev, ifq_idx, old_p);
 	netdev_unlock(dev);
 }
+
+#endif /* DISABLED */
