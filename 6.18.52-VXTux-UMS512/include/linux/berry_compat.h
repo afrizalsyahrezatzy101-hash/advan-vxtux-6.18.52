@@ -171,6 +171,9 @@ static inline unsigned int ip_dst_mtu_configured(void *a, ...) { (void)a; return
 /* ====== dst4_mtu (VXTux 6.18 missing) ====== */
 static inline unsigned int dst4_mtu(void *a, ...) { (void)a; return 1500; }
 
+/* ====== nf_ct_helper_expectfn_destroy (VXTux 6.18 missing) ====== */
+static inline void nf_ct_helper_expectfn_destroy(void *a, ...) { (void)a; }
+
 #endif /* _BERRY_COMPAT_H */
 
 

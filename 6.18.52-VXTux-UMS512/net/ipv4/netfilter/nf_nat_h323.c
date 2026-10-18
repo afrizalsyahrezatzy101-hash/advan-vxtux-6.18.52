@@ -9,6 +9,7 @@
  * Jozsef Kadlecsik <kadlec@netfilter.org>
  */
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/tcp.h>
 #include <net/tcp.h>
