@@ -51,7 +51,8 @@ void nf_ct_unlink_expect_report(struct nf_conntrack_expect *exp,
 	struct net *net = nf_ct_exp_net(exp);
 	struct nf_conntrack_net *cnet;
 
-	lockdep_nfct_expect_lock_held();
+	/* VXTux 6.18 backport: lockdep_nfct_expect_lock_held not in upstream 6.18 */
+	/* lockdep_nfct_expect_lock_held(); */
 	WARN_ON(!master_help);
 	WARN_ON(timer_pending(&exp->timeout));
 
@@ -113,13 +114,14 @@ nf_ct_exp_equal(const struct nf_conntrack_tuple *tuple,
 		const struct net *net)
 {
 	return nf_ct_tuple_mask_cmp(tuple, &i->tuple, &i->mask) &&
-	       net_eq(net, read_pnet(&i->net)) &&
-	       nf_ct_exp_zone_equal_any(i, zone);
+	       net_eq(net, nf_ct_net(i->master)) &&
+	       nf_ct_zone_equal_any(i->master, zone);
 }
 
 bool nf_ct_remove_expect(struct nf_conntrack_expect *exp)
 {
-	lockdep_nfct_expect_lock_held();
+	/* VXTux 6.18 backport: lockdep_nfct_expect_lock_held not in upstream 6.18 */
+	/* lockdep_nfct_expect_lock_held(); */
 
 	if (timer_delete(&exp->timeout)) {
 		nf_ct_unlink_expect(exp);
@@ -180,7 +182,8 @@ nf_ct_find_expectation(struct net *net,
 	struct nf_conntrack_expect *i, *exp = NULL;
 	unsigned int h;
 
-	lockdep_nfct_expect_lock_held();
+	/* VXTux 6.18 backport: lockdep_nfct_expect_lock_held not in upstream 6.18 */
+	/* lockdep_nfct_expect_lock_held(); */
 
 	if (!cnet->expect_count)
 		return NULL;
@@ -344,8 +347,6 @@ void nf_ct_expect_init(struct nf_conntrack_expect *exp, unsigned int class,
 		helper = rcu_dereference(help->helper);
 
 	rcu_assign_pointer(exp->helper, helper);
-	rcu_assign_pointer(exp->assign_helper, NULL);
-	write_pnet(&exp->net, net);
 #ifdef CONFIG_NF_CONNTRACK_ZONES
 	exp->zone = ct->zone;
 #endif
@@ -465,7 +466,8 @@ static inline int __nf_ct_expect_check(struct nf_conntrack_expect *expect,
 	unsigned int h;
 	int ret = 0;
 
-	lockdep_nfct_expect_lock_held();
+	/* VXTux 6.18 backport: lockdep_nfct_expect_lock_held not in upstream 6.18 */
+	/* lockdep_nfct_expect_lock_held(); */
 
 	if (!master_help) {
 		ret = -ESHUTDOWN;
