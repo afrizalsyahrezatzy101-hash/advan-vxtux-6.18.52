@@ -91,7 +91,7 @@
 #include <linux/scatterlist.h>
 
 #include <trace/events/tcp.h>
-/* VXTux 6.18 backport: vendor-only secure_tcp_seq_and_ts_off / union tcp_seq_and_ts_off */
+/* VXTux 6.18 backport: union tcp_seq_and_ts_off type definition (function in net/core/secure_seq.c) */
 struct tcp_seq_and_ts_off {
 	u32 seq;
 	u32 ts_off;
@@ -100,17 +100,7 @@ union tcp_seq_and_ts_off {
 	struct tcp_seq_and_ts_off off;
 	u64 both;
 };
-static inline union tcp_seq_and_ts_off secure_tcp_seq_and_ts_off(const struct net *net,
-								 __be32 saddr, __be32 daddr,
-								 __be16 sport, __be16 dport)
-{
-	union tcp_seq_and_ts_off ret;
-	(void)net; (void)saddr; (void)daddr; (void)sport; (void)dport;
-	ret.both = 0;
-	ret.off.seq = 0;
-	ret.off.ts_off = 0;
-	return ret;
-}
+
 
 
 
@@ -1778,7 +1768,9 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 				  struct request_sock *req,
 				  struct dst_entry *dst,
 				  struct request_sock *req_unhash,
-				  bool *own_req)
+				  bool *own_req,
+				  void (*opt_child_init)(struct sock *newsk,
+		const struct sock *sk))
 {
 	struct inet_request_sock *ireq;
 	bool found_dup_sk = false;
