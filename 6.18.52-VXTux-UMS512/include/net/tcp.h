@@ -2095,6 +2095,17 @@ enum tcp_chrono {
 void tcp_chrono_start(struct sock *sk, const enum tcp_chrono type);
 void tcp_chrono_stop(struct sock *sk, const enum tcp_chrono type);
 
+/* VXTux 6.18 backport: vendor-only stubs (function removed in 6.18) */
+static inline unsigned int tcp_dst_advmss(const struct dst_entry *dst)
+{
+	return dst_metric_raw(dst, RTAX_ADVMSS);
+}
+
+static inline void tcp_chrono_set(struct tcp_sock *tp, enum tcp_chrono c)
+{
+	tcp_chrono_stop((struct sock *)tp, c);
+}
+
 /* This helper is needed, because skb->tcp_tsorted_anchor uses
  * the same memory storage than skb->destructor/_skb_refdst
  */

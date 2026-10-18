@@ -129,7 +129,7 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
 
 #define __smp_store_release(p, v)					\
 do {									\
-	typeof(p) __p = (p);						\
+	typeof((p) ? (p) : NULL) __p = (p);				\
 	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u =	\
 		{ .__val = (__force __unqual_scalar_typeof(*p)) (v) };	\
 	compiletime_assert_atomic_type(*p);				\
@@ -165,7 +165,7 @@ do {									\
 #define __smp_load_acquire(p)						\
 ({									\
 	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
-	typeof(p) __p = (p);						\
+	typeof((p) ? (p) : NULL) __p = (p);				\
 	compiletime_assert_atomic_type(*p);				\
 	kasan_check_read(__p, sizeof(*p));				\
 	switch (sizeof(*p)) {						\
