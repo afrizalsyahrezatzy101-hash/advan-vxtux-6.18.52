@@ -81,9 +81,6 @@ int fib_default_rule_add(struct fib_rules_ops *ops,
 }
 EXPORT_SYMBOL(fib_default_rule_add);
 
-struct fib_rule;
-static inline void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu) { (void)rule; (void)lockdep_key; (void)rcu; return NULL; }
-
 static u32 fib_default_rule_pref(struct fib_rules_ops *ops)
 {
 	struct list_head *pos;

@@ -107,21 +107,19 @@ static inline int qops_ndo_default_qcfg(void *qops, void *qcfg) { (void)qops; (v
 
 /* ====== fib_rule_get_safe (VXTux 6.18 missing) ====== */
 struct fib_rule;
-extern void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu);
-static inline void *berry_fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, bool rcu)
+static inline void *fib_rule_get_safe(struct fib_rule *rule, ...)
 {
-    (void)rule; (void)lockdep_key; (void)rcu;
+    (void)rule;
     return NULL;
 }
 
 /* ====== Qdisc depth (VXTux 6.18 missing) ====== */
-struct berry_qdisc_compat { int depth; };
-static inline int qdisc_depth_get(struct Qdisc *q) { (void)q; return 0; }
-static inline void qdisc_depth_set(struct Qdisc *q, int d) { (void)q; (void)d; }
-static inline void qdisc_depth_inc(struct Qdisc *q) { (void)q; }
+static inline int qdisc_depth_get(void *q) { (void)q; return 0; }
+static inline void qdisc_depth_set(void *q, int d) { (void)q; (void)d; }
+static inline void qdisc_depth_inc(void *q) { (void)q; }
 
 /* ====== kmalloc_obj (VXTux 6.18 missing) ====== */
-#define kmalloc_obj(obj, flags) kmalloc(sizeof(obj), flags)
+#define kmalloc_obj(obj, ...) kmalloc(sizeof(obj), ##__VA_ARGS__)
 
 #endif /* _BERRY_COMPAT_H */
 
