@@ -22,7 +22,7 @@ struct nf_queue_entry {
 	struct nf_hook_state	state;
 	u16			size; /* sizeof(entry) + saved route keys */
 	/* VXTux 6.18 backport: missing fields from upstream 6.18 */
-	struct hlist_node	hash_node; /* for nfnetlink_queue hash table */
+	struct rhash_head	hash_node; /* for nfnetlink_queue hash table */
 
 	/* extra space to store route keys */
 };

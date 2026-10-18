@@ -491,7 +491,7 @@ static void nfqnl_reinject(struct nf_queue_entry *entry, unsigned int verdict)
 		}
 	}
 
-	if (verdict != NF_DROP && entry->nf_ct_is_unconfirmed) {
+	if (verdict != NF_DROP) {
 		/* If first queued segment was already reinjected then
 		 * there is a good chance the ct entry is now confirmed.
 		 *
@@ -1155,7 +1155,7 @@ nfqnl_enqueue_packet(struct nf_queue_entry *entry, unsigned int queuenum)
 			 * As long as the first one is reinjected first it
 			 * will do the confirmation for us.
 			 */
-			entry->nf_ct_is_unconfirmed = ct_is_unconfirmed;
+			/* confirmation handled by conntrack */
 		}
 
 		if (err == 0)
