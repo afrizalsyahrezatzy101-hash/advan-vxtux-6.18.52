@@ -23,6 +23,7 @@
 
 #define pr_fmt(fmt) "IPv4: " fmt
 
+#include <linux/berry_compat.h>
 #include <linux/compiler.h>
 #include <linux/module.h>
 #include <linux/types.h>
