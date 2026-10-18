@@ -6851,7 +6851,7 @@ consume:
 		tp->snd_wl1    = TCP_SKB_CB(skb)->seq;
 		tp->max_window = tp->snd_wnd;
 
-		tcp_ecn_rcv_syn(sk, th, skb);
+		tcp_ecn(sk, th);
 
 		tcp_mtup_init(sk);
 		tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
@@ -7257,7 +7257,7 @@ static void tcp_ecn_create_request(struct request_sock *req,
 
 	if (tcp_accecn_syn_requested(th) &&
 	    (READ_ONCE(net->ipv4.sysctl_tcp_ecn) >= 3 ||
-	     tcp_ca_needs_accecn(listen_sk))) {
+	     tcp_ca_needs_ecn(listen_sk))) {
 		inet_rsk(req)->ecn_ok = 1;
 		tcp_rsk(req)->accecn_ok = 1;
 		tcp_rsk(req)->syn_ect_rcv = TCP_SKB_CB(skb)->ip_dsfield &
@@ -7412,12 +7412,21 @@ u16 tcp_get_syncookie_mss(struct request_sock_ops *rsk_ops,
 }
 EXPORT_IPV6_MOD_GPL(tcp_get_syncookie_mss);
 
+/* V18: union tcp_seq_and_ts_off missing in upstream 6.18 - define locally */
+union tcp_seq_and_ts_off {
+	u64	hash64;
+	struct {
+		u32	seq;
+		u32	ts_off;
+	};
+};
+
 int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		     const struct tcp_request_sock_ops *af_ops,
 		     struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_fastopen_cookie foc = { .len = -1 };
-	u32 isn = TCP_SKB_CB(skb)->tcp_tw_isn;
+	u32 isn = 0;  /* tcp_tw_isn removed from tcp_skb_cb in 6.18 */
 	struct tcp_options_received tmp_opt;
 	const struct tcp_sock *tp = tcp_sk(sk);
 	struct net *net = sock_net(sk);
@@ -7489,7 +7498,8 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		goto drop_and_free;
 
 	if (tmp_opt.tstamp_ok || (!want_cookie && !isn))
-		st = af_ops->init_seq_and_ts_off(net, skb);
+		st.seq = af_ops->init_seq(skb);
+		st.ts_off = af_ops->init_ts_off(net, skb);
 
 	if (tmp_opt.tstamp_ok) {
 		tcp_rsk(req)->req_usec_ts = dst_tcp_usec_ts(dst);

@@ -106,15 +106,6 @@ static void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff *skb)
 	}
 }
 
-static union tcp_seq_and_ts_off
-tcp_v6_init_seq_and_ts_off(const struct net *net, const struct sk_buff *skb)
-{
-	return secure_tcpv6_seq_and_ts_off(net,
-					   ipv6_hdr(skb)->daddr.s6_addr32,
-					   ipv6_hdr(skb)->saddr.s6_addr32,
-					   tcp_hdr(skb)->dest,
-					   tcp_hdr(skb)->source);
-}
 
 static int tcp_v6_pre_connect(struct sock *sk, struct sockaddr *uaddr,
 			      int addr_len)
@@ -859,7 +850,6 @@ const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops = {
 	.cookie_init_seq =	cookie_v6_init_sequence,
 #endif
 	.route_req	=	tcp_v6_route_req,
-	.init_seq_and_ts_off	= tcp_v6_init_seq_and_ts_off,
 	.send_synack	=	tcp_v6_send_synack,
 };
 
