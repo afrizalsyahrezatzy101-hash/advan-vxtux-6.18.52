@@ -736,7 +736,7 @@ void snd_pcm_runtime_buffer_set_silence(struct snd_pcm_runtime *runtime)
 
 	err = snd_pcm_buffer_access_lock(runtime);
 	if (err < 0)
-		return err;
+		return;
 	if (runtime->dma_area)
 		snd_pcm_format_set_silence(runtime->format, runtime->dma_area,
 					   bytes_to_samples(runtime, runtime->dma_bytes));
@@ -763,7 +763,7 @@ static int snd_pcm_hw_params(struct snd_pcm_substream *substream,
 	runtime = substream->runtime;
 	err = snd_pcm_buffer_access_lock(runtime);
 	if (err < 0)
-		return err;
+		return;
 	scoped_guard(pcm_stream_lock_irq, substream) {
 		switch (runtime->state) {
 		case SNDRV_PCM_STATE_OPEN:
