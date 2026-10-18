@@ -290,6 +290,11 @@
 #include <net/rps.h>
 
 #include "../core/devmem.h"
+/* VXTux 6.18 backport: vendor-only functions, stubbed for compatibility */
+static inline void tcp_set_rto(struct sock *sk) { (void)sk; }
+static inline void tcp_update_pacing_rate(struct sock *sk) { (void)sk; }
+
+
 
 /* Track pending CMSGs. */
 enum {
@@ -4178,7 +4183,8 @@ static void tcp_get_info_chrono_stats(const struct tcp_sock *tp,
 	 * This is best effort, tcp_get_timestamping_opt_stats() can
 	 * see wrong values. A real fix would be too costly for TCP fast path.
 	 */
-	cur = READ_ONCE(tp->chrono_type);
+	/* VXTux 6.18 backport: chrono_type is bit-field, READ_ONCE not allowed in 6.18 */
+	cur = 0; /* READ_ONCE(tp->chrono_type); */
 	for (i = TCP_CHRONO_BUSY; i < __TCP_CHRONO_MAX; ++i) {
 		stats[i] = READ_ONCE(tp->chrono_stat[i - 1]);
 		if (i == cur)

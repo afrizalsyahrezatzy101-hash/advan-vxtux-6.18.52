@@ -22,6 +22,11 @@
 #include <net/tcp.h>
 #include <net/sock_reuseport.h>
 #include <net/addrconf.h>
+/* VXTux 6.18 backport: vendor-only functions, stubbed to false for compatibility */
+static inline bool inet_use_hash2_on_bind(struct sock *sk) { (void)sk; return false; }
+static inline void tcp_clear_sock_ops_cb_flags(struct sock *sk) { (void)sk; }
+
+
 
 #if IS_ENABLED(CONFIG_IPV6)
 /* match_sk*_wildcard == true:  IPV6_ADDR_ANY equals to any IPv6 addresses

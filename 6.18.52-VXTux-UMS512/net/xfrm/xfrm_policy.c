@@ -4698,7 +4698,8 @@ int xfrm_migrate(const struct xfrm_selector *sel, u8 dir, u8 type,
 	}
 
 	/* Stage 5 - announce */
-	km_migrate(sel, dir, type, m, num_migrate, k, net, encap);
+	/* VXTux 6.18 backport: km_migrate dropped net arg in upstream 6.18 */
+	km_migrate(sel, dir, type, m, num_migrate, k, encap);
 
 	xfrm_pol_put(pol);
 
