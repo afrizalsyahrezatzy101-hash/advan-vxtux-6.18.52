@@ -50,6 +50,9 @@ struct fib4_rule {
 #endif
 };
 
+struct fib_rule;
+extern void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu);
+
 static bool fib4_rule_matchall(const struct fib_rule *rule)
 {
 	struct fib4_rule *r = container_of(rule, struct fib4_rule, common);

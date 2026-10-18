@@ -578,7 +578,7 @@ void netdev_watchdog_up(struct net_device *dev)
 		if (!false /* watchdog_ref_held missing */) {
 			netdev_hold(dev, &dev->watchdog_dev_tracker,
 				    GFP_ATOMIC);
-			false /* watchdog_ref_held missing */ = true;
+			/* watchdog_ref_held = true; */
 		}
 	}
 	spin_unlock_bh(&watchdog_compat_lock);
@@ -1375,8 +1375,9 @@ void dev_deactivate_many(struct list_head *head)
 	list_for_each_entry(dev, head, close_list) {
 		/* dev_reset_queue/netdev_reset_queue stubbed - VXTux 6.18 missing */
 
-		if (dev_ingress_queue(dev))
-			/* dev_reset_queue/netdev_reset_queue stubbed - VXTux 6.18 missing */
+		if (dev_ingress_queue(dev)) {
+			/* dev_reset_queue/netdev_reset_queue stubbed */
+		}
 	}
 
 	/* Wait for outstanding qdisc_run calls. */
