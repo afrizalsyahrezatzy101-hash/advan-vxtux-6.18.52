@@ -6852,7 +6852,7 @@ consume:
 		tp->max_window = tp->snd_wnd;
 
 		/* VXTux 6.18 backport: tcp_ecn_rcv_syn signature changed in 6.18 */
-					  tcp_ecn_rcv_synack(sk, skb, th, sk, skb);
+					  tcp_ecn_rcv_syn(tp, th, skb);
 
 		tcp_mtup_init(sk);
 		tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
@@ -7413,6 +7413,15 @@ u16 tcp_get_syncookie_mss(struct request_sock_ops *rsk_ops,
 }
 EXPORT_IPV6_MOD_GPL(tcp_get_syncookie_mss);
 
+/* V18: union tcp_seq_and_ts_off missing in upstream 6.18 - define locally */
+union tcp_seq_and_ts_off {
+	u64	hash64;
+	struct {
+		u32	seq;
+		u32	ts_off;
+	};
+};
+
 int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		     const struct tcp_request_sock_ops *af_ops,
 		     struct sock *sk, struct sk_buff *skb)
@@ -7492,7 +7501,8 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 
 	if (tmp_opt.tstamp_ok || (!want_cookie && !isn))
 		/* VXTux 6.18 backport: init_seq_and_ts_off not in 6.18 */
-		st = af_ops->init_seq(net, skb);
+		st.seq = af_ops->init_seq(skb);
+		st.ts_off = af_ops->init_ts_off(net, skb);
 
 	if (tmp_opt.tstamp_ok) {
 		tcp_rsk(req)->req_usec_ts = dst_tcp_usec_ts(dst);

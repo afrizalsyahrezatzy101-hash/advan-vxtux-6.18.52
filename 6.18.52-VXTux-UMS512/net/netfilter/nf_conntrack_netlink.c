@@ -3577,12 +3577,12 @@ ctnetlink_alloc_expect(const struct nlattr * const cda[], struct nf_conn *ct,
 
 	exp->class = class;
 	exp->master = ct;
-	write_pnet(&exp->net, net);
+	/* VXTux 6.18 backport: exp->net not in upstream 6.18 */
 #ifdef CONFIG_NF_CONNTRACK_ZONES
 	exp->zone = ct->zone;
 #endif
 	rcu_assign_pointer(exp->helper, helper);
-	rcu_assign_pointer(exp->assign_helper, assign_helper);
+	/* VXTux 6.18 backport: assign_helper removed */
 	exp->tuple = *tuple;
 	exp->mask.src.u3 = mask->src.u3;
 	exp->mask.src.u.all = mask->src.u.all;
