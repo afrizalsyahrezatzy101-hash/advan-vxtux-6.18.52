@@ -1,3 +1,7 @@
+#include <linux/berry_compat.h>
+struct fib_rule;
+static inline void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu) { (void)rule; (void)lockdep_key; (void)rcu; return NULL; }
+
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * INET		An implementation of the TCP/IP protocol suite for the LINUX
@@ -50,8 +54,6 @@ struct fib4_rule {
 #endif
 };
 
-struct fib_rule;
-extern void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu);
 
 static bool fib4_rule_matchall(const struct fib_rule *rule)
 {

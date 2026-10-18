@@ -1,3 +1,4 @@
+#include <linux/berry_compat.h>
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * net/sched/sch_api.c	Packet scheduler API.
@@ -11,6 +12,7 @@
  * Jamal Hadi Salim <hadi@nortelnetworks.com>: 990601: ingress support
  */
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
