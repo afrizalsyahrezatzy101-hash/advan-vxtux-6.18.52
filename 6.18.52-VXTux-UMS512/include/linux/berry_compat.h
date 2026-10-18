@@ -74,6 +74,14 @@ static inline int sprd_cam_pw_off(void) { return 0; }
 static inline int sprd_cam_domain_eb(void) { return 0; }
 static inline int sprd_cam_domain_disable(void) { return 0; }
 
+/* ====== soc_pcm_set_dai_params (ASoC compat) ====== */
+static inline int soc_pcm_set_dai_params(struct snd_pcm_substream *substream,
+                                        struct snd_pcm_hw_params *params)
+{
+    (void)substream; (void)params;
+    return 0;
+}
+
 #endif /* _BERRY_COMPAT_H */
 
 
