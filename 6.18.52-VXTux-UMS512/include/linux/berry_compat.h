@@ -67,8 +67,8 @@ static inline int security_mmap_backing_file(struct vm_area_struct *vma,
 }
 
 /* ====== vsp_pw_on / vsp_pw_off (VXTux tree missing) ====== */
-static inline int vsp_pw_on(void) { return 0; }
-static inline int vsp_pw_off(void) { return 0; }
+static inline int vsp_pw_on(int domain) { (void)domain; return 0; }
+static inline int vsp_pw_off(int domain) { (void)domain; return 0; }
 static inline int sprd_cam_pw_on(void) { return 0; }
 static inline int sprd_cam_pw_off(void) { return 0; }
 static inline int sprd_cam_domain_eb(void) { return 0; }

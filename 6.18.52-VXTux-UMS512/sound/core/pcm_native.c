@@ -763,7 +763,7 @@ static int snd_pcm_hw_params(struct snd_pcm_substream *substream,
 	runtime = substream->runtime;
 	err = snd_pcm_buffer_access_lock(runtime);
 	if (err < 0)
-		return;
+		return err;
 	scoped_guard(pcm_stream_lock_irq, substream) {
 		switch (runtime->state) {
 		case SNDRV_PCM_STATE_OPEN:
