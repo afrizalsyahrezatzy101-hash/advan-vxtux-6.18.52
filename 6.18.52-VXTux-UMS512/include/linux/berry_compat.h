@@ -165,6 +165,12 @@ static inline bool mini_qdisc_pair_inited(void *a, ...) { (void)a; return true; 
 /* ====== skb_header_pointer_careful (VXTux 6.18 missing) ====== */
 static inline void *skb_header_pointer_careful(void *a, ...) { (void)a; return NULL; }
 
+/* ====== ip_dst_mtu_configured (VXTux 6.18 missing) ====== */
+static inline unsigned int ip_dst_mtu_configured(void *a, ...) { (void)a; return 1500; }
+
+/* ====== dst4_mtu (VXTux 6.18 missing) ====== */
+static inline unsigned int dst4_mtu(void *a, ...) { (void)a; return 1500; }
+
 #endif /* _BERRY_COMPAT_H */
 
 
