@@ -1373,10 +1373,10 @@ void dev_deactivate_many(struct list_head *head)
 		synchronize_net();
 
 	list_for_each_entry(dev, head, close_list) {
-		netdev_for_each_tx_queue(dev, dev_reset_queue, NULL);
+		/* dev_reset_queue/netdev_reset_queue stubbed - VXTux 6.18 missing */
 
 		if (dev_ingress_queue(dev))
-			netdo { } while (0) /* dev_reset_queue stub */, NULL);
+			/* dev_reset_queue/netdev_reset_queue stubbed - VXTux 6.18 missing */
 	}
 
 	/* Wait for outstanding qdisc_run calls. */

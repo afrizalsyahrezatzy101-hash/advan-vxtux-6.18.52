@@ -106,7 +106,9 @@ static inline void netdev_get_by_index_unlock(void) {}
 static inline int qops_ndo_default_qcfg(void *qops, void *qcfg) { (void)qops; (void)qcfg; return 0; }
 
 /* ====== fib_rule_get_safe (VXTux 6.18 missing) ====== */
-static inline void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, bool rcu)
+struct fib_rule;
+extern void *fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, int rcu);
+static inline void *berry_fib_rule_get_safe(struct fib_rule *rule, void *lockdep_key, bool rcu)
 {
     (void)rule; (void)lockdep_key; (void)rcu;
     return NULL;
