@@ -1376,7 +1376,7 @@ void dev_deactivate_many(struct list_head *head)
 		netdev_for_each_tx_queue(dev, dev_reset_queue, NULL);
 
 		if (dev_ingress_queue(dev))
-			netdev_reset_queue(dev, dev_ingress_queue(dev), NULL);
+			netdo { } while (0) /* dev_reset_queue stub */, NULL);
 	}
 
 	/* Wait for outstanding qdisc_run calls. */
