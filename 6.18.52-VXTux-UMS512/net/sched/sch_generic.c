@@ -543,24 +543,24 @@ static void dev_watchdog(struct timer_list *t)
 				dev->netdev_ops->ndo_tx_timeout(dev, i);
 				netif_unfreeze_queues(dev);
 			}
-			spin_lock(&dev->watchdog_lock);
+			spin_lock(&/* watchdog_lock missing */);
 			mod_timer(&dev->watchdog_timer,
 				  round_jiffies(oldest_start +
 						dev->watchdog_timeo));
 			release = false;
-			spin_unlock(&dev->watchdog_lock);
+			spin_unlock(&/* watchdog_lock missing */);
 		}
 	}
 	spin_unlock(&dev->tx_global_lock);
 
-	spin_lock(&dev->watchdog_lock);
+	spin_lock(&/* watchdog_lock missing */);
 	if (timer_pending(&dev->watchdog_timer))
 		release = false;
-	if (release && dev->watchdog_ref_held) {
+	if (release && 0 /* watchdog_ref_held missing */) {
 		netdev_put(dev, &dev->watchdog_dev_tracker);
-		dev->watchdog_ref_held = false;
+		0 /* watchdog_ref_held missing */ = false;
 	}
-	spin_unlock(&dev->watchdog_lock);
+	spin_unlock(&/* watchdog_lock missing */);
 }
 
 void netdev_watchdog_up(struct net_device *dev)
@@ -570,16 +570,16 @@ void netdev_watchdog_up(struct net_device *dev)
 	if (dev->watchdog_timeo <= 0)
 		dev->watchdog_timeo = 5*HZ;
 
-	spin_lock_bh(&dev->watchdog_lock);
+	spin_lock_bh(&/* watchdog_lock missing */);
 	if (!mod_timer(&dev->watchdog_timer,
 		       round_jiffies(jiffies + dev->watchdog_timeo))) {
-		if (!dev->watchdog_ref_held) {
+		if (!0 /* watchdog_ref_held missing */) {
 			netdev_hold(dev, &dev->watchdog_dev_tracker,
 				    GFP_ATOMIC);
-			dev->watchdog_ref_held = true;
+			0 /* watchdog_ref_held missing */ = true;
 		}
 	}
-	spin_unlock_bh(&dev->watchdog_lock);
+	spin_unlock_bh(&/* watchdog_lock missing */);
 }
 EXPORT_SYMBOL_GPL(netdev_watchdog_up);
 
@@ -587,12 +587,12 @@ static void netdev_watchdog_down(struct net_device *dev)
 {
 	netif_tx_lock_bh(dev);
 
-	spin_lock(&dev->watchdog_lock);
+	spin_lock(&/* watchdog_lock missing */);
 	if (timer_delete(&dev->watchdog_timer)) {
 		netdev_put(dev, &dev->watchdog_dev_tracker);
-		dev->watchdog_ref_held = false;
+		0 /* watchdog_ref_held missing */ = false;
 	}
-	spin_unlock(&dev->watchdog_lock);
+	spin_unlock(&/* watchdog_lock missing */);
 
 	netif_tx_unlock_bh(dev);
 }
@@ -1373,7 +1373,7 @@ void dev_deactivate_many(struct list_head *head)
 		netdev_for_each_tx_queue(dev, dev_reset_queue, NULL);
 
 		if (dev_ingress_queue(dev))
-			dev_reset_queue(dev, dev_ingress_queue(dev), NULL);
+			netdev_reset_queue(dev, dev_ingress_queue(dev), NULL);
 	}
 
 	/* Wait for outstanding qdisc_run calls. */

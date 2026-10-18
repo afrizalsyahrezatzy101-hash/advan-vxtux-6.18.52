@@ -94,7 +94,11 @@ static inline void sk_msg_sg_copy_assign(void *msg, int i, void *from, int move_
 }
 
 /* ====== netdev_get_by_index_lock (VXTux 6.18 missing) ====== */
-static inline void netdev_get_by_index_lock(void) {}
+static inline struct net_device *netdev_get_by_index_lock(struct net *net, int ifindex)
+{
+    (void)net; (void)ifindex;
+    return NULL;
+}
 static inline void netdev_get_by_index_unlock(void) {}
 
 #endif /* _BERRY_COMPAT_H */
