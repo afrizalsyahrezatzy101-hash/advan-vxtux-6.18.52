@@ -5,6 +5,7 @@
  * Author:	Jamal Hadi Salim
  */
 
+#include <linux/berry_compat.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/string.h>
@@ -122,7 +123,7 @@ static void free_tcf(struct tc_action *p)
 	if (chain)
 		tcf_chain_put_by_act(chain);
 
-	kfree_rcu(p, tcfa_rcu);
+	kfree(p); /* tcfa_rcu missing in VXTux 6.18 */
 }
 
 static void offload_action_hw_count_set(struct tc_action *act,
