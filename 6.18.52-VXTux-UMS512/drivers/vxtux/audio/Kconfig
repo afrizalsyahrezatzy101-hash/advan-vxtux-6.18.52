@@ -95,3 +95,7 @@ config SPRD_AUDIO_VOICE_TRIGGER
 source "drivers/vxtux/audio/mcdt/Kconfig"
 
 endif # SPRD_AUDIO_INFRA
+
+# The apipe character device, the replacement for the vendor
+# sprd_apipe.ko.
+source "drivers/vxtux/audio/audio_pipe/Kconfig"

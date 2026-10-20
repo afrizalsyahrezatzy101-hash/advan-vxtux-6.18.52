@@ -169,7 +169,6 @@ source "drivers/soundwire/Kconfig"
 
 source "drivers/soc/Kconfig"
 source "drivers/soc/sprd/Kconfig"
-source "drivers/sound/soc/sprd/Kconfig"
 source "drivers/gpu/drm/sprd/Kconfig"
 source "drivers/media/platform/sprd/Kconfig"
 source "drivers/net/wireless/sprd/Kconfig"

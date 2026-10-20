@@ -16,6 +16,11 @@ obj-$(CONFIG_SPRD_AUDIO_SAUDIO)		+= saudio/
 # The apipe driver lives in drivers/sound/soc/sprd/audio_pipe/
 # (the corrected copy) and is built as sprd_apipe.ko there.
 # A second copy here would build the same driver twice.
+#
+# The copy under drivers/sound/ was never built (that whole tree is a
+# stray duplicate of drivers/vxtux/sound/asoc/ and has no Makefile
+# chain), so the source now lives here, in the tree that IS built.
+obj-$(CONFIG_SPRD_APIPE)		+= audio_pipe/
 obj-$(CONFIG_SPRD_AUDIO_CPBOOT)		+= audiocpboot/
 obj-$(CONFIG_SPRD_HW_DEVICE_DVFS_AGCP)	+= audiodvfs/
 # mcdt/ = SATU direktori, DUA varian saling meniadakan (r1p0/r2p0). Descent
