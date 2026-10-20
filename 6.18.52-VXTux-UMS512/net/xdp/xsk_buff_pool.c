@@ -227,7 +227,7 @@ int xp_assign_dev(struct xsk_buff_pool *pool,
 	 * set yet at this point; we are before getting down to driver
 	 */
 	frame_size = __xsk_pool_get_rx_frame_size(pool) -
-		     xsk_pool_get_tailroom(mbuf);
+		     xsk_pool_get_tailroom(pool);
 	frame_size = ALIGN_DOWN(frame_size, 128);
 
 	if (needed > frame_size * segs) {

@@ -265,9 +265,9 @@ static inline u32 __xsk_pool_get_rx_frame_size(const struct xsk_buff_pool *pool)
  * chunk that the umem allocated beyond the configured frame_len, so that
  * xp_assign_dev() can align-down the effective frame size to 128 bytes.
  */
-static inline u32 xsk_pool_get_tailroom(const struct xdp_buff_xsk *xskb)
+static inline u32 xsk_pool_get_tailroom(const struct xsk_buff_pool *pool)
 {
-	return xskb->pool->chunk_size - xskb->pool->frame_len;
+	return pool->chunk_size - pool->frame_len;
 }
 
 #endif /* XSK_BUFF_POOL_H_ */
