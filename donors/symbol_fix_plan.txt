@@ -1,0 +1,67 @@
+=== aes-ce-ccm ===
+    ce_aes_ccm_auth_data                             UNSTATIC+EXPORT  arch/arm64/crypto/aes-ce-ccm-glue.c:100  (func, static)
+
+=== ion_ipc_trusty ===
+    ion_handle_msg                                   UNSTATIC+EXPORT  drivers/dma-buf/sprd/ion_ipc_trusty.c:136  (func, static)
+    ion_tipc                                         UNSTATIC+EXPORT  drivers/dma-buf/sprd/ion_ipc_trusty.c:97  (func, static)
+
+=== sdhci-sprd ===
+    mmc_send_tuning_cmd                              UNSTATIC+EXPORT  drivers/mmc/host/sdhci-sprd.c:571  (func, static)
+
+=== trusty-tui ===
+    trusty_tui_driver                                UNSTATIC+EXPORT  drivers/misc/trusty-tui.c:225  (func, static)
+
+=== novatek_ts_spi ===
+    Boot_Update_Firmware                             EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:73  (func, global)
+    CTP_SPI_READ                                     EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:134  (func, global)
+    CTP_SPI_WRITE                                    EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:168  (func, global)
+    ENG_RST_ADDR                                     EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:77  (func, global)
+    SWRST_N8_ADDR                                    EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:78  (func, global)
+    esd_check                                        EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:46  (func, global)
+    esd_retry                                        EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:47  (func, global)
+    fw_entry                                         EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_fw_update.c:43  (func, global)
+    nvt_bld_crc_enable                               EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:269  (func, global)
+    nvt_boot_ready                                   EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:319  (func, global)
+    nvt_bootloader_reset                             EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:325  (func, global)
+    nvt_change_mode                                  EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c:76  (func, global)
+    nvt_check_fw_reset_state                         EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:333  (func, global)
+    nvt_check_fw_status                              EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:336  (func, global)
+    nvt_clear_fw_status                              EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:335  (func, global)
+    nvt_eng_reset                                    EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:326  (func, global)
+    nvt_esd_check_enable                             EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:338  (func, global)
+    nvt_extra_proc_init                              EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:56  (func, global)
+    nvt_fw_crc_enable                                EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:294  (func, global)
+    nvt_fw_version_seq_ops                           EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c:332  (func, global)
+    nvt_get_fw_info                                  EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:334  (func, global)
+    nvt_get_fw_pipe                                  EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:78  (func, global)
+    nvt_get_mdata                                    EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:80  (func, global)
+    nvt_mp_parse_ain                                 EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:1228  (func, global)
+    nvt_mp_parse_array                               EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:1292  (func, global)
+    nvt_mp_parse_dt                                  EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:81  (func, global)
+    nvt_mp_parse_u32                                 EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:1268  (func, global)
+    nvt_mp_proc_deinit                               EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:1471  (func, global)
+    nvt_mp_proc_init                                 EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:63  (func, global)
+    nvt_read_mdata                                   EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:79  (func, global)
+    nvt_read_pid                                     EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:543  (func, global)
+    nvt_selftest_seq_ops                             EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:1041  (func, global)
+    nvt_seq_ops                                      EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c:339  (func, global)
+    nvt_set_page                                     EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:217  (func, global)
+    nvt_sw_reset                                     EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:327  (func, global)
+    nvt_sw_reset_idle                                EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:328  (func, global)
+    nvt_update_firmware                              EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h:332  (func, global)
+    nvt_write_addr                                   EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:235  (func, global)
+    print_selftest_result                            EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c:876  (func, global)
+    ts                                               EXPORT           drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c:66  (func, global)
+
+=== unisoc-mailbox ===
+    get_tx_fifo_mask                                 ABSENT from source
+    mbox_phy_ops                                     ABSENT from source
+    mbox_start_send_tx_fifo                          ABSENT from source
+    sprd_mbox_change_wakeup_flag_r1                  ABSENT from source
+    sprd_mbox_phy_r1_init                            ABSENT from source
+    sprd_mbox_wakeup_flag_callback_register_r1       ABSENT from source
+    sprd_mbox_wakeup_flag_callback_unregister_r1     ABSENT from source
+
+=== trusty ===
+    trusty_sprd_sec_call                             ABSENT from source
+    trusty_sprd_alloc_share_memory                   ABSENT from source

@@ -1,0 +1,466 @@
+{
+  "aes-ce-ccm": [
+    {
+      "sym": "ce_aes_ccm_auth_data",
+      "action": "UNSTATIC+EXPORT",
+      "file": "arch/arm64/crypto/aes-ce-ccm-glue.c",
+      "line": 100,
+      "kind": "func",
+      "static": true,
+      "head": "static u32"
+    }
+  ],
+  "ion_ipc_trusty": [
+    {
+      "sym": "ion_handle_msg",
+      "action": "UNSTATIC+EXPORT",
+      "file": "drivers/dma-buf/sprd/ion_ipc_trusty.c",
+      "line": 136,
+      "kind": "func",
+      "static": true,
+      "head": "static struct tipc_msg_buf *"
+    },
+    {
+      "sym": "ion_tipc",
+      "action": "UNSTATIC+EXPORT",
+      "file": "drivers/dma-buf/sprd/ion_ipc_trusty.c",
+      "line": 97,
+      "kind": "func",
+      "static": true,
+      "head": "static struct ion_tipc_dev *"
+    }
+  ],
+  "sdhci-sprd": [
+    {
+      "sym": "mmc_send_tuning_cmd",
+      "action": "UNSTATIC+EXPORT",
+      "file": "drivers/mmc/host/sdhci-sprd.c",
+      "line": 571,
+      "kind": "func",
+      "static": true,
+      "head": "static int"
+    }
+  ],
+  "trusty-tui": [
+    {
+      "sym": "trusty_tui_driver",
+      "action": "UNSTATIC+EXPORT",
+      "file": "drivers/misc/trusty-tui.c",
+      "line": 225,
+      "kind": "func",
+      "static": true,
+      "head": "static struct platform_driver"
+    }
+  ],
+  "novatek_ts_spi": [
+    {
+      "sym": "Boot_Update_Firmware",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 73,
+      "kind": "func",
+      "static": false,
+      "head": "extern void"
+    },
+    {
+      "sym": "CTP_SPI_READ",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 134,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "CTP_SPI_WRITE",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 168,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "ENG_RST_ADDR",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 77,
+      "kind": "func",
+      "static": false,
+      "head": "uint32_t"
+    },
+    {
+      "sym": "SWRST_N8_ADDR",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 78,
+      "kind": "func",
+      "static": false,
+      "head": "uint32_t"
+    },
+    {
+      "sym": "esd_check",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 46,
+      "kind": "func",
+      "static": false,
+      "head": "uint8_t"
+    },
+    {
+      "sym": "esd_retry",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 47,
+      "kind": "func",
+      "static": false,
+      "head": "uint8_t"
+    },
+    {
+      "sym": "fw_entry",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_fw_update.c",
+      "line": 43,
+      "kind": "func",
+      "static": false,
+      "head": "const struct firmware *"
+    },
+    {
+      "sym": "nvt_bld_crc_enable",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 269,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_boot_ready",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 319,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_bootloader_reset",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 325,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_change_mode",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c",
+      "line": 76,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_check_fw_reset_state",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 333,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_check_fw_status",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 336,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_clear_fw_status",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 335,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_eng_reset",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 326,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_esd_check_enable",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 338,
+      "kind": "func",
+      "static": false,
+      "head": "extern void"
+    },
+    {
+      "sym": "nvt_extra_proc_init",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 56,
+      "kind": "func",
+      "static": false,
+      "head": "extern int32_t"
+    },
+    {
+      "sym": "nvt_fw_crc_enable",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 294,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_fw_version_seq_ops",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c",
+      "line": 332,
+      "kind": "func",
+      "static": false,
+      "head": "const struct seq_operations"
+    },
+    {
+      "sym": "nvt_get_fw_info",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 334,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_get_fw_pipe",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 78,
+      "kind": "func",
+      "static": false,
+      "head": "extern uint8_t"
+    },
+    {
+      "sym": "nvt_get_mdata",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 80,
+      "kind": "func",
+      "static": false,
+      "head": "extern void"
+    },
+    {
+      "sym": "nvt_mp_parse_ain",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 1228,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_mp_parse_array",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 1292,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_mp_parse_dt",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 81,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_mp_parse_u32",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 1268,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_mp_proc_deinit",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 1471,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_mp_proc_init",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 63,
+      "kind": "func",
+      "static": false,
+      "head": "extern int32_t"
+    },
+    {
+      "sym": "nvt_read_mdata",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 79,
+      "kind": "func",
+      "static": false,
+      "head": "extern void"
+    },
+    {
+      "sym": "nvt_read_pid",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 543,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_selftest_seq_ops",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 1041,
+      "kind": "func",
+      "static": false,
+      "head": "const struct seq_operations"
+    },
+    {
+      "sym": "nvt_seq_ops",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_ext_proc.c",
+      "line": 339,
+      "kind": "func",
+      "static": false,
+      "head": "const struct seq_operations"
+    },
+    {
+      "sym": "nvt_set_page",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 217,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "nvt_sw_reset",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 327,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_sw_reset_idle",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 328,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_update_firmware",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.h",
+      "line": 332,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "nvt_write_addr",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 235,
+      "kind": "func",
+      "static": false,
+      "head": "int32_t"
+    },
+    {
+      "sym": "print_selftest_result",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx_mp_ctrlram.c",
+      "line": 876,
+      "kind": "func",
+      "static": false,
+      "head": "void"
+    },
+    {
+      "sym": "ts",
+      "action": "EXPORT",
+      "file": "drivers/input/touchscreen/novatek_nvt_ts_spi/nt36xxx.c",
+      "line": 66,
+      "kind": "func",
+      "static": false,
+      "head": "struct nvt_ts_data *"
+    }
+  ],
+  "unisoc-mailbox": [
+    {
+      "sym": "get_tx_fifo_mask",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "mbox_phy_ops",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "mbox_start_send_tx_fifo",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "sprd_mbox_change_wakeup_flag_r1",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "sprd_mbox_phy_r1_init",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "sprd_mbox_wakeup_flag_callback_register_r1",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "sprd_mbox_wakeup_flag_callback_unregister_r1",
+      "action": "ABSENT",
+      "file": null
+    }
+  ],
+  "trusty": [
+    {
+      "sym": "trusty_sprd_sec_call",
+      "action": "ABSENT",
+      "file": null
+    },
+    {
+      "sym": "trusty_sprd_alloc_share_memory",
+      "action": "ABSENT",
+      "file": null
+    }
+  ]
+}

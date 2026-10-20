@@ -35,7 +35,7 @@ config SPRD_AUDIO_AGDSP_ACCESS
 	default n
 
 config SPRD_AUDIO_SIPC
-	bool "Unisoc audio SIPC (audiosipc)"
+	tristate "Unisoc audio SIPC (audiosipc)"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
 	default n
 	help

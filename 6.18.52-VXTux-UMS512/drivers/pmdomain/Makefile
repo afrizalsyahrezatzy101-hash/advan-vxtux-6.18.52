@@ -8,4 +8,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
 obj-y					+= core.o governor.o
 
-obj-$(CONFIG_SPRD_VSP_PW_DOMAIN) += sprd/
+# sprd/ is built as a composite module; it is not listed
+# here as a directory module any more.

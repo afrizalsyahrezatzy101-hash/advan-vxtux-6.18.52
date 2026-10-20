@@ -15,12 +15,31 @@
 #define __LINUX_TRUSTY_TRUSTY_H
 
 #include <linux/kernel.h>
+#include <linux/kconfig.h>
 #include <linux/trusty/sm_err.h>
 #include <linux/device.h>
 #include <linux/pagemap.h>
 
 
-#ifdef CONFIG_TRUSTY
+/*
+ * IS_ENABLED(), not #ifdef CONFIG_TRUSTY.
+ *
+ * CONFIG_TRUSTY is tristate. When it is =m, autoconf.h defines
+ * CONFIG_TRUSTY_MODULE and NOT CONFIG_TRUSTY, so #ifdef CONFIG_TRUSTY
+ * is false and the header fell through to the static inline stub
+ * branch - while drivers/trusty/trusty-core.c still defines the real
+ * functions. The two collided:
+ *
+ *   trusty-core.c:145:5: error: redefinition of 'trusty_fast_call32'
+ *   trusty-core.c:155:5: error: redefinition of 'trusty_fast_call64'
+ *   trusty-core.c:293:5: error: redefinition of 'trusty_std_call32'
+ *
+ * IS_ENABLED(CONFIG_TRUSTY) is true for =y AND for =m, so the
+ * declaration branch is taken in both cases. The stub branch is then
+ * only reached when the driver really is not built at all, which is
+ * what it is for.
+ */
+#if IS_ENABLED(CONFIG_TRUSTY)
 s32 trusty_std_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u32 a2);
 s32 trusty_fast_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u32 a2);
 s32 trusty_fast_call32_power(u32 smcnr, u32 a0, u32 a1, u32 a2);
