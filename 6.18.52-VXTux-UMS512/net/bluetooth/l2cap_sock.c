@@ -1529,10 +1529,10 @@ static void l2cap_sock_cleanup_listen(struct sock *parent)
 	}
 }
 
-static int l2cap_sock_new_connection_cb(struct l2cap_chan *chan,
-					struct l2cap_chan *new_chan)
+static int l2cap_sock_new_connection_cb(struct l2cap_chan *pchan,
+					struct l2cap_chan *chan)
 {
-	struct sock *sk, *parent = chan->data;
+	struct sock *sk, *parent = pchan->data;
 
 	if (!parent)
 		return -EINVAL;

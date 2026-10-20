@@ -617,7 +617,8 @@ struct l2cap_chan {
 struct l2cap_ops {
 	char			*name;
 
-	struct l2cap_chan	*(*new_connection) (struct l2cap_chan *chan);
+	struct l2cap_chan	*(*new_connection) (struct l2cap_chan *pchan,
+						    struct l2cap_chan *chan);
 	int			(*recv) (struct l2cap_chan * chan,
 					 struct sk_buff *skb);
 	void			(*teardown) (struct l2cap_chan *chan, int err);
@@ -882,7 +883,8 @@ static inline __u16 __next_seq(struct l2cap_chan *chan, __u16 seq)
 	return (seq + 1) % (chan->tx_win_max + 1);
 }
 
-static inline struct l2cap_chan *l2cap_chan_no_new_connection(struct l2cap_chan *chan)
+static inline struct l2cap_chan *l2cap_chan_no_new_connection(struct l2cap_chan *pchan,
+							     struct l2cap_chan *chan)
 {
 	return NULL;
 }

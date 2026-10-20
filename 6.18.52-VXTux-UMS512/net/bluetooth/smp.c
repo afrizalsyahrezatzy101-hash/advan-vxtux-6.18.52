@@ -3234,8 +3234,8 @@ static const struct l2cap_ops smp_chan_ops = {
 	.get_sndtimeo		= l2cap_chan_no_get_sndtimeo,
 };
 
-static inline int smp_new_conn_cb(struct l2cap_chan *chan,
-				  struct l2cap_chan *new_chan)
+static inline int smp_new_conn_cb(struct l2cap_chan *pchan,
+				  struct l2cap_chan *chan)
 {
 	new_chan->ops = &smp_chan_ops;
 
