@@ -87,6 +87,15 @@ static __always_inline unsigned int total_extension_size(void)
 	;
 }
 
+void *__nf_ct_ext_find(const struct nf_ct_ext *ext, u8 id)
+{
+	if (!ext || id >= NF_CT_EXT_NUM || !ext->offset[id])
+		return NULL;
+
+	return (void *)ext + ext->offset[id];
+}
+EXPORT_SYMBOL_GPL(__nf_ct_ext_find);
+
 void *nf_ct_ext_add(struct nf_conn *ct, enum nf_ct_ext_id id, gfp_t gfp)
 {
 	unsigned int newlen, newoff, oldlen, alloc;

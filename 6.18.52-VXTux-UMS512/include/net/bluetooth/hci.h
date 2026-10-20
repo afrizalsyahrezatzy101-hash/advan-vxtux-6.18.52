@@ -3026,3 +3026,15 @@ static inline void hci_cpu_to_le24(__u32 val, __u8 dst[3])
 }
 
 #endif /* __HCI_H */
+
+/* ====== HCI PAST (Power Aware Scanning) not ported to VXTux 6.18 ====== */
+static inline bool past_receiver_capable(struct hci_dev *hdev)
+{
+	(void)hdev;
+	return false;
+}
+static inline bool past_sender_capable(struct hci_dev *hdev)
+{
+	(void)hdev;
+	return false;
+}
