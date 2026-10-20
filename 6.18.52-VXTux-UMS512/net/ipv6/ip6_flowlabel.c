@@ -67,7 +67,7 @@ EXPORT_SYMBOL(ipv6_flowlabel_exclusive);
 	     fl = rcu_dereference(fl->next))
 
 #define for_each_sk_fl_rcu(sk, sfl)				\
-	for (sfl = rcu_dereference(inet_sk(sk)->ipv6_fl_list);	\
+	for (sfl = rcu_dereference(inet6_sk(sk)->ipv6_fl_list);	\
 	     sfl != NULL;					\
 	     sfl = rcu_dereference(sfl->next))
 
@@ -554,10 +554,10 @@ static int ipv6_flowlabel_put(struct sock *sk, struct in6_flowlabel_req *freq)
 	}
 
 	spin_lock_bh(&ip6_sk_fl_lock);
-	for (sflp = &inet_sk(sk)->ipv6_fl_list;
-	     (sfl = socklist_dereference(*sflp)) != NULL;
-	     sflp = &sfl->next) {
-		if (sfl->fl->label == freq->flr_label)
+		for (sflp = &inet6_sk(sk)->ipv6_fl_list;
+		     (sfl = socklist_dereference(*sflp)) != NULL;
+		     sflp = &sfl->next) {
+			if (sfl->fl->label == freq->flr_label)
 			goto found;
 	}
 	spin_unlock_bh(&ip6_sk_fl_lock);

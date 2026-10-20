@@ -130,7 +130,7 @@ static int udp_bpf_ioctl(struct sock *sk, int cmd, int *karg)
 	 * BPF might only be processing this data at the moment. We only
 	 * care about the data in the ingress_msg here.
 	 */
-	*karg = sk_msg_first_len(sk);
+	*karg = 0;
 	return 0;
 }
 

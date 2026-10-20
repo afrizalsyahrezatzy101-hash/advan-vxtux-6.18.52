@@ -534,6 +534,8 @@ int ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 
 	msg->msg_flags |= MSG_ERRQUEUE;
 	err = copied;
+	if (addr_len)
+		*addr_len = msg->msg_namelen;
 
 	consume_skb(skb);
 out:
