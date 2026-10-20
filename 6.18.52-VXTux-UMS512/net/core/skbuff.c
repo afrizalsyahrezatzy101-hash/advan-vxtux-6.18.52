@@ -5407,13 +5407,6 @@ int skb_cow_data(struct sk_buff *skb, int tailbits, struct sk_buff **trailer)
 }
 EXPORT_SYMBOL_GPL(skb_cow_data);
 
-void sock_efree(struct sk_buff *skb)
-{
-	struct sock *sk = skb->sk;
-
-	atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
-}
-
 static void skb_set_err_queue(struct sk_buff *skb)
 {
 	/* The error-queue test in skb_is_err_queue() matches this marker
