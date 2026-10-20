@@ -707,6 +707,20 @@ err:
 	return ret;
 }
 
+/*
+ * The audio pipe is a MODULE (audio-pipe.ko) and it calls
+ * aud_send_cmd(). The SIPC core is built-in, so the symbol has to be
+ * exported for the module to link:
+ *
+ *   ERROR: modpost: "aud_send_cmd"
+ *   [drivers/vxtux/audio/audiosipc/audio-pipe.ko] undefined!
+ *
+ * The other aud_send_cmd_* variants are already exported for the same
+ * reason (EXPORT_SYMBOL_GPL(aud_send_cmd_no_wait) and
+ * EXPORT_SYMBOL_GPL(aud_send_cmd_no_param)).
+ */
+EXPORT_SYMBOL_GPL(aud_send_cmd);
+
 int aud_send_cmd_no_wait_param(u16 channel, int id, int stream,
 			       u32 cmd, void *para, size_t n)
 {
