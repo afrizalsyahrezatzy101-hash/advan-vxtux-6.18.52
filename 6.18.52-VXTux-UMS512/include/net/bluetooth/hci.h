@@ -2862,8 +2862,25 @@ struct hci_evt_le_big_sync_established {
 
 #define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
 struct hci_evt_le_big_sync_lost {
-	__u8    handle;
-	__u8    reason;
+	__u8	handle;
+	__u8	reason;
+} __packed;
+
+#define HCI_EVT_LE_PAST_RECEIVED	0x24
+struct hci_ev_le_past_received {
+	__u8	status;
+	__u16	conn_handle;
+	bdaddr_t bdaddr;
+	__u8	sid;
+	__le16	sync_handle;
+	__u8	adv_sid;
+	__u8	adv_addr_type;
+	bdaddr_t adv_addr;
+	__u8	adv_phy;
+	__le16	adv_interval;
+	__u8	adv_clock_accuracy;
+	__u8	subevent;
+	__u8	num_subevents;
 } __packed;
 
 #define HCI_EVT_LE_BIG_INFO_ADV_REPORT	0x22
