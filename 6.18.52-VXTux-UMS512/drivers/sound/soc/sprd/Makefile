@@ -57,3 +57,11 @@ ccflags-y += -I$(srctree)/drivers/sound/soc/sprd/mcdt/mcdt_r2p0
 ccflags-y += -I$(srctree)/drivers/sound/soc/sprd/platform_include
 ccflags-y += -I$(srctree)/drivers/sound/soc/sprd/saudio
 
+
+# The ASoC proper. These were never built either: the files
+# drivers/sound/Makefile and drivers/sound/soc/Makefile were
+# missing, so kbuild never descended into this directory.
+#
+# They are built-in (the Kconfig says the sound stack is built-in
+# so snd_soc_* symbols exist in System.map and gate C5 can prove
+# link), so they are listed with obj- behind their symbol.
