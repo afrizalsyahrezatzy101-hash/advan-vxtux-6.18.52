@@ -21,7 +21,7 @@ import sys
 NM = (r"C:\Users\Administrator\scoop\apps\gcc-aarch64-none-linux-gnu"
       r"\15.2.rel1\bin\aarch64-none-linux-gnu-nm.exe")
 STOCK_DIR = "E:/vxtux_build_repo/donors/stock_vendor_modules"
-BUILT_KO = "E:/vxtux_build_repo/build_output/vxtux_6.18.52/ko"
+BUILT_KO = "E:/vxtux_build_repo/built_kos"
 STOCK_LIST = "E:/vxtux_build_repo/donors/stock_modules.txt"
 REPORT = "E:/vxtux_build_repo/docs/DEBLOB_VERIFICATION.md"
 
