@@ -1,0 +1,169 @@
+modpost SIGSEGV — gdb source-annotated backtrace (Worker GDB)
+===============================================================
+Date       : 2026-10-20
+Codespace  : solid-tribble-9rjjxvjqq5pcpq5g  (archanaberry/advan-vxtux-6.18.52)
+Workspace  : /workspaces/vxtux-build/6.18.52-VXTux-UMS512
+Host tool  : gdb 15.1 (Ubuntu 15.1-1ubuntu1~24.04.1), gcc 13 (host x86_64)
+Input      : ./init/main.o ./init/version.o   (EM_AARCH64, KERNEL_ELFCLASS=ELFCLASS64)
+
+HEADLINE RESULT
+---------------
+1. The SIGSEGV is ALREADY FIXED in the current tree. A `-g -O0` rebuild from
+   the tree's own sources, run on ./init/main.o ./init/version.o, does NOT
+   segfault. It exits 1 with ordinary "undefined symbol" diagnostics.
+   Commit 4212680b "modpost: fix ELF64 relocation symbol-index extraction"
+   (Tue Oct 20 07:39:11 2026) introduced the fix.
+
+2. To answer "what is the exact crash source" anyway, the crash was
+   REPRODUCED deliberately by reinstating the Bionic-style macro in a scratch
+   copy of modpost.h. It reproduces bit-for-bit the reported failure:
+   rc=139, rdi/r_sym = 3019898881, non-canonical tsym = 0x8010d7d4b7c0.
+
+3. EXACT CRASH SOURCE LINE:
+       scripts/mod/modpost.c:1391
+           taddr = tsym->st_value + TO_NATIVE(rela->r_addend);
+   in section_rela(), called from check_sec_ref() (modpost.c:1491) <-
+   read_symbols() (modpost.c:1666) <- main() (modpost.c:2385).
+
+   The fault is `tsym->st_value` at offset +8 of Elf64_Sym, where
+   tsym = elf->symtab_start + r_sym and r_sym is garbage.
+
+ROOT CAUSE (confirmed by gcc -E, not inferred)
+----------------------------------------------
+get_rel_type_and_sym() is the ONLY consumer (modpost.c:1372-1373):
+
+    *r_type = ELF_R_TYPE(r_info);
+    *r_sym  = ELF_R_SYM(r_info);
+
+gcc -E expansion of the two headers differs in exactly those two lines:
+
+  CURRENT (fixed)                     BIONIC-BUG repro
+  ----------------------------------  --------------------------------
+  *r_type = ((unsigned long long)(r_info) & 0xffffffffULL);   *r_type = ((r_info) & 0xff);
+  *r_sym  = ((unsigned long long)(r_info) >> 32);            *r_sym  = ((r_info) >> 8);
+
+Ground truth from init/main.o .rela.text entry 0 (EM_AARCH64, entsize 24):
+    r_info  = 0x000000b400000113
+    correct r_sym  = r_info >> 32 = 0xb4   = 180
+    correct r_type = r_info & 0xffffffff = 0x113 = 275 (R_AARCH64_ADR_PREL_PG_HI21)
+    buggy   r_sym  = r_info >> 8  = 0xb4000001 = 3019898881   <-- gdb shows exactly this
+    buggy   r_type = r_info & 0xff = 0x13 = 19
+
+init/main.o has 485 symbols, so index 3019898881 is structurally impossible.
+tsym = symtab_start(0x7ffff7d4b7a8) + 3019898881*24 = 0x8010d7d4b7c0, which is
+non-canonical on x86-64 -> the load faults immediately.
+
+The faulting instruction (section_rela+175) shows the 24-byte Elf64_Sym
+stride being used to index with the bogus r_sym; the stride itself is correct,
+only the index is wrong.
+
+WHY THE OLD REPORT AND THE NEW BEHAVIOUR DISAGREE
+------------------------------------------------
+The pre-fix modpost.h (4212680b^) does NOT itself define ELF64_R_SYM. It only
+aliases `ELF_R_SYM -> ELF64_R_SYM` (line 51) and relies on the host <elf.h>.
+On this glibc host that yields the CORRECT (i)>>32, so a build of the pre-fix
+header also does not crash here (verified: modpost_PREFIX exits 1, not 139).
+The crash requires a host whose <elf.h> supplies the 32-bit encoding, i.e. a
+Bionic/Android host — which is exactly what the fix commit's message says the
+shim was for. Hence: reproducible on the original Bionic host, NOT reproducible
+on this Linux codespace with the same header.
+
+THIS ALSO EXPLAINS THE 'file size changed' RED HERRING
+-----------------------------------------------------
+No mmap write is involved. The .o is opened PROT_READ|PROT_WRITE MAP_PRIVATE by
+parse_elf() and modpost only reads from it. init/version.o's observed size
+change (148280 -> 148088) is the KERNEL BUILD still running in the background
+relinking/regenerating that object while gdb was reading it, not modpost
+writing to its mapping. MAP_PRIVATE guarantees none of modpost's writes would
+persist to the file in any case. The float-OBServa experiment was chasing a
+moving target, not a memory-corruption signal.
+
+=======================================================================
+PART A — REQUESTED COMMAND AGAINST THE CURRENT (FIXED) TREE
+=======================================================================
+Build (the tree's own recipe, from scripts/mod/.modpost.o.cmd, plus -g -O0):
+
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/modpost.c    -o /tmp/modpost_dbg.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/file2alias.c -o /tmp/file2alias_dbg.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/sumversion.c -o /tmp/sumversion_dbg.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/symsearch.c  -o /tmp/symsearch_dbg.o
+  gcc -g -o /tmp/modpost_dbg /tmp/modpost_dbg.o /tmp/file2alias_dbg.o \
+        /tmp/sumversion_dbg.o /tmp/symsearch_dbg.o
+  # -> ELF 64-bit LSB pie executable, x86-64, with debug_info, not stripped
+
+Note: no -lelf / libelf.h is used or needed. The tree links modpost from
+plain host gcc with only -I ./scripts/include (see scripts/mod/.modpost.cmd).
+The codespace has /usr/lib/x86_64-linux-gnu/libelf.so.1 but no libelf.h/gelf.h
+(dev package absent), so a -lelf link would fail for that reason alone.
+
+  gdb --batch -ex "set print pretty on" -ex run -ex "bt full" -ex quit \
+      --args /tmp/modpost_dbg -o /tmp/s0.symvers -e ./init/main.o ./init/version.o
+
+Output (no crash; bt full is unavailable because the process exited normally):
+  [Thread debugging using libthread_db enabled]
+  Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+  ERROR: modpost: missing MODULE_LICENSE() in ./init/main.o
+  WARNING: modpost: missing MODULE_DESCRIPTION() in ./init/main.o
+  ERROR: modpost: missing MODULE_LICENSE() in ./init/version.o
+  WARNING: modpost: missing MODULE_DESCRIPTION() in ./init/version.o
+  ERROR: modpost: "console_printk" [./init/main.ko] undefined!
+  ERROR: modpost: "__setup_start" [./init/main.ko] undefined!
+  ERROR: modpost: "__setup_end" [./init/main.ko] undefined!
+  ERROR: modpost: "parameq" [./init/main.ko] undefined!
+  ERROR: modpost: "_printk" [./init/main.ko] undefined!
+  ERROR: modpost: "strlen" [./init/main.ko] undefined!
+  ERROR: modpost: "memmove" [./init/main.ko] undefined!
+  ERROR: modpost: "sysctl_is_alias" [./init/main.ko] undefined!
+  ERROR: modpost: "strncmp" [./init/main.ko] undefined!
+  ERROR: modpost: "parameqn" [./init/main.ko] undefined!
+  WARNING: modpost: suppressed 216 unresolved symbol warnings because there were too many)
+  [Inferior 1 (process 317980) exited with code 01]
+  No stack.
+  The program has no registers now.
+  No registers.
+  No registers.
+  ...
+  No frame selected.
+
+  Exit status: 1.  NO SIGSEGV.
+
+  Also verified non-crashing (same exit-1 outcome, byte-for-byte identical
+  stderr), so the crash is not an -O0 artefact:
+    - the tree's own -O2 scripts/mod/modpost binary
+    - an -O0 build of the current header
+    - a -g -O0 build of the current header
+    - a -g -O0 build of the PRE-FIX header (modpost_PREFIX)
+
+  Note the "undefined symbol" errors are expected and unrelated to the crash:
+  they are modpost resolving init/*.ko relocations against the whole vmlinux
+  without vmlinux's exported symbols in scope. They are a link-stage concern,
+  not a modpost defect.
+
+=======================================================================
+PART B — DELIBERATE CRASH REPRODUCTION (the defect, on demand)
+=======================================================================
+Scratch copies only. scripts/mod/modpost.h was restored byte-identical
+afterwards (md5 82b5615fc335c765bb9bb0e1c606324a, empty `git diff HEAD`).
+
+  cp /tmp/crashrepro/modpost.h.BIONIC scripts/mod/modpost.h
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/modpost.c    -o /tmp/crashrepro/B_modpost.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/file2alias.c -o /tmp/crashrepro/B_file2alias.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/sumversion.c -o /tmp/crashrepro/B_sumversion.o
+  gcc -g -O0 -std=gnu11 -Wall -I ./scripts/include -c scripts/mod/symsearch.c  -o /tmp/crashrepro/B_symsearch.o
+  gcc -g -o /tmp/crashrepro/modpost_BIONICBUG /tmp/crashrepro/B_*.o
+  cp /tmp/crashrepro/modpost.h.CURRENT scripts/mod/modpost.h
+
+  gdb --batch -ex "set print pretty on" -ex "set pagination off" \
+      -ex run -ex bt -ex "bt full" -ex "info registers" \
+      -ex "thread apply all bt" -ex 'disassemble $pc-48,$pc+32' \
+      -ex "frame 0" -ex "info args" -ex "info locals" -ex list -ex quit \
+      --args /tmp/crashrepro/modpost_BIONICBUG -o /tmp/s0.symvers \
+             -e ./init/main.o ./init/version.o
+
+  $ /tmp/crashrepro/modpost_BIONICBUG -o /tmp/s0.symvers -e ./init/main.o ./init/version.o
+  Segmentation fault (core dumped)
+  RC=139
+
+=======================================================================
+PART C — VERBATIM gdb OUTPUT FOR THE CRASHING BINARY
+=======================================================================
