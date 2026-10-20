@@ -69,7 +69,11 @@ obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
 
 obj-$(CONFIG_SUN6I_MSGBOX)	+= sun6i-msgbox.o
 
-obj-$(CONFIG_SPRD_MBOX)		+= sprd-mailbox.o
+# The composite module is named after the vendor blob it
+# replaces (unisoc-mailbox.ko). The stock module's own
+# name is unisoc_mailbox.
+obj-$(CONFIG_SPRD_MBOX)		+= unisoc-mailbox.o
+unisoc-mailbox-y := sprd-mailbox.o
 
 obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
 

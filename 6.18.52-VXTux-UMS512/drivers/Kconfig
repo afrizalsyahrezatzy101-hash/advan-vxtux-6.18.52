@@ -268,13 +268,15 @@ source "drivers/unisoc_platform/Kconfig"
 # and survive a rebuild.
 source "drivers/vxtux/Kconfig"
 
-config SPRD_FLASH_DRV
-	bool "Spreadtrum camera flash HAL"
-	help
-	  Registration HAL between the V4L2 flash subdevice and per-chip flash
-	  drivers. Ports the vendor sprd_flash_drv.ko; the register/dispatch
-	  contract was recovered from that module with radare2 (no source exists
-	  in the donors). Chip drivers call sprd_flash_register() to publish
-	  themselves; the subdevice calls sprd_flash_ctrl()/sprd_flash_cfg().
-	  Registers a misc device "sprd_flash" and creates its own platform
-	  device, so it needs no DT node.
+# The Unisoc camera flash HAL (drivers/sprd/flash/). It replaces the
+# vendor sprd_flash_drv.ko, so it has to be a loadable module -
+# drivers/sprd/flash/Kconfig declares it tristate for that reason.
+source "drivers/sprd/Kconfig"
+
+# SPRD_FLASH_DRV is defined in drivers/sprd/flash/Kconfig, which is
+# sourced through drivers/sprd/Kconfig. It used to be defined here as
+# a bool, for the port where no source existed for the vendor
+# sprd_flash_drv.ko and the contract was recovered from the blob with
+# radare2. The source has since been recovered, and a bool can never
+# be a module - the stock ROM ships sprd_flash_drv.ko, so the
+# replacement has to be loadable.

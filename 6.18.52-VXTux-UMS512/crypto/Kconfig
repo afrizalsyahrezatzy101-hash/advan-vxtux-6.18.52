@@ -594,6 +594,14 @@ config CRYPTO_TWOFISH_COMMON
 	  Common parts of the Twofish cipher algorithm shared by the
 	  generic c and the assembler implementations.
 
+	  It is a module of its own rather than being forced into
+	  vmlinux by the CRYPTO_TWOFISH select, because the stock ROM
+	  ships twofish_common.ko with twofish_setkey exported:
+	  (checked on the blob pulled from the device)
+	  $ nm donors/stock_vendor_modules/twofish_common.ko
+	  T twofish_setkey
+	  T __twofish_setkey
+
 endmenu
 
 menu "Length-preserving ciphers and modes"

@@ -1,15 +1,11 @@
-# SPDX-License-Identifier: GPL-2.0
+# The composite module is named after the vendor blob it replaces
+# (sprd_apipe.ko). The stock module's own name is sprd_apipe.
 #
-# ONE composite module, named after the vendor blob it replaces
-# (audio-pipe.ko).
-# Listing the objects one by one would make kbuild emit a module
-# per object, and the stock file name would not be reproduced.
-
-# SPRD Audio Pipe (apipe) — port 6.18
+# NOTE: a single-object module must NOT be written as a composite
+# whose object has the same name as the module - kbuild then uses the
+# module's own .o as the link input and ld refuses:
 #
-# Include path vendor lama (sound/soc/sprd/include) tidak ada di tree ini;
-# simbol CONFIG yang benar untuk modul ini adalah SPRD_AUDIO_PIPE (lihat
-# drivers/vxtux/audio/Kconfig dan Makefile induk).
+#   aarch64-linux-gnu-ld: input file '.../audio_pipe.o' is the same
+#   as output file
 
-obj-$(CONFIG_SPRD_AUDIO_PIPE) += audio-pipe.o
-audio-pipe-y := audio_pipe.o
+obj-$(CONFIG_SPRD_AUDIO_PIPE) += sprd_apipe.o
