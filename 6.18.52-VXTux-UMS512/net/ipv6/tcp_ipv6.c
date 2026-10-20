@@ -118,7 +118,7 @@ static u32 tcp_v6_init_ts_off(const struct net *net, const struct sk_buff *skb)
 
 static u32 tcp_v6_init_seq(const struct sk_buff *skb)
 {
-	return secure_tcpv6_seq_and_ts_off(init_net,
+	return secure_tcpv6_seq_and_ts_off(&init_net,
 				ipv6_hdr(skb)->saddr.s6_addr32,
 				ipv6_hdr(skb)->daddr.s6_addr32,
 				tcp_hdr(skb)->dest,

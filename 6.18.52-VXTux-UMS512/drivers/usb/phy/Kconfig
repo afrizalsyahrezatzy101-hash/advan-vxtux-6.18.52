@@ -5,8 +5,14 @@
 menu "USB Physical Layer drivers"
 
 config USB_PHY
+	bool
 	select EXTCON
-	def_bool n
+	default y
+	help
+	  Support for USB physical layer (PHY) controllers. The generic
+	  USB PHY framework (drivers/usb/phy/phy.c) provides the
+	  usb_add_phy()/usb_remove_phy() API used by the Unisoc MUSB
+	  host and gadget drivers.
 
 #
 # USB Transceiver Drivers
