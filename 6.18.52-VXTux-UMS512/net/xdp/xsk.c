@@ -549,9 +549,9 @@ static int xsk_cq_reserve_locked(struct xsk_buff_pool *pool)
 {
 	int ret;
 
-	spin_lock(&pool->cq_cached_prod_lock);
+	spin_lock(&pool->cq_lock);
 	ret = xskq_prod_reserve(pool->cq);
-	spin_unlock(&pool->cq_cached_prod_lock);
+	spin_unlock(&pool->cq_lock);
 
 	return ret;
 }
@@ -602,7 +602,7 @@ static void xsk_cq_submit_addr_locked(struct xsk_buff_pool *pool,
 	unsigned long flags;
 	u32 idx, i;
 
-	spin_lock_irqsave(&pool->cq_prod_lock, flags);
+	spin_lock_irqsave(&pool->cq_lock, flags);
 	idx = xskq_get_prod(pool->cq);
 
 	if (unlikely(num_descs > 1)) {
@@ -620,7 +620,7 @@ static void xsk_cq_submit_addr_locked(struct xsk_buff_pool *pool,
 		descs_processed++;
 	}
 	xskq_prod_submit_n(pool->cq, descs_processed);
-	spin_unlock_irqrestore(&pool->cq_prod_lock, flags);
+	spin_unlock_irqrestore(&pool->cq_lock, flags);
 }
 
 static void xsk_cq_submit_addr_single_locked(struct xsk_buff_pool *pool,
@@ -629,18 +629,18 @@ static void xsk_cq_submit_addr_single_locked(struct xsk_buff_pool *pool,
 	unsigned long flags;
 	u32 idx;
 
-	spin_lock_irqsave(&pool->cq_prod_lock, flags);
+	spin_lock_irqsave(&pool->cq_lock, flags);
 	idx = xskq_get_prod(pool->cq);
 	xskq_prod_write_addr(pool->cq, idx, desc->addr);
 	xskq_prod_submit_n(pool->cq, 1);
-	spin_unlock_irqrestore(&pool->cq_prod_lock, flags);
+	spin_unlock_irqrestore(&pool->cq_lock, flags);
 }
 
 static void xsk_cq_cancel_locked(struct xsk_buff_pool *pool, u32 n)
 {
-	spin_lock(&pool->cq_cached_prod_lock);
+	spin_lock(&pool->cq_lock);
 	xskq_prod_cancel_n(pool->cq, n);
-	spin_unlock(&pool->cq_cached_prod_lock);
+	spin_unlock(&pool->cq_lock);
 }
 
 static void xsk_destruct_skb(struct sk_buff *skb)
@@ -705,7 +705,7 @@ static int xsk_skb_metadata(struct sk_buff *skb, void *buffer,
 		return -EINVAL;
 
 	meta = buffer - pool->tx_metadata_len;
-	if (unlikely(!xsk_buff_valid_tx_metadata(pool, meta, &flags)))
+	if (unlikely(!xsk_buff_valid_tx_metadata(meta)))
 		return -EINVAL;
 
 	if (flags & XDP_TXMD_FLAGS_CHECKSUM) {
