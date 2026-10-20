@@ -46,10 +46,17 @@
 #define ELF_R_SYM(i)     ((i) >> 8)
 #define ELF_R_TYPE(i)    ((i) & 0xff)
 
+/*
+ * ELF64 has a 64-bit r_info: symbol index in bits 63..32, type in 31..0.
+ * ELF32 has a 32-bit r_info: symbol index in bits 31..8, type in 7..0.
+ * These must NOT be aliased to the same shift/mask or ELF64 relocation
+ * symbol indices come out shifted left by 24 bits, sending modpost into
+ * an out-of-bounds symtab read (SIGSEGV in section_rela()).
+ */
 #define ELF64_ST_BIND(i) ELF_ST_BIND(i)
 #define ELF64_ST_TYPE(i) ELF_ST_TYPE(i)
-#define ELF64_R_SYM(i)   ELF_R_SYM(i)
-#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+#define ELF64_R_SYM(i)   ((unsigned long long)(i) >> 32)
+#define ELF64_R_TYPE(i)  ((unsigned long long)(i) & 0xffffffffULL)
 
 #define ELF32_ST_BIND(i) ELF_ST_BIND(i)
 #define ELF32_ST_TYPE(i) ELF_ST_TYPE(i)
@@ -88,15 +95,21 @@
 
 /* Final override: Bionic's elf.h left ELF{32,64}_ST_BIND/TYPE as references
  * to the undefined ELF_ST_BIND. Force them to point at our working
- * function-style macros (defined as `((i) >> 4)` etc. above). */
+ * function-style macros (defined as `((i) >> 4)` etc. above).
+ *
+ * ELF_R_SYM/ELF_R_TYPE must be re-done here too, because this block
+ * re-undefines the ELF{32,64}->ELF_R_SYM alias made above. They must
+ * carry the width of the target's ELF class: ELF32 packs the symbol
+ * index into bits 31..8, ELF64 into bits 63..32. Using the ELF32 width
+ * for a 64-bit r_info shifts every ELF64 relocation symbol index left by
+ * 24 bits, and modpost then reads symtab out of bounds (SIGSEGV in
+ * section_rela()). */
 #undef ELF_ST_BIND
 #undef ELF_ST_TYPE
 #undef ELF_R_SYM
 #undef ELF_R_TYPE
 #undef ELF64_ST_BIND
 #undef ELF64_ST_TYPE
-#undef ELF64_R_SYM
-#undef ELF64_R_TYPE
 #undef ELF32_ST_BIND
 #undef ELF32_ST_TYPE
 #undef ELF32_R_SYM
@@ -104,18 +117,24 @@
 
 #define ELF_ST_BIND(i)   ((i) >> 4)
 #define ELF_ST_TYPE(i)   ((i) & 0xf)
-#define ELF_R_SYM(i)     ((i) >> 8)
-#define ELF_R_TYPE(i)    ((i) & 0xff)
 
 #define ELF64_ST_BIND(i) ELF_ST_BIND(i)
 #define ELF64_ST_TYPE(i) ELF_ST_TYPE(i)
-#define ELF64_R_SYM(i)   ELF_R_SYM(i)
-#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+#define ELF64_R_SYM(i)   ((unsigned long long)(i) >> 32)
+#define ELF64_R_TYPE(i)  ((unsigned long long)(i) & 0xffffffffULL)
 
 #define ELF32_ST_BIND(i) ELF_ST_BIND(i)
 #define ELF32_ST_TYPE(i) ELF_ST_TYPE(i)
-#define ELF32_R_SYM(i)   ELF_R_SYM(i)
-#define ELF32_R_TYPE(i)  ELF_R_TYPE(i)
+#define ELF32_R_SYM(i)   ((i) >> 8)
+#define ELF32_R_TYPE(i)  ((i) & 0xff)
+
+#if KERNEL_ELFCLASS == ELFCLASS32
+#define ELF_R_SYM(i)     ELF32_R_SYM(i)
+#define ELF_R_TYPE(i)    ELF32_R_TYPE(i)
+#else
+#define ELF_R_SYM(i)     ELF64_R_SYM(i)
+#define ELF_R_TYPE(i)    ELF64_R_TYPE(i)
+#endif
 
 #define bswap(x) \
 ({ \
