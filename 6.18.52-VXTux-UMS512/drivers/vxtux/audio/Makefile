@@ -13,7 +13,9 @@ obj-$(CONFIG_SPRD_AUDIO_AGDSP_ACCESS)	+= agdsp_access/
 obj-$(CONFIG_SPRD_AUDIO_SIPC)		+= audiosipc/
 obj-$(CONFIG_SPRD_AUDIO_DSP_DUMP)	+= audiodspdump/
 obj-$(CONFIG_SPRD_AUDIO_SAUDIO)		+= saudio/
-obj-$(CONFIG_SPRD_AUDIO_PIPE)		+= audio_pipe/
+# The apipe driver lives in drivers/sound/soc/sprd/audio_pipe/
+# (the corrected copy) and is built as sprd_apipe.ko there.
+# A second copy here would build the same driver twice.
 obj-$(CONFIG_SPRD_AUDIO_CPBOOT)		+= audiocpboot/
 obj-$(CONFIG_SPRD_HW_DEVICE_DVFS_AGCP)	+= audiodvfs/
 # mcdt/ = SATU direktori, DUA varian saling meniadakan (r1p0/r2p0). Descent

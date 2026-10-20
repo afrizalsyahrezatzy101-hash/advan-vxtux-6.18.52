@@ -256,6 +256,18 @@ endmenu
 
 source "drivers/unisoc_platform/Kconfig"
 
+# The VXTux reverse-engineered / upstream-restored drivers live in
+# drivers/vxtux/ and are built (drivers/Makefile has obj-y += vxtux/),
+# but their Kconfig was never sourced from here. That means syncconfig
+# never saw any of their symbols, so every CONFIG_SPRD_AUDIO_SIPC,
+# CONFIG_SPRD_AUDIO_DSP_DUMP, CONFIG_SPRD_AUDIO_MEMORY_MANAGER ... was
+# dropped again on the next 'make oldconfig', and the drivers were
+# never built at all.
+#
+# Sourcing it makes those symbols real, so they can be set in .config
+# and survive a rebuild.
+source "drivers/vxtux/Kconfig"
+
 config SPRD_FLASH_DRV
 	bool "Spreadtrum camera flash HAL"
 	help

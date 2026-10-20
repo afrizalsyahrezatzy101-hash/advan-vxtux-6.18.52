@@ -29,6 +29,20 @@
 #include <linux/trusty/smcall.h>
 #include <linux/trusty/trusty.h>
 
+/*
+ * dma_buf_export() and dma_buf_fd() live in the DMA_BUF namespace.
+ * While this driver was built-in that did not matter, but as a module
+ * modpost's namespace check rejects it:
+ *
+ *   ERROR: modpost: module sprd_shm uses symbol dma_buf_export from
+ *          namespace DMA_BUF, but does not import it.
+ *   ERROR: modpost: module sprd_shm uses symbol dma_buf_fd from
+ *          namespace DMA_BUF, but does not import it.
+ *
+ * MODULE_IMPORT_NS declares the import explicitly.
+ */
+MODULE_IMPORT_NS(DMA_BUF);
+
 
 #define TSHM_KERN_POOL_ORDER (3)
 #define TSHM_USER_POOL_ORDER  (PAGE_SHIFT)
