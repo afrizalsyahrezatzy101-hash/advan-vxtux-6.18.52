@@ -4489,13 +4489,13 @@ static struct pgv *alloc_pg_vec(struct tpacket_req *req, int order, bool tx_ring
 			goto out_free_pgvec;
 
 		if (tx_ring && !vec->deferred &&
-		    is_vmalloc_addr(pg_vec[i].buffer)) {
-			vec->deferred = kzalloc(*vec->deferred,
-						    GFP_KERNEL | __GFP_NOWARN);
-			if (!vec->deferred)
-				goto out_free_pgvec;
-			vec->deferred->vec = vec;
-			INIT_DELAYED_WORK(&vec->deferred->work,
+				    is_vmalloc_addr(pg_vec[i].buffer)) {
+					vec->deferred = kzalloc(sizeof(*vec->deferred),
+								GFP_KERNEL | __GFP_NOWARN);
+					if (!vec->deferred)
+						goto out_free_pgvec;
+					vec->deferred->vec = vec;
+					INIT_DELAYED_WORK(&vec->deferred->work,
 					  packet_free_pg_vec_work);
 		}
 	}

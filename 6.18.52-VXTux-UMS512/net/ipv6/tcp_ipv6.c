@@ -106,14 +106,21 @@ static void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff *skb)
 	}
 }
 
-static union tcp_seq_and_ts_off
-tcp_v6_init_seq_and_ts_off(const struct net *net, const struct sk_buff *skb)
+static u32 tcp_v6_init_ts_off(const struct net *net, const struct sk_buff *skb)
 {
-	return secure_tcpv6_seq_and_ts_off(net,
-					   ipv6_hdr(skb)->daddr.s6_addr32,
-					   ipv6_hdr(skb)->saddr.s6_addr32,
-					   tcp_hdr(skb)->dest,
-					   tcp_hdr(skb)->source);
+	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
+		return 0;
+	return secure_tcpv6_ts_off(net,
+				  ipv6_hdr(skb)->saddr.s6_addr32,
+				  ipv6_hdr(skb)->daddr.s6_addr32);
+}
+
+static u32 tcp_v6_init_seq(const struct sk_buff *skb)
+{
+	return secure_tcpv6_seq(ipv6_hdr(skb)->daddr.s6_addr32,
+				ipv6_hdr(skb)->saddr.s6_addr32,
+				tcp_hdr(skb)->dest,
+				tcp_hdr(skb)->source);
 }
 
 static int tcp_v6_pre_connect(struct sock *sk, struct sockaddr *uaddr,
@@ -316,16 +323,15 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 	sk_set_txhash(sk);
 
 	if (likely(!tp->repair)) {
-		union tcp_seq_and_ts_off st;
-
-		st = secure_tcpv6_seq_and_ts_off(net,
-						 np->saddr.s6_addr32,
-						 sk->sk_v6_daddr.s6_addr32,
-						 inet->inet_sport,
-						 inet->inet_dport);
 		if (!tp->write_seq)
-			WRITE_ONCE(tp->write_seq, st.off.seq);
-		tp->tsoffset = st.off.ts_off;
+			WRITE_ONCE(tp->write_seq,
+				   secure_tcpv6_seq(np->saddr.s6_addr32,
+						     sk->sk_v6_daddr.s6_addr32,
+						     inet->inet_sport,
+						     inet->inet_dport));
+		tp->tsoffset = secure_tcpv6_ts_off(net,
+						  np->saddr.s6_addr32,
+						  sk->sk_v6_daddr.s6_addr32);
 	}
 
 	if (tcp_fastopen_defer_connect(sk, &err))

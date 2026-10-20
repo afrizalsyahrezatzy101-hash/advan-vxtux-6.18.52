@@ -345,7 +345,7 @@ static int tcp_bpf_ioctl(struct sock *sk, int cmd, int *karg)
 		return -EINVAL;
 
 	slow = lock_sock_fast(sk);
-	*karg = sk_psock_msg_inq(sk);
+	*karg = tcp_inq(sk);
 	unlock_sock_fast(sk, slow);
 
 	return 0;

@@ -139,7 +139,7 @@ int sk_msg_zerocopy_from_iter(struct sock *sk, struct iov_iter *from,
 			      struct sk_msg *msg, u32 bytes);
 int sk_msg_memcopy_from_iter(struct sock *sk, struct iov_iter *from,
 			     struct sk_msg *msg, u32 bytes);
-int «redacted:sk_…»(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
+int __sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
 		   int len, int flags, int *copied_from_self);
 bool sk_msg_is_readable(struct sock *sk);
 
