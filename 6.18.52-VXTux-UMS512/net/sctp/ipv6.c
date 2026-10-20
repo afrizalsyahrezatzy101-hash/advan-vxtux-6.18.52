@@ -801,7 +801,6 @@ static struct sock *sctp_v6_create_accept_sk(struct sock *sk,
 	newsctp6sk = (struct sctp6_sock *)newsk;
 	newinet = inet_sk(newsk);
 	newinet->pinet6 = &newsctp6sk->inet6;
-	newinet->ipv6_fl_list = NULL;
 
 	sctp_sk(newsk)->v4mapped = sctp_sk(sk)->v4mapped;
 

@@ -277,7 +277,7 @@ EXPORT_SYMBOL_GPL(__fl6_sock_lookup);
 
 void fl6_free_socklist(struct sock *sk)
 {
-	struct inet_sock *inet = inet_sk(sk);
+	struct ipv6_pinfo *inet = inet6_sk(sk);
 	struct ipv6_fl_socklist *sfl;
 
 	if (!rcu_access_pointer(inet->ipv6_fl_list))
@@ -488,7 +488,7 @@ static int mem_check(struct sock *sk)
 static inline void fl_link(struct sock *sk, struct ipv6_fl_socklist *sfl,
 			   struct ip6_flowlabel *fl)
 {
-	struct inet_sock *inet = inet_sk(sk);
+	struct ipv6_pinfo *inet = inet6_sk(sk);
 
 	spin_lock_bh(&ip6_sk_fl_lock);
 	sfl->fl = fl;
