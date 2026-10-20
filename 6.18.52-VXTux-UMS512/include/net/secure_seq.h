@@ -29,5 +29,10 @@ u32 secure_tcpv6_seq(const __be32 *saddr, const __be32 *daddr,
 		     __be16 sport, __be16 dport);
 u32 secure_tcpv6_ts_off(const struct net *net,
 			const __be32 *saddr, const __be32 *daddr);
+union tcp_seq_and_ts_off secure_tcpv6_seq_and_ts_off(const struct net *net,
+						    const __be32 *saddr,
+						    const __be32 *daddr,
+						    __be16 sport,
+						    __be16 dport);
 
 #endif /* _NET_SECURE_SEQ */
