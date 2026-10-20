@@ -38,6 +38,15 @@
 #include <net/bluetooth/hci_core.h>
 #include <net/bluetooth/l2cap.h>
 
+/* 6.18 mainline dropped l2cap_flags enum; provide fallback constants
+ * matching the bit positions used by the (patched) VXTux code paths. */
+#ifndef FLAG_DEL
+#define FLAG_DEL			3
+#endif
+#ifndef FLAG_FORCE_ACTIVE
+#define FLAG_FORCE_ACTIVE		4
+#endif
+
 #include "smp.h"
 
 #define LE_FLOWCTL_MAX_CREDITS 65535
