@@ -5407,7 +5407,7 @@ int skb_cow_data(struct sk_buff *skb, int tailbits, struct sk_buff **trailer)
 }
 EXPORT_SYMBOL_GPL(skb_cow_data);
 
-void sock_rmem_free(struct sk_buff *skb)
+void sock_efree(struct sk_buff *skb)
 {
 	struct sock *sk = skb->sk;
 
@@ -5417,7 +5417,7 @@ void sock_rmem_free(struct sk_buff *skb)
 static void skb_set_err_queue(struct sk_buff *skb)
 {
 	/* The error-queue test in skb_is_err_queue() matches this marker
-	 * with the sock_rmem_free destructor installed by sock_queue_err_skb().
+	 * with the sock_efree destructor installed by sock_queue_err_skb().
 	 */
 	skb->pkt_type = PACKET_OUTGOING;
 	BUILD_BUG_ON(PACKET_OUTGOING == 0);
@@ -5434,7 +5434,7 @@ int sock_queue_err_skb(struct sock *sk, struct sk_buff *skb)
 
 	skb_orphan(skb);
 	skb->sk = sk;
-	skb->destructor = sock_rmem_free;
+	skb->destructor = sock_efree;
 	atomic_add(skb->truesize, &sk->sk_rmem_alloc);
 	skb_set_err_queue(skb);
 
