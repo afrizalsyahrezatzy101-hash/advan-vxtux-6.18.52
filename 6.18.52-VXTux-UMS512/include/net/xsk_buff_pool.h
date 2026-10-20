@@ -250,4 +250,24 @@ static inline bool xp_tx_metadata_enabled(const struct xsk_buff_pool *pool)
 	return pool->tx_metadata_len > 0;
 }
 
+/* Backport of xsk_pool_get_rx_frame_size() for 6.18.x VXTux:
+ * The pool is set up so that frame_len is the per-RX frame size in the umem
+ * region (typically chunk_size - headroom for a single-buffer). Drivers and
+ * core code need to know this without having to peek at ->dev (which is
+ * not yet initialised during xp_assign_dev's own frame-size check).
+ */
+static inline u32 __xsk_pool_get_rx_frame_size(const struct xsk_buff_pool *pool)
+{
+	return pool->frame_len;
+}
+
+/* Backport of xsk_pool_get_tailroom(): returns the unused tail of the
+ * chunk that the umem allocated beyond the configured frame_len, so that
+ * xp_assign_dev() can align-down the effective frame size to 128 bytes.
+ */
+static inline u32 xsk_pool_get_tailroom(const struct xdp_buff_xsk *xskb)
+{
+	return xskb->pool->chunk_size - xskb->pool->frame_len;
+}
+
 #endif /* XSK_BUFF_POOL_H_ */
