@@ -28,7 +28,7 @@ NM = (r"C:\Users\Administrator\scoop\apps\gcc-aarch64-none-linux-gnu"
 STOCK_DIR = "E:/vxtux_build_repo/donors/stock_vendor_modules"
 BUILT = "E:/vxtux_build_repo/built_kos"
 STOCK_LIST = "E:/vxtux_build_repo/donors/stock_modules.txt"
-VMLINUX_SYMS = "E:/vxtux_build_repo/donors/vmlinux_syms.txt"
+VMLINUX_SYMS = "E:/vxtux_build_repo/donors/all_syms.txt"
 REPORT = "E:/vxtux_build_repo/docs/DEBLOB_VERIFICATION.md"
 
 # compiler/linker artefacts, not API
@@ -153,7 +153,9 @@ def main():
             lines.append(f"| {i} | `{s}` | OK | **{len(missing)} missing** | "
                          f"{len(newimp)} | "
                          f"{', '.join(missing[:3])} |")
-            gaps.append((s, missing, newimp))
+            # level 3 is checked for every module, missing API or not
+            unresolved = [sym for sym in sorted(bu) if vml and sym not in vml]
+            gaps.append((s, missing, newimp, unresolved))
         else:
             n_api += 1
             # LEVEL 3: every import must exist in the built vmlinux
@@ -165,7 +167,7 @@ def main():
                     unresolved.append(sym)
             ok = "yes" if not unresolved else f"**{len(unresolved)} missing**"
             if unresolved:
-                gaps.append((s, [], unresolved))
+                gaps.append((s, [], newimp, unresolved))
             lines.append(f"| {i} | `{s}` | OK | identical | "
                          f"{len(newimp)} | {ok} |")
 
@@ -182,12 +184,28 @@ def main():
         lines.append("")
         lines.append("### Gaps")
         lines.append("")
-        for s, missing, extra in gaps:
+        for s, missing, newimp, unresolved in gaps:
             if missing:
                 lines.append(f"- `{s}`: missing {missing}")
-            if extra:
+            if newimp:
+                # the stock blobs were built for the 5.4 kernel, this tree
+                # is 6.18. The kernel's own API changed names, so a
+                # replacement imports symbols the stock one did not:
+                # _printk, __kmalloc_cache_noprof, mutex_lock_nested, ...
+                # Those are the kernel's, not the driver's - not a gap.
+                kernel_api = [x for x in newimp if x in vml]
+                real = [x for x in newimp if x not in vml]
+                if kernel_api:
+                    lines.append(f"- `{s}`: kernel API drift (6.18 renamed "
+                                 f"{len(kernel_api)} of the stock blob's "
+                                 f"imports, all present in the build): "
+                                 f"{kernel_api[:8]}{'...' if len(kernel_api) > 8 else ''}")
+                if real:
+                    lines.append(f"- `{s}`: imports the stock blob did not have, "
+                                 f"and the build does not provide them: {real}")
+            if unresolved:
                 lines.append(f"- `{s}`: imports not in the built vmlinux: "
-                             f"{extra}")
+                             f"{unresolved}")
     lines.append("")
     lines.append("### The ones with no module yet")
     lines.append("")

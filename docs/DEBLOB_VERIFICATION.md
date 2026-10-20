@@ -17,14 +17,14 @@ Three levels, each reported on its own:
    have them is not the same code.
 3. **DEPS** - it imports nothing the stock one did not, and
    every symbol it does import exists in the built vmlinux
-   (36,289 symbols).
+   (164,210 symbols).
 
 | # | stock .ko | name | API | new imports | imports ok |
 |---|-----------|------|-----|-------------|------------|
 | 1 | `aes-ce-ccm` | OK | **1 missing** | 13 | ce_aes_ccm_final |
 | 2 | `apsys-dvfs` | OK | **70 missing** | 7 | dpu_devfreq_gov, dpu_dvfs_chain, dpu_dvfs_driver |
-| 3 | `audio-dsp-dump` | OK | identical | 15 | **15 missing** |
-| 4 | `audio-pipe` | OK | identical | 10 | **6 missing** |
+| 3 | `audio-dsp-dump` | OK | identical | 15 | yes |
+| 4 | `audio-pipe` | OK | identical | 10 | yes |
 | 5 | `audio_sipc` | **MISSING** | - | - | - |
 | 6 | `gpio-pmic-eic-sprd` | OK | identical | 8 | yes |
 | 7 | `ion_ipc_trusty` | OK | identical | 7 | yes |
@@ -39,7 +39,7 @@ Three levels, each reported on its own:
 | 16 | `sprd-dmaengine-pcm` | **MISSING** | - | - | - |
 | 17 | `sprd-sipc-virt-bus` | **MISSING** | - | - | - |
 | 18 | `sprd-vsp-pw-domain` | **MISSING** | - | - | - |
-| 19 | `sprd_apipe` | **MISSING** | - | - | - |
+| 19 | `sprd_apipe` | OK | identical | 8 | yes |
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
 | 21 | `sprd_power_manager` | OK | identical | 15 | yes |
 | 22 | `sprd_time_sync` | **MISSING** | - | - | - |
@@ -49,33 +49,30 @@ Three levels, each reported on its own:
 | 26 | `trusty-tui` | OK | identical | 7 | yes |
 | 27 | `trusty` | OK | identical | 28 | yes |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
-| 29 | `ums512-clk` | OK | identical | 0 | **9 missing** |
+| 29 | `ums512-clk` | OK | identical | 0 | yes |
 | 30 | `unisoc-mailbox` | OK | **7 missing** | 6 | get_tx_fifo_mask, mbox_phy_ops, mbox_start_send_tx_fifo |
 | 31 | `usb_f_vser` | **MISSING** | - | - | - |
 
 ## Result
 
 - stock vendor blobs: **31**
-- a .ko with the same file name is built: **23** (74.2%)
-- and it carries the same API: **17** (54.8%)
+- a .ko with the same file name is built: **24** (77.4%)
+- and it carries the same API: **18** (58.1%)
 
 ### Gaps
 
 - `aes-ce-ccm`: missing ['ce_aes_ccm_final']
-- `aes-ce-ccm`: imports not in the built vmlinux: ['ce_aes_mac_update', 'debug_lockdep_rcu_enabled', 'lock_acquire', 'lock_release', 'lockdep_rcu_suspicious', 'mem_section', 'memcpy_from_sglist', 'memcpy_to_sglist', 'memstart_addr', 'preempt_count_add', 'preempt_count_sub', 'rcu_is_watching', 'rcu_sched_lock_map']
+- `aes-ce-ccm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['ce_aes_mac_update', 'debug_lockdep_rcu_enabled', 'lock_acquire', 'lock_release', 'lockdep_rcu_suspicious', 'mem_section', 'memcpy_from_sglist', 'memcpy_to_sglist']...
 - `apsys-dvfs`: missing ['dpu_devfreq_gov', 'dpu_dvfs_chain', 'dpu_dvfs_driver', 'dpu_dvfs_head', 'dpu_dvfs_notifier_call_chain', 'dpu_vsp_dvfs_check_clkeb', 'find_apsys_device_by_name', 'get_display_power_status', 'gsp_devfreq_gov', 'gsp_dvfs_chain', 'gsp_dvfs_driver', 'gsp_dvfs_head', 'gsp_dvfs_notifier_call_chain', 'n6pro_AA_flag', 'n6pro_soc_ver_id_check', 'qogirl6_apsys_dvfs_ops', 'qogirl6_apsys_val_to_volt', 'qogirl6_dpu_dvfs_ops', 'qogirl6_dpu_val_to_freq', 'qogirl6_vdsp_val_to_freq', 'qogirl6_vsp_dvfs_ops', 'qogirl6_vsp_val_to_freq', 'qogirn6pro_apsys_dvfs_ops', 'qogirn6pro_apsys_val_to_volt', 'qogirn6pro_dpu_dvfs_ops', 'qogirn6pro_dpu_val_to_freq', 'qogirn6pro_gsp_dvfs_ops', 'qogirn6pro_gsp_val_to_freq', 'qogirn6pro_gsp_val_to_volt', 'qogirn6pro_vdsp_val_to_freq', 'qogirn6pro_vpu_val_to_volt', 'qogirn6pro_vpudec_val_to_freq', 'qogirn6pro_vpudec_vsp_dvfs_ops', 'qogirn6pro_vpuenc_val_to_freq', 'qogirn6pro_vpuenc_vsp_dvfs_ops', 'regmap_aon_base', 'roc1_apsys_dvfs_ops', 'roc1_apsys_val_to_volt', 'roc1_dpu_dvfs_ops', 'roc1_dpu_val_to_freq', 'roc1_vdsp_dvfs_ops', 'roc1_vdsp_val_to_freq', 'roc1_vsp_dvfs_ops', 'roc1_vsp_val_to_freq', 'sharkl5_apsys_dvfs_ops', 'sharkl5_apsys_val_to_volt', 'sharkl5_dpu_dvfs_ops', 'sharkl5_dpu_val_to_freq', 'sharkl5_vsp_dvfs_ops', 'sharkl5_vsp_val_to_freq', 'sharkl5pro_apsys_dvfs_ops', 'sharkl5pro_apsys_val_to_volt', 'sharkl5pro_dpu_dvfs_ops', 'sharkl5pro_dpu_val_to_freq', 'sharkl5pro_vdsp_dvfs_ops', 'sharkl5pro_vdsp_val_to_freq', 'sharkl5pro_vsp_dvfs_ops', 'sharkl5pro_vsp_val_to_freq', 'vdsp_devfreq_gov', 'vdsp_dvfs_chain', 'vdsp_dvfs_driver', 'vdsp_dvfs_head', 'vdsp_dvfs_notifier_call_chain', 'vpuenc_dvfs_chain', 'vsp_devfreq_gov', 'vsp_dvfs_chain', 'vsp_dvfs_driver', 'vsp_dvfs_get_dev_status', 'vsp_dvfs_head', 'vsp_dvfs_notifier_call_chain']
-- `apsys-dvfs`: imports not in the built vmlinux: ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '_printk', 'arm64_use_ng_mappings', 'class_create', 'ioremap_prot', 'kmalloc_caches']
-- `audio-dsp-dump`: imports not in the built vmlinux: ['agdsp_can_access', 'aud_ipc_ch_close', 'aud_ipc_ch_open', 'aud_ipc_dump', 'aud_send_cmd_no_param', 'aud_send_cmd_no_wait', 'aud_smsg_ch_close', 'aud_smsg_ch_open', 'aud_smsg_recv', 'aud_smsg_register_dump_func', 'audio_addr_ap2dsp', 'audio_mem_alloc', 'audio_mem_free', 'audio_mem_unmap', 'audio_mem_vmap']
-- `audio-pipe`: imports not in the built vmlinux: ['aud_ipc_ch_close', 'aud_ipc_ch_open', 'aud_send_cmd', 'aud_send_cmd_no_wait', 'aud_smsg_recv', 'aud_smsg_wakeup_ch']
+- `apsys-dvfs`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '_printk', 'arm64_use_ng_mappings', 'class_create', 'ioremap_prot', 'kmalloc_caches']
 - `novatek_ts_spi`: missing ['SPI_RD_FAST_ADDR', 'nvt_check_spi_dma_tx_info', 'nvt_extra_proc_deinit', 'nvt_mp_parse_pen_array', 'nvt_pen_diff_seq_ops', 'nvt_read_fw_history', 'nvt_read_get_num_mdata', 'nvt_set_pen_inband_mode_1', 'nvt_set_pen_normal_mode', 'nvt_tx_auto_copy_mode', 'sprd_dpu_nt36xxx_touchscreen_callback']
-- `novatek_ts_spi`: imports not in the built vmlinux: ['__copy_overflow', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_large_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__might_fault', '__raw_spin_lock_init', '__rwlock_init', '_printk', '_raw_spin_lock_irqsave', '_raw_spin_unlock_irqrestore', 'alloc_workqueue_noprof', 'device_set_wakeup_capable', 'device_wakeup_enable', 'disable_irq_nosync', 'gpiod_set_raw_value', 'input_set_capability', 'int_sqrt', 'ktime_get_ts64', 'lockdep_init_map_type', 'mutex_destroy', 'mutex_lock_interruptible_nested', 'mutex_lock_nested', 'of_get_named_gpio', 'of_property_read_bool', 'proc_mkdir', 'queue_work_on', 'seq_putc', 'spi_setup', 'sscanf', 'system_percpu_wq', 'timer_init_key', 'trace_hardirqs_off', 'trace_hardirqs_on', 'usleep_range_state', 'validate_usercopy_range', 'warn_bogus_irq_restore']
+- `novatek_ts_spi`: kernel API drift (6.18 renamed 38 of the stock blob's imports, all present in the build): ['__copy_overflow', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_large_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__might_fault', '__raw_spin_lock_init']...
 - `sdhci-sprd`: missing ['_sdhci_request_atomic', 'mmc_check_wp_fn', 'mmc_hsq_swcq_init', 'mmc_send_tuning_read', 'mmc_set_powp', 'mmc_wp_init', 'mmc_wp_remove', 'sdhci_sprd_irq_request_swcq', 'sdhci_sprd_request_sync']
-- `sdhci-sprd`: imports not in the built vmlinux: ['__kmalloc_cache_noprof', '__might_sleep', '__sdhci_read_caps', '_dev_err', '_printk', 'alt_cb_patch_nops', 'ktime_get', 'mmc_regulator_disable_vqmmc', 'mmc_regulator_enable_vqmmc', 'mmc_regulator_get_supply', 'mmc_sd_switch', 'mmc_send_status', 'sdhci_request_atomic', 'usleep_range_state']
+- `sdhci-sprd`: kernel API drift (6.18 renamed 14 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_sleep', '__sdhci_read_caps', '_dev_err', '_printk', 'alt_cb_patch_nops', 'ktime_get', 'mmc_regulator_disable_vqmmc']...
 - `trusty-ipc`: missing ['__mod_tipc__tipc_virtio_id_table_device_table']
-- `trusty-ipc`: imports not in the built vmlinux: ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver', '__virt_to_phys', '_printk', 'alloc_pages_exact_noprof', 'alt_cb_patch_nops', 'class_create', 'memset', 'memstart_addr', 'mutex_lock_nested', 'pfn_is_map_memory', 'validate_usercopy_range']
-- `ums512-clk`: imports not in the built vmlinux: ['sprd_clk_probe', 'sprd_clk_regmap_init', 'sprd_comp_ops', 'sprd_div_ops', 'sprd_gate_ops', 'sprd_mux_ops', 'sprd_pll_ops', 'sprd_pll_sc_gate_ops', 'sprd_sc_gate_ops']
+- `trusty-ipc`: kernel API drift (6.18 renamed 18 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver']...
 - `unisoc-mailbox`: missing ['get_tx_fifo_mask', 'mbox_phy_ops', 'mbox_start_send_tx_fifo', 'sprd_mbox_change_wakeup_flag_r1', 'sprd_mbox_phy_r1_init', 'sprd_mbox_wakeup_flag_callback_register_r1', 'sprd_mbox_wakeup_flag_callback_unregister_r1']
-- `unisoc-mailbox`: imports not in the built vmlinux: ['__mutex_init', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
+- `unisoc-mailbox`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__mutex_init', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
 
 ### The ones with no module yet
 
@@ -84,6 +81,5 @@ Three levels, each reported on its own:
 - `sprd-dmaengine-pcm`
 - `sprd-sipc-virt-bus`
 - `sprd-vsp-pw-domain`
-- `sprd_apipe`
 - `sprd_time_sync`
 - `usb_f_vser`

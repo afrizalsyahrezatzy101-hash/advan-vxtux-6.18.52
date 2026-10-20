@@ -116,6 +116,7 @@ PIPE_MAKEFILE = """# The composite module is named after the vendor blob it repl
 # drivers/vxtux/sound/asoc/.
 
 obj-$(CONFIG_SPRD_APIPE) += sprd_apipe.o
+sprd_apipe-y := audio_pipe.o
 """
 
 
