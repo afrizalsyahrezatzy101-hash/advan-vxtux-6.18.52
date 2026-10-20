@@ -2866,7 +2866,7 @@ struct hci_evt_le_big_sync_lost {
 	__u8	reason;
 } __packed;
 
-#define HCI_EVT_LE_PAST_RECEIVED	0x24
+#define HCI_EV_LE_PAST_RECEIVED	0x24
 struct hci_ev_le_past_received {
 	__u8	status;
 	__u16	conn_handle;
