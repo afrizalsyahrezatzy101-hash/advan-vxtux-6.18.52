@@ -8,5 +8,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 obj-y					+= core.o governor.o
 
-# sprd/ is built as a composite module; it is not listed
-# here as a directory module any more.
+# sprd/ carries the VSP power-domain module (sprd-vsp-pw-domain.ko,
+# which replaces the stock blob) and its register table. It has to be
+# descended into, otherwise the module is never built.
+obj-y					+= sprd/
