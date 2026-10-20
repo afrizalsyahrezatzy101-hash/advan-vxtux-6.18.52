@@ -92,7 +92,7 @@ static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
 		goto out;
 	}
 
-	if (vsock_has_data(sk, psock) && «redacted:sk_…»(psock)) {
+	if (vsock_has_data(sk, psock) && sock_recvmsg(psock)) {
 		release_sock(sk);
 		sk_psock_put(sk, psock);
 		return __vsock_recvmsg(sk, msg, len, flags, addr_len);
