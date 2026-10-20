@@ -62,12 +62,18 @@ config SPRD_AUDIO_CPBOOT
 	default n
 
 config SPRD_AUDIO_PIPE
-	bool "Unisoc audio pipe"
+	tristate "Unisoc audio pipe"
 	depends on SPRD_AUDIO_SIPC
 	default n
 	help
 	  Port fork GPL drivers/misc/sprd_audio/audio_pipe: channel chardev
 	  voice/effect/recordproc/bthal di atas audio SIPC.
+
+	  Tristate, not bool: the stock ROM ships audio-pipe.ko as a
+	  loadable module, and the replacement has to be one too, or
+	  insmod cannot work and the blob is not really replaced. The
+	  SIPC core above stays built-in; this one is a module that
+	  takes aud_smsg_* from it.
 
 config SPRD_HW_DEVICE_DVFS_AGCP
 	bool "Unisoc AGCP DVFS driver"
