@@ -41,7 +41,7 @@
  *
  * MODULE_IMPORT_NS declares the import explicitly.
  */
-MODULE_IMPORT_NS(DMA_BUF);
+MODULE_IMPORT_NS("DMA_BUF");
 
 
 #define TSHM_KERN_POOL_ORDER (3)

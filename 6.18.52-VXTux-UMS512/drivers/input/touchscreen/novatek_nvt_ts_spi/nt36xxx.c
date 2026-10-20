@@ -1978,7 +1978,6 @@ return:
 static int32_t nvt_ts_probe(struct spi_device *client)
 {
 
-	char *oppo_ftmmode_start;
 	int32_t ret = 0;
 #if (TOUCH_KEY_NUM > 0)
 	int32_t retry = 0;
@@ -2219,19 +2218,21 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 	ts->is_suspended = 0;
 	NVT_LOG("end\n");
 	
-	oppo_ftmmode_start = strstr(saved_command_line,"oppo_ftm_mode=");
-	if ( oppo_ftmmode_start != NULL ) {
-		oppo_ftmmode_start += strlen("oppo_ftm_mode=");
-		if (strncmp(oppo_ftmmode_start, "factory2", strlen("factory2")) == 0) {
-			ts->boot_mode = 3;
-			NVT_LOG("boot_mode is FACTORY,RF and WLAN not need to enable irq\n");
-		} else {
-			nvt_irq_enable(1);
-		}
-	} else {
-		NVT_LOG("boot_mode is failed\n");
-		nvt_irq_enable(1);
-	}
+	/*
+	 * The stock novatek_ts_spi.ko does not import saved_command_line
+	 * (verified with nm -u on the blob pulled from the device), so it
+	 * has no Oppo factory-mode check either. The code that did look
+	 * for "oppo_ftm_mode=" in the kernel command line needed
+	 * saved_command_line, which this kernel does not export:
+	 *
+	 *   ERROR: modpost: "saved_command_line"
+	 *   [drivers/input/touchscreen/novatek_nvt_ts_spi/novatek_ts_spi.ko]
+	 *   undefined!
+	 *
+	 * On this board the check never fired anyway - its only effect
+	 * was to enable the IRQ, which is what happens below.
+	 */
+	nvt_irq_enable(1);
 	return 0;
 
 #if (NVT_TOUCH_PROC || NVT_TOUCH_EXT_PROC || NVT_TOUCH_MP)
