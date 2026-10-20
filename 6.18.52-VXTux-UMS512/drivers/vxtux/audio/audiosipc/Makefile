@@ -26,5 +26,18 @@ ccflags-y	+= -I$(srctree)/$(VXTUX_AUDIO_TREE)/audiosipc/include \
 
 obj-$(CONFIG_SPRD_AUDIO_SIPC) += audio-sipc.o audio-smsg.o
 
+# audio-pipe is a SINGLE-object module: audio-pipe.o is built from
+# audio-pipe.c and linked directly into audio-pipe.ko.
+#
+# It must NOT be written as a composite:
+#
+#   obj-$(CONFIG_SPRD_AUDIO_PIPE) += audio-pipe.o
+#   audio-pipe-y := audio-pipe.o
+#
+# because with the same name for source, object and module, kbuild
+# makes the module's own .o the link input:
+#
+#   aarch64-linux-gnu-ld: input file
+#   'drivers/vxtux/audio/audiosipc/audio-pipe.o' is the same as output
+#   file
 obj-$(CONFIG_SPRD_AUDIO_PIPE) += audio-pipe.o
-audio-pipe-y := audio-pipe.o
