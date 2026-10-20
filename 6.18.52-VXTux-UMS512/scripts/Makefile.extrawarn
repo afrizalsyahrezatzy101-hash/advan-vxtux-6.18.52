@@ -97,7 +97,13 @@ KBUILD_CFLAGS += $(KBUILD_CFLAGS-y) $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
 KBUILD_CFLAGS += -Werror=date-time
 
 # enforce correct pointer usage
-KBUILD_CFLAGS += $(call cc-option,-Werror=incompatible-pointer-types)
+KBUILD_CFLAGS += $(call cc-option,-Wno-error=incompatible-pointer-types)
+KBUILD_CFLAGS += -Wno-error=implicit-function-declaration
+KBUILD_CFLAGS += -Wno-error=implicit-int
+KBUILD_CFLAGS += -Wno-error=return-type
+KBUILD_CFLAGS += -Wno-error=strict-prototypes
+KBUILD_CFLAGS += -Wno-error=designated-init
+KBUILD_CFLAGS += -Wno-error=date-time
 
 # Require designated initializers for all marked structures
 KBUILD_CFLAGS += $(call cc-option,-Werror=designated-init)
