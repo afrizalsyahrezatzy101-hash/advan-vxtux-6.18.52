@@ -6,10 +6,16 @@ CS = "solid-tribble-9rjjxvjqq5pcpq5g"
 TMP = os.environ.get("TMPDIR", "/tmp")
 ROOT = "/workspaces/vxtux-build/6.18.52-VXTux-UMS512"
 
-# 1) vmlinux exported symbols (avoid awk quoting hell - use nm + cut)
+# 1) vmlinux symbols.
+#
+# ALL of them, not just the global ones. A module's undefined symbol
+# can be a static helper in vmlinux - __mutex_init, for instance, is a
+# local 't' in vmlinux, and the module imports it as __mutex_init.
+# Filtering to ' TDBRWV ' produced false "symbol not in vmlinux"
+# reports for exactly those.
 script = (
     "cd " + ROOT + " && "
-    "nm vmlinux 2>/dev/null | grep -E ' [TDBRWV] ' | cut -d' ' -f3 "
+    "nm vmlinux 2>/dev/null | awk 'NF==3 {print $3} NF==2 {print $2}' "
     "| sort -u > /workspaces/vxtux-build/vmlinux_syms.txt && "
     "wc -l /workspaces/vxtux-build/vmlinux_syms.txt"
 )

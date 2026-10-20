@@ -1,11 +1,8 @@
-# The composite module is named after the vendor blob it replaces
-# (sprd_apipe.ko). The stock module's own name is sprd_apipe.
+# NOT BUILT.
 #
-# NOTE: a single-object module must NOT be written as a composite
-# whose object has the same name as the module - kbuild then uses the
-# module's own .o as the link input and ld refuses:
+# The apipe driver that replaces the stock sprd_apipe.ko is built
+# from drivers/sound/soc/sprd/audio_pipe/ - that is the copy the
+# stock blob was recovered from, and it is where the module lives.
 #
-#   aarch64-linux-gnu-ld: input file '.../audio_pipe.o' is the same
-#   as output file
-
-obj-$(CONFIG_SPRD_AUDIO_PIPE) += sprd_apipe.o
+# This copy is kept for reference only: building it would build the
+# same driver a second time.

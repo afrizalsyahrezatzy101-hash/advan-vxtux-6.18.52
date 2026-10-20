@@ -74,3 +74,7 @@ config VXTUX_SND_SPRD_SC2730
 	  driver machine vbc-rxpx-codec-sc27xx (compatible "sprd,vbc-v4-codec-sc2730").
 
 endif # VXTUX_SND_SPRD_ASOC
+
+# The apipe character device, the replacement for the vendor
+# sprd_apipe.ko.
+source "drivers/sound/soc/sprd/audio_pipe/Kconfig"

@@ -25,7 +25,12 @@ obj-y += card/ codec/ dai_v4/ platform/ codec_sc2730/ machine/
 # audio_pipe.c under the vendor symbol CONFIG_SPRD_AUDIO_MEMORY_MANAGER,
 # but nothing descended into the directory -- the same silent-descent
 # trap as drivers/soc/sprd/modem/. Wired here like its siblings.
-obj-y += audio_pipe/
+#
+# It has to be obj-$(CONFIG_SPRD_APIPE), not obj-y: a directory listed
+# in obj-y is always built into vmlinux, so the module inside it can
+# never be a .ko, and the stock ROM ships sprd_apipe.ko as a loadable
+# module.
+obj-$(CONFIG_SPRD_APIPE) += audio_pipe/
 
 # Vendor header include paths (NOT upstream).
 # The VXTux ASoC port kept the vendor drivers/vxtux/sound/asoc layout: the
