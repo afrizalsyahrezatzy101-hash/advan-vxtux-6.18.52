@@ -2059,7 +2059,7 @@ EXPORT_IPV6_MOD(udp_read_skb);
  * 	return it, otherwise we block.
  */
 
-int udp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags)
+int udp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags, int *addr_len)
 {
 	struct inet_sock *inet = inet_sk(sk);
 	DECLARE_SOCKADDR(struct sockaddr_in *, sin, msg->msg_name);
@@ -2070,7 +2070,7 @@ int udp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags)
 	bool checksum_valid = false;
 
 	if (flags & MSG_ERRQUEUE)
-		return ip_recv_error(sk, msg, len);
+			return ip_recv_error(sk, msg, len, NULL);
 
 try_again:
 	off = sk_peek_offset(sk, flags);
@@ -2147,11 +2147,13 @@ try_again:
 		ip_cmsg_recv_offset(msg, sk, skb, sizeof(struct udphdr), off);
 
 	err = copied;
-	if (flags & MSG_TRUNC)
-		err = ulen;
+		if (flags & MSG_TRUNC)
+			err = ulen;
 
-	skb_consume_udp(sk, skb, peeking ? -err : err);
-	return err;
+		skb_consume_udp(sk, skb, peeking ? -err : err);
+		if (addr_len)
+			*addr_len = msg->msg_namelen ?: sizeof(*sin);
+		return err;
 
 csum_copy_err:
 	if (!__sk_queue_drop_skb(sk, &udp_sk(sk)->reader_queue, skb, flags,

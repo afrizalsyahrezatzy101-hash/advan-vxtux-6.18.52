@@ -176,8 +176,8 @@ obj-$(CONFIG_PERF_EVENTS)	+= perf/
 obj-$(CONFIG_RAS)		+= ras/
 obj-$(CONFIG_USB4)		+= thunderbolt/
 obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
-obj-y				+= hwtracing/intel_th/
-obj-$(CONFIG_STM)		+= hwtracing/stm/
+# intel_th removed in V17 (directory not present; VXTux 6.18 only carries coresight + stm)
+obj-$(CONFIG_STM)			+= hwtracing/stm/
 obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
 obj-y				+= android/
 obj-$(CONFIG_NVMEM)		+= nvmem/

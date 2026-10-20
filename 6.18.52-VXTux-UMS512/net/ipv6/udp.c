@@ -466,7 +466,7 @@ static int udp6_skb_len(struct sk_buff *skb)
  */
 
 int udpv6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-		  int flags)
+		  int flags, int *addr_len)
 {
 	struct ipv6_pinfo *np = inet6_sk(sk);
 	struct inet_sock *inet = inet_sk(sk);
@@ -479,10 +479,10 @@ int udpv6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 	int is_udp4;
 
 	if (flags & MSG_ERRQUEUE)
-		return ipv6_recv_error(sk, msg, len);
+		return ipv6_recv_error(sk, msg, len, NULL);
 
 	if (np->rxopt.bits.rxpmtu && READ_ONCE(np->rxpmtu))
-		return ipv6_recv_rxpmtu(sk, msg, len);
+		return ipv6_recv_rxpmtu(sk, msg, len, NULL);
 
 try_again:
 	off = sk_peek_offset(sk, flags);
@@ -581,6 +581,8 @@ try_again:
 		err = ulen;
 
 	skb_consume_udp(sk, skb, peeking ? -err : err);
+	if (addr_len)
+		*addr_len = msg->msg_namelen;
 	return err;
 
 csum_copy_err:

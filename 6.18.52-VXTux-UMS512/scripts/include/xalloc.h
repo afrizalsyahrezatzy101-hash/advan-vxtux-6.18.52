@@ -3,6 +3,7 @@
 #ifndef XALLOC_H
 #define XALLOC_H
 
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <string.h>
 
@@ -43,10 +44,14 @@ static inline char *xstrdup(const char *s)
 
 static inline char *xstrndup(const char *s, size_t n)
 {
-	char *p = strndup(s, n);
-
+	/* VXTux: mingw has no strndup/strnlen, use a manual strncpy+alloc implementation. */
+	size_t i;
+	char *p = malloc(n + 1);
 	if (!p)
 		exit(1);
+	for (i = 0; i < n && s[i]; i++)
+		p[i] = s[i];
+	p[i] = 0;
 	return p;
 }
 

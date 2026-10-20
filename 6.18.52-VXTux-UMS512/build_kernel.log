@@ -1,0 +1,2 @@
+ABS_SRCTREE=E:/vxtux_build_repo/6.18.52-VXTux-UMS512
+Makefile:218: *** source directory cannot contain spaces or colons.  Stop.

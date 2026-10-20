@@ -287,7 +287,7 @@ static int get_build_id_64(struct freader *r, unsigned char *build_id, __u32 *si
 /* enough for Elf64_Ehdr, Elf64_Phdr, and all the smaller requests */
 #define MAX_FREADER_BUF_SZ 64
 
-static int __build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+static int __build_id_parse(struct file *file, unsigned char *build_id,
 			    __u32 *size, bool may_fault)
 {
 	const Elf32_Ehdr *ehdr;
@@ -296,10 +296,10 @@ static int __build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
 	int ret;
 
 	/* only works for page backed storage  */
-	if (!vma->vm_file)
+	if (!file)
 		return -EINVAL;
 
-	freader_init_from_file(&r, buf, sizeof(buf), vma->vm_file, may_fault);
+	freader_init_from_file(&r, buf, sizeof(buf), file, may_fault);
 
 	/* fetch first 18 bytes of ELF header for checks */
 	ehdr = freader_fetch(&r, 0, offsetofend(Elf32_Ehdr, e_type));
@@ -328,6 +328,24 @@ out:
 }
 
 /*
+ * Parse build ID of ELF file
+ * @file:     file pointer (must be a regular file backing a VMA)
+ * @build_id: buffer to store build id, at least BUILD_ID_SIZE long
+ * @size:     returns actual build id size in case of success
+ *
+ * Assumes faultable context and can cause page faults to bring in file data
+ * into page cache. This is the file-based variant of build_id_parse() and
+ * is useful when the caller has already obtained a file reference (and
+ * has dropped the VMA lock) — see CVE-2026-23199.
+ *
+ * Return: 0 on success; negative error, otherwise
+ */
+int build_id_parse_file(const struct file *file, unsigned char *build_id, __u32 *size)
+{
+	return __build_id_parse((struct file *)file, build_id, size, true /* may_fault */);
+}
+
+/*
  * Parse build ID of ELF file mapped to vma
  * @vma:      vma object
  * @build_id: buffer to store build id, at least BUILD_ID_SIZE long
@@ -340,7 +358,9 @@ out:
  */
 int build_id_parse_nofault(struct vm_area_struct *vma, unsigned char *build_id, __u32 *size)
 {
-	return __build_id_parse(vma, build_id, size, false /* !may_fault */);
+	if (!vma)
+		return -EINVAL;
+	return __build_id_parse(vma->vm_file, build_id, size, false /* !may_fault */);
 }
 
 /*
@@ -356,7 +376,9 @@ int build_id_parse_nofault(struct vm_area_struct *vma, unsigned char *build_id, 
  */
 int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id, __u32 *size)
 {
-	return __build_id_parse(vma, build_id, size, true /* may_fault */);
+	if (!vma)
+		return -EINVAL;
+	return __build_id_parse(vma->vm_file, build_id, size, true /* may_fault */);
 }
 
 /**

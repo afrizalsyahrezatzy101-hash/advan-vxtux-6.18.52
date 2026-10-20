@@ -847,7 +847,7 @@ do_confirm:
 	goto out;
 }
 
-int ping_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags)
+int ping_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags, int *addr_len)
 {
 	struct inet_sock *isk = inet_sk(sk);
 	int family = sk->sk_family;
@@ -862,7 +862,7 @@ int ping_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags)
 		goto out;
 
 	if (flags & MSG_ERRQUEUE)
-		return inet_recv_error(sk, msg, len);
+		return inet_recv_error(sk, msg, len, NULL);
 
 	skb = skb_recv_datagram(sk, flags, &err);
 	if (!skb)
@@ -933,6 +933,8 @@ done:
 	skb_free_datagram(sk, skb);
 out:
 	pr_debug("ping_recvmsg -> %d\n", err);
+	if (addr_len)
+		*addr_len = msg->msg_namelen;
 	return err;
 }
 EXPORT_IPV6_MOD_GPL(ping_recvmsg);

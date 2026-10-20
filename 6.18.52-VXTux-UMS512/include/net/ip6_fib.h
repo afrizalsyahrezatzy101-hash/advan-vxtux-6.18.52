@@ -545,6 +545,14 @@ static inline void fib6_remove_gc_list(struct fib6_info *f6i)
 		hlist_del_init(&f6i->gc_link);
 }
 
+/* VXTux 6.18 backport: fib6_may_remove_gc_list. Decides whether to drop
+ * the gc_link without taking tb6_lock; the actual removal happens via
+ * fib6_remove_gc_list() under the table lock. */
+static inline bool fib6_may_remove_gc_list(struct net *net, struct fib6_info *f6i)
+{
+	return !hlist_unhashed(&f6i->gc_link);
+}
+
 struct ipv6_route_iter {
 	struct seq_net_private p;
 	struct fib6_walker w;

@@ -3,6 +3,7 @@
 #define _BERRY_COMPAT_H
 
 #include <linux/fs.h>
+#include <net/dst.h>
 
 /* ====== security_backing_file_* (missing in VXTux 6.18) ====== */
 /* VXTux 6.18 backing_file struct: contains struct file (NOT pointer)
@@ -87,6 +88,12 @@ static inline int dev_xmit_recursion(void) { return 0; }
 static inline void dev_xmit_recursion_inc(void) {}
 static inline void dev_xmit_recursion_dec(void) {}
 
+/* ====== IP_TUNNEL_RECURSION_LIMIT (VXTux 6.18 missing) ====== */
+#define IP_TUNNEL_RECURSION_LIMIT	8
+
+/* ====== SKB_DROP_REASON_RECURSION_LIMIT (VXTux 6.18 missing) ====== */
+#define SKB_DROP_REASON_RECURSION_LIMIT	SKB_DROP_REASON_FQ_HORIZON_LIMIT
+
 /* ====== sk_msg_sg_copy_assign (BPF msg shim) ====== */
 static inline void sk_msg_sg_copy_assign(void *msg, int i, void *from, int move_from)
 {
@@ -165,15 +172,12 @@ static inline bool mini_qdisc_pair_inited(void *a, ...) { (void)a; return true; 
 /* ====== skb_header_pointer_careful (VXTux 6.18 missing) ====== */
 static inline void *skb_header_pointer_careful(void *a, ...) { (void)a; return NULL; }
 
-/* ====== ip_dst_mtu_configured (VXTux 6.18 missing) ====== */
-static inline unsigned int ip_dst_mtu_configured(void *a, ...) { (void)a; return 1500; }
+/* ====== ip_dst_mtu_configured/ip6_dst_mtu_configured now in include/net/dst.h ====== */
 
-/* ====== dst4_mtu (VXTux 6.18 missing) ====== */
-static inline unsigned int dst4_mtu(void *a, ...) { (void)a; return 1500; }
+/* ====== dst4_mtu moved to include/net/dst.h (VXTux 6.18) ====== */
 
 
-/* ====== inet_frag_queue_flush (VXTux 6.18 missing) ====== */
-static inline void inet_frag_queue_flush(void *q, int reason) { (void)q; (void)reason; }
+/* ====== inet_frag_queue_flush now declared in include/net/inet_frag.h ====== */
 
 #endif /* _BERRY_COMPAT_H */
 

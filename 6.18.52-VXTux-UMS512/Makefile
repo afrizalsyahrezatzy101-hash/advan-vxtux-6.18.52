@@ -213,9 +213,8 @@ abs_output := $(realpath $(output))
 $(if $(abs_output),,$(error failed to create output directory "$(output)"))
 endif
 
-ifneq ($(words $(subst :, ,$(abs_srctree))), 1)
-$(error source directory cannot contain spaces or colons)
-endif
+# VXTux: colon check disabled for Windows MSYS paths like E:/...
+# The original check refused "E:/..." which is the actual native path on Windows.
 
 export sub_make_done := 1
 

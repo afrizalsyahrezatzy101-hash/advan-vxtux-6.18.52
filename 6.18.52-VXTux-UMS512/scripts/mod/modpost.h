@@ -10,6 +10,15 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+/* Bionic's <elf.h> declares ELF{32,64}_ST_BIND as macros that call
+ * ELF_ST_BIND(x), but never provides ELF_ST_BIND itself (glibc-only).
+ * Define the underlying bit extractors so the cascade resolves. */
+#define ELF_ST_BIND(i)   ((i) >> 4)
+#define ELF_ST_TYPE(i)   ((i) & 0xf)
+#define ELF_R_SYM(i)     ((i) >> 8)
+#define ELF_R_TYPE(i)    ((i) & 0xff)
+
 #include <elf.h>
 #include "../../include/linux/module_symbol.h"
 
@@ -21,6 +30,31 @@
 #undef ELF_ST_TYPE
 #undef ELF_R_SYM
 #undef ELF_R_TYPE
+#undef ELF64_ST_BIND
+#undef ELF64_ST_TYPE
+#undef ELF64_R_SYM
+#undef ELF64_R_TYPE
+#undef ELF32_ST_BIND
+#undef ELF32_ST_TYPE
+#undef ELF32_R_SYM
+#undef ELF32_R_TYPE
+
+/* Re-define the underlying macros (Bionic elf.h may have left
+ * ELF{32,64}_ST_BIND dangling as references to undefined ELF_ST_BIND). */
+#define ELF_ST_BIND(i)   ((i) >> 4)
+#define ELF_ST_TYPE(i)   ((i) & 0xf)
+#define ELF_R_SYM(i)     ((i) >> 8)
+#define ELF_R_TYPE(i)    ((i) & 0xff)
+
+#define ELF64_ST_BIND(i) ELF_ST_BIND(i)
+#define ELF64_ST_TYPE(i) ELF_ST_TYPE(i)
+#define ELF64_R_SYM(i)   ELF_R_SYM(i)
+#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+
+#define ELF32_ST_BIND(i) ELF_ST_BIND(i)
+#define ELF32_ST_TYPE(i) ELF_ST_TYPE(i)
+#define ELF32_R_SYM(i)   ELF_R_SYM(i)
+#define ELF32_R_TYPE(i)  ELF_R_TYPE(i)
 
 #if KERNEL_ELFCLASS == ELFCLASS32
 
@@ -51,6 +85,37 @@
 #define ELF_R_SYM   ELF64_R_SYM
 #define ELF_R_TYPE  ELF64_R_TYPE
 #endif
+
+/* Final override: Bionic's elf.h left ELF{32,64}_ST_BIND/TYPE as references
+ * to the undefined ELF_ST_BIND. Force them to point at our working
+ * function-style macros (defined as `((i) >> 4)` etc. above). */
+#undef ELF_ST_BIND
+#undef ELF_ST_TYPE
+#undef ELF_R_SYM
+#undef ELF_R_TYPE
+#undef ELF64_ST_BIND
+#undef ELF64_ST_TYPE
+#undef ELF64_R_SYM
+#undef ELF64_R_TYPE
+#undef ELF32_ST_BIND
+#undef ELF32_ST_TYPE
+#undef ELF32_R_SYM
+#undef ELF32_R_TYPE
+
+#define ELF_ST_BIND(i)   ((i) >> 4)
+#define ELF_ST_TYPE(i)   ((i) & 0xf)
+#define ELF_R_SYM(i)     ((i) >> 8)
+#define ELF_R_TYPE(i)    ((i) & 0xff)
+
+#define ELF64_ST_BIND(i) ELF_ST_BIND(i)
+#define ELF64_ST_TYPE(i) ELF_ST_TYPE(i)
+#define ELF64_R_SYM(i)   ELF_R_SYM(i)
+#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+
+#define ELF32_ST_BIND(i) ELF_ST_BIND(i)
+#define ELF32_ST_TYPE(i) ELF_ST_TYPE(i)
+#define ELF32_R_SYM(i)   ELF_R_SYM(i)
+#define ELF32_R_TYPE(i)  ELF_R_TYPE(i)
 
 #define bswap(x) \
 ({ \

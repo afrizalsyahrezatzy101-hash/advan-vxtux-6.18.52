@@ -28,6 +28,11 @@ struct inet_bind_bucket;
 struct inet_bind2_bucket;
 struct tcp_congestion_ops;
 
+/* VXTux backport: hash2 binding from mainline 6.16+. The inline is
+ * provided here so callers don't need to update; the .c file holds
+ * the symbol of the same name but it's resolved via extern-then-inline. */
+static inline bool inet_use_hash2_on_bind(struct sock *sk) { return false; }
+
 /*
  * Pointers to address related TCP functions
  * (i.e. things that depend on the address family)
@@ -42,7 +47,9 @@ struct inet_connection_sock_af_ops {
 				      struct request_sock *req,
 				      struct dst_entry *dst,
 				      struct request_sock *req_unhash,
-				      bool *own_req);
+				      bool *own_req,
+				      void (*opt_child_init)(struct sock *newsk,
+							     const struct sock *sk));
 	u16	    net_header_len;
 	int	    (*setsockopt)(struct sock *sk, int level, int optname,
 				  sockptr_t optval, unsigned int optlen);

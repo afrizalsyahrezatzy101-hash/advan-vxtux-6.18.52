@@ -385,7 +385,7 @@ static struct request_sock *cookie_tcp_check(struct net *net, struct sock *sk,
 					       ip_hdr(skb)->saddr,
 					       tcp_hdr(skb)->dest,
 					       tcp_hdr(skb)->source);
-		tsoff = st.ts_off;
+		tsoff = st.off.ts_off;
 		tcp_opt.rcv_tsecr -= tsoff;
 	}
 

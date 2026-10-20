@@ -47,15 +47,6 @@ static u32 seq_scale(u32 seq)
 #endif
 
 #if IS_ENABLED(CONFIG_IPV6)
-/* V18: union tcp_seq_and_ts_off missing in VXTux 6.18 - define locally */
-union tcp_seq_and_ts_off {
-    u64    hash64;
-    struct {
-        u32 seq;
-        u32 ts_off;
-    };
-};
-
 union tcp_seq_and_ts_off
 secure_tcpv6_seq_and_ts_off(const struct net *net, const __be32 *saddr,
 			    const __be32 *daddr, __be16 sport, __be16 dport)
@@ -79,9 +70,9 @@ secure_tcpv6_seq_and_ts_off(const struct net *net, const __be32 *saddr,
 			    &net_secret);
 
 	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
-		st.ts_off = 0;
+		st.off.ts_off = 0;
 
-	st.seq = seq_scale(st.seq);
+	st.off.seq = seq_scale(st.off.seq);
 	return st;
 }
 EXPORT_SYMBOL(secure_tcpv6_seq_and_ts_off);
@@ -126,9 +117,9 @@ secure_tcp_seq_and_ts_off(const struct net *net, __be32 saddr, __be32 daddr,
 				 ports, &net_secret);
 
 	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
-		st.ts_off = 0;
+		st.off.ts_off = 0;
 
-	st.seq = seq_scale(st.seq);
+	st.off.seq = seq_scale(st.off.seq);
 	return st;
 }
 EXPORT_SYMBOL_GPL(secure_tcp_seq_and_ts_off);

@@ -91,15 +91,6 @@
 #include <linux/scatterlist.h>
 
 #include <trace/events/tcp.h>
-/* VXTux 6.18 backport: union tcp_seq_and_ts_off type definition (function in net/core/secure_seq.c) */
-struct tcp_seq_and_ts_off {
-	u32 seq;
-	u32 ts_off;
-};
-union tcp_seq_and_ts_off {
-	struct tcp_seq_and_ts_off off;
-	u64 both;
-};
 
 
 
@@ -344,8 +335,8 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 					       inet->inet_sport,
 					       usin->sin_port);
 		if (!tp->write_seq)
-			WRITE_ONCE(tp->write_seq, st.seq);
-		WRITE_ONCE(tp->tsoffset, st.ts_off);
+			WRITE_ONCE(tp->write_seq, st.off.seq);
+		WRITE_ONCE(tp->tsoffset, st.off.ts_off);
 	}
 
 	atomic_set(&inet->inet_id, get_random_u16());

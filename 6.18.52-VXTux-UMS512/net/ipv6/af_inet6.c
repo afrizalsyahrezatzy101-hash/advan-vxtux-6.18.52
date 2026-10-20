@@ -674,7 +674,7 @@ int inet6_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
 	/* IPV6_ADDRFORM can change sk->sk_prot under us. */
 	prot = READ_ONCE(sk->sk_prot);
 	return INDIRECT_CALL_2(prot->recvmsg, tcp_recvmsg, udpv6_recvmsg,
-			       sk, msg, size, flags);
+				       sk, msg, size, flags, NULL);
 }
 
 const struct proto_ops inet6_stream_ops = {

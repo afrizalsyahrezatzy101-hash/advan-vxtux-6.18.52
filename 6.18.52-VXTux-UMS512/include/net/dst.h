@@ -219,6 +219,33 @@ static inline u32 dst_mtu(const struct dst_entry *dst)
 	return INDIRECT_CALL_INET(dst->ops->mtu, ip6_mtu, ipv4_mtu, dst);
 }
 
+/* VXTux 6.18: dst_mtu was split per-family. For the ipv4 paths we
+ * route everything through the legacy dst_mtu getter (dsts are always
+ * ipv4 at these call sites). */
+static inline u32 dst4_mtu(const struct dst_entry *dst)
+{
+	return dst_mtu(dst);
+}
+
+/* VXTux 6.18: dst_mtu was split per-family. */
+static inline u32 dst6_mtu(const struct dst_entry *dst)
+{
+	return dst_mtu(dst);
+}
+
+/* VXTux 6.18: ip*_dst_mtu_configured helpers - expose the configured
+ * MTU as the underlying dst_metric sees it, falling back to the
+ * raw metric value. */
+static inline unsigned int ip_dst_mtu_configured(const struct dst_entry *dst)
+{
+	return dst_mtu(dst);
+}
+
+static inline unsigned int ip6_dst_mtu_configured(const struct dst_entry *dst)
+{
+	return dst_mtu(dst);
+}
+
 /* RTT metrics are stored in milliseconds for user ABI, but used as jiffies */
 static inline unsigned long dst_metric_rtt(const struct dst_entry *dst, int metric)
 {

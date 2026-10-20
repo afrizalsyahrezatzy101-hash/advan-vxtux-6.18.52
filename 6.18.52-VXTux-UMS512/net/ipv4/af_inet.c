@@ -871,7 +871,7 @@ void inet_splice_eof(struct socket *sock)
 EXPORT_SYMBOL_GPL(inet_splice_eof);
 
 INDIRECT_CALLABLE_DECLARE(int udp_recvmsg(struct sock *, struct msghdr *,
-					  size_t, int));
+				  size_t, int, int *));
 int inet_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
 		 int flags)
 {
@@ -881,7 +881,7 @@ int inet_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
 		sock_rps_record_flow(sk);
 
 	return INDIRECT_CALL_2(sk->sk_prot->recvmsg, tcp_recvmsg, udp_recvmsg,
-			       sk, msg, size, flags);
+				       sk, msg, size, flags, NULL);
 }
 EXPORT_SYMBOL(inet_recvmsg);
 
@@ -1566,15 +1566,16 @@ __be32 inet_current_timestamp(void)
 }
 EXPORT_SYMBOL(inet_current_timestamp);
 
-int inet_recv_error(struct sock *sk, struct msghdr *msg, int len)
+int inet_recv_error(struct sock *sk, struct msghdr *msg, int len,
+		    int *addr_len)
 {
 	unsigned int family = READ_ONCE(sk->sk_family);
 
 	if (family == AF_INET)
-		return ip_recv_error(sk, msg, len);
+			return ip_recv_error(sk, msg, len, NULL);
 #if IS_ENABLED(CONFIG_IPV6)
 	if (family == AF_INET6)
-		return pingv6_ops.ipv6_recv_error(sk, msg, len);
+		return pingv6_ops.ipv6_recv_error(sk, msg, len, NULL);
 #endif
 	return -EINVAL;
 }

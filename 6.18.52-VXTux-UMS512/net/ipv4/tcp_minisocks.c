@@ -472,6 +472,19 @@ void tcp_openreq_init_rwin(struct request_sock *req,
 	ireq->rcv_wscale = rcv_wscale;
 }
 
+/* VXTux 6.18 backport: tcp_ca_no_fallback_rfc3168 - ECN CA-specific check.
+ * Returns true if the congestion control algorithm on @sk does not want to
+ * fall back to RFC3168 ECN behavior. 6.18 mainline dropped the explicit
+ * CA-side ECN negotiation hook (ca_no_fallback_rfc3168); in the absence of
+ * any CC that opts in, every call returns false and the ECN path falls
+ * back to RFC3168 (the historical default).
+ */
+bool tcp_ca_no_fallback_rfc3168(struct sock *sk)
+{
+	return false;
+}
+EXPORT_SYMBOL_GPL(tcp_ca_no_fallback_rfc3168);
+
 static void tcp_ecn_openreq_child(struct sock *sk,
 				  const struct request_sock *req,
 				  const struct sk_buff *skb)

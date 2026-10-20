@@ -76,6 +76,7 @@
 #include <net/tcp_ecn.h>
 #include <net/proto_memory.h>
 #include <net/inet_common.h>
+#include <net/secure_seq.h>
 #include <linux/ipsec.h>
 #include <linux/unaligned.h>
 #include <linux/errqueue.h>
@@ -7413,15 +7414,6 @@ u16 tcp_get_syncookie_mss(struct request_sock_ops *rsk_ops,
 }
 EXPORT_IPV6_MOD_GPL(tcp_get_syncookie_mss);
 
-/* V18: union tcp_seq_and_ts_off missing in upstream 6.18 - define locally */
-union tcp_seq_and_ts_off {
-	u64	hash64;
-	struct {
-		u32	seq;
-		u32	ts_off;
-	};
-};
-
 int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		     const struct tcp_request_sock_ops *af_ops,
 		     struct sock *sk, struct sk_buff *skb)
@@ -7501,12 +7493,12 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 
 	if (tmp_opt.tstamp_ok || (!want_cookie && !isn))
 		/* VXTux 6.18 backport: init_seq_and_ts_off not in 6.18 */
-		st.seq = af_ops->init_seq(skb);
-		st.ts_off = af_ops->init_ts_off(net, skb);
+		st.off.seq = af_ops->init_seq(skb);
+		st.off.ts_off = af_ops->init_ts_off(net, skb);
 
 	if (tmp_opt.tstamp_ok) {
 		tcp_rsk(req)->req_usec_ts = dst_tcp_usec_ts(dst);
-		tcp_rsk(req)->ts_off = st.ts_off;
+		tcp_rsk(req)->ts_off = st.off.ts_off;
 	}
 	if (!want_cookie && !isn) {
 		int max_syn_backlog = READ_ONCE(net->ipv4.sysctl_max_syn_backlog);
@@ -7528,7 +7520,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 			goto drop_and_release;
 		}
 
-		isn = st.seq;
+		isn = st.off.seq;
 	}
 
 	tcp_ecn_create_request(req, skb, sk, dst);

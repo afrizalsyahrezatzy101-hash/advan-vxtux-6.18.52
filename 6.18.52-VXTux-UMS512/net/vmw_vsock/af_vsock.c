@@ -2280,7 +2280,7 @@ static int vsock_connectible_wait_data(struct sock *sk,
 }
 
 static int __vsock_stream_recvmsg(struct sock *sk, struct msghdr *msg,
-				  size_t len, int flags)
+				  size_t len, int flags, int *addr_len)
 {
 	struct vsock_transport_recv_notify_data recv_data;
 	const struct vsock_transport *transport;
@@ -2359,7 +2359,7 @@ out:
 }
 
 static int __vsock_seqpacket_recvmsg(struct sock *sk, struct msghdr *msg,
-				     size_t len, int flags)
+				     size_t len, int flags, int *addr_len)
 {
 	const struct vsock_transport *transport;
 	struct vsock_sock *vsk;
@@ -2466,9 +2466,9 @@ __vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
 	}
 
 	if (sk->sk_type == SOCK_STREAM)
-		err = __vsock_stream_recvmsg(sk, msg, len, flags);
+		err = __vsock_stream_recvmsg(sk, msg, len, flags, NULL);
 	else
-		err = __vsock_seqpacket_recvmsg(sk, msg, len, flags);
+		err = __vsock_seqpacket_recvmsg(sk, msg, len, flags, NULL);
 
 out:
 	release_sock(sk);

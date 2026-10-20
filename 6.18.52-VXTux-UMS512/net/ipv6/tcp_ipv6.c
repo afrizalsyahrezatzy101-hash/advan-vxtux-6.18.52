@@ -324,8 +324,8 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 						 inet->inet_sport,
 						 inet->inet_dport);
 		if (!tp->write_seq)
-			WRITE_ONCE(tp->write_seq, st.seq);
-		tp->tsoffset = st.ts_off;
+			WRITE_ONCE(tp->write_seq, st.off.seq);
+		tp->tsoffset = st.off.ts_off;
 	}
 
 	if (tcp_fastopen_defer_connect(sk, &err))

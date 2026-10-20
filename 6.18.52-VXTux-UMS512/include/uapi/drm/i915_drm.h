@@ -1,13 +1,4 @@
 #include <linux/types.h>
-#ifndef _BOOL_TYPEDEF_GUARD
-#define _BOOL_TYPEDEF_GUARD
-#ifndef __cplusplus
-#ifndef bool
-typedef enum { false = 0, true = 1 } bool;
-#endif
-#endif
-#endif
-
 /*
  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.
  * All Rights Reserved.

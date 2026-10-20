@@ -21,6 +21,47 @@
 #include <stdbool.h>
 #include <errno.h>
 
+/* Bionic's <elf.h> does not define R_ARM_* relocation types that modpost
+ * references. We build on aarch64 (EM_AARCH64) so these are dead code
+ * paths, but the compiler still parses the case labels. Provide harmless
+ * numeric fallbacks so the file compiles cleanly on Bionic. */
+#ifndef R_ARM_ABS32
+#define R_ARM_ABS32 2
+#endif
+#ifndef R_ARM_REL32
+#define R_ARM_REL32 3
+#endif
+#ifndef R_ARM_MOVW_ABS_NC
+#define R_ARM_MOVW_ABS_NC 43
+#endif
+#ifndef R_ARM_MOVT_ABS
+#define R_ARM_MOVT_ABS 44
+#endif
+#ifndef R_ARM_PC24
+#define R_ARM_PC24 1
+#endif
+#ifndef R_ARM_CALL
+#define R_ARM_CALL 28
+#endif
+#ifndef R_ARM_JUMP24
+#define R_ARM_JUMP24 29
+#endif
+#ifndef R_ARM_THM_MOVW_ABS_NC
+#define R_ARM_THM_MOVW_ABS_NC 47
+#endif
+#ifndef R_ARM_THM_MOVT_ABS
+#define R_ARM_THM_MOVT_ABS 48
+#endif
+#ifndef R_ARM_THM_JUMP19
+#define R_ARM_THM_JUMP19 51
+#endif
+#ifndef R_ARM_THM_PC22
+#define R_ARM_THM_PC22 10
+#endif
+#ifndef R_ARM_THM_JUMP24
+#define R_ARM_THM_JUMP24 30
+#endif
+
 #include <hash.h>
 #include <hashtable.h>
 #include <list.h>

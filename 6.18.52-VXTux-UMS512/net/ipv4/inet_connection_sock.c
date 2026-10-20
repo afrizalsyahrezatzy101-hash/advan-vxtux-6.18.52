@@ -22,8 +22,8 @@
 #include <net/tcp.h>
 #include <net/sock_reuseport.h>
 #include <net/addrconf.h>
-/* VXTux 6.18 backport: vendor-only functions, stubbed to false for compatibility */
-static inline bool inet_use_hash2_on_bind(struct sock *sk) { (void)sk; return false; }
+/* VXTux 6.18 backport: vendor-only functions, stubbed to false for compatibility
+ * (inet_use_hash2_on_bind now lives in include/net/inet_connection_sock.h) */
 static inline void tcp_clear_sock_ops_cb_flags(struct sock *sk) { (void)sk; }
 
 
