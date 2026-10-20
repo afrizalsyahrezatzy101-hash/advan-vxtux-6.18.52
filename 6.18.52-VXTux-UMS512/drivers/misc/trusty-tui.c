@@ -222,7 +222,7 @@ static const struct of_device_id trusty_tui_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, trusty_tui_of_match);
 
-static struct platform_driver trusty_tui_driver = {
+ struct platform_driver trusty_tui_driver = {
 	.probe		= trusty_tui_probe,
 	.remove		= trusty_tui_remove,
 	.driver		= {
@@ -230,6 +230,7 @@ static struct platform_driver trusty_tui_driver = {
 		.of_match_table = trusty_tui_of_match,
 	},
 };
+EXPORT_SYMBOL_GPL(trusty_tui_driver);
 
 module_platform_driver(trusty_tui_driver);
 

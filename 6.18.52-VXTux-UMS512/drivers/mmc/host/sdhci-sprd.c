@@ -568,10 +568,11 @@ static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
 		     SDHCI_SPRD_REG_32_DLL_DLY);
 }
 
-static int mmc_send_tuning_cmd(struct mmc_card *card)
+ int mmc_send_tuning_cmd(struct mmc_card *card)
 {
 	return mmc_send_status(card, NULL);
 }
+EXPORT_SYMBOL_GPL(mmc_send_tuning_cmd);
 
 static int mmc_send_tuning_data(struct mmc_card *card)
 {

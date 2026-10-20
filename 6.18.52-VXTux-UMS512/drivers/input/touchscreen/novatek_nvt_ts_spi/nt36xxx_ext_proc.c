@@ -92,6 +92,7 @@ void nvt_change_mode(uint8_t mode)
 		msleep(20);
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_change_mode);
 
 /*******************************************************
 Description:
@@ -335,6 +336,7 @@ const struct seq_operations nvt_fw_version_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_fw_version_show
 };
+EXPORT_SYMBOL_GPL(nvt_fw_version_seq_ops);
 
 const struct seq_operations nvt_seq_ops = {
 	.start  = c_start,
@@ -342,6 +344,7 @@ const struct seq_operations nvt_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_show
 };
+EXPORT_SYMBOL_GPL(nvt_seq_ops);
 
 /*******************************************************
 Description:

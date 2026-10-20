@@ -97,7 +97,7 @@ static int ccm_init_mac(struct aead_request *req, u8 maciv[], u32 msglen)
 	return 0;
 }
 
-static u32 ce_aes_ccm_auth_data(u8 mac[], u8 const in[], u32 abytes,
+ u32 ce_aes_ccm_auth_data(u8 mac[], u8 const in[], u32 abytes,
 				u32 macp, u32 const rk[], u32 rounds)
 {
 	int enc_after = (macp + abytes) % AES_BLOCK_SIZE;
@@ -131,6 +131,7 @@ static u32 ce_aes_ccm_auth_data(u8 mac[], u8 const in[], u32 abytes,
 
 	return macp;
 }
+EXPORT_SYMBOL_GPL(ce_aes_ccm_auth_data);
 
 static void ccm_calculate_auth_mac(struct aead_request *req, u8 mac[])
 {

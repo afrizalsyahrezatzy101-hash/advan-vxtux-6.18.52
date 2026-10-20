@@ -44,7 +44,9 @@ static struct workqueue_struct *nvt_esd_check_wq;
 static unsigned long irq_timer = 0;
 
 uint8_t esd_check = false;
+EXPORT_SYMBOL_GPL(esd_check);
 uint8_t esd_retry = 0;
+EXPORT_SYMBOL_GPL(esd_retry);
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
 static unsigned long nvt_tp_usb_state = 0;
@@ -64,6 +66,7 @@ extern int32_t nvt_mp_proc_init(void);
 #endif
 
 struct nvt_ts_data *ts;
+EXPORT_SYMBOL_GPL(ts);
 
 int gloal_reset_flag;
 //static struct workqueue_struct *nvt_wq;
@@ -75,7 +78,9 @@ extern void Boot_Update_Firmware(struct work_struct *work);
 
 
 uint32_t ENG_RST_ADDR  = 0x7FFF80;
+EXPORT_SYMBOL_GPL(ENG_RST_ADDR);
 uint32_t SWRST_N8_ADDR = 0; //read from dtsi
+EXPORT_SYMBOL_GPL(SWRST_N8_ADDR);
 
 #if TOUCH_KEY_NUM > 0
 const uint16_t touch_key_array[TOUCH_KEY_NUM] = {
@@ -157,6 +162,7 @@ int32_t CTP_SPI_READ(struct spi_device *client, uint8_t *buf, uint16_t len)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(CTP_SPI_READ);
 
 /*******************************************************
 Description:
@@ -189,6 +195,7 @@ int32_t CTP_SPI_WRITE(struct spi_device *client, uint8_t *buf, uint16_t len)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(CTP_SPI_WRITE);
 
 /*******************************************************
 Description:
@@ -224,6 +231,7 @@ int32_t nvt_set_page(uint32_t addr)
 
 	return CTP_SPI_WRITE(ts->client, buf, 3);
 }
+EXPORT_SYMBOL_GPL(nvt_set_page);
 
 /*******************************************************
 Description:
@@ -258,6 +266,7 @@ int32_t nvt_write_addr(uint32_t addr, uint8_t data)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(nvt_write_addr);
 
 /*******************************************************
 Description:
@@ -283,6 +292,7 @@ void nvt_bld_crc_enable(void)
 	buf[1] = buf[1] | (0x01 << 7);
 	CTP_SPI_WRITE(ts->client, buf, 2);
 }
+EXPORT_SYMBOL_GPL(nvt_bld_crc_enable);
 
 /*******************************************************
 Description:
@@ -308,6 +318,7 @@ void nvt_fw_crc_enable(void)
 	buf[1] = 0xAE;	//enable fw crc command
 	CTP_SPI_WRITE(ts->client, buf, 2);
 }
+EXPORT_SYMBOL_GPL(nvt_fw_crc_enable);
 
 /*******************************************************
 Description:
@@ -331,6 +342,7 @@ void nvt_boot_ready(void)
 		nvt_write_addr(ts->mmap->POR_CD_ADDR, 0xA0);
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_boot_ready);
 
 /*******************************************************
 Description:
@@ -563,6 +575,7 @@ int32_t nvt_read_pid(void)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(nvt_read_pid);
 
 /*******************************************************
 Description:

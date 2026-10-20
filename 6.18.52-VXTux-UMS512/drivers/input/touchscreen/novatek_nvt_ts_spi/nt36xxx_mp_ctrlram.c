@@ -935,6 +935,7 @@ void print_selftest_result(struct seq_file *m, int32_t TestResult, uint8_t Recor
 	}
 	nvt_mp_seq_printf(m, "\n");
 }
+EXPORT_SYMBOL_GPL(print_selftest_result);
 
 /*******************************************************
 Description:
@@ -1044,6 +1045,7 @@ const struct seq_operations nvt_selftest_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_show_selftest
 };
+EXPORT_SYMBOL_GPL(nvt_selftest_seq_ops);
 
 /*******************************************************
 Description:
@@ -1257,6 +1259,7 @@ int32_t nvt_mp_parse_ain(struct device_node *np, const char *name, uint8_t *arra
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_ain);
 
 /*******************************************************
 Description:
@@ -1281,6 +1284,7 @@ int32_t nvt_mp_parse_u32(struct device_node *np, const char *name, int32_t *para
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_u32);
 
 /*******************************************************
 Description:
@@ -1326,6 +1330,7 @@ int32_t nvt_mp_parse_array(struct device_node *np, const char *name, int32_t *ar
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_array);
 
 /*******************************************************
 Description:
@@ -1478,4 +1483,5 @@ void nvt_mp_proc_deinit(void)
 		NVT_LOG("Removed /proc/%s\n", "nvt_selftest");
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_mp_proc_deinit);
 #endif /* #if NVT_TOUCH_MP */

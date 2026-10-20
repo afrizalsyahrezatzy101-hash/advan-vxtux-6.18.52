@@ -41,6 +41,7 @@
 
 struct timespec64 start, end;
 const struct firmware *fw_entry = NULL;
+EXPORT_SYMBOL_GPL(fw_entry);
 const struct firmware *fw_entry_normal = NULL;
 const struct firmware *fw_entry_mp = NULL;
 static uint8_t request_and_download_normal_complete = false;
