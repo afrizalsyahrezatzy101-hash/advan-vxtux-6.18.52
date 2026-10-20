@@ -791,5 +791,6 @@ void Boot_Update_Firmware(struct work_struct *work)
 	nvt_update_firmware(NVT_BOOT_FW_NAME);
 	mutex_unlock(&ts->lock);
 }
+EXPORT_SYMBOL_GPL(Boot_Update_Firmware);
 #endif /* BOOT_UPDATE_FIRMWARE */
 

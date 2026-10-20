@@ -1437,6 +1437,7 @@ int32_t nvt_mp_parse_dt(struct device_node *root, const char *node_compatible)
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_dt);
 #endif /* #ifdef CONFIG_OF */
 
 /*******************************************************
@@ -1464,6 +1465,7 @@ int32_t nvt_mp_proc_init(void)
 		return 0;
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_mp_proc_init);
 
 /*******************************************************
 Description:

@@ -117,6 +117,7 @@ uint8_t nvt_get_fw_pipe(void)
 
 	return (buf[1] & 0x01);
 }
+EXPORT_SYMBOL_GPL(nvt_get_fw_pipe);
 
 /*******************************************************
 Description:
@@ -206,6 +207,7 @@ void nvt_read_mdata(uint32_t xdata_addr, uint32_t xdata_btn_addr)
 	//---set xdata index to EVENT BUF ADDR---
 	nvt_set_page(ts->mmap->EVENT_BUF_ADDR);
 }
+EXPORT_SYMBOL_GPL(nvt_read_mdata);
 
 /*******************************************************
 Description:
@@ -242,6 +244,7 @@ void nvt_get_mdata(int32_t *buf, uint8_t *m_x_num, uint8_t *m_y_num)
     *m_y_num = ts->y_num;
     memcpy(buf, xdata, ((ts->x_num * ts->y_num + TOUCH_KEY_NUM) * sizeof(int32_t)));
 }
+EXPORT_SYMBOL_GPL(nvt_get_mdata);
 
 /*******************************************************
 Description:
@@ -1537,4 +1540,5 @@ int32_t nvt_extra_proc_init(void)
 	return 0;
 
 }
+EXPORT_SYMBOL_GPL(nvt_extra_proc_init);
 #endif
