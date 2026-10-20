@@ -12,5 +12,4 @@ config TOUCHSCREEN_SPRD
 	  Aggregator for the Unisoc/VXTux touch drivers. Not user-selectable;
 	  select the panel driver you want below.
 
-source "drivers/input/touchscreen/sprd/hx83102e/Kconfig"
 source "drivers/input/touchscreen/sprd/chipone_tddi/Kconfig"
