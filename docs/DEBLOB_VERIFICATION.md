@@ -43,7 +43,7 @@ Three levels, each reported on its own:
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
 | 21 | `sprd_power_manager` | OK | identical | 15 | yes |
 | 22 | `sprd_time_sync` | OK | **1 missing** | 7 | _copy_to_user |
-| 23 | `trusty-ipc` | OK | **13 missing** | 18 | _create_cdev_node, _dn_lookup_vds, _free_vds |
+| 23 | `trusty-ipc` | OK | identical | 20 | yes |
 | 24 | `trusty-irq` | OK | **2 missing** | 10 | trusty_irq_enable_irqset, trusty_irq_init_normal_irq |
 | 25 | `trusty-log` | OK | **1 missing** | 7 | trusty_dump_logs.__print_once |
 | 26 | `trusty-tui` | OK | **2 missing** | 7 | _copy_from_user, _copy_to_user |
@@ -57,7 +57,7 @@ Three levels, each reported on its own:
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **7** (22.6%)
+- and it carries the same API: **8** (25.8%)
 
 ### Gaps
 
@@ -91,8 +91,6 @@ Three levels, each reported on its own:
 - `sprd_apipe`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__might_fault', '__might_sleep', 'mutex_destroy', 'mutex_lock_nested', 'trace_hardirqs_off', 'trace_hardirqs_on', 'vmalloc_noprof', 'warn_bogus_irq_restore']
 - `sprd_time_sync`: missing ['_copy_to_user']
 - `sprd_time_sync`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'class_create', 'memset', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
-- `trusty-ipc`: missing ['_create_cdev_node', '_dn_lookup_vds', '_free_vds', '_handle_conn_rsp', '_handle_ctrl_msg', '_handle_disc_req', '_handle_rxbuf', '_vds_get_txbuf', 'create_cdev_node', 'destroy_cdev_node', 'tipc_virtio_probe.vq_names', 'vds_add_channel', 'vds_del_channel']
-- `trusty-ipc`: kernel API drift (6.18 renamed 18 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver']...
 - `trusty-irq`: missing ['trusty_irq_enable_irqset', 'trusty_irq_init_normal_irq']
 - `trusty-irq`: kernel API drift (6.18 renamed 10 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__of_parse_phandle_with_args', '__raw_spin_lock_init', '_find_next_bit', 'debug_smp_processor_id', 'memset', 'pcpu_alloc_noprof', 'trace_hardirqs_off']...
 - `trusty-log`: missing ['trusty_dump_logs.__print_once']
