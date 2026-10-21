@@ -52,11 +52,26 @@ ARTEFACT_EXACT = {
 # the two entry points are not API - every module has them
 ENTRY = {"cleanup_module", "init_module"}
 
+# MODULE_DEVICE_TABLE's symbol name is built by the macro, and the
+# macro changed between 5.4 and 6.18:
+#
+#   5.4   __mod_<type>__<table>_device_table
+#   6.18  __mod_device_table__kmod_<module>__<type>__<table>
+#
+# The table itself is the same, so these are not API gaps. They are
+# matched by the table they are built from instead.
+DEVICE_TABLE_RE = re.compile(
+    r"^__mod(?:_device_table__kmod_[A-Za-z0-9_]+)?"
+    r"(?:_[A-Za-z0-9_]+)?__[A-Za-z0-9_]*_device_table$"
+)
+
 
 def is_artefact(s):
     if s in ENTRY:
         return True
     if s in ARTEFACT_EXACT:
+        return True
+    if DEVICE_TABLE_RE.match(s):
         return True
     return s.startswith(ARTEFACT_PREFIX)
 

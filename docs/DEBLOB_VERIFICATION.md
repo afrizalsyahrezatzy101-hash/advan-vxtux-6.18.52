@@ -21,7 +21,7 @@ Three levels, each reported on its own:
 
 | # | stock .ko | name | API | new imports | imports ok |
 |---|-----------|------|-----|-------------|------------|
-| 1 | `aes-ce-ccm` | OK | **1 missing** | 13 | ce_aes_ccm_final |
+| 1 | `aes-ce-ccm` | OK | identical | 13 | yes |
 | 2 | `apsys-dvfs` | OK | **70 missing** | 7 | dpu_devfreq_gov, dpu_dvfs_chain, dpu_dvfs_driver |
 | 3 | `audio-dsp-dump` | OK | identical | 15 | yes |
 | 4 | `audio-pipe` | OK | identical | 10 | yes |
@@ -43,36 +43,30 @@ Three levels, each reported on its own:
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
 | 21 | `sprd_power_manager` | OK | identical | 15 | yes |
 | 22 | `sprd_time_sync` | **MISSING** | - | - | - |
-| 23 | `trusty-ipc` | OK | **1 missing** | 18 | __mod_tipc__tipc_virtio_id_table_device_table |
+| 23 | `trusty-ipc` | OK | identical | 18 | yes |
 | 24 | `trusty-irq` | OK | identical | 10 | yes |
 | 25 | `trusty-log` | OK | identical | 7 | yes |
 | 26 | `trusty-tui` | OK | identical | 7 | yes |
 | 27 | `trusty` | OK | identical | 28 | yes |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | identical | 0 | yes |
-| 30 | `unisoc-mailbox` | OK | **7 missing** | 6 | get_tx_fifo_mask, mbox_phy_ops, mbox_start_send_tx_fifo |
+| 30 | `unisoc-mailbox` | OK | identical | 7 | yes |
 | 31 | `usb_f_vser` | **MISSING** | - | - | - |
 
 ## Result
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **24** (77.4%)
-- and it carries the same API: **18** (58.1%)
+- and it carries the same API: **21** (67.7%)
 
 ### Gaps
 
-- `aes-ce-ccm`: missing ['ce_aes_ccm_final']
-- `aes-ce-ccm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['ce_aes_mac_update', 'debug_lockdep_rcu_enabled', 'lock_acquire', 'lock_release', 'lockdep_rcu_suspicious', 'mem_section', 'memcpy_from_sglist', 'memcpy_to_sglist']...
 - `apsys-dvfs`: missing ['dpu_devfreq_gov', 'dpu_dvfs_chain', 'dpu_dvfs_driver', 'dpu_dvfs_head', 'dpu_dvfs_notifier_call_chain', 'dpu_vsp_dvfs_check_clkeb', 'find_apsys_device_by_name', 'get_display_power_status', 'gsp_devfreq_gov', 'gsp_dvfs_chain', 'gsp_dvfs_driver', 'gsp_dvfs_head', 'gsp_dvfs_notifier_call_chain', 'n6pro_AA_flag', 'n6pro_soc_ver_id_check', 'qogirl6_apsys_dvfs_ops', 'qogirl6_apsys_val_to_volt', 'qogirl6_dpu_dvfs_ops', 'qogirl6_dpu_val_to_freq', 'qogirl6_vdsp_val_to_freq', 'qogirl6_vsp_dvfs_ops', 'qogirl6_vsp_val_to_freq', 'qogirn6pro_apsys_dvfs_ops', 'qogirn6pro_apsys_val_to_volt', 'qogirn6pro_dpu_dvfs_ops', 'qogirn6pro_dpu_val_to_freq', 'qogirn6pro_gsp_dvfs_ops', 'qogirn6pro_gsp_val_to_freq', 'qogirn6pro_gsp_val_to_volt', 'qogirn6pro_vdsp_val_to_freq', 'qogirn6pro_vpu_val_to_volt', 'qogirn6pro_vpudec_val_to_freq', 'qogirn6pro_vpudec_vsp_dvfs_ops', 'qogirn6pro_vpuenc_val_to_freq', 'qogirn6pro_vpuenc_vsp_dvfs_ops', 'regmap_aon_base', 'roc1_apsys_dvfs_ops', 'roc1_apsys_val_to_volt', 'roc1_dpu_dvfs_ops', 'roc1_dpu_val_to_freq', 'roc1_vdsp_dvfs_ops', 'roc1_vdsp_val_to_freq', 'roc1_vsp_dvfs_ops', 'roc1_vsp_val_to_freq', 'sharkl5_apsys_dvfs_ops', 'sharkl5_apsys_val_to_volt', 'sharkl5_dpu_dvfs_ops', 'sharkl5_dpu_val_to_freq', 'sharkl5_vsp_dvfs_ops', 'sharkl5_vsp_val_to_freq', 'sharkl5pro_apsys_dvfs_ops', 'sharkl5pro_apsys_val_to_volt', 'sharkl5pro_dpu_dvfs_ops', 'sharkl5pro_dpu_val_to_freq', 'sharkl5pro_vdsp_dvfs_ops', 'sharkl5pro_vdsp_val_to_freq', 'sharkl5pro_vsp_dvfs_ops', 'sharkl5pro_vsp_val_to_freq', 'vdsp_devfreq_gov', 'vdsp_dvfs_chain', 'vdsp_dvfs_driver', 'vdsp_dvfs_head', 'vdsp_dvfs_notifier_call_chain', 'vpuenc_dvfs_chain', 'vsp_devfreq_gov', 'vsp_dvfs_chain', 'vsp_dvfs_driver', 'vsp_dvfs_get_dev_status', 'vsp_dvfs_head', 'vsp_dvfs_notifier_call_chain']
 - `apsys-dvfs`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '_printk', 'arm64_use_ng_mappings', 'class_create', 'ioremap_prot', 'kmalloc_caches']
 - `novatek_ts_spi`: missing ['SPI_RD_FAST_ADDR', 'nvt_check_spi_dma_tx_info', 'nvt_extra_proc_deinit', 'nvt_mp_parse_pen_array', 'nvt_pen_diff_seq_ops', 'nvt_read_fw_history', 'nvt_read_get_num_mdata', 'nvt_set_pen_inband_mode_1', 'nvt_set_pen_normal_mode', 'nvt_tx_auto_copy_mode', 'sprd_dpu_nt36xxx_touchscreen_callback']
 - `novatek_ts_spi`: kernel API drift (6.18 renamed 38 of the stock blob's imports, all present in the build): ['__copy_overflow', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_large_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__might_fault', '__raw_spin_lock_init']...
 - `sdhci-sprd`: missing ['_sdhci_request_atomic', 'mmc_check_wp_fn', 'mmc_hsq_swcq_init', 'mmc_send_tuning_read', 'mmc_set_powp', 'mmc_wp_init', 'mmc_wp_remove', 'sdhci_sprd_irq_request_swcq', 'sdhci_sprd_request_sync']
 - `sdhci-sprd`: kernel API drift (6.18 renamed 14 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_sleep', '__sdhci_read_caps', '_dev_err', '_printk', 'alt_cb_patch_nops', 'ktime_get', 'mmc_regulator_disable_vqmmc']...
-- `trusty-ipc`: missing ['__mod_tipc__tipc_virtio_id_table_device_table']
-- `trusty-ipc`: kernel API drift (6.18 renamed 18 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver']...
-- `unisoc-mailbox`: missing ['get_tx_fifo_mask', 'mbox_phy_ops', 'mbox_start_send_tx_fifo', 'sprd_mbox_change_wakeup_flag_r1', 'sprd_mbox_phy_r1_init', 'sprd_mbox_wakeup_flag_callback_register_r1', 'sprd_mbox_wakeup_flag_callback_unregister_r1']
-- `unisoc-mailbox`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__mutex_init', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
 
 ### The ones with no module yet
 
