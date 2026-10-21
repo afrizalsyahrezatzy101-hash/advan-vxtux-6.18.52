@@ -47,6 +47,24 @@
 
 #include "sprd_mm_dvfs.h"
 
+/* Exported below; the stock blob exports these per-IP entry points. */
+int fd_dvfs_init(void);
+void fd_dvfs_exit(void);
+int isp_dvfs_init(void);
+void isp_dvfs_exit(void);
+int dcam_axi_dvfs_init(void);
+void dcam_axi_dvfs_exit(void);
+int dcam_if_dvfs_init(void);
+void dcam_if_dvfs_exit(void);
+int jpg_dvfs_init(void);
+void jpg_dvfs_exit(void);
+int cpp_dvfs_init(void);
+void cpp_dvfs_exit(void);
+int mtx_dvfs_init(void);
+void mtx_dvfs_exit(void);
+int mmsys_dvfs_init(void);
+void mmsys_dvfs_exit(void);
+
 static u32 mm_read(u32 off)
 {
 	return readl(g_mmreg_map + off);
@@ -341,28 +359,19 @@ static void ip##_map_apply(struct ip_dvfs_map_cfg *cfg)		\
 }
 
 /* fd, jpg and cpp: volt in 7:5, axi in 4:2, sub-level in 1:0 */
-#define PACK_V5A2S2(c)	(((c)->volt_level & 0x7) << 5 |	\
-			 ((c)->axi_index & 0x7) << 2 |	\
-			 (c)->fdiv_num & 0x3)
+#define PACK_V5A2S2(c)	((((c)->volt_level & 0x7) << 5) | (((c)->axi_index & 0x7) << 2) | ((c)->fdiv_num & 0x3))
 
 /* isp: volt in 8:6, axi in 5:3, sub-level in 2:0 */
-#define PACK_V6A3S3(c)	(((c)->volt_level & 0x7) << 6 |	\
-			 ((c)->axi_index & 0x7) << 3 |	\
-			 (c)->fdiv_num & 0x7)
+#define PACK_V6A3S3(c)	((((c)->volt_level & 0x7) << 6) | (((c)->axi_index & 0x7) << 3) | ((c)->fdiv_num & 0x7))
 
 /* dcam_axi: sub-level in 1:0, axi in 4:2 */
-#define PACK_S2A2(c)	(((c)->fdiv_num & 0x3) |			\
-			 ((c)->axi_index & 0x7) << 2)
+#define PACK_S2A2(c)	(((c)->fdiv_num & 0x3) | (((c)->axi_index & 0x7) << 2))
 
 /* mtx: sub-level in 2:0, volt in 5:3 */
-#define PACK_S3V3(c)	(((c)->fdiv_num & 0x7) |			\
-			 ((c)->volt_level & 0x7) << 3)
+#define PACK_S3V3(c)	(((c)->fdiv_num & 0x7) | (((c)->volt_level & 0x7) << 3))
 
 /* dcam_if: volt in 14:11, axi in 10:7, sub-level in 6:3, level in 2:0 */
-#define PACK_DCAM_IF(c)	(((c)->volt_level & 0xf) << 11 |	\
-				 ((c)->axi_index & 0xf) << 7 |	\
-				 ((c)->fdiv_num & 0xf) << 3 |	\
-				 (c)->map_index & 0x7)
+#define PACK_DCAM_IF(c)	((((c)->volt_level & 0xf) << 11) | (((c)->axi_index & 0xf) << 7) | (((c)->fdiv_num & 0xf) << 3) | ((c)->map_index & 0x7))
 
 IP_PACK(fd, PACK_V5A2S2(cfg));
 IP_PACK(isp, PACK_V6A3S3(cfg));
@@ -859,6 +868,7 @@ static int dvfs_probe(struct platform_device *pdev)
 {
 	struct ip_dvfs_dev *ip_dev;
 	struct device *dev = &pdev->dev;
+	bool is_mmsys;
 	int ret;
 
 	ip_dev = devm_kmalloc(dev, sizeof(*ip_dev), GFP_KERNEL);
@@ -869,6 +879,9 @@ static int dvfs_probe(struct platform_device *pdev)
 	ip_dev->ops = get_ip_dvfs_ops(dev_name(dev));
 	if (!ip_dev->ops)
 		return -EINVAL;
+
+	/* the mmsys block gets the mmsys sysfs groups */
+	is_mmsys = !strcmp(ip_dev->ops->name, "MMSYS_DVFS_OPS");
 
 	platform_set_drvdata(pdev, ip_dev);
 	dev_set_drvdata(dev, ip_dev);
@@ -887,20 +900,34 @@ static int dvfs_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+	/*
+	 * The sysfs tuning knobs.  The mmsys device gets the mmsys
+	 * groups, every camera IP gets the per-IP groups.
+	 */
+	ret = mm_dvfs_sysfs_create_groups(dev, is_mmsys);
+	if (ret) {
+		dev_err(dev, "failed to create sysfs groups: %d\n", ret);
+		devfreq_remove_device(ip_dev->devfreq);
+		dev_pm_opp_of_remove_table(dev);
+		return ret;
+	}
+
 	return 0;
 }
 
-static int dvfs_remove(struct platform_device *pdev)
+static void dvfs_remove(struct platform_device *pdev)
 {
 	struct ip_dvfs_dev *ip_dev = platform_get_drvdata(pdev);
 
 	if (ip_dev) {
+		bool is_mmsys = ip_dev->ops &&
+			!strcmp(ip_dev->ops->name, "MMSYS_DVFS_OPS");
+
+		mm_dvfs_sysfs_remove_groups(&pdev->dev, is_mmsys);
 		if (ip_dev->devfreq)
 			devfreq_remove_device(ip_dev->devfreq);
 		dev_pm_opp_of_remove_table(&pdev->dev);
 	}
-
-	return 0;
 }
 
 /* The parameter must NOT be named "compatible": the preprocessor

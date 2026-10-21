@@ -277,7 +277,6 @@ int dvfs_target(struct device *dev, unsigned long *freq, u32 flags)
 	struct dev_pm_opp *opp;
 	unsigned long target;
 	unsigned long volt;
-	int ret;
 
 	if (!ip_dev || !ip_dev->ops)
 		return -EINVAL;

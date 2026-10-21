@@ -15,6 +15,7 @@
 #include <linux/scatterlist.h>
 #include <linux/sched.h>
 #include <linux/slab.h>
+#include <linux/ktime.h>
 
 #include <linux/mmc/host.h>
 #include <linux/mmc/card.h>
@@ -94,64 +95,56 @@ int mmc_send_tuning_read(struct mmc_host *mmc);
 int sdhci_sprd_request_sync(struct mmc_host *mmc, struct mmc_request *mrq);
 int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev);
 void sdhci_sprd_set_powp(struct mmc_card *card);
-
+/* the bodies live in sdhci.c, which upstream keeps static */
+int sprd_calc_hs_mode_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+				   int *range, int max_range);
 /*
  * The Unisoc SDHCI R11 driver ships its own renamed copy of the SDHCI core,
  * so the stock blob sdhci-sprd.ko carries these as local symbols (nm type
  * 't'): sdhci_sprd_cmd_irq, sdhci_sprd_data_irq, sdhci_sprd_prepare_data,
- * sdhci_sprd_transfer_pio and friends.  Each one below is the same code,
- * under the name the blob uses.
+ * sdhci_sprd_transfer_pio and friends.  Each one is the same code, under the
+ * name the blob uses.
  *
  * ponytail: the bodies live in sdhci.c, which upstream keeps static, so
- * sdhci.c exports them under these names.  When a second vendor driver needs
- * the same, move the bodies behind one sdhci_ops entry instead.
+ * sdhci.c exports them under '*_body' names and these wrap them.  When a
+ * second vendor driver needs the same, move the bodies behind one
+ * sdhci_ops entry instead.
  */
-void sdhci_sprd_set_transfer_irqs(struct sdhci_host *host)
-{
-	sdhci_sprd_set_transfer_irqs_body(host);
-}
-
-void sdhci_sprd_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-{
-	sdhci_sprd_prepare_data_body(host, cmd);
-}
-
-void sdhci_sprd_finish_command(struct sdhci_host *host)
-{
-	sdhci_sprd_finish_command_body(host);
-}
-
-void sdhci_sprd_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
-{
-	sdhci_sprd_cmd_irq_body(host, intmask, intmask_p);
-}
-
-void sdhci_sprd_data_irq(struct sdhci_host *host, u32 intmask)
-{
-	sdhci_sprd_data_irq_body(host, intmask);
-}
-
-void sdhci_sprd_transfer_pio(struct sdhci_host *host)
-{
-	sdhci_sprd_transfer_pio_body(host);
-}
-
-void sdhci_sprd_read_block_pio(struct sdhci_host *host)
-{
-	sdhci_sprd_read_block_pio_body(host);
-}
-
-void sdhci_sprd_write_block_pio(struct sdhci_host *host)
-{
-	sdhci_sprd_write_block_pio_body(host);
-}
-
+void sdhci_sprd_set_transfer_irqs(struct sdhci_host *host);
+void sdhci_sprd_prepare_data(struct sdhci_host *host, struct mmc_command *cmd);
+void sdhci_sprd_finish_command(struct sdhci_host *host);
+void sdhci_sprd_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p);
+void sdhci_sprd_data_irq(struct sdhci_host *host, u32 intmask);
+void sdhci_sprd_transfer_pio(struct sdhci_host *host);
+void sdhci_sprd_read_block_pio(struct sdhci_host *host);
+void sdhci_sprd_write_block_pio(struct sdhci_host *host);
 u8 sdhci_sprd_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
-			    bool *too_big)
-{
-	return sdhci_sprd_calc_timeout_body(host, cmd, too_big);
-}
+			    bool *too_big);
+irqreturn_t sdhci_sprd_irq(int irq, void *dev_id);
+bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd);
 
+
+int sdhci_sprd_execute_tuning(struct mmc_host *mmc, u32 opcode);
+int sprd_calc_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+			   int *range, int max_range);
+int sprd_calc_hs_mode_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+				   int *range, int max_range);
+/* the bodies live in sdhci.c, which upstream keeps static */
+void sdhci_sprd_set_transfer_irqs_body(struct sdhci_host *host);
+void sdhci_sprd_prepare_data_body(struct sdhci_host *host,
+				  struct mmc_command *cmd);
+void sdhci_sprd_finish_command_body(struct sdhci_host *host);
+void sdhci_sprd_cmd_irq_body(struct sdhci_host *host, u32 intmask,
+			     u32 *intmask_p);
+void sdhci_sprd_data_irq_body(struct sdhci_host *host, u32 intmask);
+void sdhci_sprd_transfer_pio_body(struct sdhci_host *host);
+void sdhci_sprd_read_block_pio_body(struct sdhci_host *host);
+void sdhci_sprd_write_block_pio_body(struct sdhci_host *host);
+u8 sdhci_sprd_calc_timeout_body(struct sdhci_host *host,
+				 struct mmc_command *cmd, bool *too_big);
+irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id);
+bool sdhci_sprd_send_command_body(struct sdhci_host *host,
+				   struct mmc_command *cmd);
 /*
  * sdhci_sprd_irq() - the stock blob's renamed sdhci_irq().  The tree's
  * raw_sdhci_irq() above is this handler with the SW-CQ's card-edge handling;
@@ -169,26 +162,6 @@ bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd)
 {
 	return sdhci_sprd_send_command_body(host, cmd);
 }
-void sdhci_sprd_set_transfer_irqs_body(struct sdhci_host *host);
-void sdhci_sprd_prepare_data_body(struct sdhci_host *host,
-				  struct mmc_command *cmd);
-void sdhci_sprd_finish_command_body(struct sdhci_host *host);
-void sdhci_sprd_cmd_irq_body(struct sdhci_host *host, u32 intmask,
-			     u32 *intmask_p);
-void sdhci_sprd_data_irq_body(struct sdhci_host *host, u32 intmask);
-void sdhci_sprd_transfer_pio_body(struct sdhci_host *host);
-void sdhci_sprd_read_block_pio_body(struct sdhci_host *host);
-void sdhci_sprd_write_block_pio_body(struct sdhci_host *host);
-u8 sdhci_sprd_calc_timeout_body(struct sdhci_host *host,
-				 struct mmc_command *cmd, bool *too_big);
-irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id);
-int sdhci_sprd_execute_tuning(struct mmc_host *mmc, u32 opcode);
-int sprd_calc_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
-			   int *range, int max_range);
-int sprd_calc_hs_mode_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
-				   int *range, int max_range);
-bool sdhci_sprd_send_command_body(struct sdhci_host *host,
-				  struct mmc_command *cmd);
 void sdhci_sprd_int_status(struct sdhci_host *host);
 void sdhci_sprd_signal_voltage_on_off(struct mmc_host *mmc, bool on);
 int sdhci_sprd_irq_request_swcq(struct sdhci_host *host);
@@ -1248,11 +1221,11 @@ int sdhci_sprd_execute_tuning(struct mmc_host *mmc, u32 opcode)
 {
 	int ret;
 
-	pre_time = sched_clock();
+	pre_time = ktime_get_ns();
 
 	ret = sdhci_execute_tuning(mmc, opcode);
 
-	second_time = sched_clock();
+	second_time = ktime_get_ns();
 
 	return ret;
 }
@@ -1275,4 +1248,52 @@ unsigned long _copy_from_user(void *to, const void __user *from,
 		return n;
 
 	return 0;
+}
+
+/* ---- SDHCI-core forwarders (the stock blob's local symbols) ---- */
+
+void sdhci_sprd_set_transfer_irqs(struct sdhci_host *host)
+{
+	sdhci_sprd_set_transfer_irqs_body(host);
+}
+
+void sdhci_sprd_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+{
+	sdhci_sprd_prepare_data_body(host, cmd);
+}
+
+void sdhci_sprd_finish_command(struct sdhci_host *host)
+{
+	sdhci_sprd_finish_command_body(host);
+}
+
+void sdhci_sprd_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
+{
+	sdhci_sprd_cmd_irq_body(host, intmask, intmask_p);
+}
+
+void sdhci_sprd_data_irq(struct sdhci_host *host, u32 intmask)
+{
+	sdhci_sprd_data_irq_body(host, intmask);
+}
+
+void sdhci_sprd_transfer_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_transfer_pio_body(host);
+}
+
+void sdhci_sprd_read_block_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_read_block_pio_body(host);
+}
+
+void sdhci_sprd_write_block_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_write_block_pio_body(host);
+}
+
+u8 sdhci_sprd_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
+			    bool *too_big)
+{
+	return sdhci_sprd_calc_timeout_body(host, cmd, too_big);
 }

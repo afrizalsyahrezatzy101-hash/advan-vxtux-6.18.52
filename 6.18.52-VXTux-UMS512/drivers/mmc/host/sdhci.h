@@ -923,3 +923,36 @@ do {									\
 } while (0)
 
 #endif /* __SDHCI_HW_H */
+
+/*
+ * The Unisoc extension (sdhci-sprd-ext.c) calls the core paths under the
+ * vendor's names, so nothing has to be duplicated.  Declared here because the
+ * definitions live in sdhci.c and both files need them.
+ */
+irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id);
+bool sdhci_sprd_send_command_body(struct sdhci_host *host,
+				   struct mmc_command *cmd);
+bool sdhci_sprd_send_command(struct sdhci_host *host,
+			     struct mmc_command *cmd);
+void sdhci_sprd_enable_sdio_irq_nolock(struct sdhci_host *host, int enable);
+
+/*
+ * The Unisoc extension (sdhci-sprd-ext.c) calls the core paths under the
+ * vendor's names, so nothing has to be duplicated.  The definitions live in
+ * sdhci.c; both files need them, so the prototypes live here.
+ */
+void sdhci_sprd_set_transfer_irqs_body(struct sdhci_host *host);
+void sdhci_sprd_prepare_data_body(struct sdhci_host *host,
+				   struct mmc_command *cmd);
+void sdhci_sprd_finish_command_body(struct sdhci_host *host);
+void sdhci_sprd_cmd_irq_body(struct sdhci_host *host, u32 intmask,
+			      u32 *handled);
+void sdhci_sprd_data_irq_body(struct sdhci_host *host, u32 intmask);
+void sdhci_sprd_transfer_pio_body(struct sdhci_host *host);
+void sdhci_sprd_read_block_pio_body(struct sdhci_host *host);
+void sdhci_sprd_write_block_pio_body(struct sdhci_host *host);
+u8 sdhci_sprd_calc_timeout_body(struct sdhci_host *host,
+				 struct mmc_command *cmd, bool *too_big);
+irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id);
+bool sdhci_sprd_send_command_body(struct sdhci_host *host,
+				   struct mmc_command *cmd);

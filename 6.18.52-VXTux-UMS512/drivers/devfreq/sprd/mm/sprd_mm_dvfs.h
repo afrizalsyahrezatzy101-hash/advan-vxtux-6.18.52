@@ -91,7 +91,8 @@ struct ip_dvfs_regs {
  */
 struct ip_dvfs_ops {
 	struct list_head list;
-	char name[16];
+	/* "dcam_axi_DVFS_OPS" is 16 characters; char[16] drops the last one. */
+	char name[20];
 	u32 ver;
 
 	/* the IP's own dvfs knobs */
@@ -152,6 +153,19 @@ struct ip_dvfs_dev {
 	u32 idle_index;
 	u32 fix_dvfs_value;
 
+	/*
+	 * The mmsys-level switches, only used by the mmsys device.  Their
+	 * names and their role come from the stock blob: the power
+	 * control value, the software DVFS gate, the DVFS hold, the clock
+	 * gate control, the wait window and the minimum voltage.
+	 */
+	u64 power_ctrl;
+	u32 sw_dvfs_en;
+	u32 dvfs_hold_en;
+	u32 clk_gate_ctrl;
+	u32 wait_window;
+	u32 min_volt;
+
 	u64 cur_freq;
 	u64 cur_volt;
 
@@ -200,5 +214,9 @@ int dvfs_get_dev_status(struct device *dev, struct devfreq_dev_status *status);
 int dvfs_get_cur_freq(struct device *dev, unsigned long *freq);
 int dvfs_notify_callback(struct notifier_block *nb, unsigned long action,
 			  void *data);
+
+/* the sysfs tuning knobs, created per device at probe time */
+int mm_dvfs_sysfs_create_groups(struct device *dev, int mmsys);
+void mm_dvfs_sysfs_remove_groups(struct device *dev, int mmsys);
 
 #endif /* __SPRD_MM_DVFS_H__ */

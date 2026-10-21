@@ -22,6 +22,9 @@
 #include "sdhci-pltfm.h"
 #include "mmc_hsq.h"
 
+/* Exported below; the stock blob exports it under the same name. */
+int mmc_send_tuning_cmd(struct mmc_card *card);
+
 /* SDHCI_ARGUMENT2 register high 16bit */
 #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
 

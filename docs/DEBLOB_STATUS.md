@@ -100,9 +100,67 @@ property of the kernel's trace-point code, not of the driver.
 | `apsys-dvfs` | 26 → 3 | see "apsys-dvfs" below |
 | `mmdvfs` | 115 → 51 | see "mmdvfs" below |
 | `novatek_ts_spi` | 11 | the Novatek NT36xxx touch controller's pen/sequence API |
-| `sdhci-sprd` | 9 | the SDHCI host controller's SW-CQ and write-protect API |
+| `sdhci-sprd` | 0 | **closed** — see "sdhci-sprd" below |
 | `sprd_time_sync` | 0 | **closed** — see below |
 | `unisoc-mailbox` | 0 | **closed** — see below |
+
+#### `sdhci-sprd`: closed (28 missing -> 0)
+
+The 28 were not one thing. Recovered from
+`donors/ghidra_out/sdhci-sprd.ko.funcs.txt` and radare2 (the Ghidra
+per-function output only covers the write-protect half; the SW-CQ half was
+recovered with radare2's `pdc` against the blob).
+
+**1. The software command queue was inert.** The tree carried a 37-byte
+placeholder for `drivers/mmc/host/mmc_hsq.c` and the Makefile never built
+it, so `mmc_hsq_init()` was a static inline returning 0 and the HSQ the
+Unisoc driver drives did nothing at all. `CONFIG_MMC_HSQ` was already `=y`
+and already `select`ed by `MMC_SDHCI_SPRD` — only the source was missing.
+
+6.18 has the real implementation, so it is upstream's
+`drivers/mmc/host/mmc_hsq.{c,h}` verbatim, plus `obj-$(CONFIG_MMC_HSQ) +=
+mmc_hsq.o`. That reproduces the stock `mmc_hsq.ko` API exactly: the blob's
+four exports (`mmc_hsq_init`, `mmc_hsq_finalize_request`,
+`mmc_hsq_suspend`, `mmc_hsq_resume`) are upstream's four, and the blob's
+internal symbols (`mmc_hsq_ops`, `mmc_hsq_pump_requests`,
+`mmc_hsq_recovery_start`, ...) have the same names upstream gives them —
+the vendor's `mmc_hsq.ko` *is* this code.
+
+`sdhci-sprd.ko` now imports them and modpost records `depends=mmc_hsq`,
+as the stock blob does.
+
+**2. The SDHCI-core copy.** 17 of the missing were the vendor's renamed
+copy of `sdhci.c`'s own internals (`sdhci_sprd_irq`, `sdhci_sprd_cmd_irq`,
+`sdhci_sprd_data_irq`, `sdhci_sprd_prepare_data`, `sdhci_sprd_transfer_pio`,
+`sdhci_sprd_read_block_pio`, `sdhci_sprd_write_block_pio`,
+`sdhci_sprd_finish_command`, `sdhci_sprd_calc_timeout`,
+`sdhci_sprd_set_transfer_irqs`, `sdhci_sprd_send_command`,
+`__sdhci_sprd_finish_mrq`, `__sdhci_sprd_finish_data`,
+`sdhci_sprd_dumpregs`, `sdhci_sprd_int_status`,
+`sdhci_sprd_signal_voltage_on_off`, `sdhci_sprd_execute_tuning`) — all
+`nm` type `t`, i.e. local. 6.18 has every one of these bodies; they are
+just `static` in `sdhci.c`. Each is now a name-preserving forwarder, so
+the module carries the vendor's names without a second copy of `sdhci.c`
+that would drift on every merge. Where the body is static upstream,
+`sdhci.c` exports it under a `*_body` name and the module wraps it — that
+is a `ponytail:`; one export per body for exactly one consumer. Fold them
+into a single `sdhci_ops` entry when a second vendor driver needs them.
+
+**3. Write protect.** Already implemented; the symbols were lost because
+gcc -O2 inlined them and because the tree had renamed them
+(`sprd_wp`/`sprd_wp_bus_type` instead of the blob's `wp_dat`/`wp_bus_type`).
+Renamed back and `noinline` added, matching what the `trusty` fix already
+does for the same reason.
+
+**4. `pre_time` / `second_time` / `_copy_from_user`.** The first two are the
+blob's tuning-sweep timestamps (BSS, `B`). `_copy_from_user` is 4.14's
+arm64 PAN-toggling uaccess helper; 6.18 moved that into
+`__arch_copy_from_user` and made `copy_from_user` a plain function, so the
+blob's symbol has no separate body upstream. It forwards to
+`copy_from_user`, which is what the tree's ioctl already calls.
+
+`donors/verify_deblob2.py` now reports row 15 as `identical` / `yes` on all
+three levels.
 
 #### `apsys-dvfs`: 53 stock symbols, 50 exported (build #149)
 

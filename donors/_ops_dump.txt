@@ -1,0 +1,2 @@
+MISSING qogirl6_vdsp_dvfs_ops
+MISSING qogirn6pro_vdsp_dvfs_ops

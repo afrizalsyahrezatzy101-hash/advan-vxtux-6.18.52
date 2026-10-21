@@ -17,7 +17,7 @@ Three levels, each reported on its own:
    have them is not the same code.
 3. **DEPS** - it imports nothing the stock one did not, and
    every symbol it does import exists in the built vmlinux
-   (164,210 symbols).
+   (167,209 symbols).
 
 | # | stock .ko | name | API | new imports | imports ok |
 |---|-----------|------|-----|-------------|------------|
@@ -35,7 +35,7 @@ Three levels, each reported on its own:
 | 12 | `pwm_bl` | OK | identical | 5 | yes |
 | 13 | `rtc-sc27xx` | OK | **2 missing** | 6 | sprd_rtc_remove, sprd_rtcdbg_log_force |
 | 14 | `sc27xx_adc` | OK | **12 missing** | 8 | adc_nvmem_cell_calib_data, sc27xx_adc_free_hwlock, sc27xx_adc_pm_ops |
-| 15 | `sdhci-sprd` | OK | **28 missing** | 25 | __sdhci_sprd_finish_data, __sdhci_sprd_finish_mrq, _copy_from_user |
+| 15 | `sdhci-sprd` | OK | identical | 43 | yes |
 | 16 | `sprd-dmaengine-pcm` | OK | **1 missing** | 13 | sprd_i2s_pcm_hardware |
 | 17 | `sprd-sipc-virt-bus` | OK | identical | 0 | yes |
 | 18 | `sprd-vsp-pw-domain` | **MISSING** | - | - | - |
@@ -57,7 +57,7 @@ Three levels, each reported on its own:
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **5** (16.1%)
+- and it carries the same API: **6** (19.4%)
 
 ### Gaps
 
@@ -85,10 +85,6 @@ Three levels, each reported on its own:
 - `rtc-sc27xx`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__devm_rtc_register_device', '__might_sleep', 'device_set_wakeup_capable', 'device_wakeup_disable', 'device_wakeup_enable', 'usleep_range_state']
 - `sc27xx_adc`: missing ['adc_nvmem_cell_calib_data', 'sc27xx_adc_free_hwlock', 'sc27xx_adc_pm_ops', 'sc27xx_adc_pm_resume', 'sc27xx_adc_pm_suspend', 'sc27xx_adc_remove', 'ump518_data', 'ump9620_adc_get_ratio', 'ump9620_adc_scale_init', 'ump9620_bat_det_graph', 'ump9620_data', 'ump96xx_adc_scale_cal']
 - `sc27xx_adc`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__devm_add_action', '__might_sleep', '__mutex_init', 'dev_err_probe', 'devm_hwspin_lock_request_specific', 'devm_regulator_get', 'mutex_lock_nested', 'usleep_range_state']
-- `sdhci-sprd`: missing ['__sdhci_sprd_finish_data', '__sdhci_sprd_finish_mrq', '_copy_from_user', 'mmc_get_wp_current_status_and_type', 'pre_time', 'raw_sdhci_irq', 'raw_sdhci_thread_irq', 'sdhci_sprd_calc_timeout', 'sdhci_sprd_cmd_irq', 'sdhci_sprd_data_irq', 'sdhci_sprd_dumpregs', 'sdhci_sprd_execute_tuning', 'sdhci_sprd_finish_command', 'sdhci_sprd_int_status', 'sdhci_sprd_irq', 'sdhci_sprd_prepare_data', 'sdhci_sprd_read_block_pio', 'sdhci_sprd_send_command', 'sdhci_sprd_set_powp', 'sdhci_sprd_set_transfer_irqs', 'sdhci_sprd_signal_voltage_on_off', 'sdhci_sprd_transfer_pio', 'sdhci_sprd_write_block_pio', 'second_time', 'sprd_calc_hs_mode_tuning_range', 'sprd_calc_tuning_range', 'wp_bus_type', 'wp_dat']
-- `sdhci-sprd`: kernel API drift (6.18 renamed 23 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_fault', '__might_sleep', '__sdhci_read_caps', '_dev_err', '_printk', 'alt_cb_patch_nops', 'ktime_get']...
-- `sdhci-sprd`: imports the stock blob did not have, and the build does not provide them: ['sdhci_sprd_enable_sdio_irq_nolock', 'sdhci_sprd_send_command']
-- `sdhci-sprd`: imports not in the built vmlinux: ['mmc_hsq_finalize_request', 'mmc_hsq_init', 'mmc_hsq_resume', 'mmc_hsq_suspend', 'sdhci_sprd_enable_sdio_irq_nolock', 'sdhci_sprd_send_command']
 - `sprd-dmaengine-pcm`: missing ['sprd_i2s_pcm_hardware']
 - `sprd-dmaengine-pcm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['__raw_spin_lock_init', '__vma_start_write', '_dev_err', '_dev_warn', '_printk', 'debug_locks', 'devm_snd_soc_register_component', 'dma_request_chan']...
 - `sprd_apipe`: missing ['_copy_from_user', '_copy_to_user']
@@ -97,7 +93,6 @@ Three levels, each reported on its own:
 - `sprd_power_manager`: kernel API drift (6.18 renamed 15 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__stack_chk_fail', '_printk', 'debugfs_create_file_full', 'memset']...
 - `sprd_time_sync`: missing ['_copy_to_user', 'sprd_time_sync_class']
 - `sprd_time_sync`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'class_create', 'memset', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
-- `sprd_time_sync`: imports not in the built vmlinux: ['sprd_systimer_read']
 - `trusty-ipc`: missing ['_create_cdev_node', '_dn_lookup_vds', '_free_vds', '_handle_conn_rsp', '_handle_ctrl_msg', '_handle_disc_req', '_handle_rxbuf', '_vds_get_txbuf', 'create_cdev_node', 'destroy_cdev_node', 'tipc_virtio_probe.vq_names', 'vds_add_channel', 'vds_create_channel', 'vds_del_channel', 'vds_get_txbuf']
 - `trusty-ipc`: kernel API drift (6.18 renamed 18 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver']...
 - `trusty-irq`: missing ['trusty_irq_enable_irqset', 'trusty_irq_init_normal_irq']
@@ -109,8 +104,7 @@ Three levels, each reported on its own:
 - `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall', 'trusty_std_call_inner']
 - `trusty`: kernel API drift (6.18 renamed 28 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__trace_trigger_soft_disabled']...
 - `ums512-clk`: missing ['dpll0_ftable', 'ftable', 'mpll2_ftable', 'mpll_ftable']
-- `ums512-clk`: imports the stock blob did not have, and the build does not provide them: ['sprd_clk_reset_register']
-- `ums512-clk`: imports not in the built vmlinux: ['sprd_clk_reset_register']
+- `ums512-clk`: kernel API drift (6.18 renamed 1 of the stock blob's imports, all present in the build): ['sprd_clk_reset_register']
 - `unisoc-mailbox`: missing ['chan_num', 'g_irq_msk_backup', 'g_mbox_nowakeup_base', 'g_started_chan_msk', 'mbox_deliver_thread', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'mbox_rx_fifo', 'mbox_rx_fifo_cnt', 'mbox_tx_mask', 'outbox_lock', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_flush', 'sprd_mbox_phy_inbox_isr', 'sprd_mbox_phy_outbox_isr', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_phy_send', 'sprd_mbox_phy_shutdown', 'sprd_mbox_phy_startup', 'sprd_mbox_process_rx_fifo', 'sprd_outbox_base', 'tx_data']
 - `unisoc-mailbox`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__mutex_init', '_printk', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
 - `usb_f_vser`: missing ['_copy_from_user', '_copy_to_user', 'vser_create_bulk_endpoints']
