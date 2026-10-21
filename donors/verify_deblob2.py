@@ -84,6 +84,14 @@ CLONE_RE = re.compile(r"^.+?\.\d+(?:\.constprop\.\d+)?$")
 # base name is what counts.  Without this, trusty-ipc reported vds_create_channel
 # as missing while the build actually contained vds_create_channel.part.0.
 PART_RE = re.compile(r"^(.*)\.part\.\d+$")
+# The same argument covers the rest of gcc's clone families.  CLONE_RE only
+# removed the trailing NUMBER, so "aud_smsg_ch_send.isra.0" was reduced to
+# "aud_smsg_ch_send.isra" and still compared unequal to the stock name.
+# .part/.constprop can chain ("HI_Command.part.0.constprop.0"), so the
+# family suffix is stripped repeatedly.  All of these are gcc's out-of-line
+# copies of a driver function: local symbols, never API.
+CLONE_FAMILY_RE = re.compile(
+    r"\.(?:part|constprop|isra|cold|clone|lto_priv|recip)(?:\.\d+)*$")
 LABEL_RE = re.compile(r"^\.L(tmp)?\d+!?\d*$|^\.L\d+!?\d*$|"
                       r"^\.L\d+!\d+$|^\.L\d+$|^\.Ltmp\d+$|"
                       r"^\.compoundliteral(\.\d+)?$|^\.L\d+!\d+$")
@@ -120,10 +128,15 @@ def strip_clone(s):
     """Drop a compiler-generated clone or partition suffix.
 
     clang emits a clone per outlined copy of a function ("foo.421"), gcc
-    numbers them differently or not at all, and gcc's IPA partitioning
-    splits a function into "foo.part.0".  These are local symbols, never
-    part of the module's API contract.
+    numbers them differently or not at all, gcc's IPA partitioning splits a
+    function into "foo.part.0", and its other clone families leave
+    "foo.isra.0" / "foo.constprop.0".  These are local symbols, never part
+    of the module's API contract, so the base name is what counts.
     """
+    prev = None
+    while prev != s:                     # the families can chain
+        prev = s
+        s = CLONE_FAMILY_RE.sub("", s)
     s = PART_RE.sub(r"\1", s)
     return CLONE_RE.sub("", s)
 
