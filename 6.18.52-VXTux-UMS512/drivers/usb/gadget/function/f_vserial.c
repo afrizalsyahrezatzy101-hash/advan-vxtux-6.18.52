@@ -348,7 +348,12 @@ static int vser_alloc_all_request(struct vser_dev *dev)
 /*
  * Claim the two bulk endpoints and get the data path moving.
  */
-static int vser_create_bulk_endpoints(struct vser_dev *dev)
+/*
+ * noinline: the stock blob keeps this as a real function, and gcc inlines it
+ * into its single caller, which removes the symbol from the module.  6.18
+ * dropped the __ prefix on the compiler attribute macros.
+ */
+static noinline int vser_create_bulk_endpoints(struct vser_dev *dev)
 {
 	struct usb_gadget *gadget = dev->func.config->cdev->gadget;
 	struct usb_ep *ep_in, *ep_out;

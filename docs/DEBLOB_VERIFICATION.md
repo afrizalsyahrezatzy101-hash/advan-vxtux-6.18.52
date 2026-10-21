@@ -51,7 +51,7 @@ Three levels, each reported on its own:
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | **4 missing** | 1 | dpll0_ftable, ftable, mpll2_ftable |
 | 30 | `unisoc-mailbox` | OK | **30 missing** | 7 | chan_num, g_irq_msk_backup, g_mbox_nowakeup_base |
-| 31 | `usb_f_vser` | OK | **3 missing** | 16 | _copy_from_user, _copy_to_user, vser_create_bulk_endpoints |
+| 31 | `usb_f_vser` | OK | **3 missing** | 17 | ____versions, _copy_from_user, _copy_to_user |
 
 ## Result
 
@@ -99,8 +99,8 @@ Three levels, each reported on its own:
 - `ums512-clk`: kernel API drift (6.18 renamed 1 of the stock blob's imports, all present in the build): ['sprd_clk_reset_register']
 - `unisoc-mailbox`: missing ['chan_num', 'g_irq_msk_backup', 'g_mbox_nowakeup_base', 'g_started_chan_msk', 'mbox_deliver_thread', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'mbox_rx_fifo', 'mbox_rx_fifo_cnt', 'mbox_tx_mask', 'outbox_lock', 'reg_ctrl', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_flush', 'sprd_mbox_phy_inbox_isr', 'sprd_mbox_phy_outbox_isr', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_phy_send', 'sprd_mbox_phy_shutdown', 'sprd_mbox_phy_startup', 'sprd_mbox_process_rx_fifo', 'sprd_outbox_base', 'tx_data']
 - `unisoc-mailbox`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__mutex_init', '_printk', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
-- `usb_f_vser`: missing ['_copy_from_user', '_copy_to_user', 'vser_create_bulk_endpoints']
-- `usb_f_vser`: kernel API drift (6.18 renamed 16 of the stock blob's imports, all present in the build): ['__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_fault', '__might_sleep', '__raw_spin_lock_init']...
+- `usb_f_vser`: missing ['____versions', '_copy_from_user', '_copy_to_user']
+- `usb_f_vser`: kernel API drift (6.18 renamed 17 of the stock blob's imports, all present in the build): ['__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_fault', '__might_sleep', '__raw_spin_lock_init']...
 
 ### The ones with no module yet
 

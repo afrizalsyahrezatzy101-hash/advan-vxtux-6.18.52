@@ -104,7 +104,17 @@ enum {
 	NVT_PEN_RING_Y,
 };
 
-static int32_t xdata_pen[NVT_PEN_CH_NUM][NVT_PEN_SAMPLE_NUM];
+/*
+ * The stock blob keeps the four pen channels as four separate 1024-byte
+ * bss objects (xdata_pen_tip_x / _tip_y / _ring_x / _ring_y, each
+ * 256 int32), not as one 2D array. c_pen_1d_diff_show() and
+ * nvt_pen_diff_open() name them individually, so match that: the four
+ * below are what the channel-indexed accesses resolve to.
+ */
+int32_t xdata_pen_tip_x[NVT_PEN_SAMPLE_NUM];
+int32_t xdata_pen_tip_y[NVT_PEN_SAMPLE_NUM];
+int32_t xdata_pen_ring_x[NVT_PEN_SAMPLE_NUM];
+int32_t xdata_pen_ring_y[NVT_PEN_SAMPLE_NUM];
 
 /* Stock: mmap field offsets of the four pen pipe addresses. */
 #define NVT_MMAP_PEN_TIP_X	92
@@ -353,22 +363,22 @@ static int32_t c_pen_1d_diff_show(struct seq_file *m, void *v)
 
 	seq_printf(m, "Tip X:\n");
 	for (i = 0; i < NVT_PEN_SAMPLE_NUM; i++)
-		seq_printf(m, "%5d, ", xdata_pen[NVT_PEN_TIP_X][i]);
+		seq_printf(m, "%5d, ", xdata_pen_tip_x[i]);
 	seq_puts(m, "\n");
 
 	seq_printf(m, "Tip Y:\n");
 	for (i = 0; i < NVT_PEN_SAMPLE_NUM; i++)
-		seq_printf(m, "%5d, ", xdata_pen[NVT_PEN_TIP_Y][i]);
+		seq_printf(m, "%5d, ", xdata_pen_tip_y[i]);
 	seq_puts(m, "\n");
 
 	seq_printf(m, "Ring X:\n");
 	for (i = 0; i < NVT_PEN_SAMPLE_NUM; i++)
-		seq_printf(m, "%5d, ", xdata_pen[NVT_PEN_RING_X][i]);
+		seq_printf(m, "%5d, ", xdata_pen_ring_x[i]);
 	seq_puts(m, "\n");
 
 	seq_printf(m, "Ring Y:\n");
 	for (i = 0; i < NVT_PEN_SAMPLE_NUM; i++)
-		seq_printf(m, "%5d, ", xdata_pen[NVT_PEN_RING_Y][i]);
+		seq_printf(m, "%5d, ", xdata_pen_ring_y[i]);
 	seq_puts(m, "\n");
 
 	seq_printf(m, "\n\n");
@@ -394,7 +404,7 @@ static struct proc_dir_entry *NVT_proc_pen_diff_entry;
  *   switch the IC into in-band pen mode, read the four pen channels,
  *   then switch back to normal mode.
  */
-static int32_t nvt_pen_diff_open(struct inode *inode, struct file *file)
+int32_t nvt_pen_diff_open(struct inode *inode, struct file *file)
 {
 	if (mutex_lock_interruptible(&ts->lock))
 		return -ERESTARTSYS;
@@ -407,13 +417,13 @@ static int32_t nvt_pen_diff_open(struct inode *inode, struct file *file)
 	}
 
 	nvt_read_get_num_mdata(ts->mmap->DOZE_GM_S1D_SCAN_RAW_ADDR,
-			       xdata_pen[NVT_PEN_TIP_X], 1);
+			       xdata_pen_tip_x, 1);
 	nvt_read_get_num_mdata(ts->mmap->DOZE_GM_BTN_SCAN_RAW_ADDR,
-			       xdata_pen[NVT_PEN_TIP_Y], 1);
+			       xdata_pen_tip_y, 1);
 	nvt_read_get_num_mdata(ts->mmap->BOOT_RDY_ADDR,
-			       xdata_pen[NVT_PEN_RING_X], 1);
+			       xdata_pen_ring_x, 1);
 	nvt_read_get_num_mdata(ts->mmap->POR_CD_ADDR,
-			       xdata_pen[NVT_PEN_RING_Y], 1);
+			       xdata_pen_ring_y, 1);
 
 	nvt_set_pen_normal_mode();
 
@@ -473,7 +483,7 @@ EXPORT_SYMBOL_GPL(nvt_extra_proc_deinit);
 int32_t nvt_pen_proc_init(void)
 {
 	NVT_proc_pen_diff_entry = proc_create(NVT_PEN_DIFF, 0444, NULL,
-					       &nvt_pen_diff_pops);
+					       &nvt_pen_diff_fops_proc_ops);
 	if (NVT_proc_pen_diff_entry == NULL) {
 		NVT_ERR("create proc/%s Failed!\n", NVT_PEN_DIFF);
 		return -ENOMEM;

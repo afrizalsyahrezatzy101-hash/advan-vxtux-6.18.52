@@ -660,7 +660,9 @@ info_retry:
   Create Device Node (Proc Entry)
 *******************************************************/
 #if NVT_TOUCH_PROC
-static struct proc_dir_entry *NVT_proc_entry;
+extern const struct proc_ops nvt_flash_fops_proc_ops;
+
+struct proc_dir_entry *NVT_proc_entry;
 #define DEVICE_NAME	"NVTSPI"
 
 /*******************************************************
@@ -670,7 +672,7 @@ Description:
 return:
 	Executive outcomes. 2---succeed. -5,-14---failed.
 *******************************************************/
-static ssize_t nvt_flash_read(struct file *file, char __user *buff, size_t count, loff_t *offp)
+ssize_t nvt_flash_read(struct file *file, char __user *buff, size_t count, loff_t *offp)
 {
 	uint8_t *str = NULL;
 	int32_t ret = 0;
@@ -779,7 +781,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed. -12---failed.
 *******************************************************/
-static int32_t nvt_flash_open(struct inode *inode, struct file *file)
+int32_t nvt_flash_open(struct inode *inode, struct file *file)
 {
 	struct nvt_flash_data *dev;
 
@@ -802,7 +804,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
-static int32_t nvt_flash_close(struct inode *inode, struct file *file)
+int32_t nvt_flash_close(struct inode *inode, struct file *file)
 {
 	struct nvt_flash_data *dev = file->private_data;
 
@@ -827,7 +829,8 @@ return:
 *******************************************************/
 static int32_t nvt_flash_proc_init(void)
 {
-	NVT_proc_entry = proc_create(DEVICE_NAME, 0444, NULL,&nvt_flash_pops);
+	NVT_proc_entry = proc_create(DEVICE_NAME, 0444, NULL,
+				     &nvt_flash_fops_proc_ops);
 	if (NVT_proc_entry == NULL) {
 		NVT_ERR("Failed!\n");
 		return -ENOMEM;
@@ -1498,7 +1501,7 @@ return:
 *******************************************************/
 uint32_t input_p_bak = 0;
 int32_t frame = 60;
-static void nvt_ts_work_func(void)
+void nvt_ts_work_func(void)
 {
 	int32_t ret = -1;
 	uint8_t point_data[POINT_DATA_LEN + 1 + DUMMY_BYTES] = {0};//spi_read_write,t.len    = (len + DUMMY_BYTES);
@@ -1748,7 +1751,7 @@ Description:
 return:
 	Executive outcomes. 0---NVT IC. -1---not NVT IC.
 *******************************************************/
-static int8_t nvt_ts_check_chip_ver_trim(void)
+int8_t nvt_ts_check_chip_ver_trim(void)
 {
 	uint8_t buf[8] = {0};
 	int32_t retry = 0;
