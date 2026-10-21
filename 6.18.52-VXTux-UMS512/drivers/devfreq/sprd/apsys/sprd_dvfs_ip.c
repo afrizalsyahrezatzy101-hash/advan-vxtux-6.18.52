@@ -272,6 +272,15 @@ int ip_gov_get_target(struct ip_dvfs_dev *ip, struct devfreq *df,
 	return 0;
 }
 
+/* dev_entries is the array of the per-IP sysfs attributes; it is defined
+ * further down, after the show and store handlers it points at.
+ */
+static struct attribute *dev_entries[];
+
+static struct attribute_group dev_attr_group = {
+	.attrs = dev_entries,
+};
+
 /**
  * ip_gov_event_handler - the IP governor's event handler
  * @ip: the IP
@@ -307,10 +316,10 @@ int ip_gov_event_handler(struct ip_dvfs_dev *ip, struct devfreq *df,
  * wants, the callback hands it to the IP's op table and refreshes the
  * devfreq status.  The change is dropped while the IP is off.
  */
-int ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
-			    struct notifier_block *nb,
+int ip_dvfs_notify_callback(struct notifier_block *nb,
 			    unsigned long action, void *data)
 {
+	struct ip_dvfs_dev *ip = container_of(nb, struct ip_dvfs_dev, nb);
 	struct ip_dvfs_ops *ops = ip->ops;
 	u32 freq = (u32)data;
 
@@ -349,7 +358,7 @@ int ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
 int ip_dvfs_probe(struct ip_dvfs_dev *ip, struct platform_device *pdev,
 		  struct devfreq_dev_profile *profile,
 		  struct devfreq_governor *gov,
-		  struct ip_dvfs_ops *ops, struct notifier_head *chain)
+		  struct ip_dvfs_ops *ops, void *chain)
 {
 	struct device *dev = &pdev->dev;
 	struct ip_dvfs_match_data *data;
@@ -401,12 +410,13 @@ int ip_dvfs_probe(struct ip_dvfs_dev *ip, struct platform_device *pdev,
 	/* the IP's own notifier block, registered on the IP's chain */
 	ip->nb.notifier_call = ip_dvfs_notify_callback;
 	ip->nb.priority = 0;
-	ip->nb.data = ip;
 
-	if (chain == &vsp_dvfs_chain || chain == &vpuenc_dvfs_chain)
-		ret = blocking_notifier_chain_register(chain, &ip->nb);
+	if (chain == (void *)&vsp_dvfs_chain || chain == (void *)&vpuenc_dvfs_chain)
+		ret = blocking_notifier_chain_register((struct blocking_notifier_head *)chain,
+							&ip->nb);
 	else
-		ret = atomic_notifier_chain_register(chain, &ip->nb);
+		ret = atomic_notifier_chain_register((struct atomic_notifier_head *)chain,
+							&ip->nb);
 	if (ret) {
 		dev_err(dev, "failed to register the notifier, ret %d\n", ret);
 		return ret;
@@ -488,7 +498,8 @@ static struct ip_dvfs_dev *ip_of(struct device *dev)
  * get_dvfs_table_show - print the IP's frequency map
  */
 static ssize_t get_dvfs_table_show(struct device *dev,
-				   struct device_attribute *attr)
+				   struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 	struct ip_dvfs_map_cfg table[DVFS_MAX_LEVEL];
@@ -514,7 +525,8 @@ static ssize_t get_dvfs_table_show(struct device *dev,
  * get_dvfs_table_info_show - print the IP's frequency map, level by level
  */
 static ssize_t get_dvfs_table_info_show(struct device *dev,
-					struct device_attribute *attr)
+					struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 	struct ip_dvfs_map_cfg table[DVFS_MAX_LEVEL];
@@ -540,7 +552,8 @@ static ssize_t get_dvfs_table_info_show(struct device *dev,
  * get_dvfs_status_show - print the IP's voltage and frequency status
  */
 static ssize_t get_dvfs_status_show(struct device *dev,
-				    struct device_attribute *attr)
+				    struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 	struct ip_dvfs_status status = { 0 };
@@ -558,7 +571,8 @@ static ssize_t get_dvfs_status_show(struct device *dev,
  * get_work_index_show - read the IP's work frequency index
  */
 static ssize_t get_work_index_show(struct device *dev,
-				   struct device_attribute *attr)
+				   struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -585,7 +599,8 @@ static ssize_t set_work_index_store(struct device *dev,
  * get_idle_index_show - read the IP's idle frequency index
  */
 static ssize_t get_idle_index_show(struct device *dev,
-				   struct device_attribute *attr)
+				   struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -612,7 +627,8 @@ static ssize_t set_idle_index_store(struct device *dev,
  * get_work_freq_show - read the IP's work frequency
  */
 static ssize_t get_work_freq_show(struct device *dev,
-				  struct device_attribute *attr)
+				  struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -639,7 +655,8 @@ static ssize_t set_work_freq_store(struct device *dev,
  * get_idle_freq_show - read the IP's idle frequency
  */
 static ssize_t get_idle_freq_show(struct device *dev,
-				  struct device_attribute *attr)
+				  struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -666,7 +683,8 @@ static ssize_t set_idle_freq_store(struct device *dev,
  * get_hw_dfs_show - read the hardware DVFS engine's enable flag
  */
 static ssize_t get_hw_dfs_show(struct device *dev,
-			       struct device_attribute *attr)
+			       struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -692,7 +710,8 @@ static ssize_t set_hw_dfs_store(struct device *dev,
  * get_dvfs_enable_show - read the software DVFS enable flag
  */
 static ssize_t get_dvfs_enable_show(struct device *dev,
-				    struct device_attribute *attr)
+				    struct device_attribute *attr,
+			   char *buf)
 {
 	struct ip_dvfs_dev *ip = ip_of(dev);
 
@@ -714,10 +733,11 @@ static ssize_t set_dvfs_enable_store(struct device *dev,
  * the VDSP and the GSP.  Their bodies are the shared ones.
  */
 #define IP_DVFS_ENABLE_PAIR(ip)						\
-static ssize_t ip##_dvfs_enable_show(struct device *dev,			\
-				      struct device_attribute *attr)	\
+static ssize_t ip##_dvfs_enable_show(struct device *dev,		\
+			      struct device_attribute *attr,	\
+			      char *buf)				\
 {										\
-	return get_dvfs_enable_show(dev, attr);				\
+	return get_dvfs_enable_show(dev, attr, buf);				\
 }										\
 static ssize_t ip##_dvfs_enable_store(struct device *dev,			\
 				       struct device_attribute *attr,	\
@@ -753,9 +773,6 @@ static struct attribute *dev_entries[] = {
 	&dev_attr_dvfs_table.attr,
 	NULL
 };
-static struct attribute_group dev_attr_group = {
-	.attrs = dev_entries,
-};
 
 /* ------------------------------------------------------------------ */
 /* The per-IP driver template.						*/
@@ -768,7 +785,12 @@ static struct attribute_group dev_attr_group = {
  * IP_OF_MATCH_ENTRIES() cannot take a parameter called "compatible": the
  * preprocessor would substitute it inside the .compatible field name too.
  */
-#define IP_DVFS_DRIVER(IP, IP_CHAIN)						\
+/*
+ * The match list differs per IP, so it comes in as a parameter.  A macro
+ * argument is expanded before substitution, so passing the list macro's
+ * name here expands it into the entries.
+ */
+#define IP_DVFS_DRIVER(IP, IP_CHAIN, IP_MATCH_ENTRIES)			\
 static struct ip_dvfs_dev IP##_priv;						\
 										\
 static int IP##_dvfs_target(struct device *dev, unsigned long *freq,		\
@@ -812,7 +834,7 @@ static int IP##_gov_event_handler(struct devfreq *df,			\
 }										\
 										\
 static struct devfreq_governor IP##_devfreq_gov = {				\
-	.name = IP "_governor",						\
+	.name = #IP "_governor",						\
 	.get_target_freq = IP##_gov_get_target,				\
 	.event_handler = IP##_gov_event_handler,				\
 };									\
@@ -838,11 +860,12 @@ static int IP##_dvfs_resume(struct device *dev)				\
 	return ip_dvfs_resume(&IP##_priv, dev);				\
 }										\
 										\
-static SIMPLE_DEV_PM_OPS(IP##_dvfs_pm, IP##_dvfs_suspend,			\
-			 IP##_dvfs_resume);				\
-										\
+static const struct dev_pm_ops IP##_dvfs_pm = {			\
+	SET_SYSTEM_SLEEP_PM_OPS(IP##_dvfs_suspend, IP##_dvfs_resume)	\
+};								\
+								\
 static const struct of_device_id IP##_dvfs_of_match[] = {			\
-	IP_OF_MATCH_ENTRIES(IP),						\
+	IP_MATCH_ENTRIES,						\
 	{}									\
 };									\
 										\
@@ -852,16 +875,16 @@ static struct platform_driver IP##_dvfs_driver = {				\
 	.probe = IP##_dvfs_probe,						\
 	.remove = IP##_dvfs_remove,						\
 	.driver = {								\
-		.name = IP "_dvfs",						\
+		.name = #IP "_dvfs",						\
 		.pm = &IP##_dvfs_pm,						\
 		.of_match_table = IP##_dvfs_of_match,				\
 	},									\
 };
 
-IP_DVFS_DRIVER(dpu, dpu_dvfs_chain)
-IP_DVFS_DRIVER(vsp, vsp_dvfs_chain)
-IP_DVFS_DRIVER(vdsp, vdsp_dvfs_chain)
-IP_DVFS_DRIVER(gsp, gsp_dvfs_chain)
+IP_DVFS_DRIVER(dpu, dpu_dvfs_chain, IP_OF_MATCH_ENTRIES_dpu)
+IP_DVFS_DRIVER(vsp, vsp_dvfs_chain, IP_OF_MATCH_ENTRIES_vsp)
+IP_DVFS_DRIVER(vdsp, vdsp_dvfs_chain, IP_OF_MATCH_ENTRIES_vdsp)
+IP_DVFS_DRIVER(gsp, gsp_dvfs_chain, IP_OF_MATCH_ENTRIES_gsp)
 
 /* ------------------------------------------------------------------ */
 /* The module registration.						*/

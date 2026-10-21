@@ -36,6 +36,7 @@
 #include <linux/notifier.h>
 #include <linux/device.h>
 #include <linux/platform_device.h>
+#include <linux/regmap.h>
 
 struct device_node;
 struct devfreq;
@@ -181,11 +182,31 @@ struct ip_dvfs_coffe {
  * also carries the encoder state).  Only the fields the shared callback
  * bodies actually touch are kept here, so one type serves all four IPs.
  */
+/*
+ * Forward declaration: struct ip_dvfs_ops lives in sprd_dvfs_ip.h, which
+ * includes this header.  Without it the .ops member below refers to an
+ * unknown type and every ip->ops in the tree fails to compile.
+ */
+struct ip_dvfs_ops;
+
+/* defined and exported in sprd_dvfs_ops.c, read from sprd_dvfs_ip.c */
+extern struct regmap *regmap_aon_base;
+extern int n6pro_AA_flag;
+
 struct ip_dvfs_dev {
 	struct device *dev;		/* the IP's platform device	*/
 	struct device_node *np;		/* its DT node			*/
 	unsigned long regs;		/* the IP's register window	*/
 	const struct soc_dvfs_desc *desc;	/* the per-SoC descriptor	*/
+
+	/*
+	 * The IP's per-SoC callback table.  This is THE struct ip_dvfs_dev:
+	 * sprd_dvfs_ip.h used to carry a second, incompatible definition with
+	 * an .ops member and nothing else, so every "ip->ops" in
+	 * sprd_dvfs_ip.c failed to compile.  There is one definition, here,
+	 * and it has the .ops member.
+	 */
+	struct ip_dvfs_ops *ops;
 
 	struct ip_dvfs_coffe coffe;	/* the DT-read coefficients	*/
 

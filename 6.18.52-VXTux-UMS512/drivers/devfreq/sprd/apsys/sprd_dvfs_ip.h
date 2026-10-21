@@ -31,6 +31,7 @@
 #define __SPRD_DVFS_IP_H__
 
 #include <linux/device.h>
+#include <linux/devfreq.h>
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/module.h>
@@ -38,6 +39,7 @@
 #include <linux/notifier.h>
 #include <linux/types.h>
 
+#include "../../governor.h"
 #include "sprd_dvfs_apsys.h"
 #include "sprd_dvfs_soc.h"
 
@@ -150,7 +152,7 @@ void ip_set_dvfs_swtrig_en(struct ip_dvfs_dev *ip, u32 en);
 int  ip_dvfs_probe(struct ip_dvfs_dev *ip, struct platform_device *pdev,
 		    struct devfreq_dev_profile *profile,
 		    struct devfreq_governor *gov,
-		    struct ip_dvfs_ops *ops, struct notifier_head *chain);
+		    struct ip_dvfs_ops *ops, void *chain);
 int  ip_dvfs_remove(struct ip_dvfs_dev *ip, struct platform_device *pdev);
 int  ip_dvfs_suspend(struct ip_dvfs_dev *ip, struct device *dev);
 int  ip_dvfs_resume(struct ip_dvfs_dev *ip, struct device *dev);
@@ -162,8 +164,7 @@ int  ip_gov_get_target(struct ip_dvfs_dev *ip, struct devfreq *df,
 		       unsigned long *freq);
 int  ip_gov_event_handler(struct ip_dvfs_dev *ip, struct devfreq *df,
 			  unsigned int event, void *data);
-int  ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
-			     struct notifier_block *nb,
+int  ip_dvfs_notify_callback(struct notifier_block *nb,
 			     unsigned long action, void *data);
 
 /* ------------------------------------------------------------------ */
@@ -178,14 +179,88 @@ int  ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
  * preprocessor would substitute it inside the .compatible field name
  * too, and the build would fail.
  */
-#define IP_OF_MATCH_ENTRIES(ip)						\
-	{ .compatible = "sprd,hwdvfs-" #ip "-sharkl5",			\
-	  .data = sharkl5_##ip##_dvfs },				\
-	{ .compatible = "sprd,hwdvfs-" #ip "-roc1",			\
-	  .data = roc1_##ip##_dvfs },					\
-	{ .compatible = "sprd,hwdvfs-" #ip "-sharkl5pro",		\
-	  .data = sharkl5pro_##ip##_dvfs },				\
-	{ .compatible = "sprd,hwdvfs-" #ip "-qogirl6",			\
-	  .data = qogirl6_##ip##_dvfs },
+
+/*
+ * The per-SoC match tables live in sprd_dvfs_soc_ops.c; the of_match
+ * tables in sprd_dvfs_ip.c point at them.
+ *
+ * The list below is the STOCK set, recovered from the blob's
+ * <ip>_dvfs_of_match relocation tables (one 200-byte struct of_device_id
+ * per entry, .data at +192).  It is NOT the cross product of four IPs and
+ * four SoCs:
+ *
+ *   dpu   sharkl5, roc1, sharkl5pro, qogirl6, qogirn6pro   (5)
+ *   vsp   sharkl5, roc1, sharkl5pro, qogirl6,
+ *         qogirn6pro, qogirn6pro-vpuenc                   (6)
+ *   vdsp  sharkl5pro, roc1                                (2)
+ *   gsp   qogirn6pro                                      (1)
+ *
+ * The two absent objects the old header invented - sharkl5_vdsp_dvfs,
+ * sharkl5pro_vsp_vpudec_dvfs and the rest of that square - are declared
+ * here ONLY where the blob actually has them, because an extern for an
+ * object nobody defines is a link error waiting to happen.
+ */
+extern const struct ip_dvfs_match_data sharkl5_dpu_dvfs[];
+extern const struct ip_dvfs_match_data sharkl5_vsp_dvfs[];
+extern const struct ip_dvfs_match_data sharkl5pro_dpu_dvfs[];
+extern const struct ip_dvfs_match_data sharkl5pro_vsp_dvfs[];
+extern const struct ip_dvfs_match_data sharkl5pro_vdsp_dvfs[];
+extern const struct ip_dvfs_match_data roc1_dpu_dvfs[];
+extern const struct ip_dvfs_match_data roc1_vsp_dvfs[];
+extern const struct ip_dvfs_match_data roc1_vdsp_dvfs[];
+extern const struct ip_dvfs_match_data qogirl6_dpu_dvfs[];
+extern const struct ip_dvfs_match_data qogirl6_vsp_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_dpu_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_vpudec_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_vpuenc_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_gsp_dvfs[];
+
+/*
+ * The stock blob's per-IP of_match tables, entry for entry.  The
+ * macro parameter must NOT be called "compatible": the preprocessor
+ * would substitute it inside the .compatible field name too.
+ *
+ * IP_OF_MATCH_ENTRIES(vsp) cannot carry the two qogirn6pro vsp entries
+ * either - their .data names differ - so vsp writes its six out.
+ */
+/*
+ * Each IP has its own SoC set, so each gets its own list.  A shared
+ * four-entry macro would name objects the blob never had.
+ */
+#define IP_OF_MATCH_ENTRIES_dpu					\
+	{ .compatible = "sprd,hwdvfs-dpu-sharkl5",		\
+	  .data = sharkl5_dpu_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-dpu-roc1",			\
+	  .data = roc1_dpu_dvfs },					\
+	{ .compatible = "sprd,hwdvfs-dpu-sharkl5pro",		\
+	  .data = sharkl5pro_dpu_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-dpu-qogirl6",		\
+	  .data = qogirl6_dpu_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-dpu-qogirn6pro",		\
+	  .data = qogirn6pro_dpu_dvfs }
+
+#define IP_OF_MATCH_ENTRIES_vsp					\
+	{ .compatible = "sprd,hwdvfs-vsp-sharkl5",		\
+	  .data = sharkl5_vsp_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-vsp-roc1",			\
+	  .data = roc1_vsp_dvfs },					\
+	{ .compatible = "sprd,hwdvfs-vsp-sharkl5pro",		\
+	  .data = sharkl5pro_vsp_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-vsp-qogirl6",		\
+	  .data = qogirl6_vsp_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-vsp-qogirn6pro",		\
+	  .data = qogirn6pro_vpudec_dvfs },			\
+	{ .compatible = "sprd,hwdvfs-vsp-qogirn6pro-vpuenc",	\
+	  .data = qogirn6pro_vpuenc_dvfs }
+
+#define IP_OF_MATCH_ENTRIES_vdsp					\
+	{ .compatible = "sprd,hwdvfs-vdsp-sharkl5pro",		\
+	  .data = sharkl5pro_vdsp_dvfs },				\
+	{ .compatible = "sprd,hwdvfs-vdsp-roc1",			\
+	  .data = roc1_vdsp_dvfs }
+
+#define IP_OF_MATCH_ENTRIES_gsp					\
+	{ .compatible = "sprd,hwdvfs-gsp-qogirn6pro",		\
+	  .data = qogirn6pro_gsp_dvfs }
 
 #endif /* __SPRD_DVFS_IP_H__ */

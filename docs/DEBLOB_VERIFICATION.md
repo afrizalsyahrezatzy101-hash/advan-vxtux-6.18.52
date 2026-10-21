@@ -21,86 +21,60 @@ Three levels, each reported on its own:
 
 | # | stock .ko | name | API | new imports | imports ok |
 |---|-----------|------|-----|-------------|------------|
-| 1 | `aes-ce-ccm` | OK | **2 missing** | 13 | ccm_crypt_fallback, ccm_update_mac |
+| 1 | `aes-ce-ccm` | OK | identical | 14 | yes |
 | 2 | `apsys-dvfs` | OK | **229 missing** | 8 | clk_pll, dev_attr_dvfs_enable, dev_attr_dvfs_status |
-| 3 | `audio-dsp-dump` | OK | **3 missing** | 15 | _copy_from_user, _copy_to_user, audio_dsp_open.dsp_log |
-| 4 | `audio-pipe` | OK | **3 missing** | 10 | _copy_from_user, _copy_to_user, aud_pipe_recv_cmd |
-| 5 | `audio_sipc` | OK | **7 missing** | 13 | aud_smsg_all_ch_notify, aud_smsg_dump_func, aud_smsg_mboxchan |
+| 3 | `audio-dsp-dump` | OK | identical | 15 | yes |
+| 4 | `audio-pipe` | OK | identical | 10 | yes |
+| 5 | `audio_sipc` | OK | identical | 13 | yes |
 | 6 | `gpio-pmic-eic-sprd` | OK | **1 missing** | 8 | sprd_pmic_eic_set |
 | 7 | `ion_ipc_trusty` | OK | identical | 7 | yes |
-| 8 | `mmdvfs` | OK | **48 missing** | 10 | coeff_attr_group, coeff_entries, dev_attr_group |
-| 9 | `novatek_ts_spi` | OK | **84 missing** | 38 | NT36523_hw_info, NT36523_memory_map, NT36526_hw_info |
-| 10 | `nvmem-sc27xx-efuse` | OK | **5 missing** | 5 | sc27xx_efuse_remove, ump518_edata, ump9620_edata |
+| 8 | `mmdvfs` | OK | identical | 14 | yes |
+| 9 | `novatek_ts_spi` | OK | identical | 40 | yes |
+| 10 | `nvmem-sc27xx-efuse` | OK | identical | 5 | yes |
 | 11 | `nvmem_sprd_cache_efuse` | OK | identical | 3 | yes |
 | 12 | `pwm_bl` | OK | identical | 5 | yes |
 | 13 | `rtc-sc27xx` | OK | **2 missing** | 6 | sprd_rtc_remove, sprd_rtcdbg_log_force |
-| 14 | `sc27xx_adc` | OK | **12 missing** | 8 | adc_nvmem_cell_calib_data, sc27xx_adc_free_hwlock, sc27xx_adc_pm_ops |
+| 14 | `sc27xx_adc` | OK | identical | 8 | yes |
 | 15 | `sdhci-sprd` | OK | identical | 43 | yes |
 | 16 | `sprd-dmaengine-pcm` | OK | **1 missing** | 13 | sprd_i2s_pcm_hardware |
 | 17 | `sprd-sipc-virt-bus` | OK | identical | 0 | yes |
 | 18 | `sprd-vsp-pw-domain` | **MISSING** | - | - | - |
-| 19 | `sprd_apipe` | OK | **2 missing** | 8 | _copy_from_user, _copy_to_user |
+| 19 | `sprd_apipe` | OK | identical | 10 | yes |
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
 | 21 | `sprd_power_manager` | OK | identical | 15 | yes |
-| 22 | `sprd_time_sync` | OK | **1 missing** | 7 | _copy_to_user |
+| 22 | `sprd_time_sync` | OK | identical | 9 | yes |
 | 23 | `trusty-ipc` | OK | identical | 18 | yes |
 | 24 | `trusty-irq` | OK | identical | 10 | yes |
-| 25 | `trusty-log` | OK | **1 missing** | 7 | trusty_dump_logs.__print_once |
-| 26 | `trusty-tui` | OK | **2 missing** | 7 | _copy_from_user, _copy_to_user |
+| 25 | `trusty-log` | OK | identical | 7 | yes |
+| 26 | `trusty-tui` | OK | identical | 9 | yes |
 | 27 | `trusty` | OK | **3 missing** | 28 | __tracepoint_ptr_smc_entry, __tracepoint_ptr_smc_exit, trace_event_define_fields_smccall |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | **4 missing** | 1 | dpll0_ftable, ftable, mpll2_ftable |
 | 30 | `unisoc-mailbox` | OK | **30 missing** | 7 | chan_num, g_irq_msk_backup, g_mbox_nowakeup_base |
-| 31 | `usb_f_vser` | OK | **3 missing** | 17 | ____versions, _copy_from_user, _copy_to_user |
+| 31 | `usb_f_vser` | OK | identical | 16 | yes |
 
 ## Result
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **10** (32.3%)
+- and it carries the same API: **23** (74.2%)
 
 ### Gaps
 
-- `aes-ce-ccm`: missing ['ccm_crypt_fallback', 'ccm_update_mac']
-- `aes-ce-ccm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['ce_aes_mac_update', 'debug_lockdep_rcu_enabled', 'lock_acquire', 'lock_release', 'lockdep_rcu_suspicious', 'mem_section', 'memcpy_from_sglist', 'memcpy_to_sglist']...
 - `apsys-dvfs`: missing ['clk_pll', 'dev_attr_dvfs_enable', 'dev_attr_dvfs_status', 'dev_attr_dvfs_table', 'dev_attr_group', 'dev_attr_hw_dfs_en', 'dev_attr_idle_freq', 'dev_attr_idle_index', 'dev_attr_work_freq', 'dev_attr_work_index', 'dev_entries', 'dpu_devfreq_gov', 'dpu_dvfs_chain', 'dpu_dvfs_driver', 'dpu_dvfs_enable_show', 'dpu_dvfs_enable_store', 'dpu_dvfs_get_cur_freq', 'dpu_dvfs_get_dev_status', 'dpu_dvfs_head', 'dpu_dvfs_init', 'dpu_dvfs_notifier_call_chain', 'dpu_dvfs_notify_callback', 'dpu_dvfs_of_match', 'dpu_dvfs_parse_dt', 'dpu_dvfs_pm', 'dpu_dvfs_probe', 'dpu_dvfs_profile', 'dpu_dvfs_remove', 'dpu_dvfs_resume', 'dpu_dvfs_suspend', 'dpu_dvfs_target', 'dpu_gov_event_handler', 'dpu_gov_get_target', 'dpu_hw_dfs_en', 'dpu_vsp_dvfs_check_clkeb', 'find_apsys_device_by_name', 'get_display_power_status', 'get_dpu_dvfs_status', 'get_dpu_dvfs_table', 'get_dpu_idle_freq', 'get_dpu_idle_index', 'get_dpu_work_freq', 'get_dpu_work_index', 'get_dvfs_enable_show', 'get_dvfs_status_show', 'get_dvfs_table_info_show', 'get_dvfs_table_show', 'get_gsp_dvfs_status', 'get_gsp_dvfs_table', 'get_gsp_idle_freq', 'get_gsp_idle_index', 'get_gsp_work_freq', 'get_gsp_work_index', 'get_hw_dfs_show', 'get_idle_freq_show', 'get_idle_index_show', 'get_vdsp_dvfs_status', 'get_vdsp_dvfs_table', 'get_vdsp_idle_freq', 'get_vdsp_idle_index', 'get_vdsp_work_freq', 'get_vdsp_work_index', 'get_vsp_dvfs_status', 'get_vsp_dvfs_table', 'get_vsp_idle_freq', 'get_vsp_idle_index', 'get_vsp_work_freq', 'get_vsp_work_index', 'get_work_freq_show', 'get_work_index_show', 'gsp_devfreq_gov', 'gsp_dvfs_chain', 'gsp_dvfs_driver', 'gsp_dvfs_enable_show', 'gsp_dvfs_enable_store', 'gsp_dvfs_get_cur_freq', 'gsp_dvfs_get_dev_status', 'gsp_dvfs_head', 'gsp_dvfs_init', 'gsp_dvfs_notifier_call_chain', 'gsp_dvfs_notify_callback', 'gsp_dvfs_of_match', 'gsp_dvfs_parse_dt', 'gsp_dvfs_pm', 'gsp_dvfs_probe', 'gsp_dvfs_profile', 'gsp_dvfs_remove', 'gsp_dvfs_resume', 'gsp_dvfs_suspend', 'gsp_dvfs_target', 'gsp_gov_event_handler', 'gsp_gov_get_target', 'gsp_hw_dfs_en', 'map_table', 'n6pro_soc_ver_id_check', 'qogirl6_apsys_dvfs_ops', 'qogirl6_apsys_ops', 'qogirl6_dpu_dvfs', 'qogirl6_dpu_dvfs_ops', 'qogirl6_vsp_data', 'qogirl6_vsp_dvfs_ops', 'qogirn6pro_apsys_dvfs_ops', 'qogirn6pro_apsys_ops', 'qogirn6pro_dpu_dvfs', 'qogirn6pro_dpu_dvfs_ops', 'qogirn6pro_gsp_dvfs', 'qogirn6pro_gsp_dvfs_ops', 'qogirn6pro_vpudec_vsp_dvfs_ops', 'qogirn6pro_vpuenc_data', 'qogirn6pro_vpuenc_vsp_dvfs_ops', 'qogirn6pro_vsp_data', 'roc1_apsys_dvfs_ops', 'roc1_apsys_ops', 'roc1_dpu_dvfs', 'roc1_dpu_dvfs_ops', 'roc1_dvfs_ops', 'roc1_vdsp_dvfs_ops', 'roc1_vsp_data', 'roc1_vsp_dvfs_ops', 'set_dpu_dvfs_swtrig_en', 'set_dpu_dvfs_table', 'set_dpu_freq_upd_delay_en', 'set_dpu_freq_upd_en_byp', 'set_dpu_freq_upd_hdsk_en', 'set_dpu_gfree_wait_delay', 'set_dpu_idle_freq', 'set_dpu_idle_index', 'set_dpu_work_freq', 'set_dpu_work_index', 'set_dvfs_enable_store', 'set_gsp_dvfs_swtrig_en', 'set_gsp_dvfs_table', 'set_gsp_freq_upd_delay_en', 'set_gsp_freq_upd_en_byp', 'set_gsp_freq_upd_hdsk_en', 'set_gsp_gfree_wait_delay', 'set_gsp_idle_freq', 'set_gsp_idle_index', 'set_gsp_work_freq', 'set_gsp_work_index', 'set_hw_dfs_store', 'set_idle_freq_store', 'set_idle_index_store', 'set_vdsp_dvfs_swtrig_en', 'set_vdsp_dvfs_table', 'set_vdsp_freq_upd_delay_en', 'set_vdsp_freq_upd_en_byp', 'set_vdsp_freq_upd_hdsk_en', 'set_vdsp_gfree_wait_delay', 'set_vdsp_idle_freq', 'set_vdsp_idle_index', 'set_vdsp_work_freq', 'set_vdsp_work_index', 'set_vsp_dvfs_swtrig_en', 'set_vsp_freq_upd_delay_en', 'set_vsp_freq_upd_en_byp', 'set_vsp_freq_upd_hdsk_en', 'set_vsp_gfree_wait_delay', 'set_vsp_idle_freq', 'set_vsp_idle_index', 'set_vsp_work_freq', 'set_vsp_work_index', 'set_work_freq_store', 'set_work_index_store', 'sharkl5_apsys_dvfs_ops', 'sharkl5_apsys_ops', 'sharkl5_dpu_dvfs', 'sharkl5_dpu_dvfs_ops', 'sharkl5_vsp_data', 'sharkl5_vsp_dvfs_ops', 'sharkl5pro_apsys_dvfs_ops', 'sharkl5pro_apsys_ops', 'sharkl5pro_dpu_dvfs', 'sharkl5pro_dpu_dvfs_ops', 'sharkl5pro_dvfs_ops', 'sharkl5pro_vdsp_dvfs_ops', 'sharkl5pro_vsp_data', 'sharkl5pro_vsp_dvfs_ops', 'sprd_apsys_dvfs_drivers', 'sprd_apsys_dvfs_governors', 'sprd_dvfs_of_match', 'updata_vsp_target_freq', 'vdsp_devfreq_gov', 'vdsp_dvfs_chain', 'vdsp_dvfs_driver', 'vdsp_dvfs_enable_show', 'vdsp_dvfs_enable_store', 'vdsp_dvfs_get_cur_freq', 'vdsp_dvfs_get_dev_status', 'vdsp_dvfs_head', 'vdsp_dvfs_init', 'vdsp_dvfs_notifier_call_chain', 'vdsp_dvfs_notify_callback', 'vdsp_dvfs_of_match', 'vdsp_dvfs_parse_dt', 'vdsp_dvfs_parse_pll', 'vdsp_dvfs_pm', 'vdsp_dvfs_probe', 'vdsp_dvfs_profile', 'vdsp_dvfs_remove', 'vdsp_dvfs_resume', 'vdsp_dvfs_suspend', 'vdsp_dvfs_target', 'vdsp_gov_event_handler', 'vdsp_gov_get_target', 'vdsp_hw_dfs_en', 'vpuenc_dvfs_chain', 'vsp_devfreq_gov', 'vsp_dvfs_chain', 'vsp_dvfs_config_table', 'vsp_dvfs_driver', 'vsp_dvfs_get_cur_freq', 'vsp_dvfs_get_dev_status', 'vsp_dvfs_gov_event_handler', 'vsp_dvfs_gov_get_target', 'vsp_dvfs_head', 'vsp_dvfs_init', 'vsp_dvfs_notifier_call_chain', 'vsp_dvfs_notify_callback', 'vsp_dvfs_of_match', 'vsp_dvfs_parse_dt', 'vsp_dvfs_pm', 'vsp_dvfs_probe', 'vsp_dvfs_profile', 'vsp_dvfs_remove', 'vsp_dvfs_resume', 'vsp_dvfs_suspend', 'vsp_dvfs_target', 'vsp_hw_dvfs_en']
 - `apsys-dvfs`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '_printk', 'arm64_use_ng_mappings', 'class_create', 'ioremap_prot', 'kmalloc_caches', 'mutex_lock_nested']
-- `audio-dsp-dump`: missing ['_copy_from_user', '_copy_to_user', 'audio_dsp_open.dsp_log']
-- `audio-dsp-dump`: kernel API drift (6.18 renamed 15 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__kmalloc_noprof', '__might_fault', '__might_sleep', '__raw_spin_lock_init', '_printk', 'class_create', 'memset_io']...
-- `audio-pipe`: missing ['_copy_from_user', '_copy_to_user', 'aud_pipe_recv_cmd']
-- `audio-pipe`: kernel API drift (6.18 renamed 10 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'memcpy', 'mutex_lock_nested', 'strncpy', 'trace_hardirqs_off', 'trace_hardirqs_on', 'validate_usercopy_range']...
-- `audio_sipc`: missing ['aud_smsg_all_ch_notify', 'aud_smsg_dump_func', 'aud_smsg_mboxchan', 'aud_smsg_send.msg_val', 'audio_sipc_create.s_sipc_inst', 'audio_sipc_rx_callback', 'msg_index']
-- `audio_sipc`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_sleep', '__raw_spin_lock_init', '_mutex_trylock_nest_lock', '_printk', 'alt_cb_patch_nops', 'debugfs_create_file_full', 'mbox_raw_sent']...
 - `gpio-pmic-eic-sprd`: missing ['sprd_pmic_eic_set']
 - `gpio-pmic-eic-sprd`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__irq_resolve_mapping', '_find_next_bit', 'devm_gpiochip_add_data_with_key', 'gpiochip_disable_irq', 'gpiochip_enable_irq', 'gpiochip_irq_relres', 'gpiochip_irq_reqres', 'mutex_lock_nested']
-- `mmdvfs`: missing ['coeff_attr_group', 'coeff_entries', 'dev_attr_group', 'dev_entries', 'dvfs_gov_event_handler', 'dvfs_gov_get_target', 'dvfs_power_notifier', 'get_ip_dvfs_table', 'get_ip_dvfs_work_index', 'get_ip_index_from_table', 'get_ip_status', 'ip_auto_tune_en', 'ip_dvfs_init', 'ip_hw_dvfs_en', 'mm_current_volt', 'mmsys_dvfs_get_cur_freq', 'mmsys_dvfs_get_dev_status', 'mmsys_dvfs_gov_event_handler', 'mmsys_dvfs_gov_get_target', 'mmsys_dvfs_notify_callback', 'mmsys_dvfs_power', 'mmsys_dvfs_probe', 'mmsys_dvfs_profile', 'mmsys_dvfs_remove', 'mmsys_dvfs_target', 'mmsys_init', 'mmsys_notify_call_chain.pw_opened', 'mmsys_power_ctrl', 'power_off_nb', 'power_on_nb', 'set_fix_dvfs_value', 'set_idle_freq', 'set_ip_dvfs_idle_index', 'set_ip_dvfs_swtrig_en', 'set_ip_dvfs_table', 'set_ip_dvfs_work_index', 'set_ip_freq_upd_delay_en', 'set_ip_freq_upd_en_byp', 'set_ip_freq_upd_hdsk_en', 'set_ip_gfree_wait_delay', 'set_mmsys_dvfs_clk_gate_ctrl', 'set_mmsys_dvfs_hold_en', 'set_mmsys_dvfs_min_volt', 'set_mmsys_dvfs_wait_window', 'set_mmsys_sw_dvfs_en', 'set_work_freq', 'top_current_volt', 'updata_target_freq']
-- `mmdvfs`: kernel API drift (6.18 renamed 10 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '_printk', 'dev_pm_opp_get_freq_indexed', 'devfreq_remove_device', 'kstrtouint', 'kstrtoull']...
-- `novatek_ts_spi`: missing ['NT36523_hw_info', 'NT36523_memory_map', 'NT36526_hw_info', 'NT36526_memory_map', 'NT36675_hw_info', 'NT36675_memory_map', 'NVT_proc_entry', 'PS_Config_Lmt_PenRingX_FW_Diff_N', 'PS_Config_Lmt_PenRingX_FW_Diff_P', 'PS_Config_Lmt_PenRingX_FW_Raw_N', 'PS_Config_Lmt_PenRingX_FW_Raw_P', 'PS_Config_Lmt_PenRingY_FW_Diff_N', 'PS_Config_Lmt_PenRingY_FW_Diff_P', 'PS_Config_Lmt_PenRingY_FW_Raw_N', 'PS_Config_Lmt_PenRingY_FW_Raw_P', 'PS_Config_Lmt_PenTipX_FW_Diff_N', 'PS_Config_Lmt_PenTipX_FW_Diff_P', 'PS_Config_Lmt_PenTipX_FW_Raw_N', 'PS_Config_Lmt_PenTipX_FW_Raw_P', 'PS_Config_Lmt_PenTipY_FW_Diff_N', 'PS_Config_Lmt_PenTipY_FW_Diff_P', 'PS_Config_Lmt_PenTipY_FW_Raw_N', 'PS_Config_Lmt_PenTipY_FW_Raw_P', 'RawData_PenRingX_DiffMax', 'RawData_PenRingX_DiffMin', 'RawData_PenRingX_Raw', 'RawData_PenRingY_DiffMax', 'RawData_PenRingY_DiffMin', 'RawData_PenRingY_Raw', 'RawData_PenTipX_DiffMax', 'RawData_PenTipX_DiffMin', 'RawData_PenTipX_Raw', 'RawData_PenTipY_DiffMax', 'RawData_PenTipY_DiffMin', 'RawData_PenTipY_Raw', 'RecordResult_PenRingX_DiffMax', 'RecordResult_PenRingX_DiffMin', 'RecordResult_PenRingX_Raw', 'RecordResult_PenRingY_DiffMax', 'RecordResult_PenRingY_DiffMin', 'RecordResult_PenRingY_Raw', 'RecordResult_PenTipX_DiffMax', 'RecordResult_PenTipX_DiffMin', 'RecordResult_PenTipX_Raw', 'RecordResult_PenTipY_DiffMax', 'RecordResult_PenTipY_DiffMin', 'RecordResult_PenTipY_Raw', 'TestResult_PenRingX_DiffMax', 'TestResult_PenRingX_DiffMin', 'TestResult_PenRingX_Raw', 'TestResult_PenRingY_DiffMax', 'TestResult_PenRingY_DiffMin', 'TestResult_PenRingY_Raw', 'TestResult_PenTipX_DiffMax', 'TestResult_PenTipX_DiffMin', 'TestResult_PenTipX_Raw', 'TestResult_PenTipY_DiffMax', 'TestResult_PenTipY_DiffMin', 'TestResult_PenTipY_Raw', 'TestResult_Pen_FW_Raw', 'TestResult_Pen_Noise', '_copy_from_user', '_copy_to_user', 'cascade_2nd_header_info', 'dev_attr_ts_suspend', 'fw_need_write_size', 'lcd_name', 'nova_light_suspend_show', 'nova_light_suspend_store', 'novatek_attr_group', 'novatek_attrs', 'nvt_baseline_fops', 'nvt_diff_fops', 'nvt_flash_fops', 'nvt_fw_version_fops', 'nvt_pen_diff_fops', 'nvt_raw_fops', 'nvt_selftest_fops', 'nvt_ts_check_chip_ver_trim', 'nvt_ts_work_func', 'xdata_pen_ring_x', 'xdata_pen_ring_y', 'xdata_pen_tip_x', 'xdata_pen_tip_y']
-- `novatek_ts_spi`: kernel API drift (6.18 renamed 38 of the stock blob's imports, all present in the build): ['__copy_overflow', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_large_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__might_fault', '__raw_spin_lock_init']...
-- `nvmem-sc27xx-efuse`: missing ['sc27xx_efuse_remove', 'ump518_edata', 'ump9620_edata', 'ump9621_edata', 'ump962x_efuse_read']
-- `nvmem-sc27xx-efuse`: kernel API drift (6.18 renamed 5 of the stock blob's imports, all present in the build): ['__might_sleep', 'devm_hwspin_lock_request_specific', 'memset', 'mutex_lock_nested', 'usleep_range_state']
 - `rtc-sc27xx`: missing ['sprd_rtc_remove', 'sprd_rtcdbg_log_force']
 - `rtc-sc27xx`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__devm_rtc_register_device', '__might_sleep', 'device_set_wakeup_capable', 'device_wakeup_disable', 'device_wakeup_enable', 'usleep_range_state']
-- `sc27xx_adc`: missing ['adc_nvmem_cell_calib_data', 'sc27xx_adc_free_hwlock', 'sc27xx_adc_pm_ops', 'sc27xx_adc_pm_resume', 'sc27xx_adc_pm_suspend', 'sc27xx_adc_remove', 'ump518_data', 'ump9620_adc_get_ratio', 'ump9620_adc_scale_init', 'ump9620_bat_det_graph', 'ump9620_data', 'ump96xx_adc_scale_cal']
-- `sc27xx_adc`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__devm_add_action', '__might_sleep', '__mutex_init', 'dev_err_probe', 'devm_hwspin_lock_request_specific', 'devm_regulator_get', 'mutex_lock_nested', 'usleep_range_state']
 - `sprd-dmaengine-pcm`: missing ['sprd_i2s_pcm_hardware']
 - `sprd-dmaengine-pcm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['__raw_spin_lock_init', '__vma_start_write', '_dev_err', '_dev_warn', '_printk', 'debug_locks', 'devm_snd_soc_register_component', 'dma_request_chan']...
-- `sprd_apipe`: missing ['_copy_from_user', '_copy_to_user']
-- `sprd_apipe`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__might_fault', '__might_sleep', 'mutex_destroy', 'mutex_lock_nested', 'trace_hardirqs_off', 'trace_hardirqs_on', 'vmalloc_noprof', 'warn_bogus_irq_restore']
-- `sprd_time_sync`: missing ['_copy_to_user']
-- `sprd_time_sync`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'class_create', 'memset', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
-- `trusty-log`: missing ['trusty_dump_logs.__print_once']
-- `trusty-log`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__alloc_pages_noprof', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__raw_spin_lock_init', '__virt_to_phys', '_printk', 'get_free_pages_noprof']
-- `trusty-tui`: missing ['_copy_from_user', '_copy_to_user']
-- `trusty-tui`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_fault', '_dev_info', '_printk', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
 - `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall']
 - `trusty`: kernel API drift (6.18 renamed 28 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__trace_trigger_soft_disabled']...
 - `ums512-clk`: missing ['dpll0_ftable', 'ftable', 'mpll2_ftable', 'mpll_ftable']
 - `ums512-clk`: kernel API drift (6.18 renamed 1 of the stock blob's imports, all present in the build): ['sprd_clk_reset_register']
 - `unisoc-mailbox`: missing ['chan_num', 'g_irq_msk_backup', 'g_mbox_nowakeup_base', 'g_started_chan_msk', 'mbox_deliver_thread', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'mbox_rx_fifo', 'mbox_rx_fifo_cnt', 'mbox_tx_mask', 'outbox_lock', 'reg_ctrl', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_flush', 'sprd_mbox_phy_inbox_isr', 'sprd_mbox_phy_outbox_isr', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_phy_send', 'sprd_mbox_phy_shutdown', 'sprd_mbox_phy_startup', 'sprd_mbox_process_rx_fifo', 'sprd_outbox_base', 'tx_data']
 - `unisoc-mailbox`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__mutex_init', '_printk', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
-- `usb_f_vser`: missing ['____versions', '_copy_from_user', '_copy_to_user']
-- `usb_f_vser`: kernel API drift (6.18 renamed 17 of the stock blob's imports, all present in the build): ['__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_fault', '__might_sleep', '__raw_spin_lock_init']...
 
 ### The ones with no module yet
 

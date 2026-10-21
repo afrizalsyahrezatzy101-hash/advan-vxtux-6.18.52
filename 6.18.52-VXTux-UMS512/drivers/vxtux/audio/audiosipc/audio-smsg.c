@@ -214,6 +214,19 @@ irqreturn_t audio_sipc_rx_callback(void *ptr)
 }
 EXPORT_SYMBOL(audio_sipc_rx_callback);
 
+/*
+ * The stock blob exports BOTH names: audio_sipc_rx_callback (the callback
+ * registered by the probe) and this one-argument trampoline, which reaches
+ * the same handler with the AGDSP ipc already bound.  agdsp_access and
+ * friends bind the short one, so both must exist.
+ */
+irqreturn_t aud_smsg_rx_handler(void *ptr);
+irqreturn_t aud_smsg_rx_handler(void *ptr)
+{
+	return aud_smsg_irq_handler(ptr, aud_smsg_ipcs[AUD_IPC_AGDSP]);
+}
+EXPORT_SYMBOL(aud_smsg_rx_handler);
+
 static void aud_smsg_tx_dump(void)
 {
 	struct aud_smsg_ipc *ipc = aud_smsg_ipcs[AUD_IPC_AGDSP];
