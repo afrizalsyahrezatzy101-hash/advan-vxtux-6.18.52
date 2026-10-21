@@ -33,6 +33,7 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel.h>
+#include <linux/io.h>
 #include <linux/mutex.h>
 #include <linux/notifier.h>
 #include <linux/pm_opp.h>
@@ -71,17 +72,17 @@ struct ip_dvfs_ops *get_ip_dvfs_ops(const char *name);
  * plain register writes (0x214, the index registers) are not locked in
  * the stock blob.
  */
-static u32 mmreg_read(u32 off)
+u32 mmreg_read(u32 off)
 {
 	return readl(g_mmreg_map + off);
 }
 
-static void mmreg_write(u32 off, u32 val)
+void mmreg_write(u32 off, u32 val)
 {
 	writel(val, g_mmreg_map + off);
 }
 
-static void mmreg_update(u32 off, u32 clear_mask, u32 set_mask)
+void mmreg_update(u32 off, u32 clear_mask, u32 set_mask)
 {
 	mutex_lock(&mmsys_glob_reg_lock);
 	mmreg_write(off, (mmreg_read(off) & ~clear_mask) | (set_mask & clear_mask));

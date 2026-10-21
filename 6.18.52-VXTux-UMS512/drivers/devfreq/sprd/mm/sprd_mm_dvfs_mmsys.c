@@ -43,6 +43,7 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/pm_opp.h>
+#include <linux/mfd/syscon.h>
 #include <linux/regmap.h>
 #include <linux/sysfs.h>
 
@@ -68,6 +69,23 @@ extern struct ip_dvfs_ops mmsys_dvfs_ops;
 extern const struct of_device_id mmsys_dvfs_of_match[];
 int sprd_mm_pw_notify_register(struct notifier_block *nb);
 int sprd_mm_pw_notify_unregister(struct notifier_block *nb);
+/*
+ * The mmsys half's own entry points, under the stock blob's names.
+ */
+int mmsys_init(struct ip_dvfs_ops *ops);
+int set_mmsys_sw_dvfs_en(struct ip_dvfs_ops *ops, int en);
+int set_mmsys_dvfs_hold_en(struct ip_dvfs_ops *ops, int en);
+int set_mmsys_dvfs_clk_gate_ctrl(struct ip_dvfs_ops *ops, int en);
+int set_mmsys_dvfs_wait_window(struct ip_dvfs_ops *ops, u32 window);
+int set_mmsys_dvfs_min_volt(struct ip_dvfs_ops *ops, u32 volt);
+void mmsys_power_ctrl(struct ip_dvfs_ops *ops, int en);
+int mmsys_dvfs_power(struct device *dev, int on);
+int mmsys_dvfs_target(struct device *dev, unsigned long *freq, u32 flags);
+int mmsys_dvfs_get_dev_status(struct device *dev,
+			      struct devfreq_dev_status *status);
+int mmsys_dvfs_get_cur_freq(struct device *dev, unsigned long *freq);
+int mmsys_dvfs_init(void);
+void mmsys_dvfs_exit(void);
 struct ip_dvfs_ops *get_ip_dvfs_ops(const char *name);
 int mmsys_register_notifier(struct notifier_block *nb);
 
@@ -315,6 +333,103 @@ int mmsys_dvfs_get_cur_freq(struct device *dev, unsigned long *freq)
 }
 
 /*
+ * The mmsys operations' own slots.
+ *
+ * The stock's mmsys ops table points at the stock-named functions above
+ * (set_mmsys_sw_dvfs_en, set_mmsys_dvfs_hold_en, ...).  The port's
+ * struct ip_dvfs_ops has a slot for each of them, and these wrappers
+ * are what the table refers to, so the same knobs are reachable both
+ * by name and through the ops table.
+ */
+int mmsys_set_hw_dvfs_en(struct ip_dvfs_ops *ops, int en)
+{
+	(void)ops;
+	mm_sw_dvfs_onoff(en);
+	return 0;
+}
+
+int mmsys_set_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en)
+{
+	(void)ops;
+	mmreg_update(0x220, BIT(9), en ? BIT(9) : 0);
+	return 0;
+}
+
+int mmsys_set_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en)
+{
+	(void)ops;
+	mmreg_update(0x220, BIT(8), en ? BIT(8) : 0);
+	return 0;
+}
+
+int mmsys_set_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en)
+{
+	(void)ops;
+	mmreg_update(0x220, BIT(10), en ? BIT(10) : 0);
+	return 0;
+}
+
+int mmsys_set_sw_trig_en(struct ip_dvfs_ops *ops, int en)
+{
+	(void)ops;
+	mmreg_update(0x220, BIT(2), en ? BIT(2) : 0);
+	return 0;
+}
+
+int mmsys_power_on(struct ip_dvfs_ops *ops)
+{
+	(void)ops;
+	mm_power_flag = 1;
+	return 0;
+}
+
+int mmsys_power_off(struct ip_dvfs_ops *ops)
+{
+	(void)ops;
+	mm_power_flag = 0;
+	return 0;
+}
+
+int mmsys_get_ip_status(struct ip_dvfs_ops *ops, struct ip_dvfs_status *status)
+{
+	if (!ops || !status)
+		return -EINVAL;
+
+	memset(status, 0, sizeof(*status));
+	return 0;
+}
+
+int mmsys_update_target_freq(struct ip_dvfs_ops *ops, u64 freq, u32 index,
+			     int is_fix)
+{
+	(void)ops;
+	(void)freq;
+	(void)index;
+	(void)is_fix;
+
+	mmsys_adjust_target_freq();
+	return 0;
+}
+
+int mmsys_top_current_volt(struct ip_dvfs_ops *ops, u32 *volt)
+{
+	if (!ops || !volt)
+		return -EINVAL;
+
+	*volt = top_mm_dvfs_current_volt();
+	return 0;
+}
+
+int mmsys_mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt)
+{
+	if (!ops || !volt)
+		return -EINVAL;
+
+	*volt = mm_dvfs_read_current_volt();
+	return 0;
+}
+
+/*
  * The mmsys power-event callback.
  *
  * The stock notifier runs one of the IP's power_on/power_off slots on
@@ -429,7 +544,7 @@ static struct notifier_block dvfs_power_notifier = {
  * A static, because the stock blob's copy is a file-scope object that
  * mmsys_dvfs_probe() hands to devm_devfreq_add_device().
  */
-static struct devfreq_profile mmsys_dvfs_profile = {
+static struct devfreq_dev_profile mmsys_dvfs_profile = {
 	.target = mmsys_dvfs_target,
 	.get_dev_status = mmsys_dvfs_get_dev_status,
 	.get_cur_freq = mmsys_dvfs_get_cur_freq,
@@ -452,7 +567,7 @@ struct devfreq_governor mmsys_dvfs_gov = {
 static int mmsys_dvfs_probe(struct platform_device *pdev)
 {
 	struct ip_dvfs_dev *ip_dev;
-	struct dev_node *dn;
+	struct device_node *dn;
 	int ret;
 
 	ip_dev = devm_kzalloc(&pdev->dev, sizeof(*ip_dev), GFP_KERNEL);
@@ -479,7 +594,7 @@ static int mmsys_dvfs_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	mmsys_top_regmap = syscon_node_to_regmap(dn->np);
+	mmsys_top_regmap = syscon_node_to_regmap(dn);
 	if (IS_ERR(mmsys_top_regmap)) {
 		pr_err("mmsys_dvfs: no topdvfs regmap\n");
 		return -ENODEV;

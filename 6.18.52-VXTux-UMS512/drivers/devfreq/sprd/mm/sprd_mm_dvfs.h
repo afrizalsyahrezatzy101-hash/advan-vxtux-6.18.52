@@ -233,6 +233,15 @@ extern struct mutex ip_dvfsops_list_lock;
 extern struct blocking_notifier_head mmsys_notifier_list;
 extern int mm_power_flag;
 
+/*
+ * The shared mm register window accessors, defined in
+ * sprd_mm_dvfs_stock.c.  Every update takes mmsys_glob_reg_lock,
+ * because the block is shared between all the IPs.
+ */
+u32 mmreg_read(u32 off);
+void mmreg_write(u32 off, u32 val);
+void mmreg_update(u32 off, u32 clear_mask, u32 set_mask);
+
 int register_ip_dvfs_ops(struct ip_dvfs_ops *ops);
 int unregister_ip_dvfs_ops(struct ip_dvfs_ops *ops);
 struct ip_dvfs_ops *get_ip_dvfs_ops(const char *name);

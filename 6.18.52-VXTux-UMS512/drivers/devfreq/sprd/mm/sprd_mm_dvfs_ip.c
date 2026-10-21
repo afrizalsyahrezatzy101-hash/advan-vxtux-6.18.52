@@ -95,6 +95,22 @@ int updata_target_freq(struct ip_dvfs_ops *ops, u64 freq, u32 index,
 int set_fix_dvfs_value(struct ip_dvfs_ops *ops, u32 value);
 int top_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
 int mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
+/*
+ * The mmsys half's own callbacks, in sprd_mm_dvfs_mmsys.c.
+ */
+int mmsys_init(struct ip_dvfs_ops *ops);
+int mmsys_set_hw_dvfs_en(struct ip_dvfs_ops *ops, int en);
+int mmsys_set_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en);
+int mmsys_set_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en);
+int mmsys_set_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en);
+int mmsys_set_sw_trig_en(struct ip_dvfs_ops *ops, int en);
+int mmsys_power_on(struct ip_dvfs_ops *ops);
+int mmsys_power_off(struct ip_dvfs_ops *ops);
+int mmsys_get_ip_status(struct ip_dvfs_ops *ops, struct ip_dvfs_status *status);
+int mmsys_update_target_freq(struct ip_dvfs_ops *ops, u64 freq, u32 index,
+			     int is_fix);
+int mmsys_top_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
+int mmsys_mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
 
 static u32 mm_read(u32 off)
 {
@@ -541,111 +557,6 @@ IP_CALLBACKS(cpp, cpp_dvfs_config_table);
 IP_CALLBACKS(mtx, mtx_dvfs_config_table);
 
 /*
- * The mmsys-level callbacks.
- *
- * The mmsys block owns the global DVFS controls: the software DVFS
- * gate, the update delay and the update handshake bits.
- */
-static int mmsys_ops_init(struct ip_dvfs_ops *ops)
-{
-	if (!ops)
-		return -EINVAL;
-
-	/* the global software DVFS gate starts enabled */
-	mm_update(0x30, 0, 0x2);
-	return 0;
-}
-
-static int mmsys_set_hw_dvfs_en(struct ip_dvfs_ops *ops, int en)
-{
-	(void)ops;
-	mm_update(0x30, en ? 0 : 0x40, en ? 0x40 : 0);
-	return 0;
-}
-
-static int mmsys_set_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en)
-{
-	(void)ops;
-	mm_update(0x220, en ? BIT(9) : 0, en ? 0 : BIT(9));
-	return 0;
-}
-
-static int mmsys_set_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en)
-{
-	(void)ops;
-	mm_update(0x220, en ? BIT(8) : 0, en ? 0 : BIT(8));
-	return 0;
-}
-
-static int mmsys_set_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en)
-{
-	(void)ops;
-	mm_update(0x220, en ? BIT(10) : 0, en ? 0 : BIT(10));
-	return 0;
-}
-
-static int mmsys_set_sw_trig_en(struct ip_dvfs_ops *ops, int en)
-{
-	(void)ops;
-	mm_update(0x220, en ? BIT(2) : 0, en ? 0 : BIT(2));
-	return 0;
-}
-
-static int mmsys_power_on(struct ip_dvfs_ops *ops)
-{
-	(void)ops;
-	mm_power_flag = 1;
-	return 0;
-}
-
-static int mmsys_power_off(struct ip_dvfs_ops *ops)
-{
-	(void)ops;
-	mm_power_flag = 0;
-	return 0;
-}
-
-static int mmsys_get_ip_status(struct ip_dvfs_ops *ops,
-			       struct ip_dvfs_status *status)
-{
-	if (!ops || !status)
-		return -EINVAL;
-
-	memset(status, 0, sizeof(*status));
-	return 0;
-}
-
-static int mmsys_update_target_freq(struct ip_dvfs_ops *ops, u64 freq,
-				     u32 index, int is_fix)
-{
-	(void)ops;
-	(void)freq;
-	(void)index;
-	(void)is_fix;
-
-	mmsys_adjust_target_freq();
-	return 0;
-}
-
-static int mmsys_top_current_volt(struct ip_dvfs_ops *ops, u32 *volt)
-{
-	if (!ops || !volt)
-		return -EINVAL;
-
-	*volt = top_mm_dvfs_current_volt();
-	return 0;
-}
-
-static int mmsys_mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt)
-{
-	if (!ops || !volt)
-		return -EINVAL;
-
-	*volt = mm_dvfs_read_current_volt();
-	return 0;
-}
-
-/*
  * The per-IP operations tables.
  */
 #define IP_OPS(ip, tab)								\
@@ -691,11 +602,13 @@ IP_OPS(mtx, mtx_dvfs_config_table);
 
 /*
  * The mmsys block is not a camera IP: it has no frequency map of its
- * own, only the global voltage and gate controls.
+ * own, only the global voltage and gate controls.  Its callbacks are
+ * the stock's own, in sprd_mm_dvfs_mmsys.c.
  */
 struct ip_dvfs_ops mmsys_dvfs_ops = {
 	.name			= "MMSYS_DVFS_OPS",
 	.ver			= 1,
+	.dvfs_init		= mmsys_init,
 	.set_hw_dvfs_en		= mmsys_set_hw_dvfs_en,
 	.set_freq_upd_delay_en	= mmsys_set_freq_upd_delay_en,
 	.set_freq_upd_hdsk_en	= mmsys_set_freq_upd_hdsk_en,
@@ -703,7 +616,6 @@ struct ip_dvfs_ops mmsys_dvfs_ops = {
 	.set_ip_dvfs_swtrig_en	= mmsys_set_sw_trig_en,
 	.power_on		= mmsys_power_on,
 	.power_off		= mmsys_power_off,
-	.dvfs_init		= mmsys_ops_init,
 	.get_ip_status		= mmsys_get_ip_status,
 	.updata_target_freq	= mmsys_update_target_freq,
 	.get_top_current_volt	= mmsys_top_current_volt,

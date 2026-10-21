@@ -171,8 +171,63 @@ int mmsys_unregister_notifier(struct notifier_block *nb)
 }
 EXPORT_SYMBOL_GPL(mmsys_unregister_notifier);
 
+/*
+ * The mmsys power-event chain's nesting depth.
+ *
+ * The stock blob keeps this as a static local inside
+ * mmsys_notify_call_chain(), and clang names such a local
+ * "<function>.<variable>", giving the stock symbol
+ * mmsys_notify_call_chain.pw_opened.  gcc names the same local
+ * "pw_opened.0" instead, so the name is pinned explicitly here - the
+ * variable is file-local and the label carries no ABI meaning.
+ *
+ * It is an atomic, not a plain int: the disassembly runs the
+ * increments and decrements inside an LL/SC
+ * (ExclusiveMonitorPass / ExclusiveMonitorsStatus) retry loop,
+ * followed by a data memory barrier.
+ *
+ * The chain is re-entrant - a notifier callback can power the block
+ * down while another power event is still being dispatched - so the
+ * depth, not a boolean, is what has to be tracked.  Event 1 is the
+ * block coming up and event 2 is it going down.
+ */
+static atomic_t pw_opened __asm__("mmsys_notify_call_chain.pw_opened") =
+	ATOMIC_INIT(0);
+
 int mmsys_notify_call_chain(int state)
 {
+	int depth;
+
+	if (state == 1) {
+		/* power up */
+		depth = atomic_inc_return(&pw_opened);
+		if (depth > 1) {
+			/*
+			 * Already up: this is a nested power-up.  Undo
+			 * the bump and refuse, exactly as the stock does
+			 * by re-decrementing and returning -EINVAL.
+			 */
+			pr_warn("mmsys is already opened\n");
+			atomic_dec(&pw_opened);
+			return -EINVAL;
+		}
+	} else if (state == 2) {
+		/* power down */
+		depth = atomic_dec_return(&pw_opened);
+		if (depth)
+			/*
+			 * Still nested - a deeper power-down is already in
+			 * flight, so this one just unwinds its own
+			 * level.  The stock does not clamp the counter at
+			 * zero here either: an unmatched power-down leaves
+			 * it negative, and the next power-up refuses
+			 * instead of dispatching.
+			 */
+			return 0;
+	} else {
+		return -EINVAL;
+	}
+
 	return blocking_notifier_call_chain(&mmsys_notifier_list, state, NULL);
 }
 EXPORT_SYMBOL_GPL(mmsys_notify_call_chain);
