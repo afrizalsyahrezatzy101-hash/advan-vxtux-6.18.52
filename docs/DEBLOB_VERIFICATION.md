@@ -46,7 +46,7 @@ Three levels, each reported on its own:
 | 23 | `trusty-ipc` | OK | identical | 18 | yes |
 | 24 | `trusty-irq` | OK | identical | 10 | yes |
 | 25 | `trusty-log` | OK | identical | 7 | yes |
-| 26 | `trusty-tui` | OK | identical | 9 | yes |
+| 26 | `trusty-tui` | OK | identical | 7 | yes |
 | 27 | `trusty` | OK | **3 missing** | 28 | __tracepoint_ptr_smc_entry, __tracepoint_ptr_smc_exit, trace_event_define_fields_smccall |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | identical | 1 | yes |

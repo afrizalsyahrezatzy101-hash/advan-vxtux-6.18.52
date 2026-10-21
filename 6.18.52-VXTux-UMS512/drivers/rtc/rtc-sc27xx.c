@@ -644,7 +644,8 @@ MODULE_DEVICE_TABLE(of, sprd_rtc_of_match);
  * device_init_wakeup(dev, false) followed by "return 0".  The port had no
  * remove path at all, so the device was left awake after unplug.
  */
-static void sprd_rtc_remove(struct platform_device *pdev)
+void sprd_rtc_remove(struct platform_device *pdev);
+void sprd_rtc_remove(struct platform_device *pdev)
 {
 	device_init_wakeup(&pdev->dev, false);
 }
@@ -654,6 +655,7 @@ static void sprd_rtc_remove(struct platform_device *pdev)
  * it stays a plain zeroed flag here too.
  */
 bool sprd_rtcdbg_log_force;
+module_param(sprd_rtcdbg_log_force, bool, 0644);
 
 static struct platform_driver sprd_rtc_driver = {
 	.driver = {

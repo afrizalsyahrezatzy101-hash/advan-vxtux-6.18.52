@@ -112,6 +112,124 @@ DEVICE_TABLE_RE = re.compile(
     r"(?:_[A-Za-z0-9_]+)?__[A-Za-z0-9_]*_device_table$"
 )
 
+# The trace macro's own generated names changed between 5.4 and 6.18.
+# Two separate renames, both provably one-to-one (same header, same
+# template, same events), so the 6.18 object IS the 5.4 one:
+#
+#   1. the field-descriptor table.  trace_events.h generated
+#        5.4   static int trace_event_define_fields_<call>(struct trace_event_call *)
+#        6.18  static struct trace_event_fields trace_event_fields_<call>[]
+#      5.4 computed the offsets at init time from a constructed
+#      trace_event_raw_<call>; 6.18 emits them as a static array and the
+#      class holds .fields_array instead of .define_fields.  Same fields,
+#      same event, different storage - so trace_event_define_fields_X is
+#      counted as trace_event_fields_X.  trusty.ko builds exactly this:
+#        stock  t trace_event_define_fields_smccall
+#        built  d trace_event_fields_smccall
+#
+#   2. the tracepoint-pointer table.  __TRACEPOINT_ENTRY() has two
+#      encodings:
+#        #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+#             asm(".long __tracepoint_<name> - .")          (no symbol)
+#        #else
+#             static tracepoint_ptr_t __tracepoint_ptr_<name> = &...
+#      6.18's arm64 selects HAVE_ARCH_PREL32_RELOCATIONS, so it takes
+#      the asm path and emits NO named __tracepoint_ptr_<name> at all -
+#      the pointer is an anonymous .long in __tracepoints_ptrs.  The
+#      stock blob's __tracepoints_ptrs is 16 bytes (2 x 8-byte named
+#      objects), the 6.18 build's is 8 bytes (2 x .long): the same table.
+#      There is no symbol to match, so this one is satisfied by the
+#      tracepoint itself being present: __tracepoint_<name>.
+TRACE_RENAME_RE = re.compile(
+    r"^trace_event_define_fields_(?P<call>[A-Za-z_]\w*)$")
+TRACEPOINTER_RE = re.compile(r"^__tracepoint_ptr_(?P<name>[A-Za-z_]\w*)$")
+
+# A function-local static gets "func.member" from clang and "member.<n>"
+# from gcc, so the two toolchains name the SAME variable differently and a
+# plain name comparison cannot see them as one.  trusty-log's
+# trusty_dump_logs.__print_once is the case: 5.4's printk_once() declared
+# `static bool __print_once`, clang names the object after its enclosing
+# function, and 6.18's DO_ONCE_LITE() declares `static bool __already_done`,
+# which gcc names __already_done.<n>.
+#
+# Collapsing "func.member" to "func" is NOT safe as a general rule, and
+# the rule below is deliberately narrow because of it:
+#
+#   * "func" is a FUNCTION and "func.member" is a separate DATA object.
+#     Comparing them compares two different things, so a blanket collapse
+#     would let a build satisfy a data symbol with the mere existence of
+#     a function that has the same stem.  Measured over the 31 stock
+#     blobs, a blanket collapse would have hidden unisoc-mailbox's
+#     sprd_mbox_phy_outbox_isr._rs (a real missing object) by merging it
+#     into the also-missing sprd_mbox_phy_outbox_isr, dropping that
+#     module's count 30 -> 29 with nothing built.
+#   * It is not injective: two stock names can share a stem
+#     (mmsys_notify_call_chain and mmsys_notify_call_chain.pw_opened), so
+#     collapsing merges two rows into one and silently deletes a gap.
+#
+# So the collapse is applied only where it is one-to-one and the match
+# stays meaningful: the base must be present in the SAME blob as a
+# symbol of the same kind, and the base must be present on the built
+# side as a symbol of the same kind too.  A function can then never
+# satisfy a data symbol or vice versa.
+FUNC_STATIC_RE = re.compile(
+    r"^(?P<base>[A-Za-z_]\w*)\.(?P<member>[A-Za-z_]\w*)$")
+
+# Member parts that are themselves a known compiler naming form, so the
+# name is not a "func.member" pair at all.
+_NOT_A_MEMBER = re.compile(
+    r"^(?:part|constprop|isra|cold|clone|lto_priv|recip)$"
+    r"|^UNIQUE_ID_ddebug\d+$|^warned$|^key$|^rs$|^cr$|^lck$")
+
+# nm's type letters, split into the two kinds a "func.member" pair must
+# agree on: a function, or a data object.
+FUNC_TYPES = "tT"
+DATA_TYPES = "dDbBrR"
+
+
+def symbol_kinds(path):
+    """{name: 'func'|'data'} for every defined symbol in the module."""
+    r = subprocess.run([NM, path], capture_output=True, text=True,
+                       timeout=300)
+    kinds = {}
+    for line in r.stdout.splitlines():
+        p = line.split()
+        if len(p) < 2:
+            continue
+        typ = p[-2] if len(p) >= 3 else p[0]
+        if typ in FUNC_TYPES:
+            kinds[p[-1]] = "func"
+        elif typ in DATA_TYPES:
+            kinds[p[-1]] = "data"
+    return kinds
+
+
+def trace_renames(s):
+    """The 6.18 spelling(s) of a 5.4 trace-macro name, or []."""
+    m = TRACE_RENAME_RE.match(s)
+    if m:
+        return ["trace_event_fields_%s" % m.group("call")]
+    m = TRACEPOINTER_RE.match(s)
+    if m:
+        # no symbol is emitted for this in 6.18; it is satisfied by the
+        # tracepoint itself being present.
+        return ["__tracepoint_%s" % m.group("name")]
+    return []
+
+
+def func_static_base(s):
+    """The base of a 'func.member' name, or None.
+
+    Only for names where the member part is not itself a known compiler
+    naming form, so this never fires on the clone/partition families.
+    """
+    m = FUNC_STATIC_RE.match(s)
+    if not m:
+        return None
+    if _NOT_A_MEMBER.match(m.group("member")):
+        return None
+    return m.group("base")
+
 
 def is_artefact(s):
     if s in ENTRY:
@@ -295,6 +413,30 @@ def main():
         # was 26.
         s_api = {strip_clone(x) for x in s_api}
         b_api = {strip_clone(x) for x in b_api}
+        # Two cross-toolchain name changes the two sides cannot be diffed
+        # on directly.  Each is applied only to the names it can apply to,
+        # and each is checked against the other side's symbols, so a
+        # rename can only ever satisfy a name it really corresponds to.
+        s_kinds = symbol_kinds(sp)
+        b_kinds = symbol_kinds(bp)
+        extra_b = set()
+        for x in s_api - b_api:
+            # 1. the trace macro's own generated names (5.4 -> 6.18)
+            for alt in trace_renames(x):
+                if alt in b_api:
+                    extra_b.add(alt)
+                    break
+            else:
+                # 2. a function-local static that one toolchain names
+                #    "func.member" and the other names plainly
+                base = func_static_base(x)
+                if base and base in s_api and base in b_api:
+                    # the base must be the same KIND on both sides, so a
+                    # function can never satisfy a data symbol
+                    if (s_kinds.get(x) == s_kinds.get(base) and
+                            b_kinds.get(base) == s_kinds.get(x)):
+                        extra_b.add(base)
+        b_api = b_api | extra_b
         missing = sorted(s_api - b_api)
         newimp = sorted(bu - su)
         if missing:
