@@ -50,7 +50,7 @@ Three levels, each reported on its own:
 | 27 | `trusty` | OK | **3 missing** | 28 | __tracepoint_ptr_smc_entry, __tracepoint_ptr_smc_exit, trace_event_define_fields_smccall |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | identical | 1 | yes |
-| 30 | `unisoc-mailbox` | OK | **30 missing** | 7 | chan_num, g_irq_msk_backup, g_mbox_nowakeup_base |
+| 30 | `unisoc-mailbox` | OK | **15 missing** | 7 | g_irq_msk_backup, mbox_phy_outbox_has_irq, mbox_pm_event |
 | 31 | `usb_f_vser` | OK | identical | 16 | yes |
 
 ## Result
@@ -65,7 +65,7 @@ Three levels, each reported on its own:
 - `apsys-dvfs`: kernel API drift (6.18 renamed 19 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '__mutex_init', '_dev_info', '_printk', 'arm64_use_ng_mappings', 'bus_find_device', 'class_create']...
 - `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall']
 - `trusty`: kernel API drift (6.18 renamed 28 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__trace_trigger_soft_disabled']...
-- `unisoc-mailbox`: missing ['chan_num', 'g_irq_msk_backup', 'g_mbox_nowakeup_base', 'g_started_chan_msk', 'mbox_deliver_thread', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'mbox_rx_fifo', 'mbox_rx_fifo_cnt', 'mbox_tx_mask', 'outbox_lock', 'reg_ctrl', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_flush', 'sprd_mbox_phy_inbox_isr', 'sprd_mbox_phy_outbox_isr', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_phy_send', 'sprd_mbox_phy_shutdown', 'sprd_mbox_phy_startup', 'sprd_mbox_process_rx_fifo', 'sprd_outbox_base', 'tx_data']
+- `unisoc-mailbox`: missing ['g_irq_msk_backup', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'outbox_lock', 'reg_ctrl', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_process_rx_fifo']
 - `unisoc-mailbox`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__mutex_init', '_printk', 'devm_clk_get_enabled', 'mutex_lock_nested', 'mutex_unlock', 'of_device_get_match_data', 'platform_driver_unregister']
 
 ### The ones with no module yet
