@@ -97,18 +97,18 @@
 #include "sprd-mailbox-r1.h"
 
 /* the OEM layer's own state, per the stock blob */
-static u32 mbox_chan_num;
-static void __iomem *mbox_tx_data;
-static void __iomem *mbox_outbox_base;
-static u32 mbox_tx_mask;
-static u32 mbox_started_chan_msk;
-static void __iomem *mbox_nowakeup_base;
-static struct sprd_mbox_chan *mbox_rx_fifo[SPRD_MBOX_R1_CHAN_MAX];
-static u32 mbox_rx_fifo_cnt;
+u32 chan_num;
+void __iomem *tx_data;
+void __iomem *sprd_outbox_base;
+u32 mbox_tx_mask;
+u32 g_started_chan_msk;
+void __iomem *g_mbox_nowakeup_base;
+struct sprd_mbox_chan *mbox_rx_fifo[SPRD_MBOX_R1_CHAN_MAX];
+u32 mbox_rx_fifo_cnt;
 
 static spinlock_t mbox_lock;
 static wait_queue_head_t deliver_thread_wait;
-static struct task_struct *mbox_deliver_thread;
+struct task_struct *mbox_deliver_thread;
 
 static void (*mbox_wakeup_flag_callback_r1)(int);
 
@@ -142,11 +142,11 @@ u32 get_tx_fifo_mask(u32 mask)
 	u32 i;
 
 	spin_lock(&mbox_lock);
-	if (!mbox_chan_num)
+	if (!chan_num)
 		goto out;
 
-	for (i = 0; i < mbox_chan_num; i += 2) {
-		void __iomem *tx = mbox_tx_data + (i * SPRD_MBOX_R1_CHAN_STRIDE);
+	for (i = 0; i < chan_num; i += 2) {
+		void __iomem *tx = tx_data + (i * SPRD_MBOX_R1_CHAN_STRIDE);
 		u32 bit_tx = BIT(i & 0x1f);
 		u32 bit_rx = BIT((i + 1) & 0x1f);
 
@@ -217,21 +217,21 @@ EXPORT_SYMBOL(sprd_mbox_change_wakeup_flag_r1);
  *   +0x30  0x104394  the typeinfo slot
  *   +0x38  0x104398  debug_show
  */
-static int sprd_mbox_r1_startup(struct sprd_mbox_chan *chan);
-static void sprd_mbox_r1_shutdown(struct sprd_mbox_chan *chan);
-static int sprd_mbox_r1_flush(struct sprd_mbox_chan *chan, unsigned long timeout);
-static int sprd_mbox_r1_send(struct sprd_mbox_chan *chan, u32 *msg);
-static int sprd_mbox_r1_inbox_isr(struct sprd_mbox_chan *chan);
-static int sprd_mbox_r1_outbox_isr(struct sprd_mbox_chan *chan);
+int sprd_mbox_phy_startup(struct sprd_mbox_chan *chan);
+void sprd_mbox_phy_shutdown(struct sprd_mbox_chan *chan);
+int sprd_mbox_phy_flush(struct sprd_mbox_chan *chan, unsigned long timeout);
+int sprd_mbox_phy_send(struct sprd_mbox_chan *chan, u32 *msg);
+int sprd_mbox_phy_inbox_isr(struct sprd_mbox_chan *chan);
+int sprd_mbox_phy_outbox_isr(struct sprd_mbox_chan *chan);
 static void sprd_mbox_r1_debug_show(struct sprd_mbox_chan *chan);
 
 static struct sprd_mbox_phy_ops sprd_mbox_phy_ops_r1 = {
-	.startup	= sprd_mbox_r1_startup,
-	.shutdown	= sprd_mbox_r1_shutdown,
-	.flush		= sprd_mbox_r1_flush,
-	.send		= sprd_mbox_r1_send,
-	.inbox_isr	= sprd_mbox_r1_inbox_isr,
-	.outbox_isr	= sprd_mbox_r1_outbox_isr,
+	.startup	= sprd_mbox_phy_startup,
+	.shutdown	= sprd_mbox_phy_shutdown,
+	.flush		= sprd_mbox_phy_flush,
+	.send		= sprd_mbox_phy_send,
+	.inbox_isr	= sprd_mbox_phy_inbox_isr,
+	.outbox_isr	= sprd_mbox_phy_outbox_isr,
 	.debug_show	= sprd_mbox_r1_debug_show,
 };
 
@@ -261,7 +261,7 @@ int sprd_mbox_phy_r1_init(struct sprd_mbox_r1 *r1)
 		return PTR_ERR(inbox);
 	r1->inbox_base = inbox;
 
-	mbox_outbox_base = inbox;
+	sprd_outbox_base = inbox;
 
 	r1->chan_num = r1->chan_num;
 	r1->fifo_depth = readl(inbox + SPRD_MBOX_R1_FIFO_DEPTH) + 1;
@@ -278,7 +278,7 @@ EXPORT_SYMBOL(sprd_mbox_phy_r1_init);
 /*
  * The PHY operations.
  */
-static int sprd_mbox_r1_startup(struct sprd_mbox_chan *chan)
+int sprd_mbox_phy_startup(struct sprd_mbox_chan *chan)
 {
 	u32 mask;
 
@@ -316,13 +316,13 @@ static int sprd_mbox_r1_startup(struct sprd_mbox_chan *chan)
 	return 0;
 }
 
-static void sprd_mbox_r1_shutdown(struct sprd_mbox_chan *chan)
+void sprd_mbox_phy_shutdown(struct sprd_mbox_chan *chan)
 {
 	writel(SPRD_MBOX_R1_IRQ_ALL, chan->inbox + SPRD_MBOX_R1_IRQ_MSK);
-	mbox_started_chan_msk &= ~BIT(chan->index & 0x1f);
+	g_started_chan_msk &= ~BIT(chan->index & 0x1f);
 }
 
-static int sprd_mbox_r1_flush(struct sprd_mbox_chan *chan, unsigned long timeout)
+int sprd_mbox_phy_flush(struct sprd_mbox_chan *chan, unsigned long timeout)
 {
 	unsigned long deadline = jiffies + msecs_to_jiffies(timeout);
 
@@ -338,7 +338,7 @@ static int sprd_mbox_r1_flush(struct sprd_mbox_chan *chan, unsigned long timeout
 	return -ETIME;
 }
 
-static int sprd_mbox_r1_send(struct sprd_mbox_chan *chan, u32 *msg)
+int sprd_mbox_phy_send(struct sprd_mbox_chan *chan, u32 *msg)
 {
 	u32 sts;
 
@@ -356,7 +356,7 @@ static int sprd_mbox_r1_send(struct sprd_mbox_chan *chan, u32 *msg)
 	return 0;
 }
 
-static int sprd_mbox_r1_inbox_isr(struct sprd_mbox_chan *chan)
+int sprd_mbox_phy_inbox_isr(struct sprd_mbox_chan *chan)
 {
 	u32 sts = readl(chan->outbox + SPRD_MBOX_R1_IRQ_STS);
 	u32 mask;
@@ -375,7 +375,7 @@ static int sprd_mbox_r1_inbox_isr(struct sprd_mbox_chan *chan)
 	return 1;
 }
 
-static int sprd_mbox_r1_outbox_isr(struct sprd_mbox_chan *chan)
+int sprd_mbox_phy_outbox_isr(struct sprd_mbox_chan *chan)
 {
 	u32 sts = readl(chan->outbox + SPRD_MBOX_R1_FIFO_STS);
 	u32 wr = (sts >> 16) & 0xff;

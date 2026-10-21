@@ -33,7 +33,7 @@ Three levels, each reported on its own:
 | 10 | `nvmem-sc27xx-efuse` | OK | identical | 5 | yes |
 | 11 | `nvmem_sprd_cache_efuse` | OK | identical | 3 | yes |
 | 12 | `pwm_bl` | OK | identical | 5 | yes |
-| 13 | `rtc-sc27xx` | OK | **2 missing** | 6 | sprd_rtc_remove, sprd_rtcdbg_log_force |
+| 13 | `rtc-sc27xx` | **MISSING** | - | - | - |
 | 14 | `sc27xx_adc` | OK | identical | 8 | yes |
 | 15 | `sdhci-sprd` | OK | identical | 43 | yes |
 | 16 | `sprd-dmaengine-pcm` | OK | identical | 13 | yes |
@@ -56,15 +56,13 @@ Three levels, each reported on its own:
 ## Result
 
 - stock vendor blobs: **31**
-- a .ko with the same file name is built: **30** (96.8%)
+- a .ko with the same file name is built: **29** (93.5%)
 - and it carries the same API: **26** (83.9%)
 
 ### Gaps
 
 - `apsys-dvfs`: missing ['clk_pll', 'dpu_dvfs_enable_show', 'dpu_dvfs_enable_store', 'dpu_dvfs_init', 'dpu_dvfs_notify_callback', 'dpu_dvfs_parse_dt', 'dpu_hw_dfs_en', 'get_dpu_dvfs_status', 'get_dpu_dvfs_table', 'get_dpu_idle_freq', 'get_dpu_idle_index', 'get_dpu_work_freq', 'get_dpu_work_index', 'get_dvfs_table_info_show', 'get_gsp_dvfs_status', 'get_gsp_dvfs_table', 'get_gsp_idle_freq', 'get_gsp_idle_index', 'get_gsp_work_freq', 'get_gsp_work_index', 'get_vdsp_dvfs_status', 'get_vdsp_dvfs_table', 'get_vdsp_idle_freq', 'get_vdsp_idle_index', 'get_vdsp_work_freq', 'get_vdsp_work_index', 'get_vsp_dvfs_status', 'get_vsp_dvfs_table', 'get_vsp_idle_freq', 'get_vsp_idle_index', 'get_vsp_work_freq', 'get_vsp_work_index', 'gsp_dvfs_enable_show', 'gsp_dvfs_enable_store', 'gsp_dvfs_init', 'gsp_dvfs_notify_callback', 'gsp_dvfs_parse_dt', 'gsp_hw_dfs_en', 'map_table', 'roc1_dvfs_ops', 'set_dpu_dvfs_swtrig_en', 'set_dpu_dvfs_table', 'set_dpu_freq_upd_delay_en', 'set_dpu_freq_upd_en_byp', 'set_dpu_freq_upd_hdsk_en', 'set_dpu_gfree_wait_delay', 'set_dpu_idle_freq', 'set_dpu_idle_index', 'set_dpu_work_freq', 'set_dpu_work_index', 'set_gsp_dvfs_swtrig_en', 'set_gsp_dvfs_table', 'set_gsp_freq_upd_delay_en', 'set_gsp_freq_upd_en_byp', 'set_gsp_freq_upd_hdsk_en', 'set_gsp_gfree_wait_delay', 'set_gsp_idle_freq', 'set_gsp_idle_index', 'set_gsp_work_freq', 'set_gsp_work_index', 'set_vdsp_dvfs_swtrig_en', 'set_vdsp_dvfs_table', 'set_vdsp_freq_upd_delay_en', 'set_vdsp_freq_upd_en_byp', 'set_vdsp_freq_upd_hdsk_en', 'set_vdsp_gfree_wait_delay', 'set_vdsp_idle_freq', 'set_vdsp_idle_index', 'set_vdsp_work_freq', 'set_vdsp_work_index', 'set_vsp_dvfs_swtrig_en', 'set_vsp_freq_upd_delay_en', 'set_vsp_freq_upd_en_byp', 'set_vsp_freq_upd_hdsk_en', 'set_vsp_gfree_wait_delay', 'set_vsp_idle_freq', 'set_vsp_idle_index', 'set_vsp_work_freq', 'set_vsp_work_index', 'sharkl5pro_dvfs_ops', 'sprd_dvfs_of_match', 'vdsp_dvfs_enable_show', 'vdsp_dvfs_enable_store', 'vdsp_dvfs_init', 'vdsp_dvfs_notify_callback', 'vdsp_dvfs_parse_dt', 'vdsp_hw_dfs_en', 'vsp_dvfs_gov_event_handler', 'vsp_dvfs_gov_get_target', 'vsp_dvfs_init', 'vsp_dvfs_notify_callback', 'vsp_dvfs_parse_dt', 'vsp_hw_dvfs_en']
 - `apsys-dvfs`: kernel API drift (6.18 renamed 19 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '__mutex_init', '_dev_info', '_printk', 'arm64_use_ng_mappings', 'bus_find_device', 'class_create']...
-- `rtc-sc27xx`: missing ['sprd_rtc_remove', 'sprd_rtcdbg_log_force']
-- `rtc-sc27xx`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__devm_rtc_register_device', '__might_sleep', 'device_set_wakeup_capable', 'device_wakeup_disable', 'device_wakeup_enable', 'usleep_range_state']
 - `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall']
 - `trusty`: kernel API drift (6.18 renamed 28 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__trace_trigger_soft_disabled']...
 - `unisoc-mailbox`: missing ['chan_num', 'g_irq_msk_backup', 'g_mbox_nowakeup_base', 'g_started_chan_msk', 'mbox_deliver_thread', 'mbox_phy_outbox_has_irq', 'mbox_pm_event', 'mbox_pm_notifier', 'mbox_pm_notifier_block', 'mbox_rx_fifo', 'mbox_rx_fifo_cnt', 'mbox_tx_mask', 'outbox_lock', 'reg_ctrl', 'sprd_mbox_debug_open', 'sprd_mbox_debug_show', 'sprd_mbox_debugfs_ops', 'sprd_mbox_deliver_thread', 'sprd_mbox_disable', 'sprd_mbox_index_xlate', 'sprd_mbox_phy_flush', 'sprd_mbox_phy_inbox_isr', 'sprd_mbox_phy_outbox_isr', 'sprd_mbox_phy_outbox_isr._rs', 'sprd_mbox_phy_send', 'sprd_mbox_phy_shutdown', 'sprd_mbox_phy_startup', 'sprd_mbox_process_rx_fifo', 'sprd_outbox_base', 'tx_data']
@@ -72,4 +70,5 @@ Three levels, each reported on its own:
 
 ### The ones with no module yet
 
+- `rtc-sc27xx`
 - `sprd-vsp-pw-domain`

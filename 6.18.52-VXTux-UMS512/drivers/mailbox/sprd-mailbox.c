@@ -136,7 +136,7 @@ static irqreturn_t do_outbox_isr(void __iomem *base, struct sprd_mbox_priv *priv
 	return IRQ_HANDLED;
 }
 
-static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
+irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
 {
 	struct sprd_mbox_priv *priv = data;
 
@@ -150,7 +150,7 @@ static irqreturn_t sprd_mbox_supp_isr(int irq, void *data)
 	return do_outbox_isr(priv->supp_base, priv);
 }
 
-static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
+irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
 {
 	struct sprd_mbox_priv *priv = data;
 	struct mbox_chan *chan;
@@ -211,7 +211,7 @@ static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
 	return 0;
 }
 
-static int sprd_mbox_flush(struct mbox_chan *chan, unsigned long timeout)
+int sprd_mbox_flush(struct mbox_chan *chan, unsigned long timeout)
 {
 	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
 	unsigned long id = (unsigned long)chan->con_priv;
@@ -288,7 +288,7 @@ static const struct mbox_chan_ops sprd_mbox_ops = {
 	.shutdown	= sprd_mbox_shutdown,
 };
 
-static int sprd_mbox_probe(struct platform_device *pdev)
+int sprd_mbox_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct sprd_mbox_priv *priv;
