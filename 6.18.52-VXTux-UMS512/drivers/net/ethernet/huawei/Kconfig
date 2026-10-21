@@ -12,7 +12,7 @@ config NET_VENDOR_HUAWEI
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Huawei cards. If you say Y, you will be asked
 	  for your specific card in the following questions.
-
+	
 if NET_VENDOR_HUAWEI
 
 source "drivers/net/ethernet/huawei/hinic/Kconfig"

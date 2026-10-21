@@ -13,4 +13,5 @@ config DRM_AST
 	 and a version of AST that knows to fail if KMS
 	 is bound to the driver. These GPUs are commonly found
 	 in server chipsets.
-
+	
+	

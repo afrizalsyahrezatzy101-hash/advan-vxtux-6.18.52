@@ -12,3 +12,4 @@ config CRYPTO_DEV_TI_DTHEV2
 	  of hardware offloading for cryptographic algorithms on
 	  these devices, providing enhanced resistance against side-channel
 	  attacks.
+	

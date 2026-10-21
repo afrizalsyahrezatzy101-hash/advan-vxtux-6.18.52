@@ -11,10 +11,10 @@ config CRYPTO_DEV_AMLOGIC_GXL
 	  Select y here to have support for the cryptographic offloader
 	  available on Amlogic GXL SoC.
 	  This hardware handles AES ciphers in ECB/CBC mode.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called amlogic-gxl-crypto.
-
+	
 config CRYPTO_DEV_AMLOGIC_GXL_DEBUG
 	bool "Enable amlogic stats"
 	depends on CRYPTO_DEV_AMLOGIC_GXL
@@ -23,3 +23,4 @@ config CRYPTO_DEV_AMLOGIC_GXL_DEBUG
 	  Say y to enable amlogic-crypto debug stats.
 	  This will create /sys/kernel/debug/gxl-crypto/stats for displaying
 	  the number of requests per flow and per algorithm.
+	

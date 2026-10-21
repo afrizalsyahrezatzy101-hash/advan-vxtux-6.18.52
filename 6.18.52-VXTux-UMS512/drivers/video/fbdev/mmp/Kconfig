@@ -4,7 +4,7 @@ menuconfig MMP_DISP
 	depends on CPU_PXA910 || CPU_MMP2 || COMPILE_TEST
 	help
 	  Marvell Display Subsystem support.
-
+	
 if MMP_DISP
 source "drivers/video/fbdev/mmp/hw/Kconfig"
 source "drivers/video/fbdev/mmp/panel/Kconfig"

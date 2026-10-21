@@ -14,14 +14,14 @@ config BRCMSMAC
 	  This module adds support for PCIe wireless adapters based on Broadcom
 	  IEEE802.11n SoftMAC chipsets. If you choose to build a module, the
 	  driver will be called brcmsmac.ko.
-
+	
 config BRCMSMAC_LEDS
 	def_bool BRCMSMAC && BCMA_DRIVER_GPIO && MAC80211_LEDS
 	help
 	  The brcmsmac LED support depends on the presence of the
 	  BCMA_DRIVER_GPIO driver, and it only works if LED support
 	  is enabled and reachable from the driver module.
-
+	
 source "drivers/net/wireless/broadcom/brcm80211/brcmfmac/Kconfig"
 
 config BRCM_TRACING
@@ -35,10 +35,11 @@ config BRCM_TRACING
 	  issues. This option adds a small amount of overhead when tracing
 	  is disabled. If unsure, say Y to allow developers to better help
 	  you when wireless problems occur.
-
+	
 config BRCMDBG
 	bool "Broadcom driver debug functions"
 	depends on BRCMSMAC || BRCMFMAC
 	select WANT_DEV_COREDUMP if BRCMFMAC
 	help
 	  Selecting this enables additional code for debug purposes.
+	

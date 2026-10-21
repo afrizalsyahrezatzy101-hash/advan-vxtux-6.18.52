@@ -8,9 +8,9 @@ menuconfig PSE_CONTROLLER
 	depends on REGULATOR
 	help
 	  Generic Power Sourcing Equipment Controller support.
-
+	
 	  If unsure, say no.
-
+	
 if PSE_CONTROLLER
 
 config PSE_REGULATOR
@@ -19,7 +19,7 @@ config PSE_REGULATOR
 	  This module provides support for simple regulator based Ethernet Power
 	  Sourcing Equipment without automatic classification support. For
 	  example for basic implementation of PoDL (802.3bu) specification.
-
+	
 config PSE_PD692X0
 	tristate "PD692X0 PSE controller"
 	depends on I2C
@@ -28,10 +28,10 @@ config PSE_PD692X0
 	help
 	  This module provides support for PD692x0 regulator based Ethernet
 	  Power Sourcing Equipment.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called pd692x0.
-
+	
 config PSE_SI3474
 	tristate "Si3474 PSE controller"
 	depends on I2C
@@ -39,17 +39,17 @@ config PSE_SI3474
 	  This module provides support for Si3474 regulator based Ethernet
 	  Power Sourcing Equipment.
 	  Only 4-pair PSE configurations are supported.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called si3474.
-
+	
 config PSE_TPS23881
 	tristate "TPS23881 PSE controller"
 	depends on I2C
 	help
 	  This module provides support for TPS23881 regulator based Ethernet
 	  Power Sourcing Equipment.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called tps23881.
 endif

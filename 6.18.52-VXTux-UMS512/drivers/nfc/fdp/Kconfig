@@ -7,11 +7,11 @@ config NFC_FDP
 	help
 	  Intel Fields Peak NFC controller core driver.
 	  This is a driver based on the NCI NFC kernel layers.
-
+	
 	  To compile this driver as a module, choose m here. The module will
 	  be called fdp.
 	  Say N if unsure.
-
+	
 config NFC_FDP_I2C
 	tristate "NFC FDP i2c support"
 	depends on NFC_FDP && I2C
@@ -19,6 +19,7 @@ config NFC_FDP_I2C
 	  This module adds support for the Intel Fields Peak NFC controller
 	  i2c interface.
 	  Select this if your platform is using the i2c bus.
-
+	
 	  If you choose to build a module, it'll be called fdp_i2c.
 	  Say N if unsure.
+	

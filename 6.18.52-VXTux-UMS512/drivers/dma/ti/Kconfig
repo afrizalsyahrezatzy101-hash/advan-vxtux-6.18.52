@@ -10,7 +10,7 @@ config TI_CPPI41
 	help
 	  The Communications Port Programming Interface (CPPI) 4.1 DMA engine
 	  is currently used by the USB driver on AM335x and DA8xx platforms.
-
+	
 config TI_EDMA
 	tristate "Texas Instruments EDMA support"
 	depends on ARCH_DAVINCI || ARCH_OMAP || ARCH_KEYSTONE || COMPILE_TEST
@@ -22,7 +22,7 @@ config TI_EDMA
 	  Enable support for the TI EDMA (Enhanced DMA) controller. This DMA
 	  engine is found on TI DaVinci, AM33xx, AM43xx, DRA7xx and Keystone 2
 	  parts.
-
+	
 config DMA_OMAP
 	tristate "Texas Instruments sDMA (omap-dma) support"
 	depends on ARCH_OMAP || COMPILE_TEST
@@ -33,7 +33,7 @@ config DMA_OMAP
 	help
 	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
 	  DMA engine is found on OMAP and DRA7xx parts.
-
+	
 config TI_K3_UDMA
 	tristate "Texas Instruments UDMA support"
 	depends on ARCH_K3
@@ -46,7 +46,7 @@ config TI_K3_UDMA
         help
 	  Enable support for the TI UDMA (Unified DMA) controller. This
 	  DMA engine is used in AM65x and j721e.
-
+	
 config TI_K3_UDMA_GLUE_LAYER
 	tristate "Texas Instruments UDMA Glue layer for non DMAengine users"
 	depends on ARCH_K3
@@ -54,7 +54,7 @@ config TI_K3_UDMA_GLUE_LAYER
 	help
 	  Say y here to support the K3 NAVSS DMA glue interface
 	  If unsure, say N.
-
+	
 config TI_K3_PSIL
        tristate
        default TI_K3_UDMA

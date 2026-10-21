@@ -27,6 +27,20 @@
 	chosen {
 		stdout-path = "serial1:115200n8";
 	};
+
+	/*
+	 * The virtual SIPC bus. The time correction device hangs off it.
+	 */
+	sipc_virt: sipc-virt {
+		compatible = "unisoc,sipc-virt-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		time_sync: time_sync {
+			compatible = "sprd,time-sync";
+			status = "okay";
+		};
+	};
 };
 
 &uart0 {

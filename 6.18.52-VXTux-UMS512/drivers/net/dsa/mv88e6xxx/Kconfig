@@ -8,7 +8,7 @@ config NET_DSA_MV88E6XXX
 	help
 	  This driver adds support for most of the Marvell 88E6xxx models of
 	  Ethernet switch chips, except 88E6060.
-
+	
 config NET_DSA_MV88E6XXX_PTP
 	bool "PTP support for Marvell 88E6xxx"
 	default n
@@ -17,7 +17,7 @@ config NET_DSA_MV88E6XXX_PTP
 	help
 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
 	  chips that support it.
-
+	
 config NET_DSA_MV88E6XXX_LEDS
 	bool "LED support for Marvell 88E6xxx"
 	default y
@@ -27,3 +27,4 @@ config NET_DSA_MV88E6XXX_LEDS
 	help
 	  This enabled support for controlling the LEDs attached to the
 	  Marvell 88E6xxx switch chips.
+	

@@ -16,3 +16,4 @@ config TOUCHSCREEN_CHIPONE
   Public chipone-tddi tree (cts_*). Not used on this T1030 unit
   (panel hx83102e) — built as reference/support other panel
   variants. DT compatible from stock blob: check blobs/re_notes/.
+	

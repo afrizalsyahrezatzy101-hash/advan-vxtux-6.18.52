@@ -11,3 +11,4 @@ config VIDEO_BCM2835
 	  Say Y here to enable camera host interface devices for
 	  Broadcom BCM2835 SoC. This operates over the VCHIQ interface
 	  to a service running on VideoCore.
+	

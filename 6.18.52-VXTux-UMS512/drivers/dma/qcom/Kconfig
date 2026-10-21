@@ -9,7 +9,7 @@ config QCOM_ADM
 	  controller, as present on MSM8x60, APQ8064, and IPQ8064 devices.
 	  This controller provides DMA capabilities for both general purpose
 	  and on-chip peripheral devices.
-
+	
 config QCOM_BAM_DMA
 	tristate "QCOM BAM DMA support"
 	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
@@ -18,7 +18,7 @@ config QCOM_BAM_DMA
 	help
 	  Enable support for the QCOM BAM DMA controller.  This controller
 	  provides DMA capabilities for a variety of on-chip devices.
-
+	
 config QCOM_GPI_DMA
         tristate "Qualcomm Technologies GPI DMA support"
         depends on ARCH_QCOM
@@ -30,7 +30,7 @@ config QCOM_GPI_DMA
           as I2C, UART, and SPI. By using GPI dmaengine driver, bus drivers
           can use a standardize interface that is protocol independent to
           transfer data between DDR and peripheral.
-
+	
 config QCOM_HIDMA_MGMT
 	tristate "Qualcomm Technologies HIDMA Management support"
 	depends on HAS_IOMEM
@@ -42,7 +42,7 @@ config QCOM_HIDMA_MGMT
 	  start managing the channels. In a virtualized environment,
 	  the guest OS would run QCOM_HIDMA channel driver and the
 	  host would run the QCOM_HIDMA_MGMT management driver.
-
+	
 config QCOM_HIDMA
 	tristate "Qualcomm Technologies HIDMA Channel support"
 	depends on HAS_IOMEM
@@ -53,3 +53,4 @@ config QCOM_HIDMA
 	  (user to kernel, kernel to kernel, etc.).  It only supports
 	  memcpy interface. The core is not intended for general
 	  purpose slave DMA.
+	

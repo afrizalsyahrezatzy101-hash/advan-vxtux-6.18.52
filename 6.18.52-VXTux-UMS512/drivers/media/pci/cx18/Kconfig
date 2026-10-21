@@ -17,13 +17,13 @@ config VIDEO_CX18
 	help
 	  This is a video4linux driver for Conexant cx23418 based
 	  PCI combo video recorder devices.
-
+	
 	  This is used in devices such as the Hauppauge HVR-1600
 	  cards.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called cx18.
-
+	
 config VIDEO_CX18_ALSA
 	tristate "Conexant 23418 DMA audio support"
 	depends on VIDEO_CX18 && SND
@@ -31,6 +31,7 @@ config VIDEO_CX18_ALSA
 	help
 	  This is a video4linux driver for direct (DMA) audio on
 	  Conexant 23418 based TV cards using ALSA.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called cx18-alsa.
+	

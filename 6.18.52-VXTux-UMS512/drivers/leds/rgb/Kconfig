@@ -10,10 +10,10 @@ config LEDS_GROUP_MULTICOLOR
 	  into multicolor LEDs which is useful in the case where LEDs of
 	  different colors are physically grouped in a single multi-color LED
 	  and driven by a controller that doesn't have multi-color support.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called leds-group-multicolor.
-
+	
 config LEDS_KTD202X
 	tristate "LED support for KTD202x Chips"
 	depends on I2C
@@ -22,10 +22,10 @@ config LEDS_KTD202X
 	  This option enables support for the Kinetic KTD2026/KTD2027
 	  RGB/White LED driver found in different BQ mobile phones.
 	  It is a 3 or 4 channel LED driver programmed via an I2C interface.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called leds-ktd202x.
-
+	
 config LEDS_NCP5623
 	tristate "LED support for NCP5623"
 	depends on I2C
@@ -33,20 +33,20 @@ config LEDS_NCP5623
 	help
 	  This option enables support for ON semiconductor NCP5623
 	  Triple Output I2C Controlled RGB LED Driver.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called leds-ncp5623.
-
+	
 config LEDS_PWM_MULTICOLOR
 	tristate "PWM driven multi-color LED Support"
 	depends on PWM
 	help
 	  This option enables support for PWM driven monochrome LEDs that are
 	  grouped into multicolor LEDs.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called leds-pwm-multicolor.
-
+	
 config LEDS_QCOM_LPG
 	tristate "LED support for Qualcomm LPG"
 	depends on OF
@@ -59,9 +59,9 @@ config LEDS_QCOM_LPG
 	  channels and typically a shared pattern lookup table and a current
 	  sink, intended to drive RGB LEDs. Each channel can either be used as
 	  a LED, grouped to represent a RGB LED or exposed as PWM channels.
-
+	
 	  If compiled as a module, the module will be named leds-qcom-lpg.
-
+	
 config LEDS_MT6370_RGB
 	tristate "LED Support for MediaTek MT6370 PMIC"
 	depends on MFD_MT6370
@@ -71,8 +71,8 @@ config LEDS_MT6370_RGB
 	  In MT6370, there are four channel current-sink LED drivers that
 	  support hardware pattern for constant current, PWM, and breath mode.
 	  Isink4 channel can also be used as a CHG_VIN power good indicator.
-
+	
 	  This driver can also be built as a module. If so, the module
 	  will be called "leds-mt6370-rgb".
-
+	
 endif # LEDS_CLASS_MULTICOLOR

@@ -608,3 +608,5 @@ subsys_initcall(flash_init);
 module_exit(flash_exit);
 MODULE_DESCRIPTION("Sprd Flash Driver");
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(flash_get_flash_info);

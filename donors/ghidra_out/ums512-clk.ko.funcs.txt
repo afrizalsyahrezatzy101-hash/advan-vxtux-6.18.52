@@ -1,0 +1,14 @@
+0010b000 __cfi_check_fail Function
+0010b030 ums512_clk_probe Function
+0010c000 __cfi_check Function
+0010c094 init_module Function
+0010c0c0 cleanup_module Function
+00114000 __platform_driver_register Function
+00114008 device_get_match_data Function
+00114010 sprd_clk_regmap_init Function
+00114018 devm_reset_controller_register Function
+00114020 _dev_err Function
+00114028 sprd_clk_probe Function
+00114030 devm_kmalloc Function
+00114038 platform_driver_unregister Function
+00114088 __ubsan_handle_cfi_check_fail_abort Function

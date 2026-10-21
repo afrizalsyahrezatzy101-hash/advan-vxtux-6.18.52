@@ -6,9 +6,9 @@ config INFINIBAND_IPOIB
 	  Support for the IP-over-InfiniBand protocol (IPoIB). This
 	  transports IP packets over InfiniBand so you can use your IB
 	  device as a fancy NIC.
-
+	
 	  See Documentation/infiniband/ipoib.rst for more information
-
+	
 config INFINIBAND_IPOIB_CM
 	bool "IP-over-InfiniBand Connected Mode support"
 	depends on INFINIBAND_IPOIB
@@ -19,11 +19,11 @@ config INFINIBAND_IPOIB_CM
 	  through /sys/class/net/ibXXX/mode to actually create
 	  connections, and then increase the interface MTU with
 	  e.g. ifconfig ib0 mtu 65520.
-
+	
 	  WARNING: Enabling connected mode will trigger some packet
 	  drops for multicast and UD mode traffic from this interface,
 	  unless you limit mtu for these destinations to 2044.
-
+	
 config INFINIBAND_IPOIB_DEBUG
 	bool "IP-over-InfiniBand debugging" if EXPERT
 	depends on INFINIBAND_IPOIB
@@ -33,12 +33,12 @@ config INFINIBAND_IPOIB_DEBUG
 	  IPoIB driver.  The output can be turned on via the
 	  debug_level and mcast_debug_level module parameters (which
 	  can also be set after the driver is loaded through sysfs).
-
+	
 	  This option also creates a directory tree under ipoib/ in
 	  debugfs, which contains files that expose debugging
 	  information about IB multicast groups used by the IPoIB
 	  driver.
-
+	
 config INFINIBAND_IPOIB_DEBUG_DATA
 	bool "IP-over-InfiniBand data path debugging"
 	depends on INFINIBAND_IPOIB_DEBUG
@@ -48,3 +48,4 @@ config INFINIBAND_IPOIB_DEBUG_DATA
 	  data_debug_level module parameter; however, even with output
 	  turned off, this debugging code will have some performance
 	  impact.
+	

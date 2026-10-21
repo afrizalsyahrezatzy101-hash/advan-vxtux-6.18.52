@@ -15,7 +15,7 @@ config NET_DSA_BCM_SF2
 	help
 	  This enables support for the Broadcom Starfighter 2 Ethernet
 	  switch chips.
-
+	
 config NET_DSA_LOOP
 	tristate "DSA mock-up Ethernet switch chip support"
 	select NET_DSA_TAG_NONE
@@ -23,7 +23,7 @@ config NET_DSA_LOOP
 	help
 	  This enables support for a fake mock-up switch chip which
 	  exercises the DSA APIs.
-
+	
 source "drivers/net/dsa/hirschmann/Kconfig"
 
 source "drivers/net/dsa/lantiq/Kconfig"
@@ -39,7 +39,7 @@ config NET_DSA_MT7530
 	  switch chips. Multi-chip module MT7530 in MT7621AT, MT7621DAT,
 	  MT7621ST and MT7623AI SoCs, and built-in switch in MT7988 SoC are
 	  supported as well.
-
+	
 config NET_DSA_MT7530_MDIO
 	tristate "MediaTek MT7530 MDIO interface driver"
 	depends on NET_DSA_MT7530
@@ -50,7 +50,7 @@ config NET_DSA_MT7530_MDIO
 	  chips which are connected via MDIO, as well as multi-chip
 	  module MT7530 which can be found in the MT7621AT, MT7621DAT,
 	  MT7621ST and MT7623AI SoCs.
-
+	
 config NET_DSA_MT7530_MMIO
 	tristate "MediaTek MT7530 MMIO interface driver"
 	depends on NET_DSA_MT7530
@@ -62,14 +62,14 @@ config NET_DSA_MT7530_MMIO
 	  The switch is a similar design as MT7531, but the switch registers
 	  are directly mapped into the SoCs register space rather than being
 	  accessible via MDIO.
-
+	
 config NET_DSA_MV88E6060
 	tristate "Marvell 88E6060 ethernet switch chip support"
 	select NET_DSA_TAG_TRAILER
 	help
 	  This enables support for the Marvell 88E6060 ethernet switch
 	  chip.
-
+	
 source "drivers/net/dsa/microchip/Kconfig"
 
 source "drivers/net/dsa/mv88e6xxx/Kconfig"
@@ -92,7 +92,7 @@ config NET_DSA_RZN1_A5PSW
 	help
 	  This driver supports the A5PSW switch, which is embedded in Renesas
 	  RZ/N1 SoC.
-
+	
 config NET_DSA_KS8995
 	tristate "Micrel KS8995 family 5-ports 10/100 Ethernet switches"
 	depends on SPI
@@ -100,7 +100,7 @@ config NET_DSA_KS8995
 	help
 	  This driver supports the Micrel KS8995 family of 10/100 Mbit ethernet
 	  switches, managed over SPI.
-
+	
 config NET_DSA_SMSC_LAN9303
 	tristate
 	select NET_DSA_TAG_LAN9303
@@ -109,7 +109,7 @@ config NET_DSA_SMSC_LAN9303
 	help
 	  This enables support for the Microchip LAN9303/LAN9354 3 port ethernet
 	  switch chips.
-
+	
 config NET_DSA_SMSC_LAN9303_I2C
 	tristate "SMSC/Microchip LAN9303 3-ports 10/100 ethernet switch in I2C managed mode"
 	depends on I2C
@@ -119,7 +119,7 @@ config NET_DSA_SMSC_LAN9303_I2C
 	help
 	  Enable access functions if the SMSC/Microchip LAN9303 is configured
 	  for I2C managed mode.
-
+	
 config NET_DSA_SMSC_LAN9303_MDIO
 	tristate "Microchip LAN9303/LAN9354 3-ports 10/100 ethernet switch in MDIO managed mode"
 	select NET_DSA_SMSC_LAN9303
@@ -127,7 +127,7 @@ config NET_DSA_SMSC_LAN9303_MDIO
 	help
 	  Enable access functions if the Microchip LAN9303/LAN9354 is configured
 	  for MDIO managed mode.
-
+	
 config NET_DSA_VITESSE_VSC73XX
 	tristate
 	select NET_DSA_TAG_VSC73XX_8021Q
@@ -137,7 +137,7 @@ config NET_DSA_VITESSE_VSC73XX
 	help
 	  This enables support for the Vitesse VSC7385, VSC7388,
 	  VSC7395 and VSC7398 SparX integrated ethernet switches.
-
+	
 config NET_DSA_VITESSE_VSC73XX_SPI
 	tristate "Vitesse VSC7385/7388/7395/7398 SPI mode support"
 	depends on SPI
@@ -145,7 +145,7 @@ config NET_DSA_VITESSE_VSC73XX_SPI
 	help
 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
 	  and VSC7398 SparX integrated ethernet switches in SPI managed mode.
-
+	
 config NET_DSA_VITESSE_VSC73XX_PLATFORM
 	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
 	depends on HAS_IOMEM

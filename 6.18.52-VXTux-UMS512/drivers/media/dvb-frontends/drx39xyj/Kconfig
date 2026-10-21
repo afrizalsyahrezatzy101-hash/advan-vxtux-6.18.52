@@ -6,3 +6,4 @@ config DVB_DRX39XYJ
 	help
 	  An ATSC 8VSB and QAM64/256 tuner module. Say Y when you want
 	  to support this frontend.
+	

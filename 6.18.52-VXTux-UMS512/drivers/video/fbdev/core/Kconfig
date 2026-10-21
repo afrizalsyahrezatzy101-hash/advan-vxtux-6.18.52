@@ -19,7 +19,7 @@ config FB_DEVICE
 	  interfaces within sysfs and procfs. It is only required if you
 	  have userspace programs that depend on fbdev for graphics output.
 	  This does not affect the framebuffer console. If unsure, say N.
-
+	
 config FB_DDC
 	tristate
 	depends on FB
@@ -33,7 +33,7 @@ config FB_CFB_FILLRECT
 	  Include the cfb_fillrect function for generic software rectangle
 	  filling. This is used by drivers that don't provide their own
 	  (accelerated) version.
-
+	
 config FB_CFB_COPYAREA
 	tristate
 	depends on FB_CORE
@@ -41,7 +41,7 @@ config FB_CFB_COPYAREA
 	  Include the cfb_copyarea function for generic software area copying.
 	  This is used by drivers that don't provide their own (accelerated)
 	  version.
-
+	
 config FB_CFB_IMAGEBLIT
 	tristate
 	depends on FB_CORE
@@ -49,7 +49,7 @@ config FB_CFB_IMAGEBLIT
 	  Include the cfb_imageblit function for generic software image
 	  blitting. This is used by drivers that don't provide their own
 	  (accelerated) version.
-
+	
 config FB_CFB_REV_PIXELS_IN_BYTE
 	bool
 	depends on FB_CORE
@@ -57,7 +57,7 @@ config FB_CFB_REV_PIXELS_IN_BYTE
 	  Allow I/O memory frame-buffer functions to work on displays with 1, 2
 	  and 4 bits per pixel depths which has opposite order of pixels in
 	  byte order to bytes in long order.
-
+	
 config FB_SYS_FILLRECT
 	tristate
 	depends on FB_CORE
@@ -65,7 +65,7 @@ config FB_SYS_FILLRECT
 	  Include the sys_fillrect function for generic software rectangle
 	  filling. This is used by drivers that don't provide their own
 	  (accelerated) version and the framebuffer is in system RAM.
-
+	
 config FB_SYS_COPYAREA
 	tristate
 	depends on FB_CORE
@@ -73,7 +73,7 @@ config FB_SYS_COPYAREA
 	  Include the sys_copyarea function for generic software area copying.
 	  This is used by drivers that don't provide their own (accelerated)
 	  version and the framebuffer is in system RAM.
-
+	
 config FB_SYS_IMAGEBLIT
 	tristate
 	depends on FB_CORE
@@ -81,7 +81,7 @@ config FB_SYS_IMAGEBLIT
 	  Include the sys_imageblit function for generic software image
 	  blitting. This is used by drivers that don't provide their own
 	  (accelerated) version and the framebuffer is in system RAM.
-
+	
 config FB_SYS_REV_PIXELS_IN_BYTE
 	bool
 	depends on FB_CORE
@@ -89,14 +89,14 @@ config FB_SYS_REV_PIXELS_IN_BYTE
 	  Allow virtual memory frame-buffer functions to work on displays with 1, 2
 	  and 4 bits per pixel depths which has opposite order of pixels in
 	  byte order to bytes in long order.
-
+	
 config FB_PROVIDE_GET_FB_UNMAPPED_AREA
 	bool
 	depends on FB
 	help
 	  Allow generic frame-buffer to provide get_fb_unmapped_area
 	  function to provide shareable character device support on nommu.
-
+	
 menuconfig FB_FOREIGN_ENDIAN
 	bool "Framebuffer foreign endianness support"
 	depends on FB
@@ -105,7 +105,7 @@ menuconfig FB_FOREIGN_ENDIAN
 	  non-native endianness (e.g. Little-Endian framebuffer on a
 	  Big-Endian machine). Most probably you don't have such hardware,
 	  so it's safe to say "n" here.
-
+	
 choice
 	prompt "Choice endianness support"
 	depends on FB_FOREIGN_ENDIAN
@@ -188,7 +188,7 @@ config FB_MODE_HELPERS
 	  on this feature such as the radeonfb, rivafb, and the i810fb. If
 	  your driver does not take advantage of this feature, choosing Y will
 	  just increase the kernel size by about 5K.
-
+	
 config FB_TILEBLITTING
 	bool "Enable Tile Blitting Support"
 	depends on FB
@@ -202,6 +202,7 @@ config FB_TILEBLITTING
 	  an index to an array of bitmaps will be used.  To clear or move a
 	  rectangular section of a screen, the rectangle will be described in
 	  terms of number of tiles in the x- and y-axis.
-
+	
 	  This is particularly important to one driver, matroxfb.  If
 	  unsure, say N.
+	

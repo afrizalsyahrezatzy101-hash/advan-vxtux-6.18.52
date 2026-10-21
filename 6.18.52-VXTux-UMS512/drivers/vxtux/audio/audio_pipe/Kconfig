@@ -5,12 +5,13 @@ config SPRD_APIPE
 	help
 	  The apipe character device, the replacement for the vendor
 	  sprd_apipe.ko.
-
+	
 	  Ported 2026-10-04 from the vendor sources in
 	  work/donorcatalog/mods-sprd/sprd/common/audio/audio_pipe/.
 	  The register/dispatch contract was recovered from the stock
 	  blob with radare2.
-
+	
 	  The stock ROM ships lib/modules/sprd_apipe.ko, so this has to
 	  be a loadable module: the blob is insmod'ed by the stock init
 	  scripts and the loader looks the file up by name.
+	

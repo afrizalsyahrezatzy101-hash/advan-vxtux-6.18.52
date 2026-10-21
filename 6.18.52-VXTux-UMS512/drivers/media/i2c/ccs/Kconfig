@@ -7,3 +7,4 @@ config VIDEO_CCS
 	help
 	  This is a generic driver for MIPI CCS, SMIA++ and SMIA compliant
 	  camera sensors.
+	

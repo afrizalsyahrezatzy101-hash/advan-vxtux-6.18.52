@@ -7,6 +7,7 @@ config VIDEO_TW5864
 	  Support for boards based on Techwell TW5864 chip which provides
 	  multichannel video & audio grabbing and encoding (H.264, MJPEG,
 	  ADPCM G.726).
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called tw5864.
+	

@@ -9,15 +9,15 @@ config VIDEO_VISL
 	select MEDIA_CONTROLLER
 	select VIDEO_V4L2_TPG
 	help
-
+	
 	  A virtual stateless decoder device for uAPI development purposes.
-
+	
 	  A userspace implementation can use visl to run a decoding loop even
 	  when no hardware is available or when the kernel uAPI for the codec
 	  has not been upstreamed yet. This can reveal bugs at an early stage.
-
+	
 	  When in doubt, say N.
-
+	
 config VISL_DEBUGFS
 	bool "Enable debugfs for visl"
 	depends on VIDEO_VISL
@@ -26,3 +26,4 @@ config VISL_DEBUGFS
 	help
 	  Choose Y to dump the bitstream buffers through debugfs.
 	  When in doubt, say N.
+	

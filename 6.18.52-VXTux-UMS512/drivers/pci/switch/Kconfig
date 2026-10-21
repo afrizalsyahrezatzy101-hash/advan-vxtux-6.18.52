@@ -11,5 +11,5 @@ config PCI_SW_SWITCHTEC
 	 to submit MRPC commands to the switch via /dev/switchtecX
 	 devices. See <file:Documentation/driver-api/switchtec.rst> for more
 	 information.
-
+	
 endmenu

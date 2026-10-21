@@ -44,13 +44,14 @@ config SCSI_SMARTPQI
 	select RAID_ATTRS
 	help
 	This driver supports Microchip PQI controllers.
-
+	
 	<http://www.microchip.com>
-
+	
 	To compile this driver as a module, choose M here: the
 	module will be called smartpqi.
-
+	
         Note: the aacraid driver will not manage a smartpqi
               controller. You need to enable smartpqi for smartpqi
               controllers. For more information, please see
               Documentation/scsi/smartpqi.rst
+	

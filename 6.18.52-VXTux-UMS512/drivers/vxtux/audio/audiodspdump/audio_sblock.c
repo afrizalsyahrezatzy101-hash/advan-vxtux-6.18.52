@@ -1056,3 +1056,18 @@ int audio_sblock_release(uint8_t dst, uint8_t channel, struct sblock *blk)
 MODULE_AUTHOR("Chen Gaopeng");
 MODULE_DESCRIPTION("SIPC/SBLOCK driver");
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(audio_sblock_create);
+EXPORT_SYMBOL(audio_sblock_destroy);
+EXPORT_SYMBOL(audio_sblock_get);
+EXPORT_SYMBOL(audio_sblock_get_arrived_count);
+EXPORT_SYMBOL(audio_sblock_get_free_count);
+EXPORT_SYMBOL(audio_sblock_init);
+EXPORT_SYMBOL(audio_sblock_poll_wait);
+EXPORT_SYMBOL(audio_sblock_put);
+EXPORT_SYMBOL(audio_sblock_receive);
+EXPORT_SYMBOL(audio_sblock_register_notifier);
+EXPORT_SYMBOL(audio_sblock_release);
+EXPORT_SYMBOL(audio_sblock_send);
+EXPORT_SYMBOL(audio_sblock_send_finish);
+EXPORT_SYMBOL(audio_sblock_send_prepare);

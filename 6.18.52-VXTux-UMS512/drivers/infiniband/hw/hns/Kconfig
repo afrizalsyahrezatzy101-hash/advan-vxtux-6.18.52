@@ -6,6 +6,7 @@ config INFINIBAND_HNS_HIP08
 	help
 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
 	  The RoCE engine is a PCI device.
-
+	
 	  To compile this driver, choose M here. This module will be called
 	  hns-roce-hw-v2.
+	

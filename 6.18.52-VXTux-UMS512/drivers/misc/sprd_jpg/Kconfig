@@ -17,6 +17,6 @@ config SPRD_JPG
 	  block found on UMS512 (T618), Sharkl5Pro and relatives. It exposes
 	  /dev/sprd_jpg, whose hardware registers userspace maps directly for
 	  bitstream-level encode/decode, plus clock and QoS control ioctls.
-
+	
 	  Say Y here if you want to use the Unisoc JPEG codec, say N if you
 	  do not want to use it.  If unsure, say N.

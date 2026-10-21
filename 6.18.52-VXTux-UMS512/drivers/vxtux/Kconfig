@@ -14,7 +14,7 @@ menuconfig VXTUX_DRIVERS
 	  Driver hasil reverse engineering blob vendor Advan/UMS512, ditulis ulang
 	  100% sebagai C official-style. Semua default n; aktifkan satu per satu
 	  dan uji boot sebelum daily.
-
+	
 if VXTUX_DRIVERS
 
 source "drivers/vxtux/touch/hx83102e/Kconfig"

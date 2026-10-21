@@ -11,3 +11,4 @@ config MLXBF_GIGE
 	  The second generation BlueField SoC from Mellanox Technologies
 	  supports an out-of-band Gigabit Ethernet management port to the
 	  Arm subsystem.
+	

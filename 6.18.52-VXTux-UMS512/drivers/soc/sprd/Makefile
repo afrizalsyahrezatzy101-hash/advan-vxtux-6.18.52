@@ -7,3 +7,4 @@ obj-$(CONFIG_SPRD_HWFEATURE)	+= hwfeature/
 # cache_efuse/ is built as a composite module; it is not listed
 # here as a directory module any more.
 obj-$(CONFIG_SPRD_POWER_MANAGER) += power_manager/
+obj-$(CONFIG_SPRD_TIME_SYNC) += time_sync/

@@ -9,10 +9,10 @@ config RTL8180
 	help
 	  This is a driver for RTL8180, RTL8185 and RTL8187SE based cards.
 	  These are PCI based chips found in cards such as:
-
+	
 	  (RTL8185 802.11g)
 	  A-Link WL54PC
-
+	
 	  (RTL8180 802.11b)
 	  Belkin F5D6020 v3
 	  Belkin F5D6020 v3
@@ -55,9 +55,9 @@ config RTL8180
 	  Sweex LC700010
 	  Surecom EP-9428
 	  Safecom SWLCR-1100
-
+	
 	  Thanks to Realtek for their support!
-
+	
 config RTL8187
 	tristate "Realtek 8187 and 8187B USB support"
 	depends on MAC80211 && USB
@@ -65,7 +65,7 @@ config RTL8187
 	help
 	  This is a driver for RTL8187 and RTL8187B based cards.
 	  These are USB based chips found in devices such as:
-
+	
 	  Netgear WG111v2
 	  Level 1 WNC-0301USB
 	  Micronet SP907GK V5
@@ -77,9 +77,9 @@ config RTL8187
 	  Linksys WUSB54GC-EU v2
 	    (v1 = rt73usb; v3 is rt2070-based,
 	     use staging/rt3070 or try rt2800usb)
-
+	
 	  Thanks to Realtek for their support!
-
+	
 # If possible, automatically enable LEDs for RTL8187.
 
 config RTL8187_LEDS

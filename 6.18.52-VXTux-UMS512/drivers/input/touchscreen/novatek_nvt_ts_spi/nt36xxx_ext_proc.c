@@ -26,10 +26,8 @@
 
 #if NVT_TOUCH_EXT_PROC
 
-#define NVT_FW_VERSION "nvt_fw_version"
-#define NVT_BASELINE "nvt_baseline"
-#define NVT_RAW "nvt_raw"
-#define NVT_DIFF "nvt_diff"
+/* NVT_FW_VERSION / NVT_BASELINE / NVT_RAW / NVT_DIFF are in nt36xxx.h,
+ * shared with nt36xxx_pen.c's teardown path. */
 
 extern int32_t nvt_selftest_open(struct inode *inode, struct file *file);
 extern int g_gesture;
@@ -52,10 +50,16 @@ static int32_t xdata[2048] = {0};
 static int32_t xdata_i[2048] = {0};
 static int32_t xdata_q[2048] = {0};
 
-static struct proc_dir_entry *NVT_proc_fw_version_entry;
-static struct proc_dir_entry *NVT_proc_baseline_entry;
-static struct proc_dir_entry *NVT_proc_raw_entry;
-static struct proc_dir_entry *NVT_proc_diff_entry;
+/*
+ * These four are referenced by nt36xxx_pen.c's nvt_extra_proc_deinit(),
+ * which removes the whole /proc set the way the stock blob does. The stock
+ * carries them as module bss symbols, not file-local ones, so they are
+ * non-static here for the same reason.
+ */
+struct proc_dir_entry *NVT_proc_fw_version_entry;
+struct proc_dir_entry *NVT_proc_baseline_entry;
+struct proc_dir_entry *NVT_proc_raw_entry;
+struct proc_dir_entry *NVT_proc_diff_entry;
 
 extern void nvt_rest_ddi(void);
 extern int gloal_reset_flag;

@@ -11,5 +11,6 @@ config DRM_KMB_DISPLAY
 	help
 	Choose this option if you have Intel's KeemBay SOC which integrates
 	an ARM Cortex A53 CPU with an Intel Movidius VPU.
-
+	
 	If M is selected the module will be called kmb-drm.
+	

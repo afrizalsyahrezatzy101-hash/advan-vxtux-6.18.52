@@ -32,7 +32,7 @@ ccflags-y += -I$(srctree)/drivers/net/wireless/sprd/sprdwcn/sdio
 # The earlier note here said copying them "is an engineering decision, not a glue
 # fix". That was wrong: without them the driver cannot compile at all. The
 # evidence that they were missing was simply that this directory had never been
-# built -- CONFIG_WCN_WLAN was "# CONFIG_WCN_WLAN is not set".
+# built -- CONFIG_SPRD_LEGACY_WCN_WLAN was "# CONFIG_SPRD_LEGACY_WCN_WLAN is not set".
 #
 # WMMAC_WFA_CERTIFICATION enables the WFA certification code paths that
 # cfg80211.c wraps in #ifdef; the rest select feature branches. Taken verbatim
@@ -65,7 +65,7 @@ ccflags-y += -DSPLIT_STACK
 # Same class of gap as the other 13 flags above.
 ccflags-y += -DDFS_MASTER
 
-obj-$(CONFIG_WCN_WLAN) += sprdwl.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_WLAN) += sprdwl.o
 
 sprdwl-y := \
 	sc2355/main.o \

@@ -49,8 +49,37 @@ ARTEFACT_EXACT = {
     "__fini_array_start", "__fini_array_end",
     "cleanup_module", "init_module", "__key",
 }
-# the two entry points are not API - every module has them
+# The two entry points are not API - every module has them
 ENTRY = {"cleanup_module", "init_module"}
+
+# Per-function bookkeeping objects. Their names are toolchain-specific:
+#
+#   clang 5.4   <func>.__UNIQUE_ID_ddebug<N>   <func>.__warned
+#   gcc 6.18    __UNIQUE_ID_ddebug<N>.<M>       __warned.<N>
+#
+# and the lockdep key of a function-local static:
+#
+#   clang 5.4   <func>.__key
+#   gcc 6.18    __key.<N>
+#
+# The code they describe is the driver's, but the NAMES are the
+# compiler's, so a name comparison across toolchains is meaningless.
+# The function that owns them IS compared - that is the real check.
+BOOKKEEPING_RE = re.compile(
+    r"^(?:[A-Za-z_][\w]*)"
+    r"(?:\.__UNIQUE_ID_ddebug\d+|\.__warned|\.__key)(?:\.\d+)?$"
+    r"|^__UNIQUE_ID_ddebug\d+\.\d+$"
+    r"|^__warned\.\d+$"
+    r"|^__key\.\d+$"
+)
+
+# Compiler label placeholders. clang calls them .Ltmp<N>, gcc .L<N> or
+# .L14472!<N>. They are numbered per translation unit, so the numbers
+# have no meaning across toolchains. gcc's .compoundliteral.N is the
+# same kind of thing.
+LABEL_RE = re.compile(r"^\.L(tmp)?\d+!?\d*$|^\.L\d+!?\d*$|"
+                      r"^\.L\d+!\d+$|^\.L\d+$|^\.Ltmp\d+$|"
+                      r"^\.compoundliteral(\.\d+)?$|^\.L\d+!\d+$")
 
 # MODULE_DEVICE_TABLE's symbol name is built by the macro, and the
 # macro changed between 5.4 and 6.18:
@@ -73,6 +102,10 @@ def is_artefact(s):
         return True
     if DEVICE_TABLE_RE.match(s):
         return True
+    if BOOKKEEPING_RE.match(s):
+        return True
+    if LABEL_RE.match(s):
+        return True
     return s.startswith(ARTEFACT_PREFIX)
 
 
@@ -91,7 +124,12 @@ def nm(path):
         name = p[-1]
         if typ == "U":
             und.add(name)
-        elif typ.isalpha() and typ.isupper():
+        elif typ.isalpha() and typ in "TtDdBbRrWwVv":
+            # nm's type letter: uppercase = global, lowercase = local.
+            # BOTH count. Using isupper() here dropped every local
+            # symbol (type 't'), which is most of the driver's own code:
+            # the check then reported "identical" for blobs that were
+            # missing real driver functions.
             defs.add(name)
     return defs, und
 

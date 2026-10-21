@@ -3,7 +3,7 @@ config DRM_MXS
 	bool
 	help
 	  Choose this option to select drivers for MXS FB devices
-
+	
 config DRM_MXSFB
 	tristate "i.MX (e)LCDIF LCD controller"
 	depends on DRM && OF
@@ -19,9 +19,9 @@ config DRM_MXSFB
 	  Choose this option if you have an LCDIF or eLCDIF LCD controller.
 	  Those devices are found in various i.MX SoC (including i.MX23,
 	  i.MX28, i.MX6SX, i.MX7 and i.MX8M).
-
+	
 	  If M is selected the module will be called mxsfb.
-
+	
 config DRM_IMX_LCDIF
 	tristate "i.MX LCDIFv3 LCD controller"
 	depends on DRM && OF
@@ -37,5 +37,6 @@ config DRM_IMX_LCDIF
 	  Choose this option if you have an LCDIFv3 LCD controller.
 	  Those devices are found in various i.MX SoC (i.MX8MP,
 	  i.MXRT).
-
+	
 	  If M is selected the module will be called imx-lcdif.
+	

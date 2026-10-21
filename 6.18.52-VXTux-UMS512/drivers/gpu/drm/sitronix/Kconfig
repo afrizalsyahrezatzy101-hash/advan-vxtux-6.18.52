@@ -8,9 +8,9 @@ config DRM_ST7571_I2C
 	select VIDEOMODE_HELPERS
 	help
 	  DRM driver for Sitronix ST7571 panels controlled over I2C.
-
+	
 	  if M is selected the module will be called st7571-i2c.
-
+	
 config DRM_ST7586
 	tristate "DRM support for Sitronix ST7586 display panels"
 	depends on DRM && SPI
@@ -21,9 +21,9 @@ config DRM_ST7586
 	help
 	  DRM driver for the following Sitronix ST7586 panels:
 	  * LEGO MINDSTORMS EV3
-
+	
 	  If M is selected the module will be called st7586.
-
+	
 config DRM_ST7735R
 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
 	depends on DRM && SPI
@@ -37,6 +37,7 @@ config DRM_ST7735R
 	  LCDs:
 	  * Jianda JD-T18003-T01 1.8" 128x160 TFT
 	  * Okaya RH128128T 1.44" 128x128 TFT
-
+	
 	  If M is selected the module will be called st7735r.
-
+	
+	

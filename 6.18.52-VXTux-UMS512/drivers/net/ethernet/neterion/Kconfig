@@ -9,12 +9,12 @@ config NET_VENDOR_NETERION
 	depends on PCI
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Neterion/Exar cards. If you say Y, you will be
 	  asked for your specific card in the following questions.
-
+	
 if NET_VENDOR_NETERION
 
 config S2IO
@@ -25,11 +25,11 @@ config S2IO
 	  These were originally released from S2IO, which renamed itself
 	  Neterion.  So, the adapters might be labeled as either one, depending
 	  on its age.
-
+	
 	  More specific information on configuring the driver is in
 	  <file:Documentation/networking/device_drivers/ethernet/neterion/s2io.rst>.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called s2io.
-
+	
 endif # NET_VENDOR_NETERION

@@ -50,6 +50,7 @@
 #include "sprd-dmaengine-pcm.h"
 #include "sprd-platform-pcm-routing.h"
 #include "sprd-string.h"
+#include "sprd-fe-dai.h"
 #include "vbc-phy-v4.h"
 #include "audio_mem.h"
 
@@ -7601,10 +7602,19 @@ static struct platform_driver vbc_driver = {
 
 static int __init sprd_vbc_driver_init(void)
 {
-	return platform_driver_register(&vbc_driver);
+	int ret;
+
+	ret = platform_driver_register(&vbc_driver);
+	if (ret)
+		return ret;
+
+	/* The FE-DAI driver lives in the same composite module,
+	 * so it cannot have its own initcall: a module has exactly
+	 * one init_module. */
+	return sprd_fe_dai_driver_init();
 }
 
-late_initcall(sprd_vbc_driver_init);
+module_init(sprd_vbc_driver_init);
 
 MODULE_DESCRIPTION("SPRD ASoC VBC CPU-DAI driver");
 MODULE_AUTHOR("Jian chen <jian.chen@spreadtrum.com>");

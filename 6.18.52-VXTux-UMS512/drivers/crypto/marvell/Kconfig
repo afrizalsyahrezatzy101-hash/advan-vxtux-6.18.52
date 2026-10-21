@@ -19,7 +19,7 @@ config CRYPTO_DEV_MARVELL_CESA
 	  Security Accelerator (CESA) which can be found on MVEBU and ORION
 	  platforms.
 	  This driver supports CPU offload through DMA transfers.
-
+	
 config CRYPTO_DEV_OCTEONTX_CPT
 	tristate "Support for Marvell OcteonTX CPT driver"
 	depends on ARCH_THUNDER || COMPILE_TEST
@@ -33,10 +33,10 @@ config CRYPTO_DEV_OCTEONTX_CPT
 	help
 		This driver allows you to utilize the Marvell Cryptographic
 		Accelerator Unit(CPT) found in OcteonTX series of processors.
-
+	
 		To compile this driver as module, choose M here:
 		the modules will be called octeontx-cpt and octeontx-cptvf
-
+	
 config CRYPTO_DEV_OCTEONTX2_CPT
 	tristate "Marvell OcteonTX2 CPT driver"
 	depends on ARCH_THUNDER2 || COMPILE_TEST
@@ -53,3 +53,4 @@ config CRYPTO_DEV_OCTEONTX2_CPT
 	help
 		This driver allows you to utilize the Marvell Cryptographic
 		Accelerator Unit(CPT) found in OcteonTX2 series of processors.
+	

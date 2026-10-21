@@ -7,13 +7,13 @@
 # Daftar objek PERSIS dari Makefile dalam-tree referensi
 # (gpl-source/hadenix_ums512_wcn/drivers/wcn/fm/driver/Makefile):
 #
-#     obj-$(CONFIG_WCN_FM) += sprd_fm.o
+#     obj-$(CONFIG_SPRD_LEGACY_WCN_FM) += sprd_fm.o
 #     sprd_fm-objs := fm_sdio/fm_rf_marlin3.o fm_sdio/fmdrv_main.o \
 #                     fm_sdio/fmdrv_ops.o fm_sdio/fmdrv_rds_parser.o
 
 ccflags-y += -DDEBUG
 
-obj-$(CONFIG_WCN_FM) += sprd_fm.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_FM) += sprd_fm.o
 sprd_fm-objs := fm_sdio/fm_rf_marlin3.o fm_sdio/fmdrv_main.o fm_sdio/fmdrv_ops.o fm_sdio/fmdrv_rds_parser.o
 
 # Vendor header include paths (NOT upstream).

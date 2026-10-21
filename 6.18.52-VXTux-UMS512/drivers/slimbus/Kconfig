@@ -7,9 +7,9 @@ menuconfig SLIMBUS
 	help
 	  SLIMbus is standard interface between System-on-Chip and audio codec,
 	  and other peripheral components in typical embedded systems.
-
+	
 	  If unsure, choose N.
-
+	
 if SLIMBUS
 
 # SLIMbus controllers

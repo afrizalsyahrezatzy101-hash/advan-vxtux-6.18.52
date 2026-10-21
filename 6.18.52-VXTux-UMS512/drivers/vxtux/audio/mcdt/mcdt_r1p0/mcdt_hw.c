@@ -1389,3 +1389,11 @@ MODULE_DESCRIPTION("mcdt driver v1");
 MODULE_AUTHOR("Zuo Wang <zuo.wang@spreadtrum.com>");
 MODULE_LICENSE("GPL");
 
+
+EXPORT_SYMBOL(mcdt_dac_dma_enable);
+EXPORT_SYMBOL(mcdt_adc_dma_enable);
+EXPORT_SYMBOL(mcdt_adc_dma_disable);
+
+EXPORT_SYMBOL(mcdt_adc_dma_phy_addr);
+EXPORT_SYMBOL(mcdt_dac_dma_disable);
+EXPORT_SYMBOL(mcdt_dac_dma_phy_addr);

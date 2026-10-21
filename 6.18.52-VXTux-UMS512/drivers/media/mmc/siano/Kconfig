@@ -14,3 +14,4 @@ config SMS_SDIO_DRV
 	select SMS_SIANO_MDTV
 	help
 	  Choose if you would like to have Siano's support for SDIO interface
+	

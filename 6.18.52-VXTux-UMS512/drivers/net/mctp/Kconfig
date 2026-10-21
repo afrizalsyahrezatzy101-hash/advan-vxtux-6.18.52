@@ -12,15 +12,15 @@ config MCTP_SERIAL
 	  serial line-discipline, as defined by DMTF specification "DSP0253 -
 	  MCTP Serial Transport Binding". By attaching the ldisc to a serial
 	  device, we get a new net device to transport MCTP packets.
-
+	
 	  This allows communication with external MCTP endpoints which use
 	  serial as their transport. It can also be used as an easy way to
 	  provide MCTP connectivity between virtual machines, by forwarding
 	  data between simple virtual serial devices.
-
+	
 	  Say y here if you need to connect to MCTP endpoints over serial. To
 	  compile as a module, use m; the module will be called mctp-serial.
-
+	
 config MCTP_SERIAL_TEST
         bool "MCTP serial tests" if !KUNIT_ALL_TESTS
         depends on MCTP_SERIAL=y && KUNIT=y
@@ -37,7 +37,7 @@ config MCTP_TRANSPORT_I2C
 	  Provides a driver to access MCTP devices over SMBus/I2C transport,
 	  from DMTF specification DSP0237. A MCTP protocol network device is
 	  created for each I2C bus that has been assigned a mctp-i2c device.
-
+	
 config MCTP_TRANSPORT_I3C
 	tristate "MCTP I3C transport"
 	depends on I3C
@@ -46,17 +46,17 @@ config MCTP_TRANSPORT_I3C
 	  from DMTF specification DSP0233.
 	  A MCTP protocol network device is created for each I3C bus
 	  having a "mctp-controller" devicetree property.
-
+	
 config MCTP_TRANSPORT_USB
 	tristate "MCTP USB transport"
 	depends on USB
 	help
 	  Provides a driver to access MCTP devices over USB transport,
 	  defined by DMTF specification DSP0283.
-
+	
 	  MCTP-over-USB interfaces are peer-to-peer, so each interface
 	  represents a physical connection to one remote MCTP endpoint.
-
+	
 endmenu
 
 endif

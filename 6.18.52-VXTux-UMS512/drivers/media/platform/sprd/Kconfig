@@ -11,7 +11,7 @@ config MEDIA_SPRD
 	help
 	  Aggregator for the Unisoc/VXTux camera drivers. Not user-selectable;
 	  choose the pipeline and sensors below.
-
+	
 config MEDIA_SPRD_PIPELINE
 	tristate "Unisoc camera pipeline (CSI/ISP glue)"
 	# VIDEO_V4L2 does not exist in this kernel any more. Upstream renamed
@@ -26,7 +26,7 @@ config MEDIA_SPRD_PIPELINE
 	help
 	  Camera pipeline glue for the Unisoc CSI/ISP block: device-camera
 	  (.dcam) node, MIPI CSI-2 receiver, CSI PHY and ISP front end.
-
+	
 source "drivers/media/platform/sprd/sensors/Kconfig"
 source "drivers/media/platform/sprd/vsp/Kconfig"
 source "drivers/media/platform/sprd/cpp/Kconfig"
@@ -44,3 +44,4 @@ config VIDEO_SPRD_SENSORS
 	  Non-visible aggregator gating the single descent into sensors/.
 	  The per-sensor symbols (VIDEO_GC8034, VIDEO_GC5025, VIDEO_S5K4H7YX)
 	  keep their own dependencies and defaults in sensors/Kconfig.
+	

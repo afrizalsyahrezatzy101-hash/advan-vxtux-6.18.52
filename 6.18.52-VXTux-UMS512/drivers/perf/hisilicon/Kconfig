@@ -5,7 +5,7 @@ config HISI_PMU
 	  help
 	  Support for HiSilicon SoC L3 Cache performance monitor, Hydra Home
 	  Agent performance monitor and DDR Controller performance monitor.
-
+	
 config HISI_PCIE_PMU
 	tristate "HiSilicon PCIE PERF PMU"
 	depends on PCI && ARM64
@@ -14,7 +14,7 @@ config HISI_PCIE_PMU
 	  RCiEP devices.
 	  Adds the PCIe PMU into perf events system for monitoring latency,
 	  bandwidth etc.
-
+	
 config HNS3_PMU
 	tristate "HNS3 PERF PMU"
 	depends on ARM64 || COMPILE_TEST
@@ -24,3 +24,4 @@ config HNS3_PMU
 	  devices.
 	  Adds the HNS3 PMU into perf events system for monitoring latency,
 	  bandwidth etc.
+	

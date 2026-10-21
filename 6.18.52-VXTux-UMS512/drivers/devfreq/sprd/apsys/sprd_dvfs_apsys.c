@@ -78,7 +78,7 @@ static ssize_t top_cur_volt_show(struct device *dev,
 	int ret, cur_volt;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->top_cur_volt) {
-		cur_volt = apsys->dvfs_ops->top_cur_volt();
+		cur_volt = apsys->dvfs_ops->top_cur_volt(apsys);
 	} else {
 		pr_info("%s: apsys ops null\n", __func__);
 		cur_volt = -EINVAL;
@@ -107,7 +107,7 @@ static ssize_t apsys_hold_en_store(struct device *dev,
 		return -EINVAL;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->apsys_hold_en)
-		apsys->dvfs_ops->apsys_hold_en(hold_en);
+		apsys->dvfs_ops->apsys_hold_en(apsys, hold_en);
 	else
 		pr_info("%s: apsys ops null\n", __func__);
 
@@ -125,7 +125,7 @@ static ssize_t apsys_force_en_store(struct device *dev,
 		return -EINVAL;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->apsys_force_en)
-		apsys->dvfs_ops->apsys_force_en(force_en);
+		apsys->dvfs_ops->apsys_force_en(apsys, force_en);
 	else
 		pr_info("%s: apsys ops null\n", __func__);
 
@@ -143,7 +143,7 @@ static ssize_t apsys_auto_gate_store(struct device *dev,
 		return -EINVAL;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->apsys_auto_gate)
-		apsys->dvfs_ops->apsys_auto_gate(gate_sel);
+		apsys->dvfs_ops->apsys_auto_gate(apsys, gate_sel);
 	else
 		pr_info("%s: apsys ops null\n", __func__);
 
@@ -161,7 +161,7 @@ static ssize_t apsys_wait_window_store(struct device *dev,
 		return -EINVAL;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->apsys_wait_window)
-		apsys->dvfs_ops->apsys_wait_window(wait_window);
+		apsys->dvfs_ops->apsys_wait_window(apsys, wait_window);
 	else
 		pr_info("%s: apsys ops null\n", __func__);
 
@@ -179,7 +179,7 @@ static ssize_t apsys_min_volt_store(struct device *dev,
 		return -EINVAL;
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->apsys_min_volt)
-		apsys->dvfs_ops->apsys_min_volt(min_volt);
+		apsys->dvfs_ops->apsys_min_volt(apsys, min_volt);
 	else
 		pr_info("%s: apsys ops null\n", __func__);
 
@@ -312,7 +312,7 @@ static int apsys_dvfs_probe(struct platform_device *pdev)
 		apsys->dvfs_ops->dvfs_init(apsys);
 
 	if (apsys->dvfs_ops && apsys->dvfs_ops->top_dvfs_init)
-		apsys->dvfs_ops->top_dvfs_init();
+		apsys->dvfs_ops->top_dvfs_init(apsys);
 	pr_info("apsys module registered\n");
 
 	return 0;
@@ -363,3 +363,5 @@ module_exit(apsys_dvfs_unregister);
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("sprd apsys dvfs driver");
 MODULE_AUTHOR("Kevin Tang <kevin.tang@unisoc.com>");
+
+EXPORT_SYMBOL(dvfs_class);

@@ -13,7 +13,7 @@ config FDDI
 	  want a driver for the FDDI card in your computer, say Y here (and
 	  then also Y to the driver for your FDDI card, below). Most people
 	  will say N.
-
+	
 if FDDI
 
 config DEFZA
@@ -23,10 +23,10 @@ config DEFZA
 	  This is support for the DEC FDDIcontroller 700 (DEFZA-AA, fiber)
 	  and 700-C (DEFZA-CA, copper) TURBOchannel network cards which
 	  can connect you to a local FDDI network.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called defza.  If unsure, say N.
-
+	
 config DEFXX
 	tristate "Digital DEFTA/DEFEA/DEFPA adapter support"
 	depends on FDDI && (PCI || EISA || TC)
@@ -34,10 +34,10 @@ config DEFXX
 	  This is support for the DIGITAL series of TURBOchannel (DEFTA),
 	  EISA (DEFEA) and PCI (DEFPA) controllers which can connect you
 	  to a local FDDI network.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called defxx.  If unsure, say N.
-
+	
 config SKFP
 	tristate "SysKonnect FDDI PCI support"
 	depends on FDDI && PCI
@@ -60,14 +60,14 @@ config SKFP
 	  - Netelligent 100 FDDI DAS UTP
 	  - Netelligent 100 FDDI SAS UTP
 	  - Netelligent 100 FDDI SAS Fibre MIC
-
+	
 	  Read <file:Documentation/networking/device_drivers/fddi/skfp.rst>
 	  for information about the driver.
-
+	
 	  Questions concerning this driver can be addressed to:
 	  <linux@syskonnect.de>
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called skfp.  This is recommended.
-
+	
 endif # FDDI

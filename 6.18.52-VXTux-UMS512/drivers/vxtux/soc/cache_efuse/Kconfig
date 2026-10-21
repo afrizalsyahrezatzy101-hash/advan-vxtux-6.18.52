@@ -11,3 +11,4 @@ config NVMEM_SPRD_CACHE_EFUSE
 	  Menyediakan sel uid_start/uid_end untuk driver UID, thermal, dan
 	  DVFS. Port dari drivers/nvmem/sprd_cache_efuse.c (GPL). Pengganti
 	  blob tanpa butuh hwspinlock/clock (baca memori cache langsung).
+	

@@ -7,8 +7,8 @@
 # Perubahan struktural vs Makefile vendor (ketiganya disengaja):
 #
 #  1. platform/ di-descend SEKALI. Vendor punya dua baris:
-#       obj-$(CONFIG_WCN_BOOT)     += platform/
-#       obj-$(CONFIG_WCN_PLATFORM) += platform/
+#       obj-$(CONFIG_SPRD_LEGACY_WCN_BOOT)     += platform/
+#       obj-$(CONFIG_SPRD_LEGACY_WCN_PLATFORM) += platform/
 #     dengan keduanya aktif, kbuild menerima "platform/" dua kali di obj-y.
 #     Sekarang penjaganya satu: WCN_BOOT (WCN_PLATFORM tetap ada sebagai
 #     simbol Kconfig untuk kode #ifdef, tapi tidak lagi mengendalikan descent).
@@ -42,18 +42,18 @@ subdir-ccflags-y := \
 	-I$(src)/platform \
 	-I$(src)/platform/rf
 
-obj-$(CONFIG_SC23XX)	+= wcn_bus.o
-obj-$(CONFIG_WCN_SIPC)	+= sipc/
+obj-$(CONFIG_SPRD_LEGACY_SC23XX)	+= wcn_bus.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_SIPC)	+= sipc/
 # platform/ di-descend SATU kali, pemiliknya WCN_CORE (bukan lagi WCN_BOOT).
 # WCN_CORE=m -> wcn_init_core() menjalankan semua init komposit (module_init
 # hanya sah satu per modul; wcn_boot.c sebagai host init-nya).
-obj-$(CONFIG_WCN_CORE)	+= platform/
-obj-$(CONFIG_WCN_INTEG)	+= boot/
-obj-$(CONFIG_SDIOHAL)	+= sdio/
-obj-$(CONFIG_WCN_SLP)	+= sleep/
-obj-$(CONFIG_WCN_BLUETOOTH)+= bluetooth/
-obj-$(CONFIG_WCN_FM)	+= fm/
-obj-$(CONFIG_WCN_PCIE)	+= pcie/
+obj-$(CONFIG_SPRD_LEGACY_WCN_CORE)	+= platform/
+obj-$(CONFIG_SPRD_LEGACY_WCN_INTEG)	+= boot/
+obj-$(CONFIG_SPRD_LEGACY_SDIOHAL)	+= sdio/
+obj-$(CONFIG_SPRD_LEGACY_WCN_SLP)	+= sleep/
+obj-$(CONFIG_SPRD_LEGACY_WCN_BLUETOOTH)+= bluetooth/
+obj-$(CONFIG_SPRD_LEGACY_WCN_FM)	+= fm/
+obj-$(CONFIG_SPRD_LEGACY_WCN_PCIE)	+= pcie/
 
 # D5(b3) (2026-09-30): wlan/ tidak pernah di-descend, sehingga driver
 # WLAN SC2355 tidak pernah masuk build.
@@ -62,7 +62,7 @@ obj-$(CONFIG_WCN_PCIE)	+= pcie/
 # lagi rujukan menggantung. CONFIG_WCN_WLAN tetap TETAP =n di fragment
 # sampai ada build device yang membuktikan link -- lihat
 # wlan/MISSING_SOURCES.tsv untuk sisa yang sengaja tidak didaftarkan.
-obj-$(CONFIG_WCN_WLAN)	+= wlan/
+obj-$(CONFIG_SPRD_LEGACY_WCN_WLAN)	+= wlan/
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

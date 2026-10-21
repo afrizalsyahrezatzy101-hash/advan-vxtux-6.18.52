@@ -5,3 +5,4 @@ config NET_DSA_LANTIQ_GSWIP
 	help
 	  This enables support for the Lantiq / Intel GSWIP 2.1 found in
 	  the xrx200 / VR9 SoC.
+	

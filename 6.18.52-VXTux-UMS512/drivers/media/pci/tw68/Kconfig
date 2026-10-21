@@ -5,6 +5,7 @@ config VIDEO_TW68
 	select VIDEOBUF2_DMA_SG
 	help
 	  Support for Techwell tw68xx based frame grabber boards.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called tw68.
+	

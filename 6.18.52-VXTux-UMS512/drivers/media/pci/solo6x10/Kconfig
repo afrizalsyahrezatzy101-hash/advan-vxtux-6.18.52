@@ -12,9 +12,10 @@ config VIDEO_SOLO6X10
 	help
 	  This driver supports the Bluecherry H.264 and MPEG-4 hardware
 	  compression capture cards and other Softlogic-based ones.
-
+	
 	  Following cards have been tested:
 	  * Bluecherry BC-H16480A (PCIe, 16 port, H.264)
 	  * Bluecherry BC-H04120A (PCIe, 4 port, H.264)
 	  * Bluecherry BC-H04120A-MPCI (Mini-PCI, 4 port, H.264)
 	  * Bluecherry BC-04120A (PCIe, 4 port, MPEG-4)
+	

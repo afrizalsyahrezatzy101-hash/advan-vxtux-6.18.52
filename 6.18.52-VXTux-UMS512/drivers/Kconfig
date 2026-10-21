@@ -16,7 +16,7 @@ config PC104
 	  Expose PC/104 form factor device drivers and options available for
 	  selection and configuration. Enable this option if your target
 	  machine has a PC/104 bus.
-
+	
 source "drivers/base/Kconfig"
 
 source "drivers/bus/Kconfig"

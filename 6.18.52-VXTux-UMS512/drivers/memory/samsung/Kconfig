@@ -4,7 +4,7 @@ config SAMSUNG_MC
 	help
 	  Support for the Memory Controller (MC) devices found on
 	  Samsung Exynos SoCs.
-
+	
 if SAMSUNG_MC
 
 config EXYNOS5422_DMC
@@ -20,7 +20,7 @@ config EXYNOS5422_DMC
 	  of DRAM running with different frequency. The timings are calculated
 	  based on DT memory information.
 	  If unsure, say Y on devices with Samsung Exynos SoCs.
-
+	
 config EXYNOS_SROM
 	bool "Exynos SROM controller driver" if COMPILE_TEST
 	depends on (ARM && ARCH_EXYNOS) || (COMPILE_TEST && HAS_IOMEM)
@@ -31,5 +31,5 @@ config EXYNOS_SROM
 	  is provided, the driver enables support for external memory
 	  or external devices.
 	  If unsure, say Y on devices with Samsung Exynos SoCs.
-
+	
 endif

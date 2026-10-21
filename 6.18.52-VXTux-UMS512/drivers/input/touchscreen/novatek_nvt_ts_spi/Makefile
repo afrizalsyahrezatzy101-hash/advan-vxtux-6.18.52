@@ -9,4 +9,4 @@
 # sibling would then reference nvt_* symbols living in another .ko
 # (modpost: undefined symbol ...). Keep the composite-y form.
 obj-$(CONFIG_TOUCHSCREEN_NOVATEK_NVT_TS_SPI) += novatek_ts_spi.o
-novatek_ts_spi-y := nt36xxx.o nt36xxx_fw_update.o nt36xxx_ext_proc.o nt36xxx_mp_ctrlram.o
+novatek_ts_spi-y := nt36xxx.o nt36xxx_fw_update.o nt36xxx_ext_proc.o nt36xxx_mp_ctrlram.o nt36xxx_pen.o

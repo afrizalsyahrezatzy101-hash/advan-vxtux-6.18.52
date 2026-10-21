@@ -8,3 +8,4 @@ config MANA_INFINIBAND
 	  for workloads (e.g. DPDK, MPI etc) that uses RDMA verbs to directly
 	  access hardware from user-mode processes in Microsoft Azure cloud
 	  environment.
+	

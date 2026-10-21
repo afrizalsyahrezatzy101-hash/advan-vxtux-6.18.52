@@ -16,7 +16,7 @@ menuconfig CXL_BUS
 	  memory targets, the CXL.io protocol is equivalent to PCI Express.
 	  Say 'y' to enable support for the configuration and management of
 	  devices supporting these protocols.
-
+	
 if CXL_BUS
 
 config CXL_PCI
@@ -28,20 +28,20 @@ config CXL_PCI
 	  this class code provide support for volatile and / or persistent
 	  memory to be mapped into the system address map (Host-managed Device
 	  Memory (HDM)).
-
+	
 	  Say 'y/m' to enable a driver that will attach to CXL memory expander
 	  devices enumerated by the memory device class code for configuration
 	  and management primarily via the mailbox interface. See Chapter 2.3
 	  Type 3 CXL Device in the CXL 2.0 specification for more details.
-
+	
 	  If unsure say 'm'.
-
+	
 config CXL_MEM_RAW_COMMANDS
 	bool "RAW Command Interface for Memory Devices"
 	depends on CXL_PCI
 	help
 	  Enable CXL RAW command interface.
-
+	
 	  The CXL driver ioctl interface may assign a kernel ioctl command
 	  number for each specification defined opcode. At any given point in
 	  time the number of opcodes that the specification defines and a device
@@ -51,9 +51,9 @@ config CXL_MEM_RAW_COMMANDS
 	  the driver it is useful to be able to submit any possible command to
 	  the hardware, even commands that may crash the kernel due to their
 	  potential impact to memory currently in use by the kernel.
-
+	
 	  If developing CXL hardware or the driver say Y, otherwise say N.
-
+	
 config CXL_ACPI
 	tristate "CXL ACPI: Platform Support"
 	depends on ACPI
@@ -72,9 +72,9 @@ config CXL_ACPI
 	  consumes these resource to publish the root of a cxl_port decode
 	  hierarchy to map regions that represent System RAM, or Persistent
 	  Memory regions to be managed by LIBNVDIMM.
-
+	
 	  If unsure say 'm'.
-
+	
 config CXL_PMEM
 	tristate "CXL PMEM: Persistent Memory Support"
 	depends on LIBNVDIMM
@@ -85,9 +85,9 @@ config CXL_PMEM
 	  managed via a bridge driver from CXL to the LIBNVDIMM system
 	  subsystem. Say 'y/m' to enable support for enumerating and
 	  provisioning the persistent memory capacity of CXL memory expanders.
-
+	
 	  If unsure say 'm'.
-
+	
 config CXL_MEM
 	tristate "CXL: Memory Expansion"
 	depends on CXL_PCI
@@ -97,13 +97,13 @@ config CXL_MEM
 	  RAM" and/or "Persistent Memory" that is fully coherent as if the
 	  memory were attached to the typical CPU memory controller. This is
 	  known as HDM "Host-managed Device Memory".
-
+	
 	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
 	  memory expansion and control of HDM. See Chapter 9.13 in the CXL 2.0
 	  specification for a detailed description of HDM.
-
+	
 	  If unsure say 'm'.
-
+	
 config CXL_FEATURES
 	bool "CXL: Features"
 	depends on CXL_PCI
@@ -112,9 +112,9 @@ config CXL_FEATURES
 	  supports commands that allows listing, getting, and setting of
 	  optionally defined features such as memory sparing or post package
 	  sparing. Vendors may define custom features for the device.
-
+	
 	  If unsure say 'n'
-
+	
 config CXL_EDAC_MEM_FEATURES
 	bool "CXL: EDAC Memory Features"
 	depends on EXPERT
@@ -125,11 +125,11 @@ config CXL_EDAC_MEM_FEATURES
 	  The CXL EDAC memory feature is optional and allows host to
 	  control the EDAC memory features configurations of CXL memory
 	  expander devices.
-
+	
 	  Say 'y' if you have an expert need to change default settings
 	  of a memory RAS feature established by the platform/device.
 	  Otherwise say 'n'.
-
+	
 config CXL_EDAC_SCRUB
 	bool "Enable CXL Patrol Scrub Control (Patrol Read)"
 	depends on CXL_EDAC_MEM_FEATURES
@@ -138,16 +138,16 @@ config CXL_EDAC_SCRUB
 	  The CXL EDAC scrub control is optional and allows host to
 	  control the scrub feature configurations of CXL memory expander
 	  devices.
-
+	
 	  When enabled 'cxl_mem' and 'cxl_region' EDAC devices are
 	  published with memory scrub control attributes as described by
 	  Documentation/ABI/testing/sysfs-edac-scrub.
-
+	
 	  Say 'y' if you have an expert need to change default settings
 	  of a memory scrub feature established by the platform/device
 	  (e.g. scrub rates for the patrol scrub feature).
 	  Otherwise say 'n'.
-
+	
 config CXL_EDAC_ECS
 	bool "Enable CXL Error Check Scrub (Repair)"
 	depends on CXL_EDAC_MEM_FEATURES
@@ -156,15 +156,15 @@ config CXL_EDAC_ECS
 	  The CXL EDAC ECS control is optional and allows host to
 	  control the ECS feature configurations of CXL memory expander
 	  devices.
-
+	
 	  When enabled 'cxl_mem' EDAC devices are published with memory
 	  ECS control attributes as described by
 	  Documentation/ABI/testing/sysfs-edac-ecs.
-
+	
 	  Say 'y' if you have an expert need to change default settings
 	  of a memory ECS feature established by the platform/device.
 	  Otherwise say 'n'.
-
+	
 config CXL_EDAC_MEM_REPAIR
 	bool "Enable CXL Memory Repair"
 	depends on CXL_EDAC_MEM_FEATURES
@@ -173,19 +173,19 @@ config CXL_EDAC_MEM_REPAIR
 	  The CXL EDAC memory repair control is optional and allows host
 	  to control the memory repair features (e.g. sparing, PPR)
 	  configurations of CXL memory expander devices.
-
+	
 	  When enabled, the memory repair feature requires an additional
 	  memory of approximately 43KB to store CXL DRAM and CXL general
 	  media event records.
-
+	
 	  When enabled 'cxl_mem' EDAC devices are published with memory
 	  repair control attributes as described by
 	  Documentation/ABI/testing/sysfs-edac-memory-repair.
-
+	
 	  Say 'y' if you have an expert need to change default settings
 	  of a memory repair feature established by the platform/device.
 	  Otherwise say 'n'.
-
+	
 config CXL_PORT
 	default CXL_BUS
 	tristate
@@ -209,9 +209,9 @@ config CXL_REGION
 	  identify the devices participating in a given interleaved memory
 	  range. Otherwise, platform-firmware managed CXL is enabled by being
 	  placed in the system address map and does not need a driver.
-
+	
 	  If unsure say 'y'
-
+	
 config CXL_REGION_INVALIDATION_TEST
 	bool "CXL: Region Cache Management Bypass (TEST)"
 	depends on CXL_REGION
@@ -226,10 +226,10 @@ config CXL_REGION_INVALIDATION_TEST
 	  bare metal x86. However, for testing purposes toggling this option
 	  can disable that data integrity safety and proceed with enabling
 	  regions when there might be conflicting contents in the CPU cache.
-
+	
 	  If unsure, or if this kernel is meant for production environments,
 	  say N.
-
+	
 config CXL_MCE
 	def_bool y
 	depends on X86_MCE && MEMORY_FAILURE

@@ -7,3 +7,4 @@ config SCSI_EFCT
 	help
 	  The efct driver provides enhanced SCSI Target Mode
 	  support for specific SLI-4 adapters.
+	

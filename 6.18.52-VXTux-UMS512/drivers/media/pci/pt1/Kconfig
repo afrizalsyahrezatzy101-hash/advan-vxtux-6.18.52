@@ -7,10 +7,11 @@ config DVB_PT1
 	select MEDIA_TUNER_QM1D1B0004 if MEDIA_SUBDRV_AUTOSELECT
 	help
 	  Support for Earthsoft PT1 PCI cards.
-
+	
 	  Since these cards have no MPEG decoder onboard, they transmit
 	  only compressed MPEG data over the PCI bus, so you need
 	  an external software decoder to watch TV on your computer.
-
+	
 	  Say Y or M if you own such a device and want to use it.
-
+	
+	

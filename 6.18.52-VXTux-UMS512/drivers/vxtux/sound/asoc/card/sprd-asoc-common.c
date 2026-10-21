@@ -345,3 +345,10 @@ static int __init sprd_audio_class_init(void)
 }
 subsys_initcall(sprd_audio_class_init);
 
+
+EXPORT_SYMBOL(agcp_ahb_set_offset);
+EXPORT_SYMBOL(agcp_ahb_clr_offset);
+EXPORT_SYMBOL(agcp_ahb_gpr_null_check);
+EXPORT_SYMBOL(arch_audio_set_agcp_ahb_gpr);
+
+EXPORT_SYMBOL(g_agcp_ahb_gpr);

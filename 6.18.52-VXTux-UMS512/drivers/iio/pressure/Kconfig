@@ -12,10 +12,10 @@ config ABP060MG
 	help
 	  Say yes here to build support for the Honeywell ABP pressure
 	  sensors.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called abp060mg.
-
+	
 config ROHM_BM1390
 	tristate "ROHM BM1390GLV-Z pressure sensor driver"
 	depends on I2C
@@ -27,7 +27,7 @@ config ROHM_BM1390
 	  can measure pressures ranging from 300 hPa to 1300 hPa with
 	  configurable measurement averaging and internal FIFO. The
 	  sensor does also provide temperature measurements.
-
+	
 config BMP280
 	tristate "Bosch Sensortec BMP180/BMP280/BMP380/BMP580 pressure sensor driver"
 	depends on (I2C || SPI_MASTER)
@@ -40,11 +40,11 @@ config BMP280
 	  Say yes here to build support for Bosch Sensortec BMP180, BMP280, BMP380
 	  and BMP580 pressure and temperature sensors. Also supports the BME280 with
 	  an additional humidity sensor channel.
-
+	
 	  To compile this driver as a module, choose M here: the core module
 	  will be called bmp280 and you will also get bmp280-i2c for I2C
 	  and/or bmp280-spi for SPI support.
-
+	
 config BMP280_I2C
 	tristate
 	depends on BMP280
@@ -63,10 +63,10 @@ config IIO_CROS_EC_BARO
 	help
 	  Say yes here to build support for the Barometer sensor when
 	  presented by the ChromeOS EC Sensor hub.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called cros_ec_baro.
-
+	
 config DLHL60D
 	tristate "All Sensors DLHL60D and DLHL60G low voltage digital pressure sensors"
 	depends on I2C
@@ -75,10 +75,10 @@ config DLHL60D
 	help
 	  Say yes here to build support for the All Sensors DLH series
 	  pressure sensors driver.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called dlhl60d.
-
+	
 config DPS310
 	tristate "Infineon DPS310 pressure and temperature sensor"
 	depends on I2C
@@ -86,10 +86,10 @@ config DPS310
 	help
 	  Support for the Infineon DPS310 digital barometric pressure sensor.
 	  It can be accessed over I2C bus.
-
+	
 	  This driver can also be built as a module.  If so, the module will be
 	  called dps310.
-
+	
 config HID_SENSOR_PRESS
 	depends on HID_SENSOR_HUB
 	select IIO_BUFFER
@@ -99,10 +99,10 @@ config HID_SENSOR_PRESS
 	help
 	  Say yes here to build support for the HID SENSOR
 	  Pressure driver
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called hid-sensor-press.
-
+	
 config HP03
 	tristate "Hope RF HP03 temperature and pressure sensor driver"
 	depends on I2C
@@ -110,10 +110,10 @@ config HP03
 	help
 	  Say yes here to build support for Hope RF HP03 pressure and
 	  temperature sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called hp03.
-
+	
 config HSC030PA
 	tristate "Honeywell HSC/SSC TruStability pressure sensor series"
 	depends on (I2C || SPI_MASTER)
@@ -124,10 +124,10 @@ config HSC030PA
 	help
 	  Say Y here to build support for the Honeywell TruStability
 	  HSC and SSC pressure and temperature sensor series.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called hsc030pa.
-
+	
 config HSC030PA_I2C
 	tristate
 	depends on HSC030PA
@@ -145,10 +145,10 @@ config ICP10100
 	help
 	  Say yes here to build support for InvenSense ICP-101xx barometric
 	  pressure and temperature sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called icp10100.
-
+	
 config MPL115
 	tristate
 
@@ -159,10 +159,10 @@ config MPL115_I2C
 	help
 	  Say yes here to build support for the Freescale MPL115A2
 	  pressure sensor connected via I2C.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called mpl115_i2c.
-
+	
 config MPL115_SPI
 	tristate "Freescale MPL115A1 pressure sensor driver"
 	depends on SPI_MASTER
@@ -170,10 +170,10 @@ config MPL115_SPI
 	help
 	  Say yes here to build support for the Freescale MPL115A1
 	  pressure sensor connected via SPI.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called mpl115_spi.
-
+	
 config MPL3115
 	tristate "Freescale MPL3115A2 pressure sensor driver"
 	depends on I2C
@@ -182,10 +182,10 @@ config MPL3115
 	help
 	  Say yes here to build support for the Freescale MPL3115A2
 	  pressure sensor / altimeter.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called mpl3115.
-
+	
 config MPRLS0025PA
 	tristate "Honeywell MPRLS0025PA (MicroPressure sensors series)"
 	depends on (I2C || SPI_MASTER)
@@ -197,10 +197,10 @@ config MPRLS0025PA
 	  Say Y here to build support for the Honeywell MicroPressure pressure
 	  sensor series. There are many different types with different pressure
 	  range. These ranges can be set up in the device tree.
-
+	
 	  To compile this driver as a module, choose M here: the module will be
 	  called mprls0025pa.
-
+	
 config MPRLS0025PA_I2C
 	tristate
 	depends on MPRLS0025PA
@@ -218,28 +218,28 @@ config MS5611
 	help
 	  Say Y here to build support for the Measurement Specialties
 	  MS5611, MS5607 pressure and temperature sensors.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called ms5611_core.
-
+	
 config MS5611_I2C
 	tristate "support I2C bus connection"
 	depends on I2C && MS5611
 	help
 	  Say Y here to build I2C bus support for MS5611.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called ms5611_i2c.
-
+	
 config MS5611_SPI
 	tristate "support SPI bus connection"
 	depends on SPI_MASTER && MS5611
 	help
 	  Say Y here to build SPI bus support for MS5611.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called ms5611_spi.
-
+	
 config MS5637
 	tristate "Measurement Specialties MS5637 pressure & temperature sensor"
 	depends on I2C
@@ -249,10 +249,10 @@ config MS5637
 	  MS5637 pressure and temperature sensor.
 	  This driver is also used for MS8607 temperature, pressure & humidity
 	  sensor
-
+	
 	  This driver can also be built as a module. If so, the module will
 	  be called ms5637.
-
+	
 config SDP500
 	tristate "Sensirion SDP500 differential pressure sensor I2C driver"
 	depends on I2C
@@ -262,7 +262,7 @@ config SDP500
 	  sensor I2C driver.
 	  To compile this driver as a module, choose M here: the core module
 	  will be called sdp500.
-
+	
 config IIO_ST_PRESS
 	tristate "STMicroelectronics pressure sensor Driver"
 	depends on (I2C || SPI_MASTER) && SYSFS
@@ -271,10 +271,10 @@ config IIO_ST_PRESS
 	help
 	  Say yes here to build support for STMicroelectronics pressure
 	  sensors: LPS001WP, LPS25H, LPS331AP, LPS22HB, LPS22HH.
-
+	
 	  Also need to enable at least one of I2C and SPI interface drivers
 	  below.
-
+	
 config IIO_ST_PRESS_I2C
 	tristate "STMicroelectronics pressure sensor I2C Interface"
 	depends on I2C && IIO_ST_PRESS
@@ -282,10 +282,10 @@ config IIO_ST_PRESS_I2C
 	select IIO_ST_SENSORS_I2C
 	help
 	  Build support for STMicroelectronics pressure sensor I2C interface.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called st_pressure_i2c.
-
+	
 config IIO_ST_PRESS_SPI
 	tristate "STMicroelectronics pressure sensor SPI Interface"
 	depends on SPI_MASTER && IIO_ST_PRESS
@@ -293,30 +293,30 @@ config IIO_ST_PRESS_SPI
 	select IIO_ST_SENSORS_SPI
 	help
 	  Build support for STMicroelectronics pressure sensor SPI interface.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called st_pressure_spi.
-
+	
 config T5403
 	tristate "EPCOS T5403 digital barometric pressure sensor driver"
 	depends on I2C
 	help
 	  Say yes here to build support for the EPCOS T5403 pressure sensor
 	  connected via I2C.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called t5403.
-
+	
 config HP206C
 	tristate "HOPERF HP206C precision barometer and altimeter sensor"
 	depends on I2C
 	help
 	  Say yes here to build support for the HOPREF HP206C precision
 	  barometer and altimeter sensor.
-
+	
 	  This driver can also be built as a module. If so, the module will
 	  be called hp206c.
-
+	
 config ZPA2326
 	tristate "Murata ZPA2326 pressure sensor driver"
 	select IIO_BUFFER
@@ -327,10 +327,10 @@ config ZPA2326
 	help
 	  Say Y here to build support for the Murata ZPA2326 pressure and
 	  temperature sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called zpa2326.
-
+	
 config ZPA2326_I2C
 	tristate
 	select REGMAP_I2C

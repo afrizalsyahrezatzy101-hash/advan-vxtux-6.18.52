@@ -13,11 +13,11 @@ config NFC_TRF7970A
 	  This option enables the NFC driver for Texas Instruments' TRF7970a
 	  device. Such device supports 5 different protocols: ISO14443A,
 	  ISO14443B, FeLiCa, ISO15693 and ISO18000-3.
-
+	
 	  Say Y here to compile support for TRF7970a into the kernel or
 	  say M  to compile it as a module. The module will be called
 	  trf7970a.ko.
-
+	
 config NFC_MEI_PHY
 	tristate "MEI bus NFC device support"
 	depends on INTEL_MEI && NFC_HCI
@@ -25,9 +25,9 @@ config NFC_MEI_PHY
 	  This adds support to use an mei bus nfc device. Select this if you
 	  will use an HCI NFC driver for an NFC chip connected behind an
 	  Intel's Management Engine chip.
-
+	
 	  If unsure, say N.
-
+	
 config NFC_SIM
 	tristate "NFC hardware simulator driver"
 	depends on NFC_DIGITAL
@@ -36,9 +36,9 @@ config NFC_SIM
 	  protocol. An LLCP connection can be established between them and
 	  all packets sent from one device is sent back to the other, acting as
 	  loopback devices.
-
+	
 	  If unsure, say N.
-
+	
 config NFC_PORT100
 	tristate "Sony NFC Port-100 Series USB device support"
 	depends on USB
@@ -46,9 +46,9 @@ config NFC_PORT100
 	help
 	  This adds support for Sony Port-100 chip based USB devices such as the
 	  RC-S380 dongle.
-
+	
 	  If unsure, say N.
-
+	
 config NFC_VIRTUAL_NCI
 	tristate "NCI device simulator driver"
 	depends on NFC_NCI
@@ -57,9 +57,9 @@ config NFC_VIRTUAL_NCI
 	  It can be used to validate the NCI module and applications.
 	  This driver supports communication between the virtual NCI device and
 	  module.
-
+	
 	  If unsure, say N.
-
+	
 source "drivers/nfc/fdp/Kconfig"
 source "drivers/nfc/pn544/Kconfig"
 source "drivers/nfc/pn533/Kconfig"

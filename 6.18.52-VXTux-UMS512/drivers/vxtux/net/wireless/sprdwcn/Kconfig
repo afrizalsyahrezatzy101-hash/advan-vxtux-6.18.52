@@ -10,7 +10,7 @@ config SC23XX
 	  This is support wcn chip for spreadtrum.
 	  if you want to use 23xx series wcn chip of spreadtrum.
 	  please say "y".
-
+	
 # CATATAN (18 Sep 2026): simbol ini HILANG di port padahal dipakai sumber dan
 # vendor Kconfig punya. `include/wcn_glb.h` memilih header register chip lewat
 # `#ifdef CONFIG_SC2355`; tanpa simbol ini tak satu pun `*_glb.h` ikut ter-include
@@ -25,7 +25,7 @@ config SC2355
 	help
 	  Dukungan chip WCN SC2355 (dipakai Advan Tab VX Lite T1030/UMS512).
 	  Menyalakan ini membuat wcn_glb.h menyertakan sc2355_glb.h.
-
+	
 config WCN_INTEG
 	tristate "WCN Integrated chip Support"
 	depends on SC23XX
@@ -34,35 +34,35 @@ config WCN_INTEG
 	  This is support wcn chip for spreadtrum.
 	  If you want to use WCN integrated chip of spreadtrum.
 	  Please say "y".
-
+	
 config UMW2652
 	tristate "UMW2652 chip Support (tidak dipakai T618)"
 	depends on SC23XX
 	default n
 	help
 	  Varian chip PCIe/dual-bin — biarkan n di papan T618.
-
+	
 config UMW2653
 	tristate "UMW2653 chip Support (tidak dipakai T618)"
 	depends on SC23XX
 	default n
 	help
 	  Varian chip SWD/debug — biarkan n di papan T618.
-
+	
 config SC2342_I
 	tristate "SC2342 integrated chip Support (tidak dipakai T618)"
 	depends on WCN_INTEG
 	default n
 	help
 	  Varian chip lain — biarkan n di papan T618.
-
+	
 config UMW2631_I
 	tristate "UMW2631 integrated chip Support (tidak dipakai T618)"
 	depends on WCN_INTEG
 	default n
 	help
 	  Varian chip lain — biarkan n di papan T618.
-
+	
 # ---------------------------------------------------------------------------
 # Bluetooth (sprdbt_tty) + FM (sprd_fm)
 #
@@ -83,7 +83,7 @@ config WCN_BLUETOOTH
 	help
 	  BT HCI di atas tty-sdio. Menggantikan blob sprdbt_tty.ko (5.4.210).
 	  Sumber: wcn/bluetooth/driver/tty-sdio (generasi 4.14).
-
+	
 config WCN_FM
 	tristate "Spreadtrum WCN FM driver (sprd_fm)"
 	depends on SC23XX
@@ -91,7 +91,7 @@ config WCN_FM
 	help
 	  Radio FM MARLIN3. Menggantikan blob sprd_fm.ko.
 	  Sumber: wcn/fm/driver/fm_sdio (generasi lebih tua dari blob).
-
+	
 # sprd's SDIO device driver based on SC2355...,etc
 source "drivers/vxtux/net/wireless/sprdwcn/sdio/Kconfig"
 

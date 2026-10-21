@@ -35,3 +35,4 @@ config SPRD_CPP
 	  rotate and dma blocks behind the camera pipeline. Misc device with
 	  the uapi in video/sprd_cpp.h. Replaces the sprd-cpp vendor blob
 	  (vendor_dlkm sprd_cpp.ko, 192 KB).
+	

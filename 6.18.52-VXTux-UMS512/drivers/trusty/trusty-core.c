@@ -164,8 +164,14 @@ s64 trusty_fast_call64(struct device *dev, u64 smcnr, u64 a0, u64 a1, u64 a2)
 }
 #endif
 
-static ulong trusty_std_call_inner(struct device *dev, ulong smcnr,
-				   ulong a0, ulong a1, ulong a2)
+/* The stock 5.4 blob (built with clang 12) keeps this as a standalone
+ * local symbol: `nm trusty.ko` lists `t trusty_std_call_inner`. gcc -O2
+ * inlines it into trusty_std_call32 and the local symbol disappears, so
+ * the replacement no longer carries the same symbol surface as the blob
+ * it replaces. noinline keeps the symbol without changing behaviour.
+ */
+static noinline ulong trusty_std_call_inner(struct device *dev, ulong smcnr,
+					     ulong a0, ulong a1, ulong a2)
 {
 	ulong ret;
 	int retry = 5;
@@ -693,3 +699,5 @@ module_exit(trusty_driver_exit);
 
 MODULE_DESCRIPTION("Sprd trusty core driver");
 MODULE_LICENSE("GPL v2");
+
+EXPORT_SYMBOL(trusty_fast_call64);

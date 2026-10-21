@@ -13,9 +13,9 @@ menuconfig IPACK_BUS
 	  hosted on these buses.  While IndustryPack modules can provide a
 	  large variety of functionality, they are most often found in
 	  industrial control applications.
-
+	
 	  Say N if unsure.
-
+	
 if IPACK_BUS
 
 source "drivers/ipack/carriers/Kconfig"

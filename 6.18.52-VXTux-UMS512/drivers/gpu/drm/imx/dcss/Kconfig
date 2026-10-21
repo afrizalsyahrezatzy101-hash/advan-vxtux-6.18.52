@@ -11,3 +11,4 @@ config DRM_IMX_DCSS
 	help
 	  Choose this if you have a NXP i.MX8MQ based system and want to use the
 	  Display Controller Subsystem. This option enables DCSS support.
+	

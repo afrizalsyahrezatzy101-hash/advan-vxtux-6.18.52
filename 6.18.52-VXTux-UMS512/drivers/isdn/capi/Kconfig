@@ -10,18 +10,18 @@ config ISDN_CAPI
 	  as well as ISDN supplementary services like call forwarding or
 	  three-party conferences (if supported by the specific hardware
 	  driver).
-
+	
 	  This subsystem requires a hardware specific driver.
 	  See CONFIG_BT_CMTP for the last remaining regular driver
 	  in the kernel that uses the CAPI subsystem.
-
+	
 config CAPI_TRACE
 	def_bool BT_CMTP
 	help
 	  If you say Y here, the kernelcapi driver can make verbose traces
 	  of CAPI messages. This feature can be enabled/disabled via IOCTL for
 	  every controller (default disabled).
-
+	
 config ISDN_CAPI_MIDDLEWARE
 	def_bool BT_CMTP && TTY
 	help
@@ -30,3 +30,4 @@ config ISDN_CAPI_MIDDLEWARE
 	  established via the usual /dev/capi20 interface to a special tty
 	  device.  If you want to use pppd with pppdcapiplugin to dial up to
 	  your ISP, say Y here.
+	

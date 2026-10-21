@@ -4,3 +4,4 @@ config SPRD_CPROC
 	default n
 	help
 	  spreadtrum modem communication processor driver.
+	

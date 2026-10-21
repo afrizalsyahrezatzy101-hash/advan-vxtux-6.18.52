@@ -9,3 +9,4 @@ config DRM_ATMEL_HLCDC
 	help
 	  Choose this option if you have an ATMEL SoC with an HLCDC display
 	  controller (i.e. at91sam9n12, at91sam9x5 family or sama5d3 family).
+	

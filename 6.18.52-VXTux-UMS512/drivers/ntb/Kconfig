@@ -8,9 +8,9 @@ menuconfig NTB
 	 mapped memory will be mirrored to a buffer on the remote system.  The
 	 ntb Linux driver uses this point-to-point communication as a method to
 	 transfer data from one system to the other.
-
+	
 	 If unsure, say N.
-
+	
 if NTB
 
 config NTB_MSI
@@ -22,7 +22,7 @@ config NTB_MSI
 	 than doorbells and more MSI interrupts can be made available to
 	 clients. However this requires an extra memory window and support
 	 in the hardware driver for creating the MSI interrupts.
-
+	
 	 If unsure, say N.
 source "drivers/ntb/hw/Kconfig"
 
@@ -34,7 +34,7 @@ config NTB_TRANSPORT
 	 This is a transport driver that enables connected systems to exchange
 	 messages over the ntb hardware.  The transport exposes a queue pair api
 	 to client drivers.
-
+	
 	 If unsure, say N.
-
+	
 endif # NTB

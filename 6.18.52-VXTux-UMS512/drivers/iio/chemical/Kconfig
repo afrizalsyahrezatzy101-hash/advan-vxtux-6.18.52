@@ -12,10 +12,10 @@ config AOSONG_AGS02MA
 	help
 	  Say Y here to build support for Aosong AGS02MA TVOC (Total Volatile
 	  Organic Compounds) sensor.
-
+	
 	  To compile this driver as module, choose M here: the module will be
 	  called ags02ma.
-
+	
 config ATLAS_PH_SENSOR
 	tristate "Atlas Scientific OEM SM sensors"
 	depends on I2C
@@ -29,10 +29,10 @@ config ATLAS_PH_SENSOR
 	    * pH SM sensor
 	    * EC SM sensor
 	    * ORP SM sensor
-
+	
 	  To compile this driver as module, choose M here: the
 	  module will be called atlas-ph-sensor.
-
+	
 config ATLAS_EZO_SENSOR
 	tristate "Atlas Scientific EZO sensors"
 	depends on I2C
@@ -40,10 +40,10 @@ config ATLAS_EZO_SENSOR
 	  Say Y here to build I2C interface support for the following
 	  Atlas Scientific EZO sensors
 	    * CO2 EZO Sensor
-
+	
 	  To compile this driver as module, choose M here: the
 	  module will be called atlas-ezo-sensor.
-
+	
 config BME680
 	tristate "Bosch Sensortec BME680 sensor driver"
 	depends on (I2C || SPI)
@@ -55,10 +55,10 @@ config BME680
 	help
 	  Say yes here to build support for Bosch Sensortec BME680 sensor with
 	  temperature, pressure, humidity and gas sensing capability.
-
+	
 	  This driver can also be built as a module. If so, the module for I2C
 	  would be called bme680_i2c and bme680_spi for SPI support.
-
+	
 config BME680_I2C
 	tristate
 	depends on I2C && BME680
@@ -77,7 +77,7 @@ config CCS811
 	help
 	  Say Y here to build I2C interface support for the AMS
 	  CCS811 VOC (Volatile Organic Compounds) sensor
-
+	
 config ENS160
 	tristate "ScioSense ENS160 sensor driver"
 	depends on (I2C || SPI)
@@ -88,10 +88,10 @@ config ENS160
 	select ENS160_SPI if SPI
 	help
 	  Say yes here to build support for ScioSense ENS160 multi-gas sensor.
-
+	
 	  This driver can also be built as a module. If so, the module for I2C
 	  would be called ens160_i2c and ens160_spi for SPI support.
-
+	
 config ENS160_I2C
 	tristate
 	select REGMAP_I2C
@@ -107,17 +107,17 @@ config IAQCORE
 	  Say Y here to build I2C interface support for the AMS
 	  iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
 	  sensors
-
+	
 config MHZ19B
 	tristate "Winsen MHZ19B CO2 sensor"
 	depends on SERIAL_DEV_BUS
 	help
 	  Say Y here to build Serdev interface support for the Winsen
 	  MHZ19B CO2 sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called mhz19b.
-
+	
 config PMS7003
 	tristate "Plantower PMS7003 particulate matter sensor"
 	depends on SERIAL_DEV_BUS
@@ -126,10 +126,10 @@ config PMS7003
 	help
 	  Say Y here to build support for the Plantower PMS7003 particulate
 	  matter sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called pms7003.
-
+	
 config SCD30_CORE
 	tristate "SCD30 carbon dioxide sensor driver"
 	select IIO_BUFFER
@@ -137,10 +137,10 @@ config SCD30_CORE
 	help
 	  Say Y here to build support for the Sensirion SCD30 sensor with carbon
 	  dioxide, relative humidity and temperature sensing capabilities.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called scd30_core.
-
+	
 config SCD30_I2C
 	tristate "SCD30 carbon dioxide sensor I2C driver"
 	depends on SCD30_CORE && I2C
@@ -148,10 +148,10 @@ config SCD30_I2C
 	help
 	  Say Y here to build support for the Sensirion SCD30 I2C interface
 	  driver.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called scd30_i2c.
-
+	
 config SCD30_SERIAL
 	tristate "SCD30 carbon dioxide sensor serial driver"
 	depends on SCD30_CORE && SERIAL_DEV_BUS
@@ -159,10 +159,10 @@ config SCD30_SERIAL
 	help
 	  Say Y here to build support for the Sensirion SCD30 serial interface
 	  driver.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called scd30_serial.
-
+	
 config SCD4X
 	tristate "SCD4X carbon dioxide sensor driver"
 	select IIO_BUFFER
@@ -172,20 +172,20 @@ config SCD4X
 	help
 	  Say Y here to build support for the Sensirion SCD4X sensor with carbon
 	  dioxide, relative humidity and temperature sensing capabilities.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called scd4x.
-
+	
 config SEN0322
 	tristate "SEN0322 oxygen sensor"
 	depends on I2C
 	select REGMAP_I2C
 	help
 	  Say Y here to build support for the DFRobot SEN0322 oxygen sensor.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called sen0322.
-
+	
 config SENSIRION_SGP30
 	tristate "Sensirion SGPxx gas sensors"
 	depends on I2C
@@ -195,10 +195,10 @@ config SENSIRION_SGP30
 	  Sensirion SGP gas sensors:
 	    * SGP30 gas sensor
 	    * SGPC3 low power gas sensor
-
+	
 	  To compile this driver as module, choose M here: the
 	  module will be called sgp30.
-
+	
 config SENSIRION_SGP40
 	tristate "Sensirion SGP40 gas sensor"
 	depends on I2C
@@ -206,10 +206,10 @@ config SENSIRION_SGP40
 	help
 	  Say Y here to build I2C interface to support Sensirion SGP40 gas
 	  sensor
-
+	
 	  To compile this driver as module, choose M here: the
 	  module will be called sgp40.
-
+	
 config SPS30
 	tristate
 	select IIO_BUFFER
@@ -223,10 +223,10 @@ config SPS30_I2C
 	help
 	  Say Y here to build support for the Sensirion SPS30 I2C interface
 	  driver.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called sps30_i2c.
-
+	
 config SPS30_SERIAL
 	tristate "SPS30 particulate matter sensor serial driver"
 	depends on SERIAL_DEV_BUS
@@ -234,10 +234,10 @@ config SPS30_SERIAL
 	help
 	  Say Y here to build support for the Sensirion SPS30 serial interface
 	  driver.
-
+	
 	  To compile this driver as a module, choose M here: the module will
 	  be called sps30_serial.
-
+	
 config SENSEAIR_SUNRISE_CO2
 	tristate "Senseair Sunrise 006-0-0007 CO2 sensor"
 	depends on I2C
@@ -245,10 +245,10 @@ config SENSEAIR_SUNRISE_CO2
 	help
 	  Say yes here to build support for Senseair Sunrise 006-0-0007 CO2
 	  sensor.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called sunrise_co2.
-
+	
 config VZ89X
 	tristate "SGX Sensortech MiCS VZ89X VOC sensor"
 	depends on I2C
@@ -256,5 +256,5 @@ config VZ89X
 	  Say Y here to build I2C interface support for the SGX
 	  Sensortech MiCS VZ89X VOC (Volatile Organic Compounds)
 	  sensors
-
+	
 endmenu

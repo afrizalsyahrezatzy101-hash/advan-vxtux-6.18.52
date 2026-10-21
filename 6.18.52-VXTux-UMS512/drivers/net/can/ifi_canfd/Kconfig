@@ -7,3 +7,4 @@ config CAN_IFI_CANFD
 	  connected to the "platform bus" (Linux abstraction for directly
 	  to the processor attached devices). The CAN_FD is most often
 	  synthesised into an FPGA or CPLD.
+	

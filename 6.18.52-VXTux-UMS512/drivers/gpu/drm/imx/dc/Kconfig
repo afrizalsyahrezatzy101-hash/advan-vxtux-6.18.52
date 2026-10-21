@@ -11,3 +11,4 @@ config DRM_IMX8_DC
 	select REGMAP_MMIO
 	help
 	  enable Freescale i.MX8 Display Controller(DC) graphics support
+	

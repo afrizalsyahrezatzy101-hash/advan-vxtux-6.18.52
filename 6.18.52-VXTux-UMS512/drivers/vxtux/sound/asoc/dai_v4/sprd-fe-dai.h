@@ -1,6 +1,10 @@
 #ifndef __SPRD_FE_DAI_H
 #define __SPRD_FE_DAI_H
 
+/* The FE-DAI driver is linked into the same composite module as
+ * vbc-dai, so its init is called from that module's initcall. */
+int sprd_fe_dai_driver_init(void);
+
 /* dma hw request */
 #define DMA_REQ_DA0_DEV_ID		(1)
 #define DMA_REQ_DA1_DEV_ID		(2)

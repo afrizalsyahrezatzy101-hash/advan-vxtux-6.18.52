@@ -4,6 +4,7 @@
 #define __WCN_BUS_H__
 
 #include <linux/errno.h>
+#include <linux/kconfig.h>
 #include <linux/types.h>
 
 #define WCNBUS_TX 1
@@ -14,7 +15,7 @@
 #define PUB_HEAD_RSV	0
 #endif
 
-#ifdef CONFIG_WCN_SIPC
+#if IS_ENABLED(CONFIG_WCN_SIPC)
 #define CHN_MAX_NUM (2 * BITS_PER_LONG)
 #define SIPC_CHN_ATCMD 4
 #define SIPC_CHN_LOOPCHECK 11
@@ -115,7 +116,7 @@ struct mbuf_t {
 	unsigned int   seq;
 };
 
-#ifdef CONFIG_WCN_SIPC
+#if IS_ENABLED(CONFIG_WCN_SIPC)
 enum wcn_sipc_trans_type {
 	WCN_SIPC_TRANS_SBUF,
 	WCN_SIPC_TRANS_SBLOCK,
@@ -213,7 +214,7 @@ struct mchn_ops_t {
 	/* channel index for wf/bt/fm */
 	int channel;
 	/* channel config paras */
-#ifdef CONFIG_WCN_SIPC
+#if IS_ENABLED(CONFIG_WCN_SIPC)
 	union wcn_chn_config chn_config;
 #endif
 	/* inout=1 tx side, inout=0 rx side */

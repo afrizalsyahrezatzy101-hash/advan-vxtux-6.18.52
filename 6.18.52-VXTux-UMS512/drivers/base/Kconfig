@@ -17,7 +17,7 @@ config UEVENT_HELPER
 	  frame. One forked process per event can create so many processes
 	  that it creates a high system load, or on smaller systems
 	  it is known to create out-of-memory situations during bootup.
-
+	
 config UEVENT_HELPER_PATH
 	string "path to uevent helper"
 	depends on UEVENT_HELPER
@@ -27,7 +27,7 @@ config UEVENT_HELPER_PATH
 	  specify an empty string here. This setting can still be altered
 	  via /proc/sys/kernel/hotplug or via /sys/kernel/uevent_helper
 	  later at runtime.
-
+	
 config DEVTMPFS
 	bool "Maintain a devtmpfs filesystem to mount at /dev"
 	help
@@ -43,10 +43,10 @@ config DEVTMPFS
 	  In very limited environments, it may provide a sufficient
 	  functional /dev without any further help. It also allows simple
 	  rescue systems, and reliably handles dynamic major/minor numbers.
-
+	
 	  Notice: if CONFIG_TMPFS isn't enabled, the simpler ramfs
 	  file system will be used instead.
-
+	
 config DEVTMPFS_MOUNT
 	bool "Automount devtmpfs at /dev, after the kernel mounted the rootfs"
 	depends on DEVTMPFS
@@ -61,27 +61,27 @@ config DEVTMPFS_MOUNT
 	  With this option enabled, it allows to bring up a system in
 	  rescue mode with init=/bin/sh, even when the /dev directory
 	  on the rootfs is completely empty.
-
+	
 config DEVTMPFS_SAFE
 	bool "Use nosuid,noexec mount options on devtmpfs"
 	depends on DEVTMPFS
 	help
 	  This instructs the kernel to include the MS_NOEXEC and MS_NOSUID mount
 	  flags when mounting devtmpfs.
-
+	
 	  Notice: If enabled, things like /dev/mem cannot be mmapped
 	  with the PROT_EXEC flag. This can break, for example, non-KMS
 	  video drivers.
-
+	
 config STANDALONE
 	bool "Select only drivers that don't need compile-time external firmware"
 	default y
 	help
 	  Select this option if you don't have magic firmware for drivers that
 	  need it.
-
+	
 	  If unsure, say Y.
-
+	
 config PREVENT_FIRMWARE_BUILD
 	bool "Disable drivers features which enable custom firmware building"
 	default y
@@ -92,15 +92,15 @@ config PREVENT_FIRMWARE_BUILD
 	  use their own custom loading mechanism. The required firmware is
 	  usually shipped with the driver, building the driver firmware
 	  should only be needed if you have an updated firmware source.
-
+	
 	  Firmware should not be being built as part of kernel, these days
 	  you should always prevent this and say Y here. There are only two
 	  old drivers which enable building of its firmware at kernel build
 	  time:
-
+	
 	    o CONFIG_WANXL through CONFIG_WANXL_BUILD_FIRMWARE
 	    o CONFIG_SCSI_AIC79XX through CONFIG_AIC79XX_BUILD_FIRMWARE
-
+	
 source "drivers/base/firmware_loader/Kconfig"
 
 config WANT_DEV_COREDUMP
@@ -108,7 +108,7 @@ config WANT_DEV_COREDUMP
 	help
 	  Drivers should "select" this option if they desire to use the
 	  device coredump mechanism.
-
+	
 config ALLOW_DEV_COREDUMP
 	bool "Allow device coredump" if EXPERT
 	default y
@@ -119,9 +119,9 @@ config ALLOW_DEV_COREDUMP
 	  Say 'N' for more sensitive systems or systems that don't want
 	  to ever access the information to not have the code, nor keep any
 	  data.
-
+	
 	  If unsure, say Y.
-
+	
 config DEV_COREDUMP
 	bool
 	default y if WANT_DEV_COREDUMP
@@ -135,9 +135,9 @@ config DEBUG_DRIVER
 	  debug messages to the system log. Select this if you are having a
 	  problem with the driver core and want to see more of what is
 	  going on.
-
+	
 	  If you are unsure about this, say N here.
-
+	
 config DEBUG_DEVRES
 	bool "Managed device resources verbose debug messages"
 	depends on DEBUG_KERNEL
@@ -147,9 +147,9 @@ config DEBUG_DEVRES
 	  you are having a problem with devres or want to debug
 	  resource management for a managed device. devres.log can be
 	  switched on and off from sysfs node.
-
+	
 	  If you are unsure about this, Say N here.
-
+	
 config DEBUG_TEST_DRIVER_REMOVE
 	bool "Test driver remove calls during probe (UNSTABLE)"
 	depends on DEBUG_KERNEL
@@ -157,11 +157,11 @@ config DEBUG_TEST_DRIVER_REMOVE
 	  Say Y here if you want the Driver core to test driver remove functions
 	  by calling probe, remove, probe. This tests the remove path without
 	  having to unbind the driver or unload the driver module.
-
+	
 	  This option is expected to find errors and may render your system
 	  unusable. You should say N here unless you are explicitly looking to
 	  test this functionality.
-
+	
 config PM_QOS_KUNIT_TEST
 	bool "KUnit Test for PM QoS features" if !KUNIT_ALL_TESTS
 	depends on KUNIT=y
@@ -180,7 +180,7 @@ config HMEM_REPORTING
 	help
 	  Enable reporting for heterogeneous memory access attributes under
 	  their non-uniform memory nodes.
-
+	
 source "drivers/base/test/Kconfig"
 
 config SYS_HYPERVISOR
@@ -212,7 +212,7 @@ config DMA_SHARED_BUFFER
 	  multiple drivers. A buffer is associated with a file using driver
 	  APIs extension; the file's descriptor can then be passed on to other
 	  driver.
-
+	
 config DMA_FENCE_TRACE
 	bool "Enable verbose DMA_FENCE_TRACE messages"
 	depends on DMA_SHARED_BUFFER
@@ -221,7 +221,7 @@ config DMA_FENCE_TRACE
 	  spam to the console log, but will make it easier to diagnose
 	  lockup related problems for dma-buffers shared across multiple
 	  devices.
-
+	
 config GENERIC_ARCH_TOPOLOGY
 	bool
 	help
@@ -229,14 +229,14 @@ config GENERIC_ARCH_TOPOLOGY
 	  CPU capacity information from DT, usage of such information for
 	  appropriate scaling, sysfs interface for reading capacity values at
 	  runtime.
-
+	
 config GENERIC_ARCH_NUMA
 	bool
 	select NUMA_MEMBLKS
 	help
 	  Enable support for generic NUMA implementation. Currently, RISC-V
 	  and ARM64 use it.
-
+	
 config FW_DEVLINK_SYNC_STATE_TIMEOUT
 	bool "sync_state() behavior defaults to timeout instead of strict"
 	help
@@ -248,5 +248,5 @@ config FW_DEVLINK_SYNC_STATE_TIMEOUT
 	  select N here unless you have already successfully tested with the
 	  command line option on every system/board your kernel is expected to
 	  work on.
-
+	
 endmenu

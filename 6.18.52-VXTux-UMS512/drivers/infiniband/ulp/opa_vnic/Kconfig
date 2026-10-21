@@ -7,3 +7,4 @@ config INFINIBAND_OPA_VNIC
 	driver for Ethernet over Omni-Path feature. It implements the HW
 	independent VNIC functionality. It interfaces with Linux stack for
 	data path and IB MAD for the control path.
+	

@@ -9,3 +9,4 @@ config SPRD_PMIC_SYSCON
 	help
 	  Akses register global PMIC SC27xx via sysfs (/sys/.../pmic_reg,
 	  pmic_value). Port dari drivers/soc/sprd/sprd_pmic_syscon.c (GPL).
+	

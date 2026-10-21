@@ -794,3 +794,5 @@ void Boot_Update_Firmware(struct work_struct *work)
 EXPORT_SYMBOL_GPL(Boot_Update_Firmware);
 #endif /* BOOT_UPDATE_FIRMWARE */
 
+
+EXPORT_SYMBOL(nvt_update_firmware);

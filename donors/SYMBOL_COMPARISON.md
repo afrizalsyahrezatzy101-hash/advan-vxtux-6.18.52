@@ -92,7 +92,6 @@
 
 | stock .ko | symbol |
 |---|---|
-| `aes-ce-ccm` | `ce_aes_ccm_final` |
 | `apsys-dvfs` | `apsys_dvfs_head` |
 | `apsys-dvfs` | `dpu_devfreq_gov` |
 | `apsys-dvfs` | `dpu_dvfs_chain` |

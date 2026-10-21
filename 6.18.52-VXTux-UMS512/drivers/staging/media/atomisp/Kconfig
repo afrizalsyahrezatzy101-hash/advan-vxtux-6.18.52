@@ -8,7 +8,7 @@ menuconfig INTEL_ATOMISP
 	help
 	  Enable support for the Intel ISP2 camera interfaces and MIPI
 	  sensor drivers.
-
+	
 config VIDEO_ATOMISP
 	tristate "Intel Atom Image Signal Processor Driver"
 	depends on VIDEO_DEV && INTEL_ATOMISP
@@ -26,7 +26,7 @@ config VIDEO_ATOMISP
 	  camera imaging subsystem.
 	  To compile this driver as a module, choose M here: the
 	  module will be called atomisp
-
+	
 if VIDEO_ATOMISP
 source "drivers/staging/media/atomisp/i2c/Kconfig"
 endif

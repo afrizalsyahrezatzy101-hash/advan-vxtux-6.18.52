@@ -8,7 +8,7 @@ config DVB_BUDGET_CORE
 	  Support for simple SAA7146 based DVB cards
 	  (so called Budget- or Nova-PCI cards) without onboard
 	  MPEG2 decoder.
-
+	
 config DVB_BUDGET
 	tristate "Budget cards"
 	depends on DVB_BUDGET_CORE && I2C
@@ -29,12 +29,12 @@ config DVB_BUDGET
 	  Support for simple SAA7146 based DVB cards (so called Budget-
 	  or Nova-PCI cards) without onboard MPEG2 decoder, and without
 	  analog inputs or an onboard Common Interface connector.
-
+	
 	  Say Y if you own such a card and want to use it.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called budget.
-
+	
 config DVB_BUDGET_CI
 	tristate "Budget cards with onboard CI connector"
 	depends on DVB_BUDGET_CORE && I2C
@@ -53,15 +53,15 @@ config DVB_BUDGET_CI
 	  Support for simple SAA7146 based DVB cards
 	  (so called Budget- or Nova-PCI cards) without onboard
 	  MPEG2 decoder, but with onboard Common Interface connector.
-
+	
 	  Note: The Common Interface is not yet supported by this driver
 	  due to lack of information from the vendor.
-
+	
 	  Say Y if you own such a card and want to use it.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called budget-ci.
-
+	
 config DVB_BUDGET_AV
 	tristate "Budget cards with analog video inputs"
 	depends on DVB_BUDGET_CORE && I2C
@@ -79,8 +79,9 @@ config DVB_BUDGET_AV
 	  Support for simple SAA7146 based DVB cards
 	  (so called Budget- or Nova-PCI cards) without onboard
 	  MPEG2 decoder, but with one or more analog video inputs.
-
+	
 	  Say Y if you own such a card and want to use it.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called budget-av.
+	

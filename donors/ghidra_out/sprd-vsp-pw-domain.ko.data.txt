@@ -1,0 +1,16 @@
+00100018 vsp_pd_driver Label
+00100488 vsp_pd_of_match Label
+00102134 __UNIQUE_ID_author131 Label
+00102160 __UNIQUE_ID_description132 Label
+0010218b __UNIQUE_ID_license133 Label
+0010219a __UNIQUE_ID_depends127 Label
+001021a3 __UNIQUE_ID_name126 Label
+001021bb __UNIQUE_ID_vermagic125 Label
+001021f8 vsp_pw_on.__UNIQUE_ID_ddebug129 Label
+00102230 ____versions Label
+00102830 _note_6 Label
+00102880 __this_module Label
+00103068 __dynamic_pr_debug Label
+001030a8 __stack_chk_guard Label
+.comment::00000000 ElfComment[0] Label
+.comment::0000009d ElfComment[1] Label

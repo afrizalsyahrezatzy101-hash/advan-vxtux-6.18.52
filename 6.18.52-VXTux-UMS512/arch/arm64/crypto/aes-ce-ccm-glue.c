@@ -44,6 +44,18 @@ asmlinkage void ce_aes_ccm_decrypt(u8 out[], u8 const in[], u32 cbytes,
 				   u32 const rk[], u32 rounds, u8 mac[],
 				   u8 ctr[], u8 const final_iv[]);
 
+u32 ce_aes_ccm_auth_data(u8 mac[], u8 const in[], u32 abytes,
+			 u32 macp, u32 const rk[], u32 rounds);
+
+/*
+ * ponytail: the stock 5.4 blob also carried ccm_update_mac() and
+ * ccm_crypt_fallback(), the non-NEON fallback pair. Upstream deleted
+ * both in b3482635e5c ("aes-ccm - remove non-SIMD fallback path"),
+ * which this 6.18 tree already carries, so re-adding them would
+ * reintroduce a path the kernel deliberately removed. They are the
+ * only two symbols this blob still "misses"; see docs/DEBLOB_STATUS.md.
+ */
+
 static int ccm_setkey(struct crypto_aead *tfm, const u8 *in_key,
 		      unsigned int key_len)
 {

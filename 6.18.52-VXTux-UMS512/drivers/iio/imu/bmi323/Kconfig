@@ -16,10 +16,10 @@ config BMI323_I2C
 	help
 	  Enable support for the Bosch BMI323 6-Axis IMU connected to I2C
 	  interface.
-
+	
 	  This driver can also be built as a module. If so, the module will be
 	  called bmi323_i2c.
-
+	
 config BMI323_SPI
 	tristate "Bosch BMI323 SPI driver"
 	depends on SPI
@@ -28,6 +28,7 @@ config BMI323_SPI
 	help
 	  Enable support for the Bosch BMI323 6-Axis IMU connected to SPI
 	  interface.
-
+	
 	  This driver can also be built as a module. If so, the module will be
 	  called bmi323_spi.
+	

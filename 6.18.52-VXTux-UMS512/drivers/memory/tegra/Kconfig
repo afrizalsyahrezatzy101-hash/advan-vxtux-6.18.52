@@ -7,7 +7,7 @@ config TEGRA_MC
 	help
 	  This driver supports the Memory Controller (MC) hardware found on
 	  NVIDIA Tegra SoCs.
-
+	
 if TEGRA_MC
 
 config TEGRA20_EMC
@@ -22,7 +22,7 @@ config TEGRA20_EMC
 	  Tegra20 chips. The EMC controls the external DRAM on the board.
 	  This driver is required to change memory timings / clock rate for
 	  external memory.
-
+	
 config TEGRA30_EMC
 	tristate "NVIDIA Tegra30 External Memory Controller driver"
 	default ARCH_TEGRA_3x_SOC
@@ -34,7 +34,7 @@ config TEGRA30_EMC
 	  Tegra30 chips. The EMC controls the external DRAM on the board.
 	  This driver is required to change memory timings / clock rate for
 	  external memory.
-
+	
 config TEGRA124_EMC
 	tristate "NVIDIA Tegra124 External Memory Controller driver"
 	default ARCH_TEGRA_124_SOC
@@ -46,7 +46,7 @@ config TEGRA124_EMC
 	  Tegra124 chips. The EMC controls the external DRAM on the board.
 	  This driver is required to change memory timings / clock rate for
 	  external memory.
-
+	
 config TEGRA210_EMC_TABLE
 	bool
 	depends on ARCH_TEGRA_210_SOC || COMPILE_TEST
@@ -60,5 +60,5 @@ config TEGRA210_EMC
 	  Tegra210 chips. The EMC controls the external DRAM on the board.
 	  This driver is required to change memory timings / clock rate for
 	  external memory.
-
+	
 endif

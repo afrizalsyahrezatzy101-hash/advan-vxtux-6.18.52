@@ -13,10 +13,10 @@ config MEMSTICK_UNSAFE_RESUME
 	  normal behaviour is to remove them at suspend and
 	  redetecting them at resume. Breaking this assumption will
 	  in most cases result in data corruption.
-
+	
 	  This option is usually just for embedded systems which use
 	  a MemoryStick card for rootfs. Most people should say N here.
-
+	
 config MSPRO_BLOCK
 	tristate "MemoryStick Pro block device driver"
 	depends on BLOCK
@@ -26,7 +26,7 @@ config MSPRO_BLOCK
 	  support. This provides a block device driver, which you can use
 	  to mount the filesystem. Almost everyone wishing MemoryStick
 	  support should say Y or M here.
-
+	
 config MS_BLOCK
 	tristate "MemoryStick Standard device driver"
 	depends on BLOCK
@@ -39,3 +39,4 @@ config MS_BLOCK
 	  but not PRO. Say Y if you have such card.
 	  Driver is new and not yet well tested, thus it can damage your card
 	  (even permanently)
+	

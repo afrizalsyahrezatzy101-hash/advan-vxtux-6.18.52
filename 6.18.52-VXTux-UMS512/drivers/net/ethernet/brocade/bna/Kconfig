@@ -11,8 +11,9 @@ config BNA
 	  Ethernet cards.
 	  To compile this driver as a module, choose M here: the module
 	  will be called bna.
-
+	
 	  For general information and support, go to the QLogic support
 	  website at:
-
+	
 	  <http://support.qlogic.com>
+	

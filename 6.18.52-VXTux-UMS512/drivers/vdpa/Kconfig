@@ -6,7 +6,7 @@ menuconfig VDPA
 	  Enable this module to support vDPA device that uses a
 	  datapath which complies with virtio specifications with
 	  vendor specific control path.
-
+	
 if VDPA
 
 config VDPA_SIM
@@ -17,21 +17,21 @@ config VDPA_SIM
 	help
 	  Enable this module to support vDPA device simulators. These devices
 	  are used for testing, prototyping and development of vDPA.
-
+	
 config VDPA_SIM_NET
 	tristate "vDPA simulator for networking device"
 	depends on VDPA_SIM
 	select GENERIC_NET_UTILS
 	help
 	  vDPA networking device simulator which loops TX traffic back to RX.
-
+	
 config VDPA_SIM_BLOCK
 	tristate "vDPA simulator for block device"
 	depends on VDPA_SIM
 	help
 	  vDPA block device simulator which terminates IO request in a
 	  memory buffer.
-
+	
 config VDPA_USER
 	tristate "VDUSE (vDPA Device in Userspace) support"
 	depends on EVENTFD && MMU
@@ -40,7 +40,7 @@ config VDPA_USER
 	help
 	  With VDUSE it is possible to emulate a vDPA Device
 	  in a userspace program.
-
+	
 config IFCVF
 	tristate "Intel IFC VF vDPA driver"
 	depends on PCI_MSI
@@ -49,7 +49,7 @@ config IFCVF
 	  virtio dataplane traffic to hardware.
 	  To compile this driver as a module, choose M here: the module will
 	  be called ifcvf.
-
+	
 config MLX5_VDPA
 	bool
 	select VHOST_IOTLB
@@ -57,7 +57,7 @@ config MLX5_VDPA
 	  Support library for Mellanox VDPA drivers. Provides code that is
 	  common for all types of VDPA drivers. The following drivers are planned:
 	  net, block.
-
+	
 config MLX5_VDPA_NET
 	tristate "vDPA driver for ConnectX devices"
 	select MLX5_VDPA
@@ -68,7 +68,7 @@ config MLX5_VDPA_NET
 	  of virtio net datapath such that descriptors put on the ring will
 	  be executed by the hardware. It also supports a variety of stateless
 	  offloads depending on the actual device used and firmware version.
-
+	
 config MLX5_VDPA_STEERING_DEBUG
 	bool "expose steering counters on debugfs"
 	select MLX5_VDPA
@@ -80,14 +80,14 @@ config MLX5_VDPA_STEERING_DEBUG
 	  debugfs. Once can read the counters using, e.g.:
 	  cat /sys/kernel/debug/mlx5/mlx5_core.sf.1/vdpa-0/rx/untagged/ucast/packets
 	  cat /sys/kernel/debug/mlx5/mlx5_core.sf.1/vdpa-0/rx/untagged/mcast/bytes
-
+	
 config VP_VDPA
 	tristate "Virtio PCI bridge vDPA driver"
 	select VIRTIO_PCI_LIB
 	depends on PCI_MSI
 	help
 	  This kernel module bridges virtio PCI device to vDPA bus.
-
+	
 config ALIBABA_ENI_VDPA
 	tristate "vDPA driver for Alibaba ENI"
 	select VIRTIO_PCI_LIB_LEGACY
@@ -95,25 +95,25 @@ config ALIBABA_ENI_VDPA
 	help
 	  VDPA driver for Alibaba ENI (Elastic Network Interface) which is built upon
 	  virtio 0.9.5 specification.
-
+	
  config SNET_VDPA
 	tristate "SolidRun's vDPA driver for SolidNET"
 	depends on PCI_MSI && PCI_IOV && (HWMON || HWMON=n)
-
+	
 	# This driver MAY create a HWMON device.
 	# Depending on (HWMON || HWMON=n) ensures that:
 	# If HWMON=n the driver can be compiled either as a module or built-in.
 	# If HWMON=y the driver can be compiled either as a module or built-in.
 	# If HWMON=m the driver is forced to be compiled as a module.
 	# By doing so, IS_ENABLED can be used instead of IS_REACHABLE
-
+	
 	help
 	  vDPA driver for SolidNET DPU.
 	  With this driver, the VirtIO dataplane can be
 	  offloaded to a SolidNET DPU.
 	  This driver includes a HW monitor device that
 	  reads health values from the DPU.
-
+	
 config PDS_VDPA
 	tristate "vDPA driver for AMD/Pensando DSC devices"
 	select VIRTIO_PCI_LIB
@@ -123,7 +123,7 @@ config PDS_VDPA
 	  vDPA network driver for AMD/Pensando's PDS Core devices.
 	  With this driver, the VirtIO dataplane can be
 	  offloaded to an AMD/Pensando DSC device.
-
+	
 config OCTEONEP_VDPA
 	tristate "vDPA driver for Octeon DPU devices"
 	depends on m
@@ -134,5 +134,5 @@ config OCTEONEP_VDPA
 	  Octeon DPU device.
 	  Please note that this driver must be built as a module and it
 	  cannot be loaded until the Octeon emulation software is running.
-
+	
 endif # VDPA

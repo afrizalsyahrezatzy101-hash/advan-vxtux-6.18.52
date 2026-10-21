@@ -7,14 +7,15 @@ config MAC80211_HWSIM
 	  needed for normal wireless LAN usage and is only for testing. See
 	  Documentation/networking/mac80211_hwsim for more information on how
 	  to use this tool.
-
+	
 	  To compile this driver as a module, choose M here: the module will be
 	  called mac80211_hwsim.  If unsure, say N.
-
+	
 config VIRT_WIFI
 	tristate "Wifi wrapper for ethernet drivers"
 	depends on CFG80211
 	help
 	  This option adds support for ethernet connections to appear as if they
 	  are wifi connections through a special rtnetlink device.
-
+	
+	

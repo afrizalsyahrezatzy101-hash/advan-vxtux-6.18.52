@@ -13,7 +13,7 @@ config MTK_SCPSYS
 	help
 	  Say yes here to add support for the MediaTek SCPSYS power domain
 	  driver.
-
+	
 config MTK_SCPSYS_PM_DOMAINS
 	bool "MediaTek SCPSYS generic power domain"
 	default ARCH_MEDIATEK
@@ -25,7 +25,7 @@ config MTK_SCPSYS_PM_DOMAINS
 	  In order to meet high performance and low power requirements, the System
 	  Control Processor System (SCPSYS) has several power management related
 	  tasks in the system.
-
+	
 endmenu
 
 config AIROHA_CPU_PM_DOMAIN
@@ -37,6 +37,7 @@ config AIROHA_CPU_PM_DOMAIN
 	select PM_GENERIC_DOMAINS
 	help
 	  Say y here to enable CPU power domain support for Airoha SoC.
-
+	
 	  CPU frequency and power is controlled by ATF with SMC command to
 	  set performance states.
+	

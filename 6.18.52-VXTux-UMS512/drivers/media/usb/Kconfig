@@ -7,7 +7,7 @@ menuconfig MEDIA_USB_SUPPORT
 	help
 	  Enable media drivers for USB bus.
 	  If you have such devices, say Y.
-
+	
 if MEDIA_USB_SUPPORT
 
 if MEDIA_CAMERA_SUPPORT

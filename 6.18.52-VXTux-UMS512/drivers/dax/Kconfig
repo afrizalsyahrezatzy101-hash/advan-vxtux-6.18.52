@@ -15,7 +15,7 @@ config DEV_DAX
 	  platform memory resource that is differentiated from the
 	  baseline memory pool.  Mappings of a /dev/daxX.Y device impose
 	  restrictions that make the mapping behavior deterministic.
-
+	
 config DEV_DAX_PMEM
 	tristate "PMEM DAX: direct access to persistent memory"
 	depends on LIBNVDIMM && NVDIMM_DAX && DEV_DAX
@@ -24,9 +24,9 @@ config DEV_DAX_PMEM
 	  Support raw access to persistent memory.  Note that this
 	  driver consumes memory ranges allocated and exported by the
 	  libnvdimm sub-system.
-
+	
 	  Say M if unsure
-
+	
 config DEV_DAX_HMEM
 	tristate "HMEM DAX: direct access to 'specific purpose' memory"
 	depends on EFI_SOFT_RESERVE
@@ -41,9 +41,9 @@ config DEV_DAX_HMEM
 	  enables the possibility to assign them to the DEV_DAX_KMEM
 	  driver to override the reservation and add them to kernel
 	  "System RAM" pool.
-
+	
 	  Say M if unsure.
-
+	
 config DEV_DAX_CXL
 	tristate "CXL DAX: direct access to CXL RAM regions"
 	depends on CXL_BUS && CXL_REGION && DEV_DAX
@@ -56,7 +56,7 @@ config DEV_DAX_CXL
 	  instance is created to access that unmapped-by-default address range.
 	  Per usual it can remain as dedicated access via a device interface, or
 	  converted to "System RAM" via the dax_kmem facility.
-
+	
 config DEV_DAX_HMEM_DEVICES
 	depends on DEV_DAX_HMEM && DAX
 	def_bool y
@@ -72,10 +72,10 @@ config DEV_DAX_KMEM
 	  easier use of persistent memory by unmodified applications, or
 	  adds core kernel memory services to heterogeneous memory types
 	  (HMEM) marked "reserved" by platform firmware.
-
+	
 	  To use this feature, a DAX device must be unbound from the
 	  device_dax driver and bound to this kmem driver on each boot.
-
+	
 	  Say N if unsure.
-
+	
 endif

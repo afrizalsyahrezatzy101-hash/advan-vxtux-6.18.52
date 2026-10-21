@@ -24,7 +24,7 @@ config VXTUX_VENDOR_ABI
 	  Batas jujur: ini penyedia ABI untuk BLOB, bukan pengganti kebijakan
 	  DE-SHIM sumber (include/vxtux/compat_618.h tetap dihapus dan dijaga
 	  tools/re/verify_compat_618.py). Lihat docs/vendor_abi_20260926.md.
-
+	
 config VXTUX_VENDOR_ABI_CFG80211
 	tristate "Shim cfg80211_get_bss 5.4 (nilai mengikuti CFG80211)"
 	depends on VXTUX_VENDOR_ABI && CFG80211
@@ -33,7 +33,7 @@ config VXTUX_VENDOR_ABI_CFG80211
 	  Blob vendor 5.4 (sprd_wlan_combo) mengimpor cfg80211_get_bss(); di 6.18
 	  fungsi itu static inline yang memanggil __cfg80211_get_bss milik
 	  net/wireless/ — lihat kepala vendor_abi_cfg80211.c untuk bukti oracle.
-
+	
 	  Nilai simbol ini SENGAJA MENGIKUTI CFG80211, bukan built-in mutlak,
 	  karena dua kasus terukur berbeda:
 	    * CFG80211=y -> shim =y. Simbol __cfg80211_get_bss milik image
@@ -45,8 +45,9 @@ config VXTUX_VENDOR_ABI_CFG80211
 	        >>> referenced by vendor_abi_cfg80211.c:53
 	      (relink2 device 2026-09-27 00:04; CFG80211=m di r9 DAN r10-qemu,
 	      jadi jalur built-in selalu salah untuk papan ini).
-
+	
 	  Batas jujur: sebagai modul, simbol cfg80211_get_bss hanya tersedia
 	  SETELAH modul ini dimuat — modul blob yang mengimpornya harus dimuat
 	  sesudahnya (softdep/modules-load.d belum dibuat; butuh bukti blob benar
 	  diuji di device). Bila CFG80211=n, shim tidak dibangun sama sekali.
+	

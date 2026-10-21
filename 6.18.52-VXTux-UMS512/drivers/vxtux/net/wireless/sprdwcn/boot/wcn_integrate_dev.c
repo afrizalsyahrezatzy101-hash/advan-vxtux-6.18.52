@@ -11,6 +11,7 @@
  * GNU General Public License for more details.
  */
 #include <linux/clk.h>
+#include <linux/gpio/consumer.h>
 #include <linux/delay.h>
 #include <linux/file.h>
 #include <linux/firmware.h>

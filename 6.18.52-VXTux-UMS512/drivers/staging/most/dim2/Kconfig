@@ -12,6 +12,7 @@ config MOST_DIM2
 	  This device driver is platform dependent and needs an additional
 	  platform driver to be installed. For more information contact
 	  maintainer of this driver.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called most_dim2.
+	

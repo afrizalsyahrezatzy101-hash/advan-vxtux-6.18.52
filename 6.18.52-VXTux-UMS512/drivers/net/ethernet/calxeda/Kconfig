@@ -7,3 +7,4 @@ config NET_CALXEDA_XGMAC
 	help
 	  This is the driver for the XGMAC Ethernet IP block found on Calxeda
 	  Highbank platforms.
+	

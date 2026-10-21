@@ -68,6 +68,7 @@ static int mdbg_log_push(int chn, struct mbuf_t **head,
 
 	return 0;
 }
+#endif /* CONFIG_WCN_PCIE */
 #if IS_ENABLED(CONFIG_WCN_SIPC)
 static int mdbg_sipc_log_cb(int channel, struct mbuf_t *head,
 			    struct mbuf_t *tail, int num)

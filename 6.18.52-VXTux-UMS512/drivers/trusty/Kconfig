@@ -33,7 +33,7 @@ config TRUSTY
 	  Trusty core: SMC call plumbing, shared memory encoding and the
 	  non-secure side of the trusty/secure-world handshake. The irq, log
 	  and virtio children below all depend on it.
-
+	
 config TRUSTY_LOG
 	tristate
 	depends on TRUSTY
@@ -51,15 +51,15 @@ config TRUSTY_VIRTIO_IPC
 	default m
 	help
 	  This module adds support for communications with Trusty Services.
-
+	
 	  It provides the tipc_chan_* API declared in
 	  include/linux/trusty/trusty_ipc.h, which is what the in-tree
 	  gsp_ipc_trusty.c / wcn_ca_trusty.c consumers and the vendor
 	  ion_ipc_trusty.ko client are written against.
-
+	
 	  If you choose to build a module, it'll be called trusty-ipc.
 	  Say N if unsure.
-
+	
 config SPRD_TSHM
 	tristate "Spreadtrum TSHM driver"
 	depends on TRUSTY
@@ -69,5 +69,5 @@ config SPRD_TSHM
 	  in user space.
 	  Say N here if you are unsure about need this.
 	  Otherwise say Y to select.
-
+	
 endmenu

@@ -8,12 +8,12 @@ config NET_VENDOR_SOLARFLARE
 	default y
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Solarflare devices. If you say Y, you will be asked
 	  for your specific card in the following questions.
-
+	
 if NET_VENDOR_SOLARFLARE
 
 config SFC
@@ -26,10 +26,10 @@ config SFC
 	help
 	  This driver supports 10/40-gigabit Ethernet cards based on
 	  the Solarflare SFC9100-family controllers.
-
+	
 	  It also supports 10/25/40/100-gigabit Ethernet cards based
 	  on the Solarflare EF100 networking IP in Xilinx FPGAs.
-
+	
 	  To compile this driver as a module, choose M here.  The module
 	  will be called sfc.
 config SFC_MTD
@@ -66,7 +66,7 @@ config SFC_MCDI_LOGGING
 	  Driver-Interface) commands and responses, allowing debugging of
 	  driver/firmware interaction.  The tracing is actually enabled by
 	  a sysfs file 'mcdi_logging' under the PCI device.
-
+	
 source "drivers/net/ethernet/sfc/falcon/Kconfig"
 source "drivers/net/ethernet/sfc/siena/Kconfig"
 

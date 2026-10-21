@@ -17,10 +17,10 @@ config VIDEO_ATMEL_ISC
 	help
 	   This module makes the ATMEL Image Sensor Controller available
 	   as a v4l2 device.
-
+	
 	   This driver is deprecated and is scheduled for removal by
 	   the beginning of 2026. See the TODO file for more information.
-
+	
 config VIDEO_ATMEL_XISC
 	tristate "ATMEL eXtended Image Sensor Controller (XISC) support (DEPRECATED)"
 	depends on V4L_PLATFORM_DRIVERS
@@ -36,12 +36,13 @@ config VIDEO_ATMEL_XISC
 	help
 	   This module makes the ATMEL eXtended Image Sensor Controller
 	   available as a v4l2 device.
-
+	
 	   This driver is deprecated and is scheduled for removal by
 	   the beginning of 2026. See the TODO file for more information.
-
+	
 config VIDEO_ATMEL_ISC_BASE
 	tristate
 	default n
 	help
 	  ATMEL ISC and XISC common code base.
+	

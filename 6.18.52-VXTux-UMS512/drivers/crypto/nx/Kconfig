@@ -11,7 +11,7 @@ config CRYPTO_DEV_NX_ENCRYPT
 	  module supports acceleration for AES and SHA2 algorithms on
 	  the pSeries platform.  If you choose 'M' here, this module
 	  will be called nx_crypto.
-
+	
 config CRYPTO_DEV_NX_COMPRESS
 	tristate "Compression acceleration support"
 	default y
@@ -23,7 +23,7 @@ config CRYPTO_DEV_NX_COMPRESS
 	  algorithm using the cryptographic API.  One of the platform
 	  drivers must be selected also.  If you choose 'M' here, this
 	  module will be called nx_compress.
-
+	
 if CRYPTO_DEV_NX_COMPRESS
 
 config CRYPTO_DEV_NX_COMPRESS_PSERIES
@@ -36,7 +36,7 @@ config CRYPTO_DEV_NX_COMPRESS_PSERIES
 	  module supports acceleration for compressing memory with the 842
 	  algorithm.  This supports NX hardware on the pSeries platform.
 	  If you choose 'M' here, this module will be called nx_compress_pseries.
-
+	
 config CRYPTO_DEV_NX_COMPRESS_POWERNV
 	tristate "Compression acceleration support on PowerNV platform"
 	depends on PPC_POWERNV
@@ -47,5 +47,5 @@ config CRYPTO_DEV_NX_COMPRESS_POWERNV
 	  module supports acceleration for compressing memory with the 842
 	  algorithm.  This supports NX hardware on the PowerNV platform.
 	  If you choose 'M' here, this module will be called nx_compress_powernv.
-
+	
 endif

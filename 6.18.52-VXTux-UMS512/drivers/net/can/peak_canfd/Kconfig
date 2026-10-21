@@ -12,3 +12,4 @@ config CAN_PEAK_PCIEFD
 	  electronics of the card and the respective computer against
 	  disturbances of up to 500 Volts. The PCAN-PCI Express FD can be
 	  operated with ambient temperatures in a range of -40 to +85 °C.
+	

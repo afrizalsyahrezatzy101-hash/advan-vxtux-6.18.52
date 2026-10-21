@@ -8,7 +8,7 @@ config MTD_COMPLEX_MAPPINGS
 	help
 	  This causes the chip drivers to allow for complicated
 	  paged mappings of flash chips.
-
+	
 config MTD_PHYSMAP
 	tristate "Flash device in physical memory map"
 	depends on MTD_CFI || MTD_JEDECPROBE || MTD_ROM || MTD_RAM || MTD_LPDDR
@@ -19,10 +19,10 @@ config MTD_PHYSMAP
 	  the physical address and size of the flash chips on your
 	  particular board as well as the bus width, either statically
 	  with config options or at run-time.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called physmap.
-
+	
 config MTD_PHYSMAP_COMPAT
 	bool "Physmap compat support"
 	depends on MTD_PHYSMAP
@@ -31,9 +31,9 @@ config MTD_PHYSMAP_COMPAT
 	  Setup a simple mapping via the Kconfig options.  Normally the
 	  physmap configuration options are done via your board's
 	  resource file.
-
+	
 	  If unsure, say N here.
-
+	
 config MTD_PHYSMAP_START
 	hex "Physical start address of flash mapping"
 	depends on MTD_PHYSMAP_COMPAT
@@ -43,7 +43,7 @@ config MTD_PHYSMAP_START
 	  are mapped on your particular target board. Refer to the
 	  memory map which should hopefully be in the documentation for
 	  your board.
-
+	
 config MTD_PHYSMAP_LEN
 	hex "Physical length of flash mapping"
 	depends on MTD_PHYSMAP_COMPAT
@@ -55,7 +55,7 @@ config MTD_PHYSMAP_LEN
 	  than the total amount of flash present. Refer to the memory
 	  map which should hopefully be in the documentation for your
 	  board.
-
+	
 config MTD_PHYSMAP_BANKWIDTH
 	int "Bank width in octets"
 	depends on MTD_PHYSMAP_COMPAT
@@ -65,7 +65,7 @@ config MTD_PHYSMAP_BANKWIDTH
 	  in octets. For example, if you have a data bus width of 32
 	  bits, you would set the bus width octet value to 4. This is
 	  used internally by the CFI drivers.
-
+	
 config MTD_PHYSMAP_OF
 	bool "Memory device in physical memory map based on OF description"
 	depends on OF && MTD_PHYSMAP
@@ -74,7 +74,7 @@ config MTD_PHYSMAP_OF
 	  and RAM driver code to communicate with chips which are mapped
 	  physically into the CPU's memory. The mapping description here is
 	  taken from OF device tree.
-
+	
 config MTD_PHYSMAP_VERSATILE
 	bool "ARM Versatile OF-based physical memory map handling"
 	depends on MTD_PHYSMAP_OF
@@ -84,7 +84,7 @@ config MTD_PHYSMAP_VERSATILE
 	  This provides some extra DT physmap parsing for the ARM Versatile
 	  platforms, basically to add a VPP (write protection) callback so
 	  the flash can be taken out of write protection.
-
+	
 config MTD_PHYSMAP_GPIO_ADDR
 	bool "GPIO-assisted Flash Chip Support"
 	depends on MTD_PHYSMAP
@@ -93,21 +93,21 @@ config MTD_PHYSMAP_GPIO_ADDR
 	help
 	  Extend the physmap driver to allow flashes to be partially
 	  physically addressed and assisted by GPIOs.
-
+	
 config MTD_CFI_FLAGADM
 	tristate "CFI Flash device mapping on FlagaDM"
 	depends on PPC_8xx && MTD_CFI
 	help
 	  Mapping for the Flaga digital module. If you don't have one, ignore
 	  this setting.
-
+	
 config MTD_PLATRAM
 	tristate "Map driver for platform device RAM (mtd-ram)"
 	select MTD_RAM
 	help
 	  Map driver for RAM areas described via the platform device
 	  system.
-
+	
 	  This selection automatically selects the map_ram driver.
-
+	
 endmenu

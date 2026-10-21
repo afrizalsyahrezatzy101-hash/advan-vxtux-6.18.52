@@ -13,9 +13,9 @@ config MT76x0U
 	  This adds support for MT7610U-based USB 2.0 wireless dongles,
 	  which comply with IEEE 802.11ac standards and support 1x1
 	  433Mbps PHY rate.
-
+	
 	  To compile this driver as a module, choose M here.
-
+	
 config MT76x0E
 	tristate "MediaTek MT76x0E (PCIe) support"
 	select MT76x0_COMMON
@@ -25,5 +25,6 @@ config MT76x0E
 	  This adds support for MT7610/MT7630-based PCIe wireless devices,
 	  which comply with IEEE 802.11ac standards and support 1x1
 	  433Mbps PHY rate.
-
+	
 	  To compile this driver as a module, choose M here.
+	

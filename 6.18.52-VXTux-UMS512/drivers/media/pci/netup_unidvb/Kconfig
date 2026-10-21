@@ -11,8 +11,9 @@ config DVB_NETUP_UNIDVB
 	select DVB_CXD2841ER if MEDIA_SUBDRV_AUTOSELECT
 	help
 	  Support for NetUP PCI express Universal DVB card.
-
+	
 	  Say Y when you want to support NetUP Dual Universal DVB card.
 	  Card can receive two independent streams in following standards:
 		DVB-S/S2, T/T2, C/C2
 	  Two CI slots available for CAM modules.
+	

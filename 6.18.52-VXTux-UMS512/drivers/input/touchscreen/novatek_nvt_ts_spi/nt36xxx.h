@@ -344,4 +344,20 @@ int32_t nvt_mode_switch(NVT_CUSTOMIZED_MODE mode, uint8_t flag);
 void nvt_read_mdata(uint32_t xdata_addr, uint32_t xdata_btn_addr);
 void nvt_read_mdata_rss(uint32_t xdata_i_addr, uint32_t xdata_q_addr,
 		uint32_t xdata_btn_i_addr, uint32_t xdata_btn_q_addr);
+
+/*
+ * /proc node lifecycle, split across two files in this port:
+ * nvt_extra_proc_init() lives in nt36xxx_ext_proc.c, the pen node and
+ * the teardown live in nt36xxx_pen.c.
+ */
+int32_t nvt_extra_proc_init(void);
+int32_t nvt_pen_proc_init(void);
+void nvt_extra_proc_deinit(void);
+
+/* /proc node names, shared by the creator and the teardown. */
+#define NVT_FW_VERSION	"nvt_fw_version"
+#define NVT_BASELINE	"nvt_baseline"
+#define NVT_RAW		"nvt_raw"
+#define NVT_DIFF	"nvt_diff"
+#define NVT_PEN_DIFF	"nvt_pen_diff"
 #endif /* _LINUX_NVT_TOUCH_H */

@@ -7,3 +7,4 @@ config DRM_PANEL_VXTUX_UMS512
 	  Completes pure DRM/KMS path: DPU (CRTC/plane) -> DSI host -> panel
 	  (connector). Default mode 1200x2000; vendor timings/init-sequence
 	  pending from stock DT (see docs/drm_kms_map.md).
+	

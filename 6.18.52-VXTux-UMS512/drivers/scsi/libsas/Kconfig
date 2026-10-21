@@ -13,7 +13,7 @@ config SCSI_SAS_LIBSAS
 	help
 	  This provides transport specific helpers for SAS drivers which
 	  use the domain device construct (like the aic94xxx).
-
+	
 config SCSI_SAS_ATA
 	bool "ATA support for libsas (requires libata)"
 	depends on SCSI_SAS_LIBSAS
@@ -22,7 +22,7 @@ config SCSI_SAS_ATA
 	help
 		Builds in ATA support into libsas.  Will necessitate
 		the loading of libata along with libsas.
-
+	
 config SCSI_SAS_HOST_SMP
 	bool "Support for SMP interpretation for SAS hosts"
 	default y
@@ -31,3 +31,4 @@ config SCSI_SAS_HOST_SMP
 		Allows sas hosts to receive SMP frames.  Selecting this
 		option builds an SMP interpreter into libsas.  Say
 		N here if you want to save the few kb this consumes.
+	

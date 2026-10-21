@@ -1445,7 +1445,7 @@ static struct platform_driver sprd_fe_dai_driver = {
 	},
 };
 
-static int __init sprd_fe_dai_driver_init(void)
+int sprd_fe_dai_driver_init(void)
 {
 	int ret;
 
@@ -1457,8 +1457,4 @@ static int __init sprd_fe_dai_driver_init(void)
 	return ret;
 }
 
-late_initcall(sprd_fe_dai_driver_init);
-MODULE_DESCRIPTION("SPRD ASoC FRONT END CPU DAI");
-MODULE_AUTHOR("Lei Ning <lei.ning@unisoc.com>");
-MODULE_LICENSE("GPL");
 

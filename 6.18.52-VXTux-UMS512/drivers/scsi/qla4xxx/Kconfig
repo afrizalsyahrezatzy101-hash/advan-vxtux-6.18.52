@@ -7,3 +7,4 @@ config SCSI_QLA_ISCSI
 	help
 	This driver supports the QLogic 40xx (ISP4XXX), 8022 (ISP82XX)
 	and 8032 (ISP83XX) iSCSI host adapter family.
+	

@@ -11,10 +11,10 @@ config PRESTERA
 	select PHYLINK
 	help
 	  This driver supports Marvell Prestera Switch ASICs family.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called prestera.
-
+	
 config PRESTERA_PCI
 	tristate "PCI interface driver for Marvell Prestera Switch ASICs family"
 	depends on PCI && HAS_IOMEM && PRESTERA
@@ -22,6 +22,7 @@ config PRESTERA_PCI
 	help
 	  This is implementation of PCI interface support for Marvell Prestera
 	  Switch ASICs family.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called prestera_pci.
+	

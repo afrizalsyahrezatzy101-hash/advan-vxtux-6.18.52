@@ -609,3 +609,5 @@ module_platform_driver(trusty_log_driver);
 
 MODULE_DESCRIPTION("Sprd trusty log driver");
 MODULE_LICENSE("GPL v2");
+
+EXPORT_SYMBOL(trusty_log_driver);

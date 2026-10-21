@@ -5,3 +5,4 @@ config SERIAL_IPOCTAL
 	help
 	  This driver supports the IPOCTAL serial port device for the IndustryPack bus.
 	default n
+	

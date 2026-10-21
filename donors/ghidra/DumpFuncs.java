@@ -7,6 +7,10 @@
 // The symbol names are looked up in the symbol table, so a vendor
 // symbol like mbox_start_send_tx_fifo can be passed directly.
 //
+// If the first argument is @<file>, the function names are read from
+// that file, one per line. A Windows command line cannot hold a few
+// hundred names, so the file form is the one that scales.
+//
 // @category VXTux
 
 import ghidra.app.decompiler.DecompInterface;
@@ -20,22 +24,39 @@ import ghidra.program.model.symbol.SymbolIterator;
 import ghidra.program.model.symbol.SymbolTable;
 import java.io.File;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.List;
 
 public class DumpFuncs extends GhidraScript {
     @Override
     public void run() throws Exception {
         String[] args = getScriptArgs();
         if (args.length == 0) {
-            println("usage: DumpFuncs <symbol> [<symbol>...]");
+            println("usage: DumpFuncs <symbol> [<symbol>...] | @<file>");
             return;
         }
         File out = new File("E:\\vxtux_build_repo\\donors\\ghidra_out");
         out.mkdirs();
 
+        List<String> wants = new java.util.ArrayList<String>();
+        if (args[0].startsWith("@")) {
+            for (String line : Files.readAllLines(new File(args[0].substring(1))
+                                                 .toPath())) {
+                line = line.trim();
+                if (!line.isEmpty() && !line.startsWith("#")) {
+                    wants.add(line);
+                }
+            }
+        } else {
+            for (String a : args) {
+                wants.add(a);
+            }
+        }
+
         DecompInterface di = new DecompInterface();
         di.openProgram(currentProgram);
 
-        for (String want : args) {
+        for (String want : wants) {
             Function f = findFunction(want);
             if (f == null) {
                 println("NOT FOUND: " + want);

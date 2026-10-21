@@ -82,6 +82,25 @@ EXPORT_SYMBOL_GPL(ENG_RST_ADDR);
 uint32_t SWRST_N8_ADDR = 0; //read from dtsi
 EXPORT_SYMBOL_GPL(SWRST_N8_ADDR);
 
+/*
+ * sprd_dpu_nt36xxx_touchscreen_callback - DPU -> touch hook.
+ *
+ * The stock blob exports this as a 4-byte global function whose entire
+ * body is a single "ret" (readelf: GLOBAL FUNC size 4, objdump: 0x30
+ * "ret"). It is a no-op stub: the DPU side of the stock kernel never
+ * called it, and nothing in the blob references it. It exists so the
+ * DPU driver can look the symbol up by name and get a valid (empty)
+ * implementation.
+ *
+ * The 6.18 tree has no DPU->touchscreen hook (drivers/gpu/drm/sprd/sprd_dpu
+ * contains only the format helpers), so there is nothing to call it from.
+ * Export it with the same empty body the stock has.
+ */
+void sprd_dpu_nt36xxx_touchscreen_callback(void)
+{
+}
+EXPORT_SYMBOL_GPL(sprd_dpu_nt36xxx_touchscreen_callback);
+
 #if TOUCH_KEY_NUM > 0
 const uint16_t touch_key_array[TOUCH_KEY_NUM] = {
 	KEY_BACK,
@@ -2204,6 +2223,18 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 		NVT_ERR("nvt extra proc init failed. ret=%d\n", ret);
 		goto err_init_NVT_ts;
 	}
+
+	/*
+	 * The stock creates /proc/nvt_pen_diff as the last node of
+	 * nvt_extra_proc_init(), guarded by the oppo baseline-test flag
+	 * (nvt_extra_proc_deinit() removes it under the same guard). The
+	 * tree splits the pen node into its own file, so init it here.
+	 */
+	ret = nvt_pen_proc_init();
+	if (ret != 0) {
+		NVT_ERR("nvt pen proc init failed. ret=%d\n", ret);
+		goto err_init_NVT_ts;
+	}
 #endif
 
 #if NVT_TOUCH_MP
@@ -2274,6 +2305,16 @@ static void nvt_ts_remove(struct spi_device *client)
 
 	free_irq(client->irq, ts);
 	input_unregister_device(ts->input_dev);
+
+#if NVT_TOUCH_EXT_PROC
+	/*
+	 * The stock calls nvt_extra_proc_deinit() from three places -
+	 * probe's error path, nvt_ts_remove() and nvt_ts_shutdown() - so
+	 * the five /proc nodes never outlive the driver.
+	 */
+	nvt_extra_proc_deinit();
+#endif
+
 	spi_set_drvdata(client, NULL);
 	kfree(ts);
 
@@ -2494,3 +2535,15 @@ module_exit(nvt_driver_exit);
 MODULE_DESCRIPTION("Novatek Touchscreen Driver");
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(spi, nvt_ts_id);
+
+EXPORT_SYMBOL(nvt_bootloader_reset);
+EXPORT_SYMBOL(nvt_check_fw_reset_state);
+EXPORT_SYMBOL(nvt_check_fw_status);
+EXPORT_SYMBOL(nvt_clear_fw_status);
+EXPORT_SYMBOL(nvt_eng_reset);
+EXPORT_SYMBOL(nvt_esd_check_enable);
+EXPORT_SYMBOL(nvt_extra_proc_init);
+EXPORT_SYMBOL(nvt_get_fw_info);
+EXPORT_SYMBOL(nvt_mp_proc_init);
+EXPORT_SYMBOL(nvt_sw_reset);
+EXPORT_SYMBOL(nvt_sw_reset_idle);

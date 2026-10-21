@@ -1,0 +1,366 @@
+=== qogirn6pro_dpu_dvfs_ops  (21 slots) ===
+  [ 0] dpu_dvfs_parse_dt
+  [ 1] dpu_dvfs_init
+  [ 2] dpu_hw_dfs_en
+  [ 3] set_dpu_work_index
+  [ 4] get_dpu_work_index
+  [ 5] set_dpu_idle_index
+  [ 6] get_dpu_idle_index
+  [ 7] set_dpu_work_freq
+  [ 8] get_dpu_work_freq
+  [ 9] set_dpu_idle_freq
+  [10] get_dpu_idle_freq
+  [11] get_dpu_dvfs_table
+  [12] set_dpu_dvfs_table
+  [13] None
+  [14] None
+  [15] get_dpu_dvfs_status
+  [16] set_dpu_gfree_wait_delay
+  [17] set_dpu_freq_upd_en_byp
+  [18] set_dpu_freq_upd_delay_en
+  [19] set_dpu_freq_upd_hdsk_en
+  [20] set_dpu_dvfs_swtrig_en
+
+=== sharkl5pro_dpu_dvfs_ops  (21 slots) ===
+  [ 0] dpu_dvfs_parse_dt.235
+  [ 1] dpu_dvfs_init.236
+  [ 2] dpu_hw_dfs_en.237
+  [ 3] set_dpu_work_index.238
+  [ 4] get_dpu_work_index.239
+  [ 5] set_dpu_idle_index.240
+  [ 6] get_dpu_idle_index.241
+  [ 7] set_dpu_work_freq.242
+  [ 8] get_dpu_work_freq.243
+  [ 9] set_dpu_idle_freq.244
+  [10] get_dpu_idle_freq.245
+  [11] get_dpu_dvfs_table.246
+  [12] set_dpu_dvfs_table.247
+  [13] None
+  [14] None
+  [15] get_dpu_dvfs_status.248
+  [16] set_dpu_gfree_wait_delay.249
+  [17] set_dpu_freq_upd_en_byp.250
+  [18] set_dpu_freq_upd_delay_en.251
+  [19] set_dpu_freq_upd_hdsk_en.252
+  [20] set_dpu_dvfs_swtrig_en.253
+
+=== sharkl5_dpu_dvfs_ops  (21 slots) ===
+  [ 0] dpu_dvfs_parse_dt.269
+  [ 1] dpu_dvfs_init.270
+  [ 2] dpu_hw_dfs_en.271
+  [ 3] set_dpu_work_index.272
+  [ 4] get_dpu_work_index.273
+  [ 5] set_dpu_idle_index.274
+  [ 6] get_dpu_idle_index.275
+  [ 7] set_dpu_work_freq.276
+  [ 8] get_dpu_work_freq.277
+  [ 9] set_dpu_idle_freq.278
+  [10] get_dpu_idle_freq.279
+  [11] get_dpu_dvfs_table.280
+  [12] set_dpu_dvfs_table.281
+  [13] None
+  [14] None
+  [15] get_dpu_dvfs_status.282
+  [16] set_dpu_gfree_wait_delay.283
+  [17] set_dpu_freq_upd_en_byp.284
+  [18] set_dpu_freq_upd_delay_en.285
+  [19] set_dpu_freq_upd_hdsk_en.286
+  [20] set_dpu_dvfs_swtrig_en.287
+
+=== qogirl6_dpu_dvfs_ops  (21 slots) ===
+  [ 0] dpu_dvfs_parse_dt.301
+  [ 1] dpu_dvfs_init.302
+  [ 2] dpu_hw_dfs_en.303
+  [ 3] set_dpu_work_index.304
+  [ 4] get_dpu_work_index.305
+  [ 5] set_dpu_idle_index.306
+  [ 6] get_dpu_idle_index.307
+  [ 7] set_dpu_work_freq.308
+  [ 8] get_dpu_work_freq.309
+  [ 9] set_dpu_idle_freq.310
+  [10] get_dpu_idle_freq.311
+  [11] get_dpu_dvfs_table.312
+  [12] set_dpu_dvfs_table.313
+  [13] None
+  [14] None
+  [15] get_dpu_dvfs_status.314
+  [16] set_dpu_gfree_wait_delay.315
+  [17] set_dpu_freq_upd_en_byp.316
+  [18] set_dpu_freq_upd_delay_en.317
+  [19] set_dpu_freq_upd_hdsk_en.318
+  [20] set_dpu_dvfs_swtrig_en.319
+
+=== roc1_dpu_dvfs_ops  (21 slots) ===
+  [ 0] dpu_dvfs_parse_dt.333
+  [ 1] dpu_dvfs_init.334
+  [ 2] dpu_hw_dfs_en.335
+  [ 3] set_dpu_work_index.336
+  [ 4] get_dpu_work_index.337
+  [ 5] set_dpu_idle_index.338
+  [ 6] get_dpu_idle_index.339
+  [ 7] set_dpu_work_freq.340
+  [ 8] get_dpu_work_freq.341
+  [ 9] set_dpu_idle_freq.342
+  [10] get_dpu_idle_freq.343
+  [11] get_dpu_dvfs_table.344
+  [12] set_dpu_dvfs_table.345
+  [13] None
+  [14] None
+  [15] get_dpu_dvfs_status.346
+  [16] set_dpu_gfree_wait_delay.347
+  [17] set_dpu_freq_upd_en_byp.348
+  [18] set_dpu_freq_upd_delay_en.349
+  [19] set_dpu_freq_upd_hdsk_en.350
+  [20] set_dpu_dvfs_swtrig_en.351
+
+=== qogirl6_apsys_dvfs_ops  (9 slots) ===
+  [ 0] apsys_dvfs_parse_dt
+  [ 1] apsys_dvfs_init
+  [ 2] apsys_dvfs_hold_en
+  [ 3] None
+  [ 4] apsys_dvfs_auto_gate
+  [ 5] apsys_dvfs_wait_window
+  [ 6] apsys_dvfs_min_volt
+  [ 7] apsys_top_dvfs_init
+  [ 8] dcdc_modem_cur_volt
+
+=== qogirn6pro_apsys_dvfs_ops  (9 slots) ===
+  [ 0] apsys_dvfs_parse_dt.420
+  [ 1] apsys_dvfs_init.421
+  [ 2] apsys_dvfs_hold_en.422
+  [ 3] None
+  [ 4] apsys_dvfs_auto_gate.423
+  [ 5] apsys_dvfs_wait_window.424
+  [ 6] apsys_dvfs_min_volt.425
+  [ 7] apsys_top_dvfs_init.426
+  [ 8] dcdc_modem_cur_volt.427
+
+=== sharkl5_apsys_dvfs_ops  (9 slots) ===
+  [ 0] apsys_dvfs_parse_dt.461
+  [ 1] apsys_dvfs_init.462
+  [ 2] apsys_dvfs_hold_en.463
+  [ 3] None
+  [ 4] apsys_dvfs_auto_gate.464
+  [ 5] apsys_dvfs_wait_window.465
+  [ 6] apsys_dvfs_min_volt.466
+  [ 7] apsys_top_dvfs_init.467
+  [ 8] dcdc_modem_cur_volt.468
+
+=== sharkl5pro_apsys_dvfs_ops  (9 slots) ===
+  [ 0] apsys_dvfs_parse_dt.502
+  [ 1] apsys_dvfs_init.503
+  [ 2] apsys_dvfs_hold_en.504
+  [ 3] None
+  [ 4] apsys_dvfs_auto_gate.505
+  [ 5] apsys_dvfs_wait_window.506
+  [ 6] apsys_dvfs_min_volt.507
+  [ 7] apsys_top_dvfs_init.508
+  [ 8] dcdc_modem_cur_volt.509
+
+=== roc1_apsys_dvfs_ops  (9 slots) ===
+  [ 0] apsys_dvfs_parse_dt.544
+  [ 1] apsys_dvfs_init.545
+  [ 2] apsys_dvfs_hold_en.546
+  [ 3] None
+  [ 4] apsys_dvfs_auto_gate.547
+  [ 5] apsys_dvfs_wait_window.548
+  [ 6] apsys_dvfs_min_volt.549
+  [ 7] apsys_top_dvfs_init.550
+  [ 8] dcdc_modem_cur_volt.551
+
+=== roc1_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt
+  [ 1] vsp_dvfs_init
+  [ 2] vsp_hw_dvfs_en
+  [ 3] set_vsp_work_freq
+  [ 4] get_vsp_work_freq
+  [ 5] set_vsp_idle_freq
+  [ 6] get_vsp_idle_freq
+  [ 7] get_vsp_dvfs_table
+  [ 8] get_vsp_dvfs_status
+  [ 9] set_vsp_gfree_wait_delay
+  [10] set_vsp_freq_upd_en_byp
+  [11] set_vsp_freq_upd_delay_en
+  [12] set_vsp_freq_upd_hdsk_en
+  [13] set_vsp_dvfs_swtrig_en
+  [14] set_vsp_work_index
+  [15] get_vsp_work_index
+  [16] set_vsp_idle_index
+  [17] get_vsp_idle_index
+  [18] updata_vsp_target_freq
+
+=== sharkl5_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt.584
+  [ 1] vsp_dvfs_init.585
+  [ 2] vsp_hw_dvfs_en.586
+  [ 3] set_vsp_work_freq.587
+  [ 4] get_vsp_work_freq.588
+  [ 5] set_vsp_idle_freq.589
+  [ 6] get_vsp_idle_freq.590
+  [ 7] get_vsp_dvfs_table.591
+  [ 8] get_vsp_dvfs_status.592
+  [ 9] set_vsp_gfree_wait_delay.593
+  [10] set_vsp_freq_upd_en_byp.594
+  [11] set_vsp_freq_upd_delay_en.595
+  [12] set_vsp_freq_upd_hdsk_en.596
+  [13] set_vsp_dvfs_swtrig_en.597
+  [14] set_vsp_work_index.598
+  [15] get_vsp_work_index.599
+  [16] set_vsp_idle_index.600
+  [17] get_vsp_idle_index.601
+  [18] updata_vsp_target_freq.602
+
+=== sharkl5pro_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt.620
+  [ 1] vsp_dvfs_init.621
+  [ 2] vsp_hw_dvfs_en.622
+  [ 3] set_vsp_work_freq.623
+  [ 4] get_vsp_work_freq.624
+  [ 5] set_vsp_idle_freq.625
+  [ 6] get_vsp_idle_freq.626
+  [ 7] get_vsp_dvfs_table.627
+  [ 8] get_vsp_dvfs_status.628
+  [ 9] set_vsp_gfree_wait_delay.629
+  [10] set_vsp_freq_upd_en_byp.630
+  [11] set_vsp_freq_upd_delay_en.631
+  [12] set_vsp_freq_upd_hdsk_en.632
+  [13] set_vsp_dvfs_swtrig_en.633
+  [14] set_vsp_work_index.634
+  [15] get_vsp_work_index.635
+  [16] set_vsp_idle_index.636
+  [17] get_vsp_idle_index.637
+  [18] updata_vsp_target_freq.638
+
+=== qogirl6_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt.666
+  [ 1] vsp_dvfs_init.667
+  [ 2] vsp_hw_dvfs_en.668
+  [ 3] set_vsp_work_freq.669
+  [ 4] get_vsp_work_freq.670
+  [ 5] set_vsp_idle_freq.671
+  [ 6] get_vsp_idle_freq.672
+  [ 7] get_vsp_dvfs_table.673
+  [ 8] get_vsp_dvfs_status.674
+  [ 9] set_vsp_gfree_wait_delay.675
+  [10] set_vsp_freq_upd_en_byp.676
+  [11] set_vsp_freq_upd_delay_en.677
+  [12] set_vsp_freq_upd_hdsk_en.678
+  [13] set_vsp_dvfs_swtrig_en.679
+  [14] set_vsp_work_index.680
+  [15] get_vsp_work_index.681
+  [16] set_vsp_idle_index.682
+  [17] get_vsp_idle_index.683
+  [18] updata_vsp_target_freq.684
+
+=== qogirn6pro_vpudec_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt.712
+  [ 1] vsp_dvfs_init.713
+  [ 2] vsp_hw_dvfs_en.714
+  [ 3] set_vsp_work_freq.715
+  [ 4] get_vsp_work_freq.716
+  [ 5] set_vsp_idle_freq.717
+  [ 6] get_vsp_idle_freq.718
+  [ 7] get_vsp_dvfs_table.719
+  [ 8] get_vsp_dvfs_status.720
+  [ 9] set_vsp_gfree_wait_delay.721
+  [10] set_vsp_freq_upd_en_byp.722
+  [11] set_vsp_freq_upd_delay_en.723
+  [12] set_vsp_freq_upd_hdsk_en.724
+  [13] set_vsp_dvfs_swtrig_en.725
+  [14] set_vsp_work_index.726
+  [15] get_vsp_work_index.727
+  [16] set_vsp_idle_index.728
+  [17] get_vsp_idle_index.729
+  [18] updata_vsp_target_freq.730
+
+=== qogirn6pro_vpuenc_vsp_dvfs_ops  (19 slots) ===
+  [ 0] vsp_dvfs_parse_dt.756
+  [ 1] vsp_dvfs_init.757
+  [ 2] vsp_hw_dvfs_en.758
+  [ 3] set_vsp_work_freq.759
+  [ 4] get_vsp_work_freq.760
+  [ 5] set_vsp_idle_freq.761
+  [ 6] get_vsp_idle_freq.762
+  [ 7] get_vsp_dvfs_table.763
+  [ 8] get_vsp_dvfs_status.764
+  [ 9] set_vsp_gfree_wait_delay.765
+  [10] set_vsp_freq_upd_en_byp.766
+  [11] set_vsp_freq_upd_delay_en.767
+  [12] set_vsp_freq_upd_hdsk_en.768
+  [13] set_vsp_dvfs_swtrig_en.769
+  [14] set_vsp_work_index.770
+  [15] get_vsp_work_index.771
+  [16] set_vsp_idle_index.772
+  [17] get_vsp_idle_index.773
+  [18] updata_vsp_target_freq.774
+
+=== sharkl5pro_vdsp_dvfs_ops  (22 slots) ===
+  [ 0] vdsp_dvfs_parse_dt
+  [ 1] vdsp_dvfs_parse_pll
+  [ 2] vdsp_dvfs_init
+  [ 3] vdsp_hw_dfs_en
+  [ 4] set_vdsp_work_index
+  [ 5] get_vdsp_work_index
+  [ 6] set_vdsp_idle_index
+  [ 7] get_vdsp_idle_index
+  [ 8] set_vdsp_work_freq
+  [ 9] get_vdsp_work_freq
+  [10] set_vdsp_idle_freq
+  [11] get_vdsp_idle_freq
+  [12] get_vdsp_dvfs_table
+  [13] set_vdsp_dvfs_table
+  [14] None
+  [15] None
+  [16] get_vdsp_dvfs_status
+  [17] set_vdsp_gfree_wait_delay
+  [18] set_vdsp_freq_upd_en_byp
+  [19] set_vdsp_freq_upd_delay_en
+  [20] set_vdsp_freq_upd_hdsk_en
+  [21] set_vdsp_dvfs_swtrig_en
+
+=== roc1_vdsp_dvfs_ops  (22 slots) ===
+  [ 0] vdsp_dvfs_parse_dt.815
+  [ 1] None
+  [ 2] vdsp_dvfs_init.816
+  [ 3] vdsp_hw_dfs_en.817
+  [ 4] set_vdsp_work_index.818
+  [ 5] get_vdsp_work_index.819
+  [ 6] set_vdsp_idle_index.820
+  [ 7] get_vdsp_idle_index.821
+  [ 8] set_vdsp_work_freq.822
+  [ 9] get_vdsp_work_freq.823
+  [10] set_vdsp_idle_freq.824
+  [11] get_vdsp_idle_freq.825
+  [12] get_vdsp_dvfs_table.826
+  [13] set_vdsp_dvfs_table.827
+  [14] None
+  [15] None
+  [16] get_vdsp_dvfs_status.828
+  [17] set_vdsp_gfree_wait_delay.829
+  [18] set_vdsp_freq_upd_en_byp.830
+  [19] set_vdsp_freq_upd_delay_en.831
+  [20] set_vdsp_freq_upd_hdsk_en.832
+  [21] set_vdsp_dvfs_swtrig_en.833
+
+=== qogirn6pro_gsp_dvfs_ops  (21 slots) ===
+  [ 0] gsp_dvfs_parse_dt
+  [ 1] gsp_dvfs_init
+  [ 2] gsp_hw_dfs_en
+  [ 3] set_gsp_work_index
+  [ 4] get_gsp_work_index
+  [ 5] set_gsp_idle_index
+  [ 6] get_gsp_idle_index
+  [ 7] set_gsp_work_freq
+  [ 8] get_gsp_work_freq
+  [ 9] set_gsp_idle_freq
+  [10] get_gsp_idle_freq
+  [11] get_gsp_dvfs_table
+  [12] set_gsp_dvfs_table
+  [13] None
+  [14] None
+  [15] get_gsp_dvfs_status
+  [16] set_gsp_gfree_wait_delay
+  [17] set_gsp_freq_upd_en_byp
+  [18] set_gsp_freq_upd_delay_en
+  [19] set_gsp_freq_upd_hdsk_en
+  [20] set_gsp_dvfs_swtrig_en

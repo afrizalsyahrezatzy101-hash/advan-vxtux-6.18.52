@@ -24,7 +24,8 @@ VXTUX_AUDIO_TREE := drivers/vxtux/audio
 ccflags-y	+= -I$(srctree)/$(VXTUX_AUDIO_TREE)/audiosipc/include \
 		   -I$(srctree)/$(VXTUX_AUDIO_TREE)/audiomem/
 
-obj-$(CONFIG_SPRD_AUDIO_SIPC) += audio-sipc.o audio-smsg.o
+obj-$(CONFIG_SPRD_AUDIO_SIPC) += audio_sipc.o
+audio_sipc-y := audio-sipc.o audio-smsg.o
 
 # audio-pipe is a SINGLE-object module: audio-pipe.o is built from
 # audio-pipe.c and linked directly into audio-pipe.ko.

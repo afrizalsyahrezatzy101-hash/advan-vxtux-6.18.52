@@ -32,9 +32,9 @@ config DRM_RADEON
 	  Choose this option if you have an ATI Radeon graphics card.  There
 	  are both PCI and AGP versions.  You don't need to choose this to
 	  run the Radeon in plain VGA mode.
-
+	
 	  If M is selected, the module will be called radeon.
-
+	
 config DRM_RADEON_USERPTR
 	bool "Always enable userptr support"
 	depends on DRM_RADEON
@@ -42,3 +42,4 @@ config DRM_RADEON_USERPTR
 	help
 	  This option selects CONFIG_MMU_NOTIFIER if it isn't already
 	  selected to enabled full userptr support.
+	

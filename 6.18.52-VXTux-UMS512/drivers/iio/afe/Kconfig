@@ -12,8 +12,8 @@ config IIO_RESCALE
 	  Say yes here to build support for the IIO rescaling
 	  that handles voltage dividers, current sense shunts and
 	  current sense amplifiers.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called iio-rescale.
-
+	
 endmenu

@@ -13,6 +13,7 @@ config VIDEO_STARFIVE_CAMSS
 	help
 	   Enable this to support for the Starfive Camera subsystem
 	   found on Starfive JH7110 SoC.
-
+	
 	   To compile this driver as a module, choose M here: the
 	   module will be called starfive-camss.
+	

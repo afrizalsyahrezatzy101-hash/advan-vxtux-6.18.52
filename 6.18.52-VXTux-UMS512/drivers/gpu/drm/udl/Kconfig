@@ -11,3 +11,4 @@ config DRM_UDL
 	help
 	  This is a KMS driver for the USB displaylink video adapters.
 	  Say M/Y to add support for these devices via drm/kms interfaces.
+	

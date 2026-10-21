@@ -12,12 +12,12 @@ config IIO_ST_LSM9DS0
 	  Say yes here to build support for STMicroelectronics LSM9DS0 IMU
 	  sensor. Supported devices: accelerometer/magnetometer of lsm9ds0
 	  and lsm303d.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called st_lsm9ds0.
-
+	
 	  Also need to enable at least one of I2C and SPI interface drivers
-
+	
 config IIO_ST_LSM9DS0_I2C
 	tristate "STMicroelectronics LSM9DS0 IMU I2C interface"
 	depends on I2C && IIO_ST_LSM9DS0
@@ -27,10 +27,10 @@ config IIO_ST_LSM9DS0_I2C
 	select REGMAP_I2C
 	help
 	  Build support for STMicroelectronics LSM9DS0 IMU I2C interface.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called st_lsm9ds0_i2c.
-
+	
 config IIO_ST_LSM9DS0_SPI
 	tristate "STMicroelectronics LSM9DS0 IMU SPI interface"
 	depends on SPI_MASTER && IIO_ST_LSM9DS0
@@ -40,6 +40,7 @@ config IIO_ST_LSM9DS0_SPI
 	select REGMAP_SPI
 	help
 	  Build support for STMicroelectronics LSM9DS0 IMU I2C interface.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called st_lsm9ds0_spi.
+	

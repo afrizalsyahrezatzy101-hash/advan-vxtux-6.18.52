@@ -8,3 +8,4 @@ config MESON_DDR_PMU
           memory throughput and other related events. It
           supports multiple channels to monitor the memory
           bandwidth simultaneously.
+	

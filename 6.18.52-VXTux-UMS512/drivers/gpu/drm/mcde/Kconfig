@@ -16,3 +16,4 @@ config DRM_MCDE
 	  Choose this option for DRM support for the ST-Ericsson MCDE
 	  Multi-Channel Display Engine.
 	  If M is selected the module will be called mcde_drm.
+	

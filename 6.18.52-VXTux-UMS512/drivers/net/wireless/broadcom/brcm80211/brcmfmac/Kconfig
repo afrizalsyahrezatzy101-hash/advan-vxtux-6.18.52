@@ -7,7 +7,7 @@ config BRCMFMAC
 	  FullMAC chipsets. It has to work with at least one of the bus
 	  interface support. If you choose to build a module, it'll be called
 	  brcmfmac.ko.
-
+	
 config BRCMFMAC_PROTO_BCDC
 	bool
 
@@ -25,7 +25,7 @@ config BRCMFMAC_SDIO
 	  This option enables the SDIO bus interface support for Broadcom
 	  IEEE802.11n embedded FullMAC WLAN driver. Say Y if you want to
 	  use the driver for a SDIO wireless card.
-
+	
 config BRCMFMAC_USB
 	bool "USB bus interface support for FullMAC driver"
 	depends on (USB = y || USB = BRCMFMAC)
@@ -36,7 +36,7 @@ config BRCMFMAC_USB
 	  This option enables the USB bus interface support for Broadcom
 	  IEEE802.11n embedded FullMAC WLAN driver. Say Y if you want to
 	  use the driver for an USB wireless card.
-
+	
 config BRCMFMAC_PCIE
 	bool "PCIE bus interface support for FullMAC driver"
 	depends on BRCMFMAC
@@ -47,4 +47,5 @@ config BRCMFMAC_PCIE
 	  This option enables the PCIE bus interface support for Broadcom
 	  IEEE802.11ac embedded FullMAC WLAN driver. Say Y if you want to
 	  use the driver for an PCIE wireless card.
-
+	
+	

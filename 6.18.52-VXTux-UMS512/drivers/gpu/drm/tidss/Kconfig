@@ -14,3 +14,4 @@ config DRM_TIDSS
 	  of it. The SoCs are 66AK2Gx, AM65x, and J721E. Set this to Y
 	  or M to add display support for TI Keystone family
 	  platforms.
+	

@@ -15,3 +15,4 @@ config SPRD_POWER_MANAGER
 	  spipe, sbuf, sblock, sensorhub, ...) depend on it per stock
 	  modules.dep; no vendor source exists, so this is built from
 	  disassembly. Behavior model: docs/re_sprd_power_manager.md.
+	

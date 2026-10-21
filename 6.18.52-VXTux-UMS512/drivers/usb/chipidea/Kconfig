@@ -13,9 +13,9 @@ config USB_CHIPIDEA
 	  controller based on ChipIdea silicon IP. It supports:
 	  Dual-role switch (ID, OTG FSM, sysfs), Host-only, and
 	  Peripheral-only.
-
+	
 	  When compiled dynamically, the module will be called ci_hdrc.ko.
-
+	
 if USB_CHIPIDEA
 
 config USB_CHIPIDEA_UDC
@@ -24,7 +24,7 @@ config USB_CHIPIDEA_UDC
 	help
 	  Say Y here to enable device controller functionality of the
 	  ChipIdea driver.
-
+	
 config USB_CHIPIDEA_HOST
 	bool "ChipIdea host controller"
 	depends on USB_EHCI_HCD
@@ -32,7 +32,7 @@ config USB_CHIPIDEA_HOST
 	help
 	  Say Y here to enable host controller functionality of the
 	  ChipIdea driver.
-
+	
 config USB_CHIPIDEA_PCI
 	tristate "Enable PCI glue driver" if EXPERT
 	depends on USB_PCI

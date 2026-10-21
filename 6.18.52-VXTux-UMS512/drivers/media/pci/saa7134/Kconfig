@@ -11,10 +11,10 @@ config VIDEO_SAA7134
 	help
 	  This is a video4linux driver for Philips SAA713x based
 	  TV cards.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called saa7134.
-
+	
 config VIDEO_SAA7134_ALSA
 	tristate "Philips SAA7134 DMA audio support"
 	depends on VIDEO_SAA7134 && SND
@@ -22,10 +22,10 @@ config VIDEO_SAA7134_ALSA
 	help
 	  This is a video4linux driver for direct (DMA) audio in
 	  Philips SAA713x based TV cards using ALSA
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called saa7134-alsa.
-
+	
 config VIDEO_SAA7134_RC
 	bool "Philips SAA7134 Remote Controller support"
 	depends on RC_CORE
@@ -34,7 +34,7 @@ config VIDEO_SAA7134_RC
 	default y
 	help
 	  Enables Remote Controller support on saa7134 driver.
-
+	
 config VIDEO_SAA7134_DVB
 	tristate "DVB/ATSC Support for saa7134 based TV cards"
 	depends on VIDEO_SAA7134 && DVB_CORE
@@ -61,10 +61,10 @@ config VIDEO_SAA7134_DVB
 	help
 	  This adds support for DVB cards based on the
 	  Philips saa7134 chip.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called saa7134-dvb.
-
+	
 config VIDEO_SAA7134_GO7007
 	tristate "go7007 support for saa7134 based TV cards"
 	depends on VIDEO_SAA7134
@@ -72,3 +72,4 @@ config VIDEO_SAA7134_GO7007
 	help
 	  Enables saa7134 driver support for boards with go7007
 	  MPEG encoder (WIS Voyager or compatible).
+	

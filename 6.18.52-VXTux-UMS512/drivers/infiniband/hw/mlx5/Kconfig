@@ -7,3 +7,4 @@ config MLX5_INFINIBAND
 	  Mellanox Connect-IB PCI Express host channel adapters (HCAs).
 	  This is required to use InfiniBand protocols such as
 	  IP-over-IB or SRP with these devices.
+	

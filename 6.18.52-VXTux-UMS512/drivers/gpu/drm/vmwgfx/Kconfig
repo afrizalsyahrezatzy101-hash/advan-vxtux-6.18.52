@@ -16,7 +16,7 @@ config DRM_VMWGFX
 	  This is a KMS enabled DRM driver for the VMware SVGA2
 	  virtual hardware.
 	  The compiled module will be called "vmwgfx.ko".
-
+	
 config DRM_VMWGFX_MKSSTATS
 	bool "Enable mksGuestStats instrumentation of vmwgfx by default"
 	depends on DRM_VMWGFX
@@ -24,4 +24,5 @@ config DRM_VMWGFX_MKSSTATS
 	default n
 	help
 	   Choose this option to instrument the kernel driver for mksGuestStats.
-
+	
+	

@@ -10,7 +10,7 @@ config FSL_FMAN
 	help
 		Freescale Data-Path Acceleration Architecture Frame Manager
 		(FMan) support
-
+	
 config DPAA_ERRATUM_A050385
 	bool
 	depends on ARM64 && FSL_DPAA
@@ -38,3 +38,4 @@ config DPAA_ERRATUM_A050385
 		With any one of the above three conditions present, there is
 		likelihood of stalled FMAN packet processing, especially under
 		stress with multiple ports injecting line-rate traffic.
+	

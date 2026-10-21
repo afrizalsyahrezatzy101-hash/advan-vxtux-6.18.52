@@ -15,7 +15,7 @@ config CAN_SOFTING
 	  controls the 2 buses on the card together.
 	  As such, some actions (start/stop/busoff recovery) on 1 bus
 	  must bring down the other bus too temporarily.
-
+	
 config CAN_SOFTING_CS
 	tristate "Softing Gmbh CAN pcmcia cards"
 	depends on PCMCIA
@@ -29,3 +29,4 @@ config CAN_SOFTING_CS
 	  firmware version 4.6 (softing-fw-4.6-binaries.tar.gz)
 	  In order to use the card as CAN device, you need the Softing generic
 	  support too.
+	

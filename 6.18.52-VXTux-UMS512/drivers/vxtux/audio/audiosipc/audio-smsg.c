@@ -871,3 +871,10 @@ int  aud_smsg_suspend_init(void)
 MODULE_AUTHOR("Chen Gaopeng");
 MODULE_DESCRIPTION("Audio SIPC/SMSG driver");
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(aud_smsg_init_debugfs);
+EXPORT_SYMBOL(aud_smsg_ipc_create);
+EXPORT_SYMBOL(aud_smsg_ipc_destroy);
+EXPORT_SYMBOL(aud_smsg_irq_handler);
+EXPORT_SYMBOL(aud_smsg_suspend_init);
+EXPORT_SYMBOL(aud_smsg_wakeup_all_ch);

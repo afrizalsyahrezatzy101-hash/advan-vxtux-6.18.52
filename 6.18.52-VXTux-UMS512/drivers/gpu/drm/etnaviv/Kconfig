@@ -14,7 +14,7 @@ config DRM_ETNAVIV
 	select DRM_SCHED
 	help
 	  DRM driver for Vivante GPUs.
-
+	
 config DRM_ETNAVIV_THERMAL
 	bool "enable ETNAVIV thermal throttling"
 	depends on DRM_ETNAVIV
@@ -22,3 +22,4 @@ config DRM_ETNAVIV_THERMAL
 	help
 	  Compile in support for thermal throttling.
 	  Say Y unless you want to risk burning your SoC.
+	

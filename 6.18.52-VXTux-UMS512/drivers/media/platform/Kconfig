@@ -8,26 +8,26 @@ menuconfig MEDIA_PLATFORM_DRIVERS
 	default "y"
 	help
 	  Say Y here to enable support for platform-specific media drivers.
-
+	
 if MEDIA_PLATFORM_DRIVERS
 
 config V4L_PLATFORM_DRIVERS
 	bool "V4L platform devices"
 	help
 	  Say Y here to enable support for platform-specific V4L drivers.
-
+	
 config SDR_PLATFORM_DRIVERS
 	bool "SDR platform devices"
 	depends on MEDIA_SDR_SUPPORT
 	help
 	  Say Y here to enable support for platform-specific SDR Drivers.
-
+	
 config DVB_PLATFORM_DRIVERS
 	bool "DVB platform devices"
 	depends on MEDIA_DIGITAL_TV_SUPPORT
 	help
 	  Say Y here to enable support for platform-specific Digital TV drivers.
-
+	
 config V4L_MEM2MEM_DRIVERS
 	bool "Memory-to-memory multimedia devices"
 	depends on VIDEO_DEV
@@ -36,7 +36,7 @@ config V4L_MEM2MEM_DRIVERS
 	  use system memory for both source and destination buffers, as opposed
 	  to capture and output drivers, which use memory buffers for just
 	  one of those.
-
+	
 # Ancillary drivers
 
 config VIDEO_MEM2MEM_DEINTERLACE
@@ -48,7 +48,7 @@ config VIDEO_MEM2MEM_DEINTERLACE
 	select V4L2_MEM2MEM_DEV
 	help
 	    Generic deinterlacing V4L2 driver.
-
+	
 config VIDEO_MUX
 	tristate "Video Multiplexer"
 	depends on V4L_PLATFORM_DRIVERS
@@ -60,7 +60,7 @@ config VIDEO_MUX
 	select V4L2_FWNODE
 	help
 	  This driver provides support for N:1 video bus multiplexers.
-
+	
 # Platform drivers - Please keep it alphabetically sorted
 source "drivers/media/platform/allegro-dvt/Kconfig"
 source "drivers/media/platform/amlogic/Kconfig"

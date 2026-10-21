@@ -11,7 +11,7 @@ config DRM_CDNS_DSI
 	help
 	  Support Cadence DPI to DSI bridge. This is an internal
 	  bridge and is meant to be directly embedded in a SoC.
-
+	
 if DRM_CDNS_DSI
 
 config DRM_CDNS_DSI_J721E
@@ -35,7 +35,7 @@ config DRM_CDNS_MHDP8546
 	  bridge and is meant to be directly embedded in a SoC.
 	  It takes a DPI stream as input and outputs it encoded
 	  in DP format.
-
+	
 if DRM_CDNS_MHDP8546
 
 config DRM_CDNS_MHDP8546_J721E

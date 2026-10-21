@@ -8,13 +8,14 @@ config VIDEO_TEGRA
 	select V4L2_FWNODE
 	help
 	  Choose this option if you have an NVIDIA Tegra SoC.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called tegra-video.
-
+	
 config VIDEO_TEGRA_TPG
 	bool "NVIDIA Tegra VI driver TPG mode"
 	depends on VIDEO_TEGRA
 	depends on ARCH_TEGRA_210_SOC
 	help
 	  Say yes here to enable Tegra internal TPG mode
+	

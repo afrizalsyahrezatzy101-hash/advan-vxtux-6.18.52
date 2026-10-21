@@ -13,3 +13,4 @@ config VXTUX_TRUSTY_DISP
 	  Helper disp_ca_* for Trusty TEE display path (proven stub build v4;
 	  original provider = disp_trusty.c when TRUSTY_VIRTIO_IPC=y). Official port
 	  replaces stub — fail-gracefully without TEE.
+	

@@ -12,10 +12,10 @@ config IQS624_POS
 	help
 	  Say Y here if you want to build support for the Azoteq IQS624
 	  and IQS625 angular position sensors.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called iqs624-pos.
-
+	
 config HID_SENSOR_CUSTOM_INTEL_HINGE
 	depends on HID_SENSOR_HUB
 	select IIO_BUFFER
@@ -28,8 +28,8 @@ config HID_SENSOR_CUSTOM_INTEL_HINGE
 	  and keyboard angle respect to horizon (ground).
 	  Say yes here to build support for the HID custom
 	  intel hinge sensor.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called hid-sensor-custom-hinge.
-
+	
 endmenu

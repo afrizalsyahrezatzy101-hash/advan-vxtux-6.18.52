@@ -6,7 +6,8 @@ config QAT_VFIO_PCI
 	help
 	  This provides migration support for Intel(R) QAT Virtual Function
 	  using the VFIO framework.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_vfio_pci. If you don't know what to do here,
 	  say N.
+	

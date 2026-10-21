@@ -15,7 +15,7 @@ config HIPPI
 	  and have a HIPPI network card in your computer that you want to use
 	  under Linux, say Y here (you must also remember to enable the driver
 	  for your HIPPI card below). Most people will say N here.
-
+	
 if HIPPI
 
 config ROADRUNNER
@@ -23,10 +23,10 @@ config ROADRUNNER
 	depends on PCI
 	help
 	  Say Y here if this is your PCI HIPPI network card.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called rrunner.  If unsure, say N.
-
+	
 config ROADRUNNER_LARGE_RINGS
 	bool "Use large TX/RX rings"
 	depends on ROADRUNNER
@@ -36,5 +36,5 @@ config ROADRUNNER_LARGE_RINGS
 	  transmitting and receiving. This memory cannot be used by any other
 	  kernel code or by user space programs. Say Y here only if you have
 	  the memory.
-
+	
 endif # HIPPI

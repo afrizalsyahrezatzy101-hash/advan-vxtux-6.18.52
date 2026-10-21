@@ -27,3 +27,4 @@ config MALI_MEMORY_GROUP_MANAGER
 	  This option enables an vendor implementation of a memory group manager
 	  for allocation and release of pages for memory pools managed by Mali GPU
 	  device drivers.
+	

@@ -10,3 +10,4 @@ config DRM_LOGICVC
 	select REGMAP_MMIO
 	help
 	  DRM display driver for the logiCVC programmable logic block from Xylon
+	

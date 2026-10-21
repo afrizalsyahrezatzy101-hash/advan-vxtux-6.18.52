@@ -10,7 +10,7 @@ config USB_FOTG210
 	help
 	  Faraday FOTG210 is a dual-mode USB controller that can act
 	  in both host controller and peripheral controller mode.
-
+	
 if USB_FOTG210
 
 config USB_FOTG210_HCD
@@ -20,10 +20,10 @@ config USB_FOTG210_HCD
 	  Faraday FOTG210 is an OTG controller which can be configured as
 	  an USB2.0 host. It is designed to meet USB2.0 EHCI specification
 	  with minor modification.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called fotg210-hcd.
-
+	
 config USB_FOTG210_UDC
 	depends on USB_GADGET=y || USB_GADGET=USB_FOTG210
 	bool "Faraday FOTG210 USB Peripheral Controller support"
@@ -31,8 +31,8 @@ config USB_FOTG210_UDC
 	   Faraday USB2.0 OTG controller which can be configured as
 	   high speed or full speed USB device. This driver supports
 	   Bulk Transfer so far.
-
+	
 	   Say "y" to link the driver statically, or "m" to build a
 	   dynamically linked module called "fotg210-udc".
-
+	
 endif

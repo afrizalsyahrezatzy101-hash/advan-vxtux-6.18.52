@@ -12,3 +12,4 @@ config HINIC
 	  To compile this driver as part of the kernel, choose Y here.
 	  If unsure, choose N.
 	  The default is compiled as module.
+	

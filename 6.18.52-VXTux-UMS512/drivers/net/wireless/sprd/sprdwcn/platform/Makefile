@@ -6,8 +6,8 @@
 # Kenapa Makefile vendor diubah:
 #
 #  Vendor memakai DUA nama komposit di objek yang sama dan dengan `:=`:
-#      obj-$(CONFIG_WCN_BOOT)     := marlin.o
-#      obj-$(CONFIG_WCN_PLATFORM) := wcn_platform.o
+#      obj-$(CONFIG_SPRD_LEGACY_WCN_BOOT)     := marlin.o
+#      obj-$(CONFIG_SPRD_LEGACY_WCN_PLATFORM) := wcn_platform.o
 #  Kalau kedua simbol aktif, penugasan kedua MENIMPA yang pertama, jadi
 #  marlin.o (beserta MARLINOFILES: wcn_boot.o, wcn_dump.o, wcn_op.o) tidak
 #  pernah masuk obj-*. Artinya marlin_probe() — driver platform WCN — tidak
@@ -15,7 +15,7 @@
 #  vendor T1030 (modulnya bernama wcn_bsp.ko, satu modul untuk seluruh
 #  pohon), jadi Makefile ini ditulis ulang dengan bentuk komposit kbuild
 #  yang benar: SATU nama modul (anchor) + anggota lewat `-y`:
-#      obj-$(CONFIG_WCN_CORE)      += wcn_core.o
+#      obj-$(CONFIG_SPRD_LEGACY_WCN_CORE)      += wcn_core.o
 #      wcn_core-y                  += <semua objek anggota>
 #  Dengan itu wcn_core.ko = SATU modul (komposit 23 objek), init fungsinya
 #  dirantai dari wcn_init_core() (wcn_boot.c) karena module_init hanya sah
@@ -34,11 +34,11 @@ ccflags-y += -I$(srctree)/$(src)/rf
 # wcn_dump_integrate.o -- the vendor picks one of the two by chip compatible
 # and building both duplicates mdbg_dump_gnss_register and dump_arm_reg.
 # Say so to the sources: mdbg_snap_shoot_iram() only exists in the integrated
-# implementation, so a caller guarded on CONFIG_WCN_INTEG alone references an
+# implementation, so a caller guarded on CONFIG_SPRD_LEGACY_WCN_INTEG alone references an
 # undefined symbol and the vmlinux link fails.
 ccflags-y += -DWCN_DUMP_SDIO_VARIANT=1
 
-obj-$(CONFIG_WCN_CORE) += wcn_core.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_CORE) += wcn_core.o
 
 wcn_core-y += gnss/gnss_common_ctl.o
 wcn_core-y += gnss/gnss_pmnotify_ctl.o
@@ -89,7 +89,7 @@ wcn_core-y += wcn_pm_qos.o
 #   wcn_procfs.c (inform_cp_wifi_download); wcn_init_debugfs -> wcn_boot.c.
 # (dipindai mekanis: nol konsumen di luar komposit; gate T22 mengunci kelasnya)
 wcn_core-$(CONFIG_WCN_UTILS) += wcn_debugfs.o
-wcn_core-$(CONFIG_SDIOHAL)   += mem_pd_mgr.o
+wcn_core-$(CONFIG_SPRD_LEGACY_SDIOHAL)   += mem_pd_mgr.o
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

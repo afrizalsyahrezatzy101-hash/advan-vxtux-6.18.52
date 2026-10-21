@@ -5,9 +5,9 @@ menuconfig RTW89
 	help
 	  This module adds support for mac80211-based wireless drivers that
 	  enables Realtek IEEE 802.11ax wireless chipsets.
-
+	
 	  If you choose to build a module, it'll be called rtw89.
-
+	
 if RTW89
 
 config RTW89_CORE
@@ -49,9 +49,9 @@ config RTW89_8851BE
 	select RTW89_8851B
 	help
 	  Select this option will enable support for 8851BE chipset
-
+	
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8851BU
 	tristate "Realtek 8851BU USB wireless network (Wi-Fi 6) adapter"
 	depends on USB
@@ -60,9 +60,9 @@ config RTW89_8851BU
 	select RTW89_8851B
 	help
 	  Select this option will enable support for 8851BU chipset
-
+	
 	  802.11ax USB wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8852AE
 	tristate "Realtek 8852AE PCI wireless network (Wi-Fi 6) adapter"
 	depends on PCI
@@ -71,9 +71,9 @@ config RTW89_8852AE
 	select RTW89_8852A
 	help
 	  Select this option will enable support for 8852AE chipset
-
+	
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8852BE
 	tristate "Realtek 8852BE PCI wireless network (Wi-Fi 6) adapter"
 	depends on PCI
@@ -83,9 +83,9 @@ config RTW89_8852BE
 	select RTW89_8852B_COMMON
 	help
 	  Select this option will enable support for 8852BE chipset
-
+	
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8852BU
 	tristate "Realtek 8852BU USB wireless network (Wi-Fi 6) adapter"
 	depends on USB
@@ -95,9 +95,9 @@ config RTW89_8852BU
 	select RTW89_8852B_COMMON
 	help
 	  Select this option will enable support for 8852BU chipset
-
+	
 	  802.11ax USB wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8852BTE
 	tristate "Realtek 8852BE-VT PCI wireless network (Wi-Fi 6) adapter"
 	depends on PCI
@@ -107,9 +107,9 @@ config RTW89_8852BTE
 	select RTW89_8852B_COMMON
 	help
 	  Select this option will enable support for 8852BE-VT chipset
-
+	
 	  802.11ax PCIe wireless network (Wi-Fi 6) adapter
-
+	
 config RTW89_8852CE
 	tristate "Realtek 8852CE PCI wireless network (Wi-Fi 6E) adapter"
 	depends on PCI
@@ -118,9 +118,9 @@ config RTW89_8852CE
 	select RTW89_8852C
 	help
 	  Select this option will enable support for 8852CE chipset
-
+	
 	  802.11ax PCIe wireless network (Wi-Fi 6E) adapter
-
+	
 config RTW89_8922AE
 	tristate "Realtek 8922AE/8922AE-VS PCI wireless network (Wi-Fi 7) adapter"
 	depends on PCI
@@ -129,12 +129,12 @@ config RTW89_8922AE
 	select RTW89_8922A
 	help
 	  Select this option will enable support for 8922AE/8922AE-VS chipset
-
+	
 	  802.11be PCIe wireless network (Wi-Fi 7) adapter
 	  supporting 2x2 2GHz/5GHz/6GHz 4096-QAM 160MHz channels.
-
+	
 	  The variant 8922AE-VS has the same features except 1024-QAM.
-
+	
 config RTW89_DEBUG
 	bool
 
@@ -144,16 +144,16 @@ config RTW89_DEBUGMSG
 	select RTW89_DEBUG
 	help
 	  Enable debug message support
-
+	
 	  If unsure, say Y to simplify debug problems
-
+	
 config RTW89_DEBUGFS
 	bool "Realtek rtw89 debugfs support"
 	depends on RTW89_CORE && CFG80211_DEBUGFS
 	select RTW89_DEBUG
 	help
 	  Enable debugfs support
-
+	
 	  If unsure, say Y to simplify debug problems
-
+	
 endif

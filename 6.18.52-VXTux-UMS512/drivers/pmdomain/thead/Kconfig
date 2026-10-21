@@ -11,3 +11,4 @@ config TH1520_PM_DOMAINS
 	  which can be managed independently. For example GPU, NPU,
 	  and DPU reside in their own power domains which can be
 	  turned on/off.
+	

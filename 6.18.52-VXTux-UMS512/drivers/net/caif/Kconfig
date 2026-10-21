@@ -8,7 +8,7 @@ menuconfig CAIF_DRIVERS
 	depends on CAIF
 	help
 	  Enable this to see CAIF physical drivers.
-
+	
 if CAIF_DRIVERS
 
 config CAIF_TTY
@@ -19,7 +19,7 @@ config CAIF_TTY
 	  The CAIF TTY transport driver is a Line Discipline (ldisc)
 	  identified as N_CAIF. When this ldisc is opened from user space
 	  it will redirect the TTY's traffic into the CAIF stack.
-
+	
 config CAIF_VIRTIO
 	tristate "CAIF virtio transport driver"
 	depends on CAIF && HAS_DMA
@@ -29,5 +29,5 @@ config CAIF_VIRTIO
 	default n
 	help
 	  The CAIF driver for CAIF over Virtio.
-
+	
 endif # CAIF_DRIVERS

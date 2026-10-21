@@ -19,6 +19,13 @@ struct platform_pwm_backlight_data {
 	int (*notify)(struct device *dev, int brightness);
 	void (*notify_after)(struct device *dev, int brightness);
 	void (*exit)(struct device *dev);
+	/*
+	 * Optional hook deciding whether the framebuffer that is being
+	 * blanked is the one this backlight controls.  Upstream used to
+	 * pass a struct fb_info * here; 6.18 has no framebuffer
+	 * notification left, so the display device is passed instead.
+	 */
+	int (*check_fb)(struct device *dev, struct device *display_dev);
 };
 
 #endif

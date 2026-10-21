@@ -16,8 +16,9 @@ config DRM_PANTHOR
 	select PM_DEVFREQ
 	help
 	  DRM driver for ARM Mali CSF-based GPUs.
-
+	
 	  This driver is for Mali (or Immortalis) Valhall Gxxx GPUs.
-
+	
 	  Note that the Mali-G68 and Mali-G78, while Valhall architecture, will
 	  be supported with the panfrost driver as they are not CSF GPUs.
+	

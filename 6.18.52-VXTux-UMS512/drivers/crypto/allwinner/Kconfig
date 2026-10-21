@@ -4,7 +4,7 @@ config CRYPTO_DEV_ALLWINNER
 	default y if ARCH_SUNXI
 	help
 	  Say Y here to get to see options for Allwinner hardware crypto devices
-
+	
 config CRYPTO_DEV_SUN4I_SS
 	tristate "Support for Allwinner Security System cryptographic accelerator"
 	depends on ARCH_SUNXI
@@ -20,10 +20,10 @@ config CRYPTO_DEV_SUN4I_SS
 	  Security System. Select this if you want to use it.
 	  The Security System handle AES/DES/3DES ciphers in CBC mode
 	  and SHA1 and MD5 hash algorithms.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called sun4i-ss.
-
+	
 config CRYPTO_DEV_SUN4I_SS_DEBUG
 	bool "Enable sun4i-ss stats"
 	depends on CRYPTO_DEV_SUN4I_SS
@@ -32,7 +32,7 @@ config CRYPTO_DEV_SUN4I_SS_DEBUG
 	  Say y to enable sun4i-ss debug stats.
 	  This will create /sys/kernel/debug/sun4i-ss/stats for displaying
 	  the number of requests per algorithm.
-
+	
 config CRYPTO_DEV_SUN8I_CE
 	tristate "Support for Allwinner Crypto Engine cryptographic offloader"
 	select CRYPTO_SKCIPHER
@@ -47,10 +47,10 @@ config CRYPTO_DEV_SUN8I_CE
 	  Select y here to have support for the crypto Engine available on
 	  Allwinner SoC H2+, H3, H5, H6, R40 and A64.
 	  The Crypto Engine handle AES/3DES ciphers in ECB/CBC mode.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called sun8i-ce.
-
+	
 config CRYPTO_DEV_SUN8I_CE_DEBUG
 	bool "Enable sun8i-ce stats"
 	depends on CRYPTO_DEV_SUN8I_CE
@@ -59,7 +59,7 @@ config CRYPTO_DEV_SUN8I_CE_DEBUG
 	  Say y to enable sun8i-ce debug stats.
 	  This will create /sys/kernel/debug/sun8i-ce/stats for displaying
 	  the number of requests per flow and per algorithm.
-
+	
 config CRYPTO_DEV_SUN8I_CE_HASH
 	bool "Enable support for hash on sun8i-ce"
 	depends on CRYPTO_DEV_SUN8I_CE
@@ -69,7 +69,7 @@ config CRYPTO_DEV_SUN8I_CE_HASH
 	select CRYPTO_SHA512
 	help
 	  Say y to enable support for hash algorithms.
-
+	
 config CRYPTO_DEV_SUN8I_CE_TRNG
 	bool "Support for Allwinner Crypto Engine TRNG"
 	depends on CRYPTO_DEV_SUN8I_CE
@@ -77,7 +77,7 @@ config CRYPTO_DEV_SUN8I_CE_TRNG
 	help
 	  Select this option if you want to provide kernel-side support for
 	  the True Random Number Generator found in the Crypto Engine.
-
+	
 config CRYPTO_DEV_SUN8I_SS
 	tristate "Support for Allwinner Security System cryptographic offloader"
 	select CRYPTO_SKCIPHER
@@ -92,10 +92,10 @@ config CRYPTO_DEV_SUN8I_SS
 	  Select y here to have support for the Security System available on
 	  Allwinner SoC A80, A83T.
 	  The Security System handle AES/3DES ciphers in ECB/CBC mode.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called sun8i-ss.
-
+	
 config CRYPTO_DEV_SUN8I_SS_DEBUG
 	bool "Enable sun8i-ss stats"
 	depends on CRYPTO_DEV_SUN8I_SS
@@ -104,7 +104,7 @@ config CRYPTO_DEV_SUN8I_SS_DEBUG
 	  Say y to enable sun8i-ss debug stats.
 	  This will create /sys/kernel/debug/sun8i-ss/stats for displaying
 	  the number of requests per flow and per algorithm.
-
+	
 config CRYPTO_DEV_SUN8I_SS_HASH
 	bool "Enable support for hash on sun8i-ss"
 	depends on CRYPTO_DEV_SUN8I_SS
@@ -113,3 +113,4 @@ config CRYPTO_DEV_SUN8I_SS_HASH
 	select CRYPTO_SHA256
 	help
 	  Say y to enable support for hash algorithms.
+	

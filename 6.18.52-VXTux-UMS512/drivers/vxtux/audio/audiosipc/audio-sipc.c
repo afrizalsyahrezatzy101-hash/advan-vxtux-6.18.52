@@ -959,3 +959,16 @@ module_exit(audio_sipc_exit);
 
 MODULE_DESCRIPTION("audio_sipc");
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(aud_recv_block_param);
+EXPORT_SYMBOL(aud_send_use_noreplychan);
+
+EXPORT_SYMBOL(aud_get_aud_ipc_smsg_addr);
+EXPORT_SYMBOL(aud_get_aud_ipc_smsg_para_addr);
+EXPORT_SYMBOL(aud_send_block_param);
+EXPORT_SYMBOL(aud_send_cmd_no_wait_param);
+EXPORT_SYMBOL(aud_send_cmd_result);
+
+EXPORT_SYMBOL(aud_recv_cmd);
+EXPORT_SYMBOL(g_aud_ipc);
+EXPORT_SYMBOL(snd_vbc_sipc_deinit);

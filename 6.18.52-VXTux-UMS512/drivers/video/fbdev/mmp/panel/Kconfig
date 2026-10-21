@@ -4,3 +4,4 @@ config MMP_PANEL_TPOHVGA
 	depends on SPI_MASTER
 	help
 		tpohvga panel support
+	
