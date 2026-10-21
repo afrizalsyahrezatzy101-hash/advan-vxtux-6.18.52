@@ -77,7 +77,7 @@ BOOKKEEPING_RE = re.compile(
 # .L14472!<N>. They are numbered per translation unit, so the numbers
 # have no meaning across toolchains. gcc's .compoundliteral.N is the
 # same kind of thing.
-CLONE_RE = re.compile(r"^.+?\.\d+(?:\.constprop\.\d+)?$")
+CLONE_RE = re.compile(r"^(.+?)\.\d+(?:\.constprop\.\d+)?$")
 # gcc's IPA partitioning splits a function into foo.part.0 / foo.part.1 when it
 # inlines one copy into another.  That is a compiler artefact exactly like the
 # clang ".N" clone suffix above and is never part of the module's API, so the
@@ -138,7 +138,7 @@ def strip_clone(s):
         prev = s
         s = CLONE_FAMILY_RE.sub("", s)
     s = PART_RE.sub(r"\1", s)
-    return CLONE_RE.sub("", s)
+    return CLONE_RE.sub(r"\1", s)
 
 
 def nm(path):
@@ -166,7 +166,60 @@ def nm(path):
     return defs, und
 
 
+def self_check():
+    """The clone-stripping must reduce a compiler suffix to the driver's own
+    name, never to the empty string and never to a different name.
+
+    It went wrong once: `CLONE_RE.sub("", s)` ate the WHOLE symbol, so
+    "apsys_dvfs_init.421" became "" and matched any other collapsed name.
+    That hid real gaps (unisoc-mailbox's reg_ctrl) and invented others.
+
+    Returns the list of failures; empty means OK.
+    """
+    cases = [
+        # gcc IPA partition
+        ("vds_create_channel.part.0", "vds_create_channel"),
+        ("dn_connect_ioctl.part.0", "dn_connect_ioctl"),
+        ("trusty_log_alloc_pages.part.0", "trusty_log_alloc_pages"),
+        # gcc interprocedural-scalar-replacement / constant propagation
+        ("aud_smsg_ch_send.isra.0", "aud_smsg_ch_send"),
+        ("crypto_transfer_request.constprop.0", "crypto_transfer_request"),
+        # chained
+        ("HI_Command.part.0.constprop.0", "HI_Command"),
+        # clang clone suffix
+        ("apsys_dvfs_init.421", "apsys_dvfs_init"),
+        # a real driver name must survive untouched
+        ("vds_get_txbuf", "vds_get_txbuf"),
+        ("_handle_rxbuf", "_handle_rxbuf"),
+        ("_free_vds", "_free_vds"),
+        ("_vds_get_txbuf", "_vds_get_txbuf"),
+        ("create_cdev_node", "create_cdev_node"),
+        ("destroy_cdev_node", "destroy_cdev_node"),
+        ("vds_add_channel", "vds_add_channel"),
+        ("vds_del_channel", "vds_del_channel"),
+        ("_create_cdev_node", "_create_cdev_node"),
+        ("_dn_lookup_vds", "_dn_lookup_vds"),
+        ("_handle_conn_rsp", "_handle_conn_rsp"),
+        ("_handle_ctrl_msg", "_handle_ctrl_msg"),
+        ("_handle_disc_req", "_handle_disc_req"),
+    ]
+    bad = [(s, want, strip_clone(s)) for s, want in cases
+           if strip_clone(s) != want]
+    # nothing may ever collapse to the empty string
+    for s, _ in cases:
+        if strip_clone(s) == "":
+            bad.append((s, "<non-empty>", ""))
+    return bad
+
+
 def main():
+    bad = self_check()
+    if bad:
+        print("SELF-CHECK FAILED - clone stripping is wrong:")
+        for s, want, got in bad:
+            print(f"  {s!r}: want {want!r}, got {got!r}")
+        return 1
+
     stock = []
     with open(STOCK_LIST, encoding="utf-8", errors="replace") as f:
         for line in f:
