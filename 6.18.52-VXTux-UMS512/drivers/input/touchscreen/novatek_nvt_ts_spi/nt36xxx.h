@@ -25,11 +25,21 @@
 #include <linux/irq.h>
 #include <linux/proc_fs.h>
 #include <linux/gpio.h>
+#include <linux/sysfs.h>
+#include <linux/types.h>
 
 
 
 
 #include "nt36xxx_mem_map.h"
+
+/* nt36xxx_compat.c carries these three for the stock blob's API surface. */
+extern char lcd_name[100];
+extern const struct attribute_group novatek_attr_group;
+extern int32_t nvt_suspend_state;
+extern size_t fw_need_write_size;
+extern uint8_t cascade_2nd_header_info;
+
 
 
 

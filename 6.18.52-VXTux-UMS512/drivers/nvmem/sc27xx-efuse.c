@@ -79,10 +79,21 @@ struct sc27xx_efuse_variant_data {
  * UMP96xx read path, selected by a compatible string rather than by the
  * variant table: which ANA_REG to program (and therefore where the efuse
  * controller window sits) depends on the chip, not on a register field.
+ *
+ * The stock blob's tables are:
+ *   ump9620_edata = { 0x2008, 0x40 }, { 0x2008, 0x0c }
+ *   ump9621_edata = { 0x2008, 0x0c }, { 0x1808, 0x40 }
+ *   ump518_edata  = { 0x1808, 0x40 }
+ * i.e. one (module_en, size) pair per efuse bank, and the banks are
+ * concatenated in table order.
  */
-struct sc27xx_efuse_ump_data {
+struct sc27xx_efuse_ump_bank {
 	u32 module_en;
-	u32 ana_reg;
+	u32 size;
+};
+
+struct sc27xx_efuse_ump_data {
+	struct sc27xx_efuse_ump_bank bank[2];
 };
 
 struct sc27xx_efuse {
@@ -104,18 +115,17 @@ static const struct sc27xx_efuse_variant_data sc2730_edata = {
 };
 
 static const struct sc27xx_efuse_ump_data ump9620_edata = {
-	.module_en = UMP9620_MODULE_EN,
-	.ana_reg = UMP9620_ANA_REG,
+	.bank[0] = { .module_en = UMP9620_MODULE_EN, .size = 0x40 },
+	.bank[1] = { .module_en = UMP9620_MODULE_EN, .size = 0x0c },
 };
 
 static const struct sc27xx_efuse_ump_data ump9621_edata = {
-	.module_en = UMP9620_MODULE_EN,
-	.ana_reg = UMP9620_ANA_REG,
+	.bank[0] = { .module_en = UMP9620_MODULE_EN, .size = 0x0c },
+	.bank[1] = { .module_en = UMP518_MODULE_EN, .size = 0x40 },
 };
 
 static const struct sc27xx_efuse_ump_data ump518_edata = {
-	.module_en = UMP518_MODULE_EN,
-	.ana_reg = UMP518_ANA_REG,
+	.bank[0] = { .module_en = UMP518_MODULE_EN, .size = 0x40 },
 };
 
 /*

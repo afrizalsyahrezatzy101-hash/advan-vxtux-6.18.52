@@ -133,25 +133,27 @@ const struct file_operations nvt_pen_diff_fops = {
  * signatures as their file_operations counterparts, so each is a direct
  * cast.
  */
-#define NVT_FOPS_TO_PROC_OPS(name)					\
-const struct proc_ops name##_proc_ops = {				\
-	.proc_open	= (int (*)(struct inode *, struct file *))	\
-			  name.open,					\
-	.proc_read	= (ssize_t (*)(struct file *, char __user *,	\
-				      size_t, loff_t *)) name.read,	\
-	.proc_lseek	= (loff_t (*)(struct file *, loff_t, int))	\
-			  name.llseek,					\
-	.proc_release	= (int (*)(struct inode *, struct file *))	\
-			  name.release,				\
+/*
+ * The blob's nvt_flash_fops has no llseek slot at all, so reading
+ * name.llseek back out of the struct is a read of an uninitialised field
+ * and gcc rejects it as a non-constant initializer.  Pass the four entry
+ * points in explicitly instead.
+ */
+#define NVT_FOPS_TO_PROC_OPS(name, open_fn, read_fn, lseek_fn, rel_fn)	\
+const struct proc_ops name##_proc_ops = {			\
+	.proc_open	= open_fn,					\
+	.proc_read	= read_fn,					\
+	.proc_lseek	= lseek_fn,					\
+	.proc_release	= rel_fn,					\
 }
 
-NVT_FOPS_TO_PROC_OPS(nvt_flash_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_selftest_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_fw_version_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_baseline_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_raw_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_diff_fops);
-NVT_FOPS_TO_PROC_OPS(nvt_pen_diff_fops);
+NVT_FOPS_TO_PROC_OPS(nvt_flash_fops, nvt_flash_open, nvt_flash_read, NULL, nvt_flash_close);
+NVT_FOPS_TO_PROC_OPS(nvt_selftest_fops, nvt_selftest_open, seq_read, seq_lseek, seq_release);
+NVT_FOPS_TO_PROC_OPS(nvt_fw_version_fops, nvt_fw_version_open, seq_read, seq_lseek, seq_release);
+NVT_FOPS_TO_PROC_OPS(nvt_baseline_fops, nvt_baseline_open, seq_read, seq_lseek, seq_release);
+NVT_FOPS_TO_PROC_OPS(nvt_raw_fops, nvt_raw_open, seq_read, seq_lseek, seq_release);
+NVT_FOPS_TO_PROC_OPS(nvt_diff_fops, nvt_diff_open, seq_read, seq_lseek, seq_release);
+NVT_FOPS_TO_PROC_OPS(nvt_pen_diff_fops, nvt_pen_diff_open, seq_read, seq_lseek, seq_release);
 
 /*
  * The stock blob's sysfs surface.
