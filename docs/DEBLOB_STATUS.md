@@ -360,3 +360,23 @@ directory only when its parent lists it:
 
 `donors/scan_dup_kconfig_syms.py` now reports **0** symbols defined
 in two reachable Kconfig files.
+
+
+## Build 165 status (measured)
+
+  Image          42,072,576 bytes, boots (no bootloop, no panic)
+  modules        224 .ko built
+  stock names    30 of 31 produced with the exact stock file name
+                 (the 31st, sprd-vsp-pw-domain, is built into vmlinux on
+                 purpose - see the section above)
+
+  exported API   376 of the 424 stock exported symbols present, 88.7%
+  identical      7 of 31 modules carry the stock blob's full symbol set
+  complete       mmdvfs (117/117), sdhci-sprd, novatek_ts_spi: 0 missing
+
+  the remaining gap is concentrated in five modules:
+    apsys-dvfs        229   per-IP devfreq objects (in progress)
+    mmdvfs              49   local statics: attribute tables, gov callbacks
+    novatek_ts_spi      84   local statics: memory-map tables
+    unisoc-mailbox     29   local statics: PHY ISR path, debugfs, pm notifier
+    trusty-ipc          13   local statics: vds_* and _handle_* functions
