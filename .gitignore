@@ -17,6 +17,13 @@ modules.order
 port_sync*.tar
 tmp_build*.sh
 
+# A device-sync leaked a second in-tree drivers/ at the repo root, a stale
+# mirror of 6.18.52-VXTux-UMS512/drivers/ (1660 files).  Real sources live
+# under 6.18.52-VXTux-UMS512/; a root-level one shadows nothing but gets swept
+# into commits by `git add -A`.
+/drivers/
+tmp_build*.sh
+
 # The stock vendor blobs ARE the ground truth for the deblob work: the
 # symbol lists are diffed against them.  They must be tracked even though
 # the build-artifact rule above says *.ko.

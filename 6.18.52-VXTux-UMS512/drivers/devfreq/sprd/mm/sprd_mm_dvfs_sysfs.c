@@ -57,6 +57,55 @@
 
 #include "sprd_mm_dvfs.h"
 
+/*
+ * The exported handlers.  The stock blob exports all 44 individually,
+ * so a consumer can reuse them; the port exports the same names.
+ */
+ssize_t get_dvfs_enable_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_auto_tune_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_work_freq_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_idle_freq_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_work_index_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_idle_index_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_fix_dvfs_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_dvfs_coffe_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_ip_status_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_dvfs_table_info_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_gfree_wait_delay_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_freq_upd_hdsk_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_freq_upd_delay_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_freq_upd_en_byp_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sw_trig_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_mmsys_power_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_status_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_dvfs_hold_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_sw_dvfs_en_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_dvfs_clk_gate_ctrl_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_dvfs_wait_window_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t get_sys_dvfs_min_volt_show(struct device *dev, struct device_attribute *attr, char *buf);
+ssize_t set_dvfs_enable_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_auto_tune_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_work_freq_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_idle_freq_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_work_index_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_idle_index_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_fix_dvfs_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_dvfs_coffe_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t get_ip_status_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_dvfs_table_info_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_gfree_wait_delay_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_freq_upd_hdsk_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_freq_upd_delay_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_freq_upd_en_byp_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sw_trig_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_mmsys_power_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_status_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_dvfs_hold_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_sw_dvfs_en_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_dvfs_clk_gate_ctrl_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_dvfs_wait_window_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+ssize_t set_sys_dvfs_min_volt_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
+
 /* the text the stock driver returns when a field has no value yet */
 static const char undefined_str[] = "undefined\n";
 
@@ -86,7 +135,7 @@ static ssize_t show_undefined(char *buf)
  * The per-IP show handlers.
  */
 
-static ssize_t get_dvfs_enable_show(struct device *dev,
+ssize_t get_dvfs_enable_show(struct device *dev,
 				    struct device_attribute *attr,
 				    char *buf)
 {
@@ -103,7 +152,7 @@ static ssize_t get_dvfs_enable_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_auto_tune_en_show(struct device *dev,
+ssize_t get_auto_tune_en_show(struct device *dev,
 				     struct device_attribute *attr,
 				     char *buf)
 {
@@ -120,7 +169,7 @@ static ssize_t get_auto_tune_en_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_work_freq_show(struct device *dev,
+ssize_t get_work_freq_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf)
 {
@@ -137,7 +186,7 @@ static ssize_t get_work_freq_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_idle_freq_show(struct device *dev,
+ssize_t get_idle_freq_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf)
 {
@@ -154,7 +203,7 @@ static ssize_t get_idle_freq_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_work_index_show(struct device *dev,
+ssize_t get_work_index_show(struct device *dev,
 				    struct device_attribute *attr,
 				    char *buf)
 {
@@ -171,7 +220,7 @@ static ssize_t get_work_index_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_idle_index_show(struct device *dev,
+ssize_t get_idle_index_show(struct device *dev,
 				    struct device_attribute *attr,
 				    char *buf)
 {
@@ -188,7 +237,7 @@ static ssize_t get_idle_index_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_fix_dvfs_show(struct device *dev,
+ssize_t get_fix_dvfs_show(struct device *dev,
 				 struct device_attribute *attr,
 				 char *buf)
 {
@@ -209,7 +258,7 @@ static ssize_t get_fix_dvfs_show(struct device *dev,
  * The coefficient show handlers.  The stock blob prints the raw
  * coefficient values, one per line.
  */
-static ssize_t get_gfree_wait_delay_show(struct device *dev,
+ssize_t get_gfree_wait_delay_show(struct device *dev,
 					  struct device_attribute *attr,
 					  char *buf)
 {
@@ -226,7 +275,7 @@ static ssize_t get_gfree_wait_delay_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_freq_upd_hdsk_en_show(struct device *dev,
+ssize_t get_freq_upd_hdsk_en_show(struct device *dev,
 					  struct device_attribute *attr,
 					  char *buf)
 {
@@ -243,7 +292,7 @@ static ssize_t get_freq_upd_hdsk_en_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_freq_upd_delay_en_show(struct device *dev,
+ssize_t get_freq_upd_delay_en_show(struct device *dev,
 					  struct device_attribute *attr,
 					  char *buf)
 {
@@ -260,7 +309,7 @@ static ssize_t get_freq_upd_delay_en_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_freq_upd_en_byp_show(struct device *dev,
+ssize_t get_freq_upd_en_byp_show(struct device *dev,
 					 struct device_attribute *attr,
 					 char *buf)
 {
@@ -277,7 +326,7 @@ static ssize_t get_freq_upd_en_byp_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t get_sw_trig_en_show(struct device *dev,
+ssize_t get_sw_trig_en_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf)
 {
@@ -300,7 +349,7 @@ static ssize_t get_sw_trig_en_show(struct device *dev,
  * The stock driver prints one "%d\n" per coefficient, in the order the
  * coefficients live in the struct.
  */
-static ssize_t get_dvfs_coffe_show(struct device *dev,
+ssize_t get_dvfs_coffe_show(struct device *dev,
 				    struct device_attribute *attr,
 				    char *buf)
 {
@@ -334,7 +383,7 @@ static ssize_t get_dvfs_coffe_show(struct device *dev,
 /*
  * get_ip_status_show - dump the live voltage and clock readback
  */
-static ssize_t get_ip_status_show(struct device *dev,
+ssize_t get_ip_status_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf)
 {
@@ -372,7 +421,7 @@ static ssize_t get_ip_status_show(struct device *dev,
 /*
  * get_dvfs_table_info_show - dump the IP's frequency map
  */
-static ssize_t get_dvfs_table_info_show(struct device *dev,
+ssize_t get_dvfs_table_info_show(struct device *dev,
 					 struct device_attribute *attr,
 					 char *buf)
 {
@@ -417,7 +466,7 @@ static ssize_t get_dvfs_table_info_show(struct device *dev,
  * forwards it to the IP's callback, so the hardware follows.
  */
 
-static ssize_t set_dvfs_enable_store(struct device *dev,
+ssize_t set_dvfs_enable_store(struct device *dev,
 				      struct device_attribute *attr,
 				      const char *buf, size_t count)
 {
@@ -441,7 +490,7 @@ static ssize_t set_dvfs_enable_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_auto_tune_en_store(struct device *dev,
+ssize_t set_auto_tune_en_store(struct device *dev,
 				       struct device_attribute *attr,
 				       const char *buf, size_t count)
 {
@@ -465,7 +514,7 @@ static ssize_t set_auto_tune_en_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_work_freq_store(struct device *dev,
+ssize_t set_work_freq_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t count)
 {
@@ -489,7 +538,7 @@ static ssize_t set_work_freq_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_idle_freq_store(struct device *dev,
+ssize_t set_idle_freq_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t count)
 {
@@ -513,7 +562,7 @@ static ssize_t set_idle_freq_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_work_index_store(struct device *dev,
+ssize_t set_work_index_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
@@ -537,7 +586,7 @@ static ssize_t set_work_index_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_idle_index_store(struct device *dev,
+ssize_t set_idle_index_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
@@ -561,7 +610,7 @@ static ssize_t set_idle_index_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_fix_dvfs_store(struct device *dev,
+ssize_t set_fix_dvfs_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
@@ -585,7 +634,7 @@ static ssize_t set_fix_dvfs_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_gfree_wait_delay_store(struct device *dev,
+ssize_t set_gfree_wait_delay_store(struct device *dev,
 					   struct device_attribute *attr,
 					   const char *buf, size_t count)
 {
@@ -609,7 +658,7 @@ static ssize_t set_gfree_wait_delay_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_freq_upd_hdsk_en_store(struct device *dev,
+ssize_t set_freq_upd_hdsk_en_store(struct device *dev,
 					   struct device_attribute *attr,
 					   const char *buf, size_t count)
 {
@@ -633,7 +682,7 @@ static ssize_t set_freq_upd_hdsk_en_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_freq_upd_delay_en_store(struct device *dev,
+ssize_t set_freq_upd_delay_en_store(struct device *dev,
 					   struct device_attribute *attr,
 					   const char *buf, size_t count)
 {
@@ -657,7 +706,7 @@ static ssize_t set_freq_upd_delay_en_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_freq_upd_en_byp_store(struct device *dev,
+ssize_t set_freq_upd_en_byp_store(struct device *dev,
 					  struct device_attribute *attr,
 					  const char *buf, size_t count)
 {
@@ -681,7 +730,7 @@ static ssize_t set_freq_upd_en_byp_store(struct device *dev,
 	return count;
 }
 
-static ssize_t set_sw_trig_en_store(struct device *dev,
+ssize_t set_sw_trig_en_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t count)
 {
@@ -711,7 +760,7 @@ static ssize_t set_sw_trig_en_store(struct device *dev,
  * The stock driver parses eight comma separated values and applies them
  * to the coefficient block.
  */
-static ssize_t set_dvfs_coffe_store(struct device *dev,
+ssize_t set_dvfs_coffe_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
@@ -766,7 +815,7 @@ static ssize_t set_dvfs_coffe_store(struct device *dev,
  *   "map_index,reg_add,fdiv_num,fdiv_denom,axi_index,mtx_index,clk,volt"
  * and applies the entry to the hardware.
  */
-static ssize_t set_dvfs_table_info_store(struct device *dev,
+ssize_t set_dvfs_table_info_store(struct device *dev,
 					  struct device_attribute *attr,
 					  const char *buf, size_t count)
 {
@@ -821,7 +870,7 @@ static ssize_t set_dvfs_table_info_store(struct device *dev,
  * The stock blob uses get_ip_status_store as the store half of the
  * get_ip_status attribute; it accepts the write and does nothing.
  */
-static ssize_t get_ip_status_store(struct device *dev,
+ssize_t get_ip_status_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t count)
 {
@@ -832,7 +881,7 @@ static ssize_t get_ip_status_store(struct device *dev,
  * The stock blob uses set_sys_status_store as the store half of the
  * get_sys_info attribute; it accepts the write and does nothing.
  */
-static ssize_t set_sys_status_store(struct device *dev,
+ssize_t set_sys_status_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
@@ -859,7 +908,7 @@ static struct ip_dvfs_ops *mmsys_ops(void)
 /*
  * get_mmsys_power_show - the mmsys power switch
  */
-static ssize_t get_mmsys_power_show(struct device *dev,
+ssize_t get_mmsys_power_show(struct device *dev,
 				    struct device_attribute *attr,
 				    char *buf)
 {
@@ -879,7 +928,7 @@ static ssize_t get_mmsys_power_show(struct device *dev,
 /*
  * set_mmsys_power_store - set the mmsys power switch
  */
-static ssize_t set_mmsys_power_store(struct device *dev,
+ssize_t set_mmsys_power_store(struct device *dev,
 				      struct device_attribute *attr,
 				      const char *buf, size_t count)
 {
@@ -906,7 +955,7 @@ static ssize_t set_mmsys_power_store(struct device *dev,
 /*
  * get_sys_status_show - the mmsys voltage and clock summary
  */
-static ssize_t get_sys_status_show(struct device *dev,
+ssize_t get_sys_status_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf)
 {
@@ -953,7 +1002,7 @@ static ssize_t get_sys_status_show(struct device *dev,
 /*
  * The mmsys coefficient switches.
  */
-static ssize_t get_sys_dvfs_hold_en_show(struct device *dev,
+ssize_t get_sys_dvfs_hold_en_show(struct device *dev,
 					  struct device_attribute *attr,
 					  char *buf)
 {
@@ -970,7 +1019,7 @@ static ssize_t get_sys_dvfs_hold_en_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t set_sys_dvfs_hold_en_store(struct device *dev,
+ssize_t set_sys_dvfs_hold_en_store(struct device *dev,
 					  struct device_attribute *attr,
 					  const char *buf, size_t count)
 {
@@ -992,7 +1041,7 @@ static ssize_t set_sys_dvfs_hold_en_store(struct device *dev,
 	return count;
 }
 
-static ssize_t get_sys_sw_dvfs_en_show(struct device *dev,
+ssize_t get_sys_sw_dvfs_en_show(struct device *dev,
 				       struct device_attribute *attr,
 				       char *buf)
 {
@@ -1009,7 +1058,7 @@ static ssize_t get_sys_sw_dvfs_en_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t set_sys_sw_dvfs_en_store(struct device *dev,
+ssize_t set_sys_sw_dvfs_en_store(struct device *dev,
 				       struct device_attribute *attr,
 				       const char *buf, size_t count)
 {
@@ -1031,7 +1080,7 @@ static ssize_t set_sys_sw_dvfs_en_store(struct device *dev,
 	return count;
 }
 
-static ssize_t get_sys_dvfs_clk_gate_ctrl_show(struct device *dev,
+ssize_t get_sys_dvfs_clk_gate_ctrl_show(struct device *dev,
 						struct device_attribute *attr,
 						char *buf)
 {
@@ -1048,7 +1097,7 @@ static ssize_t get_sys_dvfs_clk_gate_ctrl_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t set_sys_dvfs_clk_gate_ctrl_store(struct device *dev,
+ssize_t set_sys_dvfs_clk_gate_ctrl_store(struct device *dev,
 						 struct device_attribute *attr,
 						 const char *buf, size_t count)
 {
@@ -1070,7 +1119,7 @@ static ssize_t set_sys_dvfs_clk_gate_ctrl_store(struct device *dev,
 	return count;
 }
 
-static ssize_t get_sys_dvfs_wait_window_show(struct device *dev,
+ssize_t get_sys_dvfs_wait_window_show(struct device *dev,
 					      struct device_attribute *attr,
 					      char *buf)
 {
@@ -1087,7 +1136,7 @@ static ssize_t get_sys_dvfs_wait_window_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t set_sys_dvfs_wait_window_store(struct device *dev,
+ssize_t set_sys_dvfs_wait_window_store(struct device *dev,
 					      struct device_attribute *attr,
 					      const char *buf, size_t count)
 {
@@ -1107,7 +1156,7 @@ static ssize_t set_sys_dvfs_wait_window_store(struct device *dev,
 	return count;
 }
 
-static ssize_t get_sys_dvfs_min_volt_show(struct device *dev,
+ssize_t get_sys_dvfs_min_volt_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
 {
@@ -1124,7 +1173,7 @@ static ssize_t get_sys_dvfs_min_volt_show(struct device *dev,
 	return ret;
 }
 
-static ssize_t set_sys_dvfs_min_volt_store(struct device *dev,
+ssize_t set_sys_dvfs_min_volt_store(struct device *dev,
 					   struct device_attribute *attr,
 					   const char *buf, size_t count)
 {

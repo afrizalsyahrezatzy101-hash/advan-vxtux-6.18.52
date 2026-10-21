@@ -1039,7 +1039,7 @@ IP_INIT(mmsys);
  * port keeps them rather than a plain module_init(): the per-IP init functions
  * are still exported individually for callers that bring the IPs up by hand.
  */
-static int __init mmsys_module_init(void)
+int __init mmsys_module_init(void)
 {
 	int ret;
 
@@ -1088,7 +1088,7 @@ err_fd:	fd_dvfs_exit();
 	return ret;
 }
 
-static void __exit mmsys_module_exit(void)
+void __exit mmsys_module_exit(void)
 {
 	mtx_dvfs_exit();
 	cpp_dvfs_exit();
@@ -1099,6 +1099,9 @@ static void __exit mmsys_module_exit(void)
 	fd_dvfs_exit();
 	mmsys_dvfs_exit();
 }
+
+EXPORT_SYMBOL_GPL(mmsys_module_init);
+EXPORT_SYMBOL_GPL(mmsys_module_exit);
 
 module_init(mmsys_module_init);
 module_exit(mmsys_module_exit);
