@@ -14,12 +14,17 @@ KO = r"E:\vxtux_build_repo\donors\stock_vendor_modules\apsys-dvfs.ko"
 FUNCS = r"E:\vxtux_build_repo\donors\ghidra_out\apsys-dvfs.ko.funcs.txt"
 data = open(KO, "rb").read()
 
+# The Ghidra export prints absolute load addresses; the .text section of
+# this ET_REL object starts at 0x106000, so the function offsets are that
+# base subtracted.
+TEXT_BASE = 0x106000
+
 # ---- function table from the Ghidra export
-funcs = []          # (addr, name)
+funcs = []          # (text-offset, name)
 for line in open(FUNCS, encoding="utf-8", errors="replace"):
     p = line.split()
-    if len(p) >= 2 and p[1] == "Function":
-        funcs.append((int(p[0], 16), p[0]))
+    if len(p) >= 3 and p[2] == "Function":
+        funcs.append((int(p[0], 16) - TEXT_BASE, p[1]))
 funcs.sort()
 FADDR = [f[0] for f in funcs]
 FNAME = [f[1] for f in funcs]

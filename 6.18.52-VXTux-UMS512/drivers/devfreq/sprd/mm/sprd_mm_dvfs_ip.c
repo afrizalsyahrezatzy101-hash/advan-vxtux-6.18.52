@@ -45,6 +45,8 @@
 #include <linux/of.h>
 #include <linux/pm_opp.h>
 
+#include <linux/module.h>
+
 #include "sprd_mm_dvfs.h"
 
 /* Exported below; the stock blob exports these per-IP entry points. */
@@ -939,6 +941,7 @@ const struct of_device_id ip##_dvfs_of_match[] = {		\
 	{ .compatible = of_match },				\
 	{ }								\
 };									\
+MODULE_DEVICE_TABLE(of, ip##_dvfs_of_match);			\
 									\
 struct platform_driver ip##_dvfs_driver = {		\
 	.probe		= dvfs_probe,				\
@@ -1039,7 +1042,7 @@ IP_INIT(mmsys);
  * port keeps them rather than a plain module_init(): the per-IP init functions
  * are still exported individually for callers that bring the IPs up by hand.
  */
-int __init mmsys_module_init(void)
+int mmsys_module_init(void);
 {
 	int ret;
 
@@ -1088,7 +1091,7 @@ err_fd:	fd_dvfs_exit();
 	return ret;
 }
 
-void __exit mmsys_module_exit(void)
+void mmsys_module_exit(void);
 {
 	mtx_dvfs_exit();
 	cpp_dvfs_exit();

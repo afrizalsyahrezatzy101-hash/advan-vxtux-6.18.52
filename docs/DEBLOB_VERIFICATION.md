@@ -41,8 +41,8 @@ Three levels, each reported on its own:
 | 18 | `sprd-vsp-pw-domain` | **MISSING** | - | - | - |
 | 19 | `sprd_apipe` | OK | **2 missing** | 8 | _copy_from_user, _copy_to_user |
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
-| 21 | `sprd_power_manager` | OK | **2 missing** | 15 | g_sprd_mpm, sprd_mpm_notifier_block |
-| 22 | `sprd_time_sync` | OK | **2 missing** | 7 | _copy_to_user, sprd_time_sync_class |
+| 21 | `sprd_power_manager` | OK | identical | 15 | yes |
+| 22 | `sprd_time_sync` | OK | **1 missing** | 7 | _copy_to_user |
 | 23 | `trusty-ipc` | OK | **15 missing** | 18 | _create_cdev_node, _dn_lookup_vds, _free_vds |
 | 24 | `trusty-irq` | OK | **2 missing** | 10 | trusty_irq_enable_irqset, trusty_irq_init_normal_irq |
 | 25 | `trusty-log` | OK | **2 missing** | 7 | trusty_dump_logs.__print_once, trusty_log_alloc_pages |
@@ -57,7 +57,7 @@ Three levels, each reported on its own:
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **6** (19.4%)
+- and it carries the same API: **7** (22.6%)
 
 ### Gaps
 
@@ -89,9 +89,7 @@ Three levels, each reported on its own:
 - `sprd-dmaengine-pcm`: kernel API drift (6.18 renamed 13 of the stock blob's imports, all present in the build): ['__raw_spin_lock_init', '__vma_start_write', '_dev_err', '_dev_warn', '_printk', 'debug_locks', 'devm_snd_soc_register_component', 'dma_request_chan']...
 - `sprd_apipe`: missing ['_copy_from_user', '_copy_to_user']
 - `sprd_apipe`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__might_fault', '__might_sleep', 'mutex_destroy', 'mutex_lock_nested', 'trace_hardirqs_off', 'trace_hardirqs_on', 'vmalloc_noprof', 'warn_bogus_irq_restore']
-- `sprd_power_manager`: missing ['g_sprd_mpm', 'sprd_mpm_notifier_block']
-- `sprd_power_manager`: kernel API drift (6.18 renamed 15 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__stack_chk_fail', '_printk', 'debugfs_create_file_full', 'memset']...
-- `sprd_time_sync`: missing ['_copy_to_user', 'sprd_time_sync_class']
+- `sprd_time_sync`: missing ['_copy_to_user']
 - `sprd_time_sync`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'class_create', 'memset', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
 - `trusty-ipc`: missing ['_create_cdev_node', '_dn_lookup_vds', '_free_vds', '_handle_conn_rsp', '_handle_ctrl_msg', '_handle_disc_req', '_handle_rxbuf', '_vds_get_txbuf', 'create_cdev_node', 'destroy_cdev_node', 'tipc_virtio_probe.vq_names', 'vds_add_channel', 'vds_create_channel', 'vds_del_channel', 'vds_get_txbuf']
 - `trusty-ipc`: kernel API drift (6.18 renamed 18 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__might_sleep', '__raw_spin_lock_init', '__register_virtio_driver']...
