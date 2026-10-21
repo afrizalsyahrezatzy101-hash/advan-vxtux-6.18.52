@@ -1,25 +1,47 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-/* V18: stub for VXTux 6.18 - mmc_hsq not in upstream */
-#ifndef _MMC_HSQ_H
-#define _MMC_HSQ_H
+#ifndef LINUX_MMC_HSQ_H
+#define LINUX_MMC_HSQ_H
 
-struct mmc_hsq {
-    int dummy;
+#define HSQ_NUM_SLOTS	64
+#define HSQ_INVALID_TAG	HSQ_NUM_SLOTS
+
+/*
+ * For MMC host software queue, we only allow 2 requests in
+ * flight to avoid a long latency.
+ */
+#define HSQ_NORMAL_DEPTH	2
+/*
+ * For 4k random writes, we allow hsq_depth to increase to 5
+ * for better performance.
+ */
+#define HSQ_PERFORMANCE_DEPTH	5
+
+struct hsq_slot {
+	struct mmc_request *mrq;
 };
 
-static inline int mmc_hsq_init(struct mmc_hsq *hsq, struct mmc_host *mmc)
-{
-    (void)hsq; (void)mmc;
-    return 0;
-}
+struct mmc_hsq {
+	struct mmc_host *mmc;
+	struct mmc_request *mrq;
+	wait_queue_head_t wait_queue;
+	struct hsq_slot *slot;
+	spinlock_t lock;
+	struct work_struct retry_work;
 
-static inline void mmc_hcq_suspend(struct mmc_host *mmc) { (void)mmc; }
-static inline int mmc_hsq_finalize_request(struct mmc_host *mmc, struct mmc_request *mrq)
-{
-    (void)mmc; (void)mrq;
-    return 0;
-}
-static inline void mmc_hsq_suspend(struct mmc_host *mmc) { (void)mmc; }
-static inline void mmc_hsq_resume(struct mmc_host *mmc) { (void)mmc; }
+	int next_tag;
+	int num_slots;
+	int qcnt;
+	int tail_tag;
+	int tag_slot[HSQ_NUM_SLOTS];
+
+	bool enabled;
+	bool waiting_for_idle;
+	bool recovery_halt;
+};
+
+int mmc_hsq_init(struct mmc_hsq *hsq, struct mmc_host *mmc);
+void mmc_hsq_suspend(struct mmc_host *mmc);
+int mmc_hsq_resume(struct mmc_host *mmc);
+bool mmc_hsq_finalize_request(struct mmc_host *mmc, struct mmc_request *mrq);
 
 #endif

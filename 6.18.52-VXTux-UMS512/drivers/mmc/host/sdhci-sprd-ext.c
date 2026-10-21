@@ -15,11 +15,20 @@
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
 
-#include <linux/mmc/card.h>
 #include <linux/mmc/host.h>
+#include <linux/mmc/card.h>
 #include <linux/mmc/ioctl.h>
-#include <linux/mmc/mmc.h>
 #include <linux/mmc/sdio_func.h>
+
+#include <linux/mmc/mmc.h>
+
+/*
+ * mmc_card_removed() and MMC_CARD_REMOVED live in drivers/mmc/core/card.h,
+ * which is core-private and redefines one EXT_CSD_* constant that
+ * <linux/mmc/mmc.h> already has.  Two macros are cheaper than that fight.
+ */
+#define MMC_CARD_REMOVED	(1 << 4)	/* card has been removed */
+#define mmc_card_removed(c)	((c) && ((c)->state & MMC_CARD_REMOVED))
 
 #include "sdhci.h"
 #include "mmc_hsq.h"
@@ -30,7 +39,6 @@
 #define MMC_SEND_WR_PROT_TYPE		31	/* not in MMC spec */
 #define EXT_CSD_CLASS_6_CTRL		59
 #define EXT_CSD_USR_WP			171
-#define EXT_CSD_CMD_SET_NORMAL		(1 << 0)
 #define EXT_CSD_USR_WP_EN_PWR_WP		1
 
 /*
@@ -54,10 +62,10 @@ struct sprd_mmc_wp {
 	u64 prot_size;
 };
 
-static struct sprd_mmc_wp sprd_wp;
-static struct bus_type sprd_wp_bus_type;
+static struct sprd_mmc_wp wp_dat;
+static struct bus_type wp_bus_type;
 
-static int mmc_set_powp(struct mmc_card *card);
+int mmc_set_powp(struct mmc_card *card);
 static void mmc_get_wp_current_status_and_type(struct mmc_card *card);
 
 /*
@@ -69,6 +77,25 @@ static void mmc_get_wp_current_status_and_type(struct mmc_card *card);
  */
 bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd);
 
+/*
+ * mmc_cmdq_enable()/mmc_cmdq_disable() exist in the MMC core but are not
+ * exported in 6.18, so the write-protect ioctl declares them itself.
+ * ponytail: drop these two lines if upstream ever exports them.
+ */
+int mmc_cmdq_enable(struct mmc_card *card);
+int mmc_cmdq_disable(struct mmc_card *card);
+
+/* Prototypes for the exported entry points, so the build stays warning-free. */
+int mmc_check_wp_fn(struct mmc_host *host);
+int mmc_wp_init(struct mmc_host *mmc);
+void mmc_wp_remove(struct mmc_host *mmc);
+int mmc_send_tuning_read(struct mmc_host *mmc);
+int sdhci_sprd_request_sync(struct mmc_host *mmc, struct mmc_request *mrq);
+int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev);
+int sdhci_sprd_irq_request_swcq(struct sdhci_host *host);
+int _sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+void sdhci_sprd_enable_sdio_irq_nolock(struct sdhci_host *host, int enable);
+
 static inline bool sdhci_sprd_manual_cmd23(struct sdhci_host *host,
 					   struct mmc_request *mrq)
 {
@@ -79,7 +106,7 @@ static inline bool sdhci_sprd_manual_cmd23(struct sdhci_host *host,
 /* power-on write protect: status/type read-back                       */
 /* ------------------------------------------------------------------ */
 
-static int mmc_get_wp_current_status(struct mmc_card *card)
+noinline static int mmc_get_wp_current_status(struct mmc_card *card)
 {
 	struct mmc_host *host = card->host;
 	struct mmc_command cmd = {0};
@@ -104,7 +131,7 @@ static int mmc_get_wp_current_status(struct mmc_card *card)
 	/* CMD30 gets the write-protect bit per group */
 	cmd.opcode = MMC_SEND_WRITE_PROT;
 	cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
-	cmd.arg = sprd_wp.start_addr;
+	cmd.arg = wp_dat.start_addr;
 
 	data.blksz = size;
 	data.blocks = 1;
@@ -138,7 +165,7 @@ out:
 	return err;
 }
 
-static int mmc_get_wp_current_type(struct mmc_card *card)
+noinline static int mmc_get_wp_current_type(struct mmc_card *card)
 {
 	struct mmc_host *host = card->host;
 	struct mmc_command cmd = {0};
@@ -164,7 +191,7 @@ static int mmc_get_wp_current_type(struct mmc_card *card)
 	/* CMD31 (Unisoc ext) gets the per-group protection type */
 	cmd.opcode = MMC_SEND_WR_PROT_TYPE;
 	cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
-	cmd.arg = sprd_wp.start_addr;
+	cmd.arg = wp_dat.start_addr;
 
 	data.blksz = size;
 	data.blocks = 1;
@@ -194,8 +221,8 @@ static int mmc_get_wp_current_type(struct mmc_card *card)
 	pr_info("%s:(WP) the really type of write protection grout: 0x%llx\n",
 		mmc_hostname(host), actual_type);
 
-	for (i = 0; i < sprd_wp.grp_cnt; i++)
-		expected_type = (expected_type << 2) + (sprd_wp.enabled ? 0x2 : 0);
+	for (i = 0; i < wp_dat.grp_cnt; i++)
+		expected_type = (expected_type << 2) + (wp_dat.enabled ? 0x2 : 0);
 
 	pr_info("%s:(WP) the expected type of write protection group: 0x%llx\n",
 		mmc_hostname(host), expected_type);
@@ -210,7 +237,7 @@ out:
 	return err;
 }
 
-static void mmc_get_wp_current_status_and_type(struct mmc_card *card)
+noinline void mmc_get_wp_current_status_and_type(struct mmc_card *card)
 {
 	mmc_get_wp_current_status(card);
 	mmc_get_wp_current_type(card);
@@ -220,7 +247,7 @@ static void mmc_get_wp_current_status_and_type(struct mmc_card *card)
 /* power-on write protect: applying the protection                     */
 /* ------------------------------------------------------------------ */
 
-static int mmc_enable_usr_wp(struct mmc_card *card, unsigned char wp)
+noinline static int mmc_enable_usr_wp(struct mmc_card *card, unsigned char wp)
 {
 	struct mmc_host *host = card->host;
 	struct mmc_command cmd = {0};
@@ -264,7 +291,7 @@ static int mmc_enable_usr_wp(struct mmc_card *card, unsigned char wp)
 	return 0;
 }
 
-static int mmc_set_usr_wp(struct mmc_card *card, unsigned char wp_type)
+noinline static int mmc_set_usr_wp(struct mmc_card *card, unsigned char wp_type)
 {
 	struct mmc_host *host = card->host;
 	struct mmc_command cmd = {0};
@@ -280,8 +307,8 @@ static int mmc_set_usr_wp(struct mmc_card *card, unsigned char wp_type)
 	cmd.opcode = MMC_SET_WRITE_PROT;
 	cmd.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
 
-	for (i = 0; i < sprd_wp.grp_cnt; i++) {
-		cmd.arg = sprd_wp.start_addr + (u64)i * sprd_wp.grp_size;
+	for (i = 0; i < wp_dat.grp_cnt; i++) {
+		cmd.arg = wp_dat.start_addr + (u64)i * wp_dat.grp_size;
 		mmc_wait_for_req(host, &mrq);
 		if (cmd.error) {
 			pr_err("%s:(WP) set fail, cmd error %d\n",
@@ -293,7 +320,7 @@ static int mmc_set_usr_wp(struct mmc_card *card, unsigned char wp_type)
 	return 0;
 }
 
-static int mmc_get_wp_params(struct mmc_card *card)
+noinline static int mmc_get_wp_params(struct mmc_card *card)
 {
 	struct mmc_host *host = card->host;
 	struct device_node *np = dev_of_node(host->parent);
@@ -312,24 +339,24 @@ static int mmc_get_wp_params(struct mmc_card *card)
 		return err;
 	}
 
-	sprd_wp.start_addr = data[0];
-	sprd_wp.prot_size = data[1];
+	wp_dat.start_addr = data[0];
+	wp_dat.prot_size = data[1];
 
-	sprd_wp.grp_size = card->ext_csd.hc_erase_size *
+	wp_dat.grp_size = card->ext_csd.hc_erase_size *
 			   card->ext_csd.raw_hc_erase_gap_size;
-	if (!sprd_wp.grp_size)
+	if (!wp_dat.grp_size)
 		return -EINVAL;
 
-	temp64 = sprd_wp.prot_size;
-	if (do_div(temp64, sprd_wp.grp_size)) {
+	temp64 = wp_dat.prot_size;
+	if (do_div(temp64, wp_dat.grp_size)) {
 		pr_err("%s:(WP) partition is not aligned\n", mmc_hostname(host));
 		return -EINVAL;
 	}
-	sprd_wp.grp_cnt = (unsigned int)temp64;
+	wp_dat.grp_cnt = (unsigned int)temp64;
 
 	pr_info("%s:(WP) start address: 0x%llx, size: 0x%llx, group cnt: 0x%x\n",
-		mmc_hostname(host), sprd_wp.start_addr, sprd_wp.prot_size,
-		sprd_wp.grp_cnt);
+		mmc_hostname(host), wp_dat.start_addr, wp_dat.prot_size,
+		wp_dat.grp_cnt);
 
 	return 0;
 }
@@ -355,7 +382,7 @@ int mmc_set_powp(struct mmc_card *card)
 	if (err)
 		pr_err("%s:(WP) get params err\n", mmc_hostname(mmc));
 
-	if (!sprd_wp.enabled) {
+	if (!wp_dat.enabled) {
 		mmc_get_wp_current_status_and_type(card);
 		pr_info("%s:(WP) status is disabled\n", mmc_hostname(mmc));
 		return 0;
@@ -441,7 +468,7 @@ mmc_wp_ioctl_copy_from_user(struct mmc_ioc_cmd __user *user)
 	return idata;
 }
 
-static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic_ptr)
+noinline static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic_ptr)
 {
 	struct sprd_mmc_wp_ioc_data *idata;
 	struct mmc_card *card = host->card;
@@ -464,8 +491,8 @@ static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic
 		goto out_free;
 	}
 
-	if (idata->ic.arg == sprd_wp.enabled) {
-		if (sprd_wp.enabled)
+	if (idata->ic.arg == wp_dat.enabled) {
+		if (wp_dat.enabled)
 			pr_info("%s:(WP) no need to reset, status is enabled\n",
 				mmc_hostname(host));
 		else
@@ -504,7 +531,7 @@ static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic
 	}
 
 	/* reset eMMC so the new power-on write protect state takes effect */
-	sprd_wp.enabled = idata->ic.arg;
+	wp_dat.enabled = idata->ic.arg;
 	err = mmc_hw_reset(card);
 
 cmd_done:
@@ -586,61 +613,61 @@ int mmc_wp_init(struct mmc_host *mmc)
 	char name[64];
 	int res;
 
-	if (mmc->index != 0 || sprd_wp.inited)
+	if (mmc->index != 0 || wp_dat.inited)
 		return 0;
 
-	if (!sprd_wp_bus_type.name) {
-		sprd_wp_bus_type.name = "mmc_wp";
-		res = bus_register(&sprd_wp_bus_type);
+	if (!wp_bus_type.name) {
+		wp_bus_type.name = "mmc_wp";
+		res = bus_register(&wp_bus_type);
 		if (res < 0) {
 			pr_err("%s:(WP) could not register WP bus type\n",
 			       mmc_hostname(mmc));
-			sprd_wp_bus_type.name = NULL;
+			wp_bus_type.name = NULL;
 			return res;
 		}
 	}
 
 	snprintf(name, sizeof(name), "%s_wp", mmc_hostname(mmc));
-	res = alloc_chrdev_region(&sprd_wp.devt, 0, SPRD_WP_MAX_DEVICES, name);
+	res = alloc_chrdev_region(&wp_dat.devt, 0, SPRD_WP_MAX_DEVICES, name);
 	if (res < 0) {
 		pr_err("%s:(WP) failed to allocate chrdev region\n",
 		       mmc_hostname(mmc));
 		goto out_bus_unreg;
 	}
 
-	sprd_wp.dev.init_name = name;
-	sprd_wp.dev.bus = &sprd_wp_bus_type;
-	sprd_wp.dev.devt = MKDEV(MAJOR(sprd_wp.devt), 1);
-	sprd_wp.dev.parent = &mmc->class_dev;
-	device_initialize(&sprd_wp.dev);
+	wp_dat.dev.init_name = name;
+	wp_dat.dev.bus = &wp_bus_type;
+	wp_dat.dev.devt = MKDEV(MAJOR(wp_dat.devt), 1);
+	wp_dat.dev.parent = &mmc->class_dev;
+	device_initialize(&wp_dat.dev);
 
-	dev_set_drvdata(&sprd_wp.dev, &sprd_wp);
+	dev_set_drvdata(&wp_dat.dev, &wp_dat);
 
-	cdev_init(&sprd_wp.chrdev, &wp_fileops);
-	sprd_wp.chrdev.owner = THIS_MODULE;
+	cdev_init(&wp_dat.chrdev, &wp_fileops);
+	wp_dat.chrdev.owner = THIS_MODULE;
 
-	res = cdev_device_add(&sprd_wp.chrdev, &sprd_wp.dev);
+	res = cdev_device_add(&wp_dat.chrdev, &wp_dat.dev);
 	if (res) {
 		pr_err("%s:(WP) could not add character device\n",
 		       mmc_hostname(mmc));
 		goto out_put_device;
 	}
 
-	sprd_wp.mmc = mmc;
+	wp_dat.mmc = mmc;
 	pr_info("%s:(WP) create chardev(%d:1)\n", mmc_hostname(mmc),
-		MAJOR(sprd_wp.devt));
-	sprd_wp.inited = true;
-	sprd_wp.enabled = 1;
+		MAJOR(wp_dat.devt));
+	wp_dat.inited = true;
+	wp_dat.enabled = 1;
 
 	return 0;
 
 out_put_device:
-	put_device(&sprd_wp.dev);
-	unregister_chrdev_region(sprd_wp.devt, SPRD_WP_MAX_DEVICES);
+	put_device(&wp_dat.dev);
+	unregister_chrdev_region(wp_dat.devt, SPRD_WP_MAX_DEVICES);
 out_bus_unreg:
-	if (!sprd_wp.inited) {
-		bus_unregister(&sprd_wp_bus_type);
-		sprd_wp_bus_type.name = NULL;
+	if (!wp_dat.inited) {
+		bus_unregister(&wp_bus_type);
+		wp_bus_type.name = NULL;
 	}
 	return res;
 }
@@ -652,17 +679,17 @@ EXPORT_SYMBOL_GPL(mmc_wp_init);
  */
 void mmc_wp_remove(struct mmc_host *mmc)
 {
-	if (mmc->index != 0 || !sprd_wp.inited)
+	if (mmc->index != 0 || !wp_dat.inited)
 		return;
 
-	put_device(&sprd_wp.dev);
-	unregister_chrdev_region(sprd_wp.devt, SPRD_WP_MAX_DEVICES);
+	put_device(&wp_dat.dev);
+	unregister_chrdev_region(wp_dat.devt, SPRD_WP_MAX_DEVICES);
 
-	bus_unregister(&sprd_wp_bus_type);
-	sprd_wp_bus_type.name = NULL;
+	bus_unregister(&wp_bus_type);
+	wp_bus_type.name = NULL;
 
-	sprd_wp.inited = false;
-	sprd_wp.enabled = 0;
+	wp_dat.inited = false;
+	wp_dat.enabled = 0;
 }
 EXPORT_SYMBOL_GPL(mmc_wp_remove);
 
@@ -821,6 +848,23 @@ int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev)
 EXPORT_SYMBOL_GPL(mmc_hsq_swcq_init);
 
 /*
+ * SWCQ's threaded half of the IRQ.  sdhci_thread_irq() is the upstream
+ * handler and the stock blob keeps its own copy here, because the SW-CQ
+ * completion path must reach the host's request-done hook without going
+ * through complete_work.
+ *
+ * ponytail: this forwards to the upstream threaded handler, so the SW-CQ
+ * still completes requests through complete_work.  Replace with the
+ * SW-CQ's own completion drain once mmc_swcq.c is in the tree.
+ */
+static irqreturn_t raw_sdhci_thread_irq(int irq, void *dev_id)
+{
+	struct sdhci_host *host = dev_id;
+
+	return sdhci_thread_irq(irq, dev_id);
+}
+
+/*
  * SWCQ's raw hard-IRQ handler. sdhci_irq() is static in sdhci.c and hands
  * command/data completion to complete_work, which the SWCQ completion path
  * must not race with, so the SWCQ carries its own copy of the top-level
@@ -831,7 +875,7 @@ EXPORT_SYMBOL_GPL(mmc_hsq_swcq_init);
  * with a single shared sdhci_irq() + a queue pointer in sdhci_host once
  * sdhci.c grows an sdhci_ops entry for the hard-IRQ half.
  */
-static irqreturn_t sprd_sdhci_raw_irq(int irq, void *dev_id)
+static irqreturn_t raw_sdhci_irq(int irq, void *dev_id)
 {
 	struct sdhci_host *host = dev_id;
 	u32 intmask, mask, unexpected = 0;
@@ -891,7 +935,7 @@ static irqreturn_t sprd_sdhci_raw_irq(int irq, void *dev_id)
 
 		if ((intmask & SDHCI_INT_CARD_INT) &&
 		    (host->ier & SDHCI_INT_CARD_INT)) {
-			sdhci_enable_sdio_irq_nolock(host, false);
+			sdhci_sprd_enable_sdio_irq_nolock(host, false);
 			sdio_signal_irq(host->mmc);
 		}
 
@@ -936,8 +980,8 @@ int sdhci_sprd_irq_request_swcq(struct sdhci_host *host)
 
 	free_irq(host->irq, host);
 
-	return request_threaded_irq(host->irq, sprd_sdhci_raw_irq,
-				    host->thread_irq_fn, IRQF_SHARED,
+	return request_threaded_irq(host->irq, raw_sdhci_irq,
+				    raw_sdhci_thread_irq, IRQF_SHARED,
 				    mmc_hostname(host->mmc), host);
 }
 EXPORT_SYMBOL_GPL(sdhci_sprd_irq_request_swcq);

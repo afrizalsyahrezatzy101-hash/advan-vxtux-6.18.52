@@ -5034,3 +5034,13 @@ MODULE_LICENSE("GPL");
 
 MODULE_PARM_DESC(debug_quirks, "Force certain quirks.");
 MODULE_PARM_DESC(debug_quirks2, "Force certain other quirks.");
+
+/*
+ * Same story for the SDIO interrupt mask: sdhci_enable_sdio_irq_nolock() is
+ * static, and the Unisoc extension's hard-IRQ path needs it.
+ */
+void sdhci_sprd_enable_sdio_irq_nolock(struct sdhci_host *host, int enable)
+{
+	sdhci_enable_sdio_irq_nolock(host, enable);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_enable_sdio_irq_nolock);
