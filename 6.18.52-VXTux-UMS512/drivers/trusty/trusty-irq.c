@@ -69,7 +69,12 @@ static void trusty_irq_enable_pending_irqs(struct trusty_irq_state *is,
 	}
 }
 
-static void trusty_irq_enable_irqset(struct trusty_irq_state *is,
+/* Defined below; the stock blob exports both under these names. */
+void trusty_irq_enable_irqset(struct trusty_irq_state *is,
+			      struct trusty_irq_irqset *irqset);
+int trusty_irq_init_normal_irq(struct trusty_irq_state *is, int tirq);
+
+void trusty_irq_enable_irqset(struct trusty_irq_state *is,
 				      struct trusty_irq_irqset *irqset)
 {
 	struct trusty_irq *trusty_irq;
@@ -325,7 +330,7 @@ static int trusty_irq_create_irq_mapping(struct trusty_irq_state *is, int irq)
 	return (!ret) ? -EINVAL : ret;
 }
 
-static int trusty_irq_init_normal_irq(struct trusty_irq_state *is, int tirq)
+int trusty_irq_init_normal_irq(struct trusty_irq_state *is, int tirq)
 {
 	int ret;
 	int irq;
@@ -650,3 +655,11 @@ module_exit(trusty_irq_driver_exit);
 
 MODULE_DESCRIPTION("Sprd trusty irq driver");
 MODULE_LICENSE("GPL v2");
+
+/*
+ * The stock trusty-irq.ko carries these two as global text symbols, so the
+ * port exports them under the same names: a module that bound to the stock
+ * blob resolves against this one too.
+ */
+EXPORT_SYMBOL_GPL(trusty_irq_enable_irqset);
+EXPORT_SYMBOL_GPL(trusty_irq_init_normal_irq);

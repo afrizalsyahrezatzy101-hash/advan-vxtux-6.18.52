@@ -35,6 +35,9 @@
 
 #include <linux/sprd_systimer.h>
 
+/* Defined below; exported under this name by the stock blob. */
+void sprd_send_ap_time(void);
+
 #define SPRD_TIME_SYNC_DEV_NAME	"sprd_time_sync"
 #define SPRD_TIME_SYNC_CLASS_NAME	"sprd_time_sync"
 
@@ -118,7 +121,7 @@ void sprd_send_ap_time(void)
 
 	kobject_uevent_env(&tcd_dev->dev->kobj, 2, envp);
 
-	dev_info(&tcd_dev->dev,
+	dev_info(tcd_dev->dev,
 		 "send %s %s %s %s %s %s %s to userspace\n",
 		 env, env_boottime, env_realtime, env_tscnt,
 		 env_sysfrt, env_minuteswest, env_dsttime);
@@ -160,18 +163,20 @@ static const struct file_operations sprd_time_sync_fops = {
 	.llseek = default_llseek,
 };
 
+struct class *sprd_time_sync_class;
+EXPORT_SYMBOL_GPL(sprd_time_sync_class);
+
 static int sprd_time_sync_probe(struct platform_device *pdev)
 {
 	struct sprd_time_sync_data *tcd;
-	struct class *class;
 	dev_t devt;
 	int ret;
 
 	dev_info(&pdev->dev, "start parse sprd_time_sync\n");
 
-	class = class_create(SPRD_TIME_SYNC_CLASS_NAME);
-	if (IS_ERR(class)) {
-		ret = PTR_ERR(class);
+	sprd_time_sync_class = class_create(SPRD_TIME_SYNC_CLASS_NAME);
+	if (IS_ERR(sprd_time_sync_class)) {
+		ret = PTR_ERR(sprd_time_sync_class);
 		dev_err(&pdev->dev,
 			"Failed to parse sprd_time_sync device tree, ret=%d\n",
 			ret);
@@ -200,7 +205,7 @@ static int sprd_time_sync_probe(struct platform_device *pdev)
 	}
 
 	tcd->devt = devt;
-	tcd->dev = device_create(class, NULL, devt, NULL, SPRD_TIME_SYNC_DEV_NAME);
+	tcd->dev = device_create(sprd_time_sync_class, NULL, devt, NULL, SPRD_TIME_SYNC_DEV_NAME);
 	if (IS_ERR(tcd->dev)) {
 		ret = PTR_ERR(tcd->dev);
 		dev_err(&pdev->dev, "Failed to create sprd_time_sync device\n");
@@ -218,11 +223,11 @@ err_cdev:
 err_chrdev:
 	unregister_chrdev_region(devt, 1);
 err_class:
-	class_destroy(class);
+	class_destroy(sprd_time_sync_class);
 	return ret;
 }
 
-static int sprd_time_sync_remove(struct platform_device *pdev)
+static void sprd_time_sync_remove(struct platform_device *pdev)
 {
 	struct sprd_time_sync_data *tcd = platform_get_drvdata(pdev);
 
@@ -234,8 +239,6 @@ static int sprd_time_sync_remove(struct platform_device *pdev)
 	}
 	if (tcd_dev)
 		tcd_dev = NULL;
-
-	return 0;
 }
 
 static const struct of_device_id sprd_time_sync_match_table[] = {

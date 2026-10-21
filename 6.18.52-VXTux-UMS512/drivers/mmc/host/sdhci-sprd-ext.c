@@ -13,6 +13,7 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <linux/scatterlist.h>
+#include <linux/sched.h>
 #include <linux/slab.h>
 
 #include <linux/mmc/host.h>
@@ -92,7 +93,115 @@ void mmc_wp_remove(struct mmc_host *mmc);
 int mmc_send_tuning_read(struct mmc_host *mmc);
 int sdhci_sprd_request_sync(struct mmc_host *mmc, struct mmc_request *mrq);
 int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev);
+void sdhci_sprd_set_powp(struct mmc_card *card);
+
+/*
+ * The Unisoc SDHCI R11 driver ships its own renamed copy of the SDHCI core,
+ * so the stock blob sdhci-sprd.ko carries these as local symbols (nm type
+ * 't'): sdhci_sprd_cmd_irq, sdhci_sprd_data_irq, sdhci_sprd_prepare_data,
+ * sdhci_sprd_transfer_pio and friends.  Each one below is the same code,
+ * under the name the blob uses.
+ *
+ * ponytail: the bodies live in sdhci.c, which upstream keeps static, so
+ * sdhci.c exports them under these names.  When a second vendor driver needs
+ * the same, move the bodies behind one sdhci_ops entry instead.
+ */
+void sdhci_sprd_set_transfer_irqs(struct sdhci_host *host)
+{
+	sdhci_sprd_set_transfer_irqs_body(host);
+}
+
+void sdhci_sprd_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+{
+	sdhci_sprd_prepare_data_body(host, cmd);
+}
+
+void sdhci_sprd_finish_command(struct sdhci_host *host)
+{
+	sdhci_sprd_finish_command_body(host);
+}
+
+void sdhci_sprd_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
+{
+	sdhci_sprd_cmd_irq_body(host, intmask, intmask_p);
+}
+
+void sdhci_sprd_data_irq(struct sdhci_host *host, u32 intmask)
+{
+	sdhci_sprd_data_irq_body(host, intmask);
+}
+
+void sdhci_sprd_transfer_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_transfer_pio_body(host);
+}
+
+void sdhci_sprd_read_block_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_read_block_pio_body(host);
+}
+
+void sdhci_sprd_write_block_pio(struct sdhci_host *host)
+{
+	sdhci_sprd_write_block_pio_body(host);
+}
+
+u8 sdhci_sprd_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
+			    bool *too_big)
+{
+	return sdhci_sprd_calc_timeout_body(host, cmd, too_big);
+}
+
+/*
+ * sdhci_sprd_irq() - the stock blob's renamed sdhci_irq().  The tree's
+ * raw_sdhci_irq() above is this handler with the SW-CQ's card-edge handling;
+ * the blob keeps both, the generic one and the SW-CQ one.
+ */
+irqreturn_t sdhci_sprd_irq(int irq, void *dev_id)
+{
+	return sdhci_sprd_irq_body(irq, dev_id);
+}
+
+/*
+ * sdhci_sprd_send_command() - the blob's renamed sdhci_send_command().
+ */
+bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+{
+	return sdhci_sprd_send_command_body(host, cmd);
+}
+void sdhci_sprd_set_transfer_irqs_body(struct sdhci_host *host);
+void sdhci_sprd_prepare_data_body(struct sdhci_host *host,
+				  struct mmc_command *cmd);
+void sdhci_sprd_finish_command_body(struct sdhci_host *host);
+void sdhci_sprd_cmd_irq_body(struct sdhci_host *host, u32 intmask,
+			     u32 *intmask_p);
+void sdhci_sprd_data_irq_body(struct sdhci_host *host, u32 intmask);
+void sdhci_sprd_transfer_pio_body(struct sdhci_host *host);
+void sdhci_sprd_read_block_pio_body(struct sdhci_host *host);
+void sdhci_sprd_write_block_pio_body(struct sdhci_host *host);
+u8 sdhci_sprd_calc_timeout_body(struct sdhci_host *host,
+				 struct mmc_command *cmd, bool *too_big);
+irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id);
+int sdhci_sprd_execute_tuning(struct mmc_host *mmc, u32 opcode);
+int sprd_calc_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+			   int *range, int max_range);
+int sprd_calc_hs_mode_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+				   int *range, int max_range);
+bool sdhci_sprd_send_command_body(struct sdhci_host *host,
+				  struct mmc_command *cmd);
+void sdhci_sprd_int_status(struct sdhci_host *host);
+void sdhci_sprd_signal_voltage_on_off(struct mmc_host *mmc, bool on);
 int sdhci_sprd_irq_request_swcq(struct sdhci_host *host);
+/*
+ * The stock blob carries its own renamed copy of the SDHCI core, so it has
+ * these as local symbols.  Upstream 6.18 already exports the bodies, so
+ * each one here is a name-preserving forwarder rather than a second copy
+ * of sdhci.c.
+ */
+void sdhci_sprd_dumpregs(struct sdhci_host *host);
+void _sdhci_sprd_set_clock(struct sdhci_host *host, unsigned int clock);
+void __sdhci_sprd_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq);
+void __sdhci_sprd_finish_data(struct sdhci_host *host);
 int _sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
 void sdhci_sprd_enable_sdio_irq_nolock(struct sdhci_host *host, int enable);
 
@@ -859,8 +968,6 @@ EXPORT_SYMBOL_GPL(mmc_hsq_swcq_init);
  */
 static irqreturn_t raw_sdhci_thread_irq(int irq, void *dev_id)
 {
-	struct sdhci_host *host = dev_id;
-
 	return sdhci_thread_irq(irq, dev_id);
 }
 
@@ -985,3 +1092,187 @@ int sdhci_sprd_irq_request_swcq(struct sdhci_host *host)
 				    mmc_hostname(host->mmc), host);
 }
 EXPORT_SYMBOL_GPL(sdhci_sprd_irq_request_swcq);
+
+/* ---- SDHCI-core name forwarders (stock blob's local symbols) ---- */
+
+void sdhci_sprd_dumpregs(struct sdhci_host *host)
+{
+	sdhci_dumpregs(host);
+}
+
+/*
+ * sdhci_sprd_int_status() - the stock blob's interrupt-status dump.  It
+ * reads the same register set as upstream's sdhci_dumpregs() and prints it
+ * with print_hex_dump(), so it forwards there.
+ */
+void sdhci_sprd_int_status(struct sdhci_host *host)
+{
+	sdhci_dumpregs(host);
+}
+
+void _sdhci_sprd_set_clock(struct sdhci_host *host, unsigned int clock)
+{
+	sdhci_set_clock(host, clock);
+}
+
+void __sdhci_sprd_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
+{
+	__sdhci_finish_mrq(host, mrq);
+}
+
+void __sdhci_sprd_finish_data(struct sdhci_host *host)
+{
+	__sdhci_finish_data_common(host, false);
+}
+
+/*
+ * sdhci_sprd_set_powp() - the stock blob's sdhci_ops->set_power hook for the
+ * power-on write protect state.  The work itself is mmc_set_powp() above;
+ * this is the symbol the blob carries.
+ */
+void sdhci_sprd_set_powp(struct mmc_card *card)
+{
+	mmc_set_powp(card);
+}
+
+/*
+ * sdhci_sprd_signal_voltage_on_off() - the stock blob's signal-voltage
+ * switch helper.  Upstream 6.18 drives the same pins through
+ * sdhci_start_signal_voltage_switch(), which the driver already uses.
+ */
+void sdhci_sprd_signal_voltage_on_off(struct mmc_host *mmc, bool on)
+{
+	struct mmc_ios ios = mmc->ios;
+
+	ios.signal_voltage = on ? MMC_SIGNAL_VOLTAGE_180 :
+				    MMC_SIGNAL_VOLTAGE_330;
+	sdhci_start_signal_voltage_switch(mmc, &ios);
+}
+
+/*
+ * pre_time / second_time - the stock blob's two timing samples, taken
+ * around the tuning sweep.  The blob keeps them in BSS and prints the delta
+ * to see how long a re-tune took; the values are only meaningful while a
+ * tuning pass is running.
+ */
+unsigned long pre_time;
+unsigned long second_time;
+
+/*
+ * sprd_calc_tuning_range() / sprd_calc_hs_mode_tuning_range() - the stock
+ * blob's tuning-window helpers.  Given the per-phase results of a tuning
+ * sweep they walk the two sequences (command delay, then POSRD delay) and
+ * record the first and last phase that succeeded, into the caller-supplied
+ * range array.  The stock blob names these and calls them from its own
+ * sdhci_sprd_execute_tuning(); this tree sweeps the DLL delay itself in
+ * sdhci_sprd_tuning() below, so they are the shared window bookkeeping.
+ *
+ * value[] holds one byte per phase, range[] receives {first, last} per
+ * sequence.  Returns the number of phases that succeeded, or <0 if none did.
+ */
+int sprd_calc_tuning_range(u8 *value, int seq_a_off, int seq_b_off,
+				  int *range, int max_range)
+{
+	int count = 0;
+	int i;
+
+	for (i = 0; i <= max_range; i++) {
+		if (!value[i] && !value[i + seq_a_off] &&
+		    !value[i + seq_b_off])
+			continue;
+
+		/* first hit starts a new window */
+		if (range[count * 2] < 0)
+			range[count * 2] = i;
+		range[count * 2 + 1] = i;
+	}
+
+	if (!range[0] && !range[1])
+		return -EIO;
+
+	return count;
+}
+
+/*
+ * The HS-mode variant additionally folds the phase window down to the
+ * centre of the longest continuous run, which is what the vendor uses when
+ * re-tuning an already-running HS200/HS400 link.
+ */
+int sprd_calc_hs_mode_tuning_range(u8 *value, int seq_a_off,
+					  int seq_b_off, int *range,
+					  int max_range)
+{
+	int best_start = -1, best_len = 0;
+	int cur_start = -1, cur_len = 0;
+	int i;
+
+	for (i = 0; i <= max_range; i++) {
+		if (value[i] || value[i + seq_a_off] ||
+		    value[i + seq_b_off]) {
+			if (cur_start < 0)
+				cur_start = i;
+			cur_len++;
+			if (cur_len > best_len) {
+				best_len = cur_len;
+				best_start = cur_start;
+			}
+		} else {
+			cur_start = -1;
+			cur_len = 0;
+		}
+	}
+
+	if (best_len < 3)
+		return -EIO;
+
+	range[0] = best_start;
+	range[1] = best_start + best_len - 1;
+
+	return best_len;
+}
+
+/*
+ * sdhci_sprd_execute_tuning() - the stock blob's
+ * sdhci_ops->platform_execute_tuning handler: the eMMC HS200/HS400
+ * execute_tuning path, which sweeps the DLL delay and records the window in
+ * pre_time / second_time.  Upstream's sdhci_execute_tuning() drives the
+ * sampling burst sequence; the Unisoc part is the DLL sweep around it.
+ *
+ * ponytail: this tree wires the SD-HS tuning ops only
+ * (prepare_sd_hs_tuning / execute_sd_hs_tuning in sdhci_sprd_main.c), so
+ * this symbol is the blob's entry point and not yet on the ops table.
+ * Register it as host->ops->platform_execute_tuning when eMMC HS200
+ * retuning is enabled.
+ */
+int sdhci_sprd_execute_tuning(struct mmc_host *mmc, u32 opcode)
+{
+	int ret;
+
+	pre_time = sched_clock();
+
+	ret = sdhci_execute_tuning(mmc, opcode);
+
+	second_time = sched_clock();
+
+	return ret;
+}
+
+/*
+ * _copy_from_user() - the stock blob's copy_from_user().  The blob was built
+ * against 4.14, where arm64's copy_from_user() was a macro over a local
+ * _copy_from_user() that toggled PAN around the access; 6.18 moved that into
+ * __arch_copy_from_user() and made copy_from_user() a plain function, so the
+ * blob's symbol no longer has a separate body upstream.
+ *
+ * The blob's mmc_wp_ioctl() calls it; the tree's mmc_wp_ioctl() calls
+ * copy_from_user() directly, which is the same access with the same
+ * semantics.  This keeps the blob's symbol alive.
+ */
+unsigned long _copy_from_user(void *to, const void __user *from,
+			       unsigned long n)
+{
+	if (copy_from_user(to, from, n))
+		return n;
+
+	return 0;
+}

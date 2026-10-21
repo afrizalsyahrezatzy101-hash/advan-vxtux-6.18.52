@@ -2542,8 +2542,13 @@ EXPORT_SYMBOL(nvt_check_fw_status);
 EXPORT_SYMBOL(nvt_clear_fw_status);
 EXPORT_SYMBOL(nvt_eng_reset);
 EXPORT_SYMBOL(nvt_esd_check_enable);
-EXPORT_SYMBOL(nvt_extra_proc_init);
+/*
+ * nvt_extra_proc_init() and nvt_mp_proc_init() are defined in
+ * nt36xxx_ext_proc.c / nt36xxx_mp_ctrlram.c, which are part of this same
+ * composite module. Exporting them a second time here makes modpost fail
+ * with "exported twice"; the single EXPORT_SYMBOL_GPL next to each
+ * definition is enough.
+ */
 EXPORT_SYMBOL(nvt_get_fw_info);
-EXPORT_SYMBOL(nvt_mp_proc_init);
 EXPORT_SYMBOL(nvt_sw_reset);
 EXPORT_SYMBOL(nvt_sw_reset_idle);

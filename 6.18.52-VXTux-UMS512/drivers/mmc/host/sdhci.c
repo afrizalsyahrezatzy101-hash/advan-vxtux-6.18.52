@@ -1765,6 +1765,18 @@ bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd)
 }
 EXPORT_SYMBOL_GPL(sdhci_sprd_send_command);
 
+/*
+ * The same body under a second name, so sdhci-sprd.ko can carry the
+ * symbol the stock blob has as a local (sdhci_sprd_send_command) without
+ * importing it from vmlinux.
+ */
+bool sdhci_sprd_send_command_body(struct sdhci_host *host,
+				   struct mmc_command *cmd)
+{
+	return sdhci_send_command(host, cmd);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_send_command_body);
+
 static bool sdhci_send_command_retry(struct sdhci_host *host,
 				     struct mmc_command *cmd,
 				     unsigned long flags)
@@ -3707,6 +3719,7 @@ out:
 	return result;
 }
 
+
 irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
 {
 	struct sdhci_host *host = dev_id;
@@ -5034,6 +5047,92 @@ MODULE_LICENSE("GPL");
 
 MODULE_PARM_DESC(debug_quirks, "Force certain quirks.");
 MODULE_PARM_DESC(debug_quirks2, "Force certain other quirks.");
+
+
+/*
+ * sdhci_irq() is the top-level handler.  The stock blob's own copy is named
+ * sdhci_sprd_irq; the Unisoc extension needs to reach it for the SW-CQ's
+ * hard-IRQ half, so it gets a forwarder under the vendor's name.  The
+ * argument is an sdhci_host, not the IRQ dev_id, so the wrapper takes the
+ * host the way the blob's symbol does.
+ */
+/*
+ * The Unisoc SDHCI R11 driver ships its own renamed copy of the SDHCI core,
+ * so the stock blob sdhci-sprd.ko carries these as local symbols (nm type
+ * 't').  Upstream keeps the bodies static here, and the module cannot reach
+ * a static, so each one is exported under a '_body' name and the module
+ * wraps it under the name the blob uses.
+ *
+ * ponytail: one export per body, used by exactly one module.  Fold these
+ * into a single sdhci_ops entry when a second driver needs them.
+ */
+void sdhci_sprd_set_transfer_irqs_body(struct sdhci_host *host)
+{
+	sdhci_set_transfer_irqs(host);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_set_transfer_irqs_body);
+
+void sdhci_sprd_prepare_data_body(struct sdhci_host *host,
+				   struct mmc_command *cmd)
+{
+	sdhci_prepare_data(host, cmd);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_prepare_data_body);
+
+void sdhci_sprd_finish_command_body(struct sdhci_host *host)
+{
+	sdhci_finish_command(host);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_finish_command_body);
+
+void sdhci_sprd_cmd_irq_body(struct sdhci_host *host, u32 intmask,
+			      u32 *intmask_p)
+{
+	sdhci_cmd_irq(host, intmask, intmask_p);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_cmd_irq_body);
+
+void sdhci_sprd_data_irq_body(struct sdhci_host *host, u32 intmask)
+{
+	sdhci_data_irq(host, intmask);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_data_irq_body);
+
+void sdhci_sprd_transfer_pio_body(struct sdhci_host *host)
+{
+	sdhci_transfer_pio(host);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_transfer_pio_body);
+
+void sdhci_sprd_read_block_pio_body(struct sdhci_host *host)
+{
+	sdhci_read_block_pio(host);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_read_block_pio_body);
+
+void sdhci_sprd_write_block_pio_body(struct sdhci_host *host)
+{
+	sdhci_write_block_pio(host);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_write_block_pio_body);
+
+u8 sdhci_sprd_calc_timeout_body(struct sdhci_host *host,
+				 struct mmc_command *cmd, bool *too_big)
+{
+	return sdhci_calc_timeout(host, cmd, too_big);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_calc_timeout_body);
+
+/*
+ * The stock blob's renamed copy of sdhci_irq().  sdhci_irq() is static here
+ * and the Unisoc extension's SW-CQ path needs it, so give it the vendor's
+ * name rather than a second copy of the handler.
+ */
+irqreturn_t sdhci_sprd_irq_body(int irq, void *dev_id)
+{
+	return sdhci_irq(irq, dev_id);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_irq_body);
 
 /*
  * Same story for the SDIO interrupt mask: sdhci_enable_sdio_irq_nolock() is
