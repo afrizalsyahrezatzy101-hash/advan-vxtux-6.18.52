@@ -65,7 +65,12 @@ struct aud_pipe_device {
 
 static u32 g_bthal_state = BTHAL_STATE_IDLE;
 
-static int aud_pipe_recv_cmd(uint16_t channel, struct aud_smsg *o_msg,
+/*
+ * noinline: the stock blob keeps this as a real function, and gcc inlines it
+ * into its single caller, which removes the symbol from the module.  6.18
+ * dropped the __ prefix on the compiler attribute macros.
+ */
+static noinline int aud_pipe_recv_cmd(uint16_t channel, struct aud_smsg *o_msg,
 	int32_t timeout)
 {
 	int ret = 0;
