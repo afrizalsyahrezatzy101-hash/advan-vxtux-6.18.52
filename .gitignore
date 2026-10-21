@@ -16,3 +16,13 @@ modules.order
 *.bak
 port_sync*.tar
 tmp_build*.sh
+
+# The stock vendor blobs ARE the ground truth for the deblob work: the
+# symbol lists are diffed against them.  They must be tracked even though
+# the build-artifact rule above says *.ko.
+!donors/stock_vendor_modules/*.ko
+!donors/stock_initramfs/*.ko
+
+# The kernel-object tarballs are build payloads, not sources: 1.8 GB of
+# them exceeded GitHub's 100 MB per-file limit and blocked every push.
+donors/*.tar.gz
