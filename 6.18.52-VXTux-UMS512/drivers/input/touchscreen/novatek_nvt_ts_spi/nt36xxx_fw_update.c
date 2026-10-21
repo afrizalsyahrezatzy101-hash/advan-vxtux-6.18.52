@@ -390,6 +390,15 @@ static int32_t nvt_write_sram(const u8 *fwdata,
 	for (i = 0 ; i < count ; i++) {
 		len = (size < NVT_TANSFER_LEN) ? size : NVT_TANSFER_LEN;
 
+		/*
+		 * The stock blob keeps the outstanding byte count in a
+		 * module-global fw_need_write_size rather than in this
+		 * function's `size`, so it survives the retry loop in
+		 * nvt_download_firmware(). Keep the blob's name: on a
+		 * failed SPI write the caller can see what is left.
+		 */
+		fw_need_write_size = size - i * NVT_TANSFER_LEN;
+
 		//---set xdata index to start address of SRAM---
 		ret = nvt_set_page(SRAM_addr);
 		if (ret) {
@@ -461,6 +470,9 @@ static int32_t nvt_write_firmware(const u8 *fwdata, size_t fwsize)
 			NVT_ERR("sram program failed, ret = %d\n", ret);
 			goto out;
 		}
+
+		/* this partition is done */
+		fw_need_write_size = 0;
 	}
 
 out:
@@ -726,6 +738,16 @@ return:
 void nvt_update_firmware(char *firmware_name)
 {
 	int8_t ret = 0;
+
+	/*
+	 * cascade_2nd_header_info: the stock blob's nvt_update_firmware()
+	 * reads the chip's cascaded-header flag out of xdata and, when it
+	 * is set, rewrites the second header as well. The tree writes the
+	 * whole image in one pass per partition and never revisits a
+	 * header, so clear the flag here rather than carry a stale value
+	 * from a previous update.
+	 */
+	cascade_2nd_header_info = 0;
 
 	// request bin file in "/etc/firmware"
 	ret = update_firmware_request(firmware_name);

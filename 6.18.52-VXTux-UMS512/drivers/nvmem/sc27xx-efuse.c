@@ -43,6 +43,23 @@
 #define SC27XX_EFUSE_BLOCK_MAX		32
 #define SC27XX_EFUSE_BLOCK_WIDTH	2
 
+/*
+ * The UMP96xx family has no pmic-type variants: the efuse block lives at a
+ * different offset inside each PMIC, and the ADC big/small-scale ratio block
+ * is calibrated through its own register pair (0x1810 on UMP518, 0x2010 on
+ * UMP9620) which the generic controller path does not touch.
+ */
+#define UMP9620_MODULE_EN		0x2008
+#define UMP9620_ANA_REG			0x2010
+#define UMP518_MODULE_EN		0x1808
+#define UMP518_ANA_REG			0x1810
+
+#define UMP9620_ADC_REG			0x200c
+#define UMP518_ADC_REG			0x180c
+
+/* ANA_REG bit 11 gates the ADC 26MHz sinout used while converting. */
+#define UMP9620_ADC_CLK26M_EN		BIT(11)
+
 /* Timeout (ms) for the trylock of hardware spinlocks */
 #define SC27XX_EFUSE_HWLOCK_TIMEOUT	5000
 
@@ -58,6 +75,16 @@ struct sc27xx_efuse_variant_data {
 	u32 module_en;
 };
 
+/*
+ * UMP96xx read path, selected by a compatible string rather than by the
+ * variant table: which ANA_REG to program (and therefore where the efuse
+ * controller window sits) depends on the chip, not on a register field.
+ */
+struct sc27xx_efuse_ump_data {
+	u32 module_en;
+	u32 ana_reg;
+};
+
 struct sc27xx_efuse {
 	struct device *dev;
 	struct regmap *regmap;
@@ -65,6 +92,7 @@ struct sc27xx_efuse {
 	struct mutex mutex;
 	u32 base;
 	const struct sc27xx_efuse_variant_data *var_data;
+	const struct sc27xx_efuse_ump_data *ump_data;
 };
 
 static const struct sc27xx_efuse_variant_data sc2731_edata = {
@@ -73,6 +101,21 @@ static const struct sc27xx_efuse_variant_data sc2731_edata = {
 
 static const struct sc27xx_efuse_variant_data sc2730_edata = {
 	.module_en = SC2730_MODULE_EN,
+};
+
+static const struct sc27xx_efuse_ump_data ump9620_edata = {
+	.module_en = UMP9620_MODULE_EN,
+	.ana_reg = UMP9620_ANA_REG,
+};
+
+static const struct sc27xx_efuse_ump_data ump9621_edata = {
+	.module_en = UMP9620_MODULE_EN,
+	.ana_reg = UMP9620_ANA_REG,
+};
+
+static const struct sc27xx_efuse_ump_data ump518_edata = {
+	.module_en = UMP518_MODULE_EN,
+	.ana_reg = UMP518_ANA_REG,
 };
 
 /*
@@ -190,6 +233,83 @@ disable_efuse:
 	regmap_update_bits(efuse->regmap, efuse->var_data->module_en, SC27XX_EFUSE_EN, 0);
 unlock_efuse:
 	sc27xx_efuse_unlock(efuse);
+
+	if (!ret) {
+		buf >>= blk_offset;
+		memcpy(val, &buf, bytes);
+	}
+
+	return ret;
+}
+
+/*
+ * UMP96xx read path.
+ *
+ * Unlike the SC27xx controller (which has a block-index register), the
+ * UMP96xx efuse window is read directly: the ANA_REG bit 11 selects the
+ * 26MHz reference, bit 7 enables the read, and the data register sits at
+ * ANA_REG + 0x40.  Each 32-bit word holds two bytes, so the caller offset
+ * selects the word (offset / 2) and the byte within it (offset % 2).
+ */
+static int ump962x_efuse_read(void *context, u32 offset, void *val,
+			      size_t bytes)
+{
+	struct sc27xx_efuse *efuse = context;
+	struct device_node *np = efuse->dev->of_node;
+	u32 blk_index = offset / 2;
+	u32 blk_offset = (offset % 2) * BITS_PER_BYTE;
+	u32 ana_reg = efuse->ump_data->ana_reg;
+	u32 buf = 0;
+	int ret;
+
+	if (bytes > 2)
+		return -EINVAL;
+
+	if (blk_index > efuse->ump_data->module_en)
+		return -EINVAL;
+
+	mutex_lock(&efuse->mutex);
+	ret = hwspin_lock_timeout_raw(efuse->hwlock,
+				       SC27XX_EFUSE_HWLOCK_TIMEOUT);
+	if (ret) {
+		dev_err(efuse->dev, "timeout to get the hwspinlock\n");
+		mutex_unlock(&efuse->mutex);
+		return ret;
+	}
+
+	/* Enable the ADC 26MHz sinout the efuse read is clocked from. */
+	ret = regmap_update_bits(efuse->regmap, ana_reg,
+				 UMP9620_ADC_CLK26M_EN, UMP9620_ADC_CLK26M_EN);
+	if (ret)
+		goto unlock_efuse;
+
+	/* UMP518 keeps the reference in a different ANA_REG than UMP9620. */
+	if (of_device_is_compatible(np, "sprd,ump518-efuse"))
+		ret = regmap_update_bits(efuse->regmap, UMP518_ANA_REG,
+					 BIT(11), BIT(11));
+	else
+		ret = regmap_update_bits(efuse->regmap, UMP9620_ANA_REG,
+					 BIT(11), BIT(11));
+	if (ret)
+		goto unlock_efuse;
+
+	/* Select the word to read, then latch it into the data register. */
+	ret = regmap_update_bits(efuse->regmap, efuse->base,
+				 8, 0, 0, 0);
+	if (ret)
+		goto unlock_efuse;
+
+	regmap_update_bits(efuse->regmap, efuse->base + 0x10,
+			   4, 4, 0, 0);
+	ret = regmap_read(efuse->regmap, efuse->base + 0x40 + blk_index * 4,
+			  &buf);
+	/* Release the 26MHz sinout again. */
+	regmap_update_bits(efuse->regmap, ana_reg,
+			   UMP9620_ADC_CLK26M_EN, 0);
+
+unlock_efuse:
+	hwspin_unlock_raw(efuse->hwlock);
+	mutex_unlock(&efuse->mutex);
 
 	if (!ret) {
 		buf >>= blk_offset;

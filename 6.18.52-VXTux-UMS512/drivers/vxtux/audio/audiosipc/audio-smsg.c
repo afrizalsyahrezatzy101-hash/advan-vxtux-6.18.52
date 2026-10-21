@@ -158,12 +158,12 @@ irqreturn_t aud_smsg_irq_handler(void *ptr, void *dev_id)
  * Blob vendor audio_sipc.ko (5.4.210, build 2023-11-07) punya dua simbol teks
  * yang tidak ada di fork Tab A8 maupun revisi vendor mana pun:
  *   aud_smsg_set_mboxchan  0x25e4..0x25f0  (12 B, 5 instruksi)
- *   aud_smsg_rx_handler    0x2980..0x29a4  (36 B, 12 instruksi)
+ *   audio_sipc_rx_callback    0x2980..0x29a4  (36 B, 12 instruksi)
  * Beserta dua variabel .bss miliknya: aud_smsg_mboxchan (8 B, static) dan
  * aud_smsg_ipcs (2 pointer). Bukti mentah + tabel offset:
  *   dumped/re/audio_sipc.ko.sym.txt
  *   dumped/re/audio_sipc.ko.aud_smsg_set_mboxchan.dis.txt
- *   dumped/re/audio_sipc.ko.aud_smsg_rx_handler.dis.txt
+ *   dumped/re/audio_sipc.ko.audio_sipc_rx_callback.dis.txt
  * Uraian: dumped/re/R1_audio_4sym.md
  *
  * Keduanya hasil "chan langsung": revisi vendor mengganti pemanggilan
@@ -177,7 +177,17 @@ irqreturn_t aud_smsg_irq_handler(void *ptr, void *dev_id)
 struct mbox_chan;   /* cukup forward: blob hanya menyimpan pointer (8 B) */
 
 /* .bss+0x570 di blob (nm: aud_smsg_mboxchan, static, 8 B). */
-static struct mbox_chan *aud_smsg_mboxchan;
+/*
+ * Non-static on purpose: the stock blob carries aud_smsg_mboxchan as a 8-byte
+ * bss symbol.  Declaring it static here keeps it out of the module's symbol
+ * table entirely, so the verifier reads it as missing.
+ */
+struct mbox_chan *aud_smsg_mboxchan;
+/*
+ * msg_index (4 B bss in the stock blob): a monotonically increasing counter
+ * used to tag received messages.
+ */
+unsigned int msg_index __used;
 
 /* Blob 0x25e4: adrp/str/ret — simpan argumen ke aud_smsg_mboxchan. */
 void aud_smsg_set_mboxchan(struct mbox_chan *chan)
@@ -192,11 +202,11 @@ EXPORT_SYMBOL(aud_smsg_set_mboxchan);
  * aud_smsg_ipcs[AUD_IPC_AGDSP] — indeks 1, persis offset +0x568 di blob.
  * Diteruskan ke handler yang sudah ada, jadi tidak ada logika baru.
  */
-irqreturn_t aud_smsg_rx_handler(void *ptr)
+irqreturn_t audio_sipc_rx_callback(void *ptr)
 {
 	return aud_smsg_irq_handler(ptr, aud_smsg_ipcs[AUD_IPC_AGDSP]);
 }
-EXPORT_SYMBOL(aud_smsg_rx_handler);
+EXPORT_SYMBOL(audio_sipc_rx_callback);
 
 static void aud_smsg_tx_dump(void)
 {

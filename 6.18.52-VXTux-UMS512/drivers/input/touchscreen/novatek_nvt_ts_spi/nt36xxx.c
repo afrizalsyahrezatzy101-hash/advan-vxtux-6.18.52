@@ -1104,6 +1104,25 @@ static int32_t nvt_parse_dt(struct device *dev)
 		NVT_LOG("SWRST_N8_ADDR=0x%06X\n", SWRST_N8_ADDR);
 	}
 
+	/*
+	 * The stock blob's lcd_name buffer: 100 bytes holding the panel's
+	 * name. The blob fills it from the device tree's compatible string;
+	 * do the same so anything reading lcd_name sees the panel name.
+	 */
+	{
+		const char *compat = NULL;
+
+		ret = of_property_read_string(np, "compatible", &compat);
+		if (ret) {
+			NVT_ERR("error reading compatible. ret=%d\n", ret);
+			lcd_name[0] = '\0';
+		} else {
+			/* lcd_name is the blob's 100-byte buffer, so bound it */
+			strscpy(lcd_name, compat, sizeof(lcd_name));
+			NVT_LOG("lcd_name=%s\n", lcd_name);
+		}
+	}
+
 	return ret;
 }
 #else
@@ -2166,6 +2185,19 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 		goto err_input_register_device_failed;
 	}
 
+	/*
+	 * The stock blob's sysfs surface: novatek_attr_group holds the
+	 * ts_suspend attribute (dev_attr_ts_suspend), and the blob also
+	 * keeps the panel's name in a 100-byte lcd_name buffer that the
+	 * SPI read path fills in. Register the group on the input device
+	 * and seed lcd_name from the device tree's panel name.
+	 */
+	ret = sysfs_create_group(&ts->input_dev->dev, &novatek_attr_group);
+	if (ret) {
+		NVT_ERR("create sysfs group failed. ret=%d\n", ret);
+		goto err_input_register_device_failed;
+	}
+
 #if WAKEUP_GESTURE
 	device_init_wakeup(&ts->input_dev->dev, 1);
 #endif
@@ -2452,6 +2484,36 @@ static int32_t nvt_ts_resume(struct device *dev)
 	NVT_LOG("%s  do nothing in this function\n",__func__);
 	return 0;
 }
+
+/*
+ * The stock blob's ts_suspend sysfs attribute (dev_attr_ts_suspend,
+ * show/store = nova_light_suspend_show/_store) drove the touch down and
+ * up from userspace: the store kstrtouint()s the value, then either
+ * suspends or resumes. Both halves are this file's nvt_ts_suspend() and
+ * nvt_ts_resume(); expose them together so the attribute can reach them.
+ */
+ssize_t nvt_sys_suspend_store(const char *buf, size_t count)
+{
+	unsigned int state;
+	int ret;
+
+	ret = kstrtouint(buf, 0, &state);
+	if (ret)
+		return ret;
+
+	if (state)
+		ret = nvt_ts_suspend(NULL);
+	else
+		ret = nvt_ts_resume(NULL);
+
+	if (ret)
+		return ret;
+
+	nvt_suspend_state = state;
+	return count;
+}
+
+int32_t nvt_suspend_state;
 
 
 

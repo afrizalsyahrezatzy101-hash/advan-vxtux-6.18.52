@@ -2,9 +2,6 @@
 /*
  * Copyright (C) 2010 - 2018 Novatek, Inc.
  *
- * $Revision: 47247 $
- * $Date: 2019-07-10 10:41:36 +0800 (Wed, 10 Jul 2019) $
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,36 +11,35 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- *
  */
 
 /*
- * Novatek NT36xxx SPI touchscreen - the stock blob's proc/sysfs API.
+ * Novatek NT36xxx SPI touchscreen - the stock blob's 5.4-shaped API.
  *
- * The stock vendor module (donors/stock_vendor_modules/novatek_ts_spi.ko)
- * was built against 5.4, where /proc entries took a struct
- * file_operations. 6.18 replaced that with struct proc_ops, so the
- * stock's nvt_*_fops tables have no direct equivalent here.
+ * donors/stock_vendor_modules/novatek_ts_spi.ko was built against 5.4,
+ * where a /proc entry took a struct file_operations. Its seven nvt_*_fops
+ * tables are 288 bytes each, which is a 5.4 struct file_operations, and
+ * the blob's .rela.rodata.novatek_attr_group pins each table's slots:
  *
- * The stock's fops tables are 288 bytes each - that is a 5.4 struct
- * file_operations - and they are the driver's own API: /proc/NVTSPI,
- * /proc/nvt_selftest, /proc/nvt_fw_version, /proc/nvt_baseline,
- * /proc/nvt_raw, /proc/nvt_diff and /proc/nvt_pen_diff are all created
- * from them. This file therefore keeps the stock's names as real
- * struct file_operations and bridges them to proc_ops, so the blob's
- * symbol set is reproduced instead of being renamed away.
+ *	nvt_flash_fops       llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_selftest_fops    llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_fw_version_fops  llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_baseline_fops    llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_raw_fops         llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_diff_fops        llseek +0x08, read  +0x10, open    +0x70, release +0x80
+ *	nvt_pen_diff_fops    llseek +0x08, read  +0x10, open    +0x70, release +0x80
  *
- * The per-node open/read handlers stay where they already are:
+ * 6.18 replaced that with struct proc_ops. This file keeps the stock's
+ * seven tables as real struct file_operations so the blob's symbol set
+ * is reproduced under its own names, then bridges each to a proc_ops
+ * that the tree's proc_create() sites use.
  *
+ * Per-node handlers stay where they already live:
  *   nt36xxx.c            nvt_flash_open / nvt_flash_read / nvt_flash_close
  *   nt36xxx_ext_proc.c   nvt_fw_version_open, nvt_baseline_open,
  *                        nvt_raw_open, nvt_diff_open
  *   nt36xxx_mp_ctrlram.c nvt_selftest_open
  *   nt36xxx_pen.c        nvt_pen_diff_open
- *
- * Every size, offset and value below was read out of the stock blob:
- * the symbol table gives the table sizes, .rela.rodata gives which
- * handler sits in which slot, and .bss gives the variable sizes.
  */
 
 #include <linux/kernel.h>
@@ -57,22 +53,6 @@
 
 #include "nt36xxx.h"
 
-/*
- * The stock's fops tables. A 5.4 struct file_operations is:
- *
- *	owner, open, read, write, llseek, release
- *
- * The blob's relocations put the handlers at:
- *
- *	nvt_flash_fops       +0x00 owner, +0x10 read,  +0x70 llseek, +0x80 release
- *	nvt_selftest_fops    +0x00 owner, +0x08 open,  +0x10 read,
- *	                     +0x70 llseek, +0x80 release
- *
- * (the flash node has no open handler, so +0x08 is NULL there and
- * +0x10 carries the read handler). The 6.18 struct file_operations
- * keeps the same field order, so these tables are layout-compatible
- * with the blob's.
- */
 extern int32_t nvt_flash_open(struct inode *inode, struct file *file);
 extern ssize_t nvt_flash_read(struct file *file, char __user *buff,
 			      size_t count, loff_t *offp);
@@ -85,68 +65,76 @@ extern int32_t nvt_raw_open(struct inode *inode, struct file *file);
 extern int32_t nvt_diff_open(struct inode *inode, struct file *file);
 extern int32_t nvt_pen_diff_open(struct inode *inode, struct file *file);
 
+/*
+ * The stock's own tables, reconstructed from its relocation graph: every
+ * table's +0x70 carries the node's own open handler and +0x80 the
+ * matching release, and +0x08/+0x10 are seq_lseek/seq_read for the six
+ * seq nodes. nvt_flash_fops is the exception - the blob has no open
+ * handler for it, so +0x08 stays empty, +0x10 is nvt_flash_read, +0x70
+ * is nvt_flash_open and +0x80 is nvt_flash_close.
+ */
 const struct file_operations nvt_flash_fops = {
 	.owner		= THIS_MODULE,
 	.read		= nvt_flash_read,
-	.llseek		= seq_lseek,
+	.open		= nvt_flash_open,
 	.release	= nvt_flash_close,
 };
 
 const struct file_operations nvt_selftest_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_selftest_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_selftest_open,
 	.release	= seq_release,
 };
 
 const struct file_operations nvt_fw_version_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_fw_version_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_fw_version_open,
 	.release	= seq_release,
 };
 
 const struct file_operations nvt_baseline_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_baseline_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_baseline_open,
 	.release	= seq_release,
 };
 
 const struct file_operations nvt_raw_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_raw_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_raw_open,
 	.release	= seq_release,
 };
 
 const struct file_operations nvt_diff_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_diff_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_diff_open,
 	.release	= seq_release,
 };
 
 const struct file_operations nvt_pen_diff_fops = {
 	.owner		= THIS_MODULE,
-	.open		= nvt_pen_diff_open,
-	.read		= seq_read,
 	.llseek		= seq_lseek,
+	.read		= seq_read,
+	.open		= nvt_pen_diff_open,
 	.release	= seq_release,
 };
 
 /*
- * 6.18 takes a struct proc_ops, not a struct file_operations. Bridge
- * the two: the proc_ops entry points have the same signatures as their
- * file_operations counterparts, so each is a straight cast.
+ * 6.18 takes a struct proc_ops. The proc_ops entry points have the same
+ * signatures as their file_operations counterparts, so each is a direct
+ * cast.
  */
 #define NVT_FOPS_TO_PROC_OPS(name)					\
-static const struct proc_ops name##_proc_ops = {			\
+const struct proc_ops name##_proc_ops = {				\
 	.proc_open	= (int (*)(struct inode *, struct file *))	\
 			  name.open,					\
 	.proc_read	= (ssize_t (*)(struct file *, char __user *,	\
@@ -171,44 +159,47 @@ NVT_FOPS_TO_PROC_OPS(nvt_pen_diff_fops);
  *   lcd_name             100-byte bss buffer, the panel's name
  *   dev_attr_ts_suspend  a 32-byte struct device_attribute
  *   nova_light_suspend_show / _store  the show/store pair
- *   novatek_attrs        a 16-byte struct attribute array (2 pointers)
+ *   novatek_attrs        a 16-byte struct attribute * array (2 slots)
  *   novatek_attr_group   a 40-byte struct attribute_group
  *
- * The blob's .rela.rodata.novatek_attr_group shows the group points at
- * novatek_attrs, and .rela.data.nvt_spi_driver shows the attribute's
- * name and its show/store handlers.
+ * The blob's .rela.rodata.novatek_attr_group shows +0x18 (attrs) pointing
+ * at novatek_attrs, and .rela.data.nvt_spi_driver shows the attribute's
+ * name string plus its show and store handlers.
  */
 char lcd_name[100];
 
 /*
- * The stock's ts_suspend attribute: the show handler returns the
- * current suspend state, the store handler takes the touch down.
+ * The stock's ts_suspend attribute. nova_light_suspend_store() is 1012
+ * bytes of real code in the blob: it kstrtouint()s the argument, then
+ * for a suspend request disables the IRQ, cancels the delayed work,
+ * cancels the ESD check, takes the ts mutex, writes the shutdown
+ * command over SPI, reports the touch-up transitions and re-enables the
+ * IRQ; for a resume request it clears the ESD check and requeues the
+ * work. That is the tree's nvt_ts_suspend() / nvt_ts_resume(), split
+ * across the value, and nt36xxx.c's nvt_sys_suspend_store() is the
+ * forwarder that reaches them.
  */
-static int32_t nvt_ts_suspend_state;
-
-static ssize_t nova_light_suspend_show(struct device *dev,
-				       struct device_attribute *attr,
-				       char *buf)
-{
-	/*
-	 * The stock's nova_light_suspend_show is 56 bytes: it snprintf()s
-	 * the state into the page with a 0x1000 size bound and returns
-	 * the result. The bound is the stock's, not the page size.
-	 */
-	return snprintf(buf, 0x1000, "%d\n", nvt_ts_suspend_state);
-}
+extern ssize_t nvt_sys_suspend_store(const char *buf, size_t count);
 
 static ssize_t nova_light_suspend_store(struct device *dev,
-					struct device_attribute *attr,
-					const char *buf, size_t count)
+					 struct device_attribute *attr,
+					 const char *buf, size_t count)
 {
-	int state;
+	return nvt_sys_suspend_store(buf, count);
+}
 
-	if (sscanf(buf, "%d", &state) != 1)
-		return -EINVAL;
+/*
+ * The stock's nova_light_suspend_show() is 56 bytes: it snprintf()s the
+ * current state with a 0x1000 bound and returns the result. That bound is
+ * the stock's, not the page size, so keep it.
+ */
+extern int32_t nvt_suspend_state;
 
-	nvt_ts_suspend_state = state;
-	return count;
+static ssize_t nova_light_suspend_show(struct device *dev,
+					struct device_attribute *attr,
+					char *buf)
+{
+	return snprintf(buf, 0x1000, "%d\n", nvt_suspend_state);
 }
 
 struct device_attribute dev_attr_ts_suspend = {
@@ -230,31 +221,51 @@ const struct attribute_group novatek_attr_group = {
 };
 
 /*
- * The stock blob's own copy of _copy_from_user / _copy_to_user.
+ * The stock blob's own _copy_from_user() / _copy_to_user().
  *
- * These are the arm64 PAN (Privileged Access Never) accessors: they
- * flip TTBR1_EL1 so the kernel can reach the user mapping. The stock
- * blob inlined its own copy into .text, which is why it carries them
- * as local symbols named exactly like the kernel's.
+ * The blob was built against 5.4, where arm64's copy_from_user() was a
+ * macro over a local _copy_from_user() that toggled PAN around the
+ * access; 6.18 moved that into __arch_copy_from_user() and made
+ * copy_from_user() a plain function, so the blob's symbol no longer has
+ * a separate body upstream. Both stock blobs here are local 't' clones
+ * of the header macro, and both are pure wrappers:
  *
- * 6.18 already provides those two names for the same code, so the
- * blob's import of them is the kernel's own, not a driver symbol -
- * there is nothing here to define. Calling them would shadow the
- * kernel's accessor, which is exactly what this driver must not do.
+ *	_copy_from_user(to, from, n)  ->  copy_from_user(to, from, n)
+ *	_copy_to_user(to, from, n)    ->  copy_to_user(to, from, n)
+ *
+ * Same access, same semantics, blob's names kept. See also
+ * drivers/mmc/host/sdhci-sprd-ext.c, which keeps the blob's
+ * _copy_from_user() for the same reason.
  */
+unsigned long _copy_from_user(void *to, const void __user *from,
+			       unsigned long n)
+{
+	if (copy_from_user(to, from, n))
+		return n;
+
+	return 0;
+}
+
+unsigned long _copy_to_user(void __user *to, const void *from,
+			     unsigned long n)
+{
+	if (copy_to_user(to, from, n))
+		return n;
+
+	return 0;
+}
 
 /*
  * The stock blob's firmware-download state.
  *
- *   fw_need_write_size       8 bytes (a size_t) - how much of the
- *                            firmware still has to be written
- *   cascade_2nd_header_info  1 byte (a flag) - the IC is a cascaded
- *                            part and its second header has to be
- *                            handled as well
+ *   fw_need_write_size       8 bytes - how much of the firmware still
+ *                            has to be written
+ *   cascade_2nd_header_info  1 byte - the IC is a cascaded part and its
+ *                            second header has to be handled as well
  *
- * Both are used by nvt_update_firmware() in the stock. The tree's
- * nt36xxx_fw_update.c is the same routine; these two are the pieces
- * the tree's version does not keep.
+ * Both belong to nvt_update_firmware() in the stock. The tree's
+ * nt36xxx_fw_update.c is the same routine but tracks the write position
+ * in locals, so keep the blob's names as the shared state.
  */
 size_t fw_need_write_size;
 uint8_t cascade_2nd_header_info;

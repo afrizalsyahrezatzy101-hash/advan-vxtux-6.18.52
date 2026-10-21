@@ -436,5 +436,30 @@ static const struct nvt_ts_trim_id_table trim_id_table[] = {
 	{.id = {0xFF, 0xFF, 0xFF, 0x70, 0x68, 0x03}, .mask = {0, 0, 0, 1, 1, 1},
 		.mmap = &NT36870_memory_map,  .hwinfo = &NT36870_hw_info},
 	{.id = {0xFF, 0xFF, 0xFF, 0x76, 0x66, 0x03}, .mask = {0, 0, 0, 1, 1, 1},
-		.mmap = &NT36676F_memory_map, .hwinfo = &NT36676F_hw_info}
+		.mmap = &NT36676F_memory_map, .hwinfo = &NT36676F_hw_info},
+
+	/*
+	 * The Unisoc panel this driver ships for. Chip ids and masks are
+	 * the stock blob's own table (.rodata 0x34c8, twelve 32-byte
+	 * entries read out of the blob), and each entry's two pointers -
+	 * mmap at +0x18, hw_info at +0x20 - are the only references the
+	 * blob makes to NT36523/NT36526/NT36675_memory_map and
+	 * *_hw_info. nvt_ts_check_chip_ver_trim() walks the same table.
+	 */
+	{.id = {0x20, 0xFF, 0xFF, 0x23, 0x65, 0x03}, .mask = {1, 0, 0, 1, 1, 1},
+		.mmap = &NT36523_memory_map, .hwinfo = &NT36523_hw_info},
+	{.id = {0x0C, 0xFF, 0xFF, 0x23, 0x65, 0x03}, .mask = {1, 0, 0, 1, 1, 1},
+		.mmap = &NT36523_memory_map, .hwinfo = &NT36523_hw_info},
+	{.id = {0x0B, 0xFF, 0xFF, 0x23, 0x65, 0x03}, .mask = {1, 0, 0, 1, 1, 1},
+		.mmap = &NT36523_memory_map, .hwinfo = &NT36523_hw_info},
+	{.id = {0x0A, 0xFF, 0xFF, 0x23, 0x65, 0x03}, .mask = {1, 0, 0, 1, 1, 1},
+		.mmap = &NT36523_memory_map, .hwinfo = &NT36523_hw_info},
+	{.id = {0xFF, 0xFF, 0xFF, 0x23, 0x65, 0x03}, .mask = {0, 0, 0, 1, 1, 1},
+		.mmap = &NT36523_memory_map, .hwinfo = &NT36523_hw_info},
+	{.id = {0x0C, 0xFF, 0xFF, 0x72, 0x66, 0x03}, .mask = {1, 0, 0, 1, 1, 1},
+		.mmap = &NT36675_memory_map, .hwinfo = &NT36675_hw_info},
+	{.id = {0xFF, 0xFF, 0xFF, 0x26, 0x65, 0x03}, .mask = {0, 0, 0, 1, 1, 1},
+		.mmap = &NT36526_memory_map, .hwinfo = &NT36526_hw_info},
+	{.id = {0xFF, 0xFF, 0xFF, 0x75, 0x66, 0x03}, .mask = {0, 0, 0, 1, 1, 1},
+		.mmap = &NT36675_memory_map, .hwinfo = &NT36675_hw_info}
 };
