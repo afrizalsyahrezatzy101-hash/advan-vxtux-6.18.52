@@ -57,15 +57,6 @@
 
 #include "nt36xxx.h"
 
-/* The proc_ops bridges the tree's own proc_create() sites now use. */
-extern const struct proc_ops nvt_flash_fops_proc_ops;
-extern const struct proc_ops nvt_selftest_fops_proc_ops;
-extern const struct proc_ops nvt_fw_version_fops_proc_ops;
-extern const struct proc_ops nvt_baseline_fops_proc_ops;
-extern const struct proc_ops nvt_raw_fops_proc_ops;
-extern const struct proc_ops nvt_diff_fops_proc_ops;
-extern const struct proc_ops nvt_pen_diff_fops_proc_ops;
-
 /*
  * The stock's fops tables. A 5.4 struct file_operations is:
  *

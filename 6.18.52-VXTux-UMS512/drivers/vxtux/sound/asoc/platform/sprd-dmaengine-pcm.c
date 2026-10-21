@@ -198,7 +198,13 @@ void sprd_soc_platform_remove(struct platform_device *pdev);
  * period_step / buffer_step / resample fields, so only the fields that
  * still exist are carried over.
  */
-static const struct snd_pcm_hardware sprd_i2s_pcm_hardware = {
+/*
+ * __used: the stock blob carries this table even though nothing in it
+ * references the table either - objdump of the blob finds no reference to
+ * sprd_i2s_pcm_hardware at all.  gcc drops an unreferenced static const from
+ * the object, so the port had to keep it explicitly to carry the same symbol.
+ */
+static const struct snd_pcm_hardware __used sprd_i2s_pcm_hardware = {
 	.info = SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
 		SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_PAUSE |
 		SNDRV_PCM_INFO_RESUME | SNDRV_PCM_INFO_NO_PERIOD_WAKEUP,
