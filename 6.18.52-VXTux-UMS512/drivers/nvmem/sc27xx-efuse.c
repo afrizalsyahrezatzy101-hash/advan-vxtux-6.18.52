@@ -59,6 +59,8 @@
 
 /* ANA_REG bit 11 gates the ADC 26MHz sinout used while converting. */
 #define UMP9620_ADC_CLK26M_EN		BIT(11)
+/* ANA_REG bit 7 gates the efuse read window. */
+#define UMP9620_EFUSE_RD_EN		BIT(7)
 
 /* Timeout (ms) for the trylock of hardware spinlocks */
 #define SC27XX_EFUSE_HWLOCK_TIMEOUT	5000
@@ -77,23 +79,17 @@ struct sc27xx_efuse_variant_data {
 
 /*
  * UMP96xx read path, selected by a compatible string rather than by the
- * variant table: which ANA_REG to program (and therefore where the efuse
- * controller window sits) depends on the chip, not on a register field.
+ * generic SC27xx controller: the efuse window is read directly, and which
+ * ANA_REG to program depends on the chip.
  *
- * The stock blob's tables are:
+ * The stock blob's tables are (module_en, size) pairs, one per efuse bank:
  *   ump9620_edata = { 0x2008, 0x40 }, { 0x2008, 0x0c }
  *   ump9621_edata = { 0x2008, 0x0c }, { 0x1808, 0x40 }
  *   ump518_edata  = { 0x1808, 0x40 }
- * i.e. one (module_en, size) pair per efuse bank, and the banks are
- * concatenated in table order.
  */
-struct sc27xx_efuse_ump_bank {
+struct sc27xx_efuse_ump_data {
 	u32 module_en;
 	u32 size;
-};
-
-struct sc27xx_efuse_ump_data {
-	struct sc27xx_efuse_ump_bank bank[2];
 };
 
 struct sc27xx_efuse {
@@ -115,17 +111,18 @@ static const struct sc27xx_efuse_variant_data sc2730_edata = {
 };
 
 static const struct sc27xx_efuse_ump_data ump9620_edata = {
-	.bank[0] = { .module_en = UMP9620_MODULE_EN, .size = 0x40 },
-	.bank[1] = { .module_en = UMP9620_MODULE_EN, .size = 0x0c },
+	.module_en = UMP9620_MODULE_EN,
+	.size = 0x40,
 };
 
 static const struct sc27xx_efuse_ump_data ump9621_edata = {
-	.bank[0] = { .module_en = UMP9620_MODULE_EN, .size = 0x0c },
-	.bank[1] = { .module_en = UMP518_MODULE_EN, .size = 0x40 },
+	.module_en = UMP9620_MODULE_EN,
+	.size = 0x0c,
 };
 
 static const struct sc27xx_efuse_ump_data ump518_edata = {
-	.bank[0] = { .module_en = UMP518_MODULE_EN, .size = 0x40 },
+	.module_en = UMP518_MODULE_EN,
+	.size = 0x40,
 };
 
 /*
@@ -255,71 +252,71 @@ unlock_efuse:
 /*
  * UMP96xx read path.
  *
- * Unlike the SC27xx controller (which has a block-index register), the
- * UMP96xx efuse window is read directly: the ANA_REG bit 11 selects the
- * 26MHz reference, bit 7 enables the read, and the data register sits at
- * ANA_REG + 0x40.  Each 32-bit word holds two bytes, so the caller offset
- * selects the word (offset / 2) and the byte within it (offset % 2).
+ * Unlike the SC27xx controller (which has a block-index register and a
+ * poll-for-done handshake), the UMP96xx efuse window is read directly:
+ *
+ *   ANA_REG bit 7  gates the efuse read (set, then clear)
+ *   ANA_REG bit 11 selects the 26MHz reference
+ *   base + 0x40   holds the data, one 32-bit word per 2 bytes
+ *
+ * The ANA_REG to use depends on the chip (0x2010 on UMP9620/9621,
+ * 0x1810 on UMP518), so it is taken from the variant table.
  */
 static int ump962x_efuse_read(void *context, u32 offset, void *val,
 			      size_t bytes)
 {
 	struct sc27xx_efuse *efuse = context;
-	struct device_node *np = efuse->dev->of_node;
-	u32 blk_index = offset / 2;
-	u32 blk_offset = (offset % 2) * BITS_PER_BYTE;
-	u32 ana_reg = efuse->ump_data->ana_reg;
+	u32 blk_index = offset / SC27XX_EFUSE_BLOCK_WIDTH;
+	u32 blk_offset = (offset % SC27XX_EFUSE_BLOCK_WIDTH) * BITS_PER_BYTE;
 	u32 buf = 0;
 	int ret;
 
-	if (bytes > 2)
+	if (bytes > SC27XX_EFUSE_BLOCK_WIDTH)
 		return -EINVAL;
 
-	if (blk_index > efuse->ump_data->module_en)
+	if (blk_index > efuse->ump_data->size)
 		return -EINVAL;
 
-	mutex_lock(&efuse->mutex);
-	ret = hwspin_lock_timeout_raw(efuse->hwlock,
-				       SC27XX_EFUSE_HWLOCK_TIMEOUT);
-	if (ret) {
-		dev_err(efuse->dev, "timeout to get the hwspinlock\n");
-		mutex_unlock(&efuse->mutex);
+	ret = sc27xx_efuse_lock(efuse);
+	if (ret)
 		return ret;
-	}
 
-	/* Enable the ADC 26MHz sinout the efuse read is clocked from. */
-	ret = regmap_update_bits(efuse->regmap, ana_reg,
-				 UMP9620_ADC_CLK26M_EN, UMP9620_ADC_CLK26M_EN);
+	/* Gate the efuse read. */
+	ret = regmap_update_bits(efuse->regmap, efuse->base,
+				 UMP9620_EFUSE_RD_EN, UMP9620_EFUSE_RD_EN);
 	if (ret)
 		goto unlock_efuse;
 
-	/* UMP518 keeps the reference in a different ANA_REG than UMP9620. */
-	if (of_device_is_compatible(np, "sprd,ump518-efuse"))
+	/*
+	 * UMP518 keeps the 26MHz reference in a different ANA_REG than
+	 * UMP9620, so pick the one this chip actually uses.
+	 */
+	if (of_device_is_compatible(efuse->dev->of_node, "sprd,ump518-efuse"))
 		ret = regmap_update_bits(efuse->regmap, UMP518_ANA_REG,
-					 BIT(11), BIT(11));
+					 UMP9620_ADC_CLK26M_EN,
+					 UMP9620_ADC_CLK26M_EN);
 	else
 		ret = regmap_update_bits(efuse->regmap, UMP9620_ANA_REG,
-					 BIT(11), BIT(11));
+					 UMP9620_ADC_CLK26M_EN,
+					 UMP9620_ADC_CLK26M_EN);
 	if (ret)
 		goto unlock_efuse;
 
-	/* Select the word to read, then latch it into the data register. */
-	ret = regmap_update_bits(efuse->regmap, efuse->base,
-				 8, 0, 0, 0);
+	/* Latch the word to read, then read it out. */
+	ret = regmap_update_bits(efuse->regmap, efuse->base + 0x10,
+				 4, 4);
 	if (ret)
 		goto unlock_efuse;
 
-	regmap_update_bits(efuse->regmap, efuse->base + 0x10,
-			   4, 4, 0, 0);
-	ret = regmap_read(efuse->regmap, efuse->base + 0x40 + blk_index * 4,
-			  &buf);
-	/* Release the 26MHz sinout again. */
-	regmap_update_bits(efuse->regmap, ana_reg,
-			   UMP9620_ADC_CLK26M_EN, 0);
+	ret = regmap_read(efuse->regmap,
+			  efuse->base + 0x40 + blk_index * 4, &buf);
+
+	/* Release the efuse read gate. */
+	regmap_update_bits(efuse->regmap, efuse->base,
+			   UMP9620_EFUSE_RD_EN, 0);
 
 unlock_efuse:
-	hwspin_unlock_raw(efuse->hwlock);
-	mutex_unlock(&efuse->mutex);
+	sc27xx_efuse_unlock(efuse);
 
 	if (!ret) {
 		buf >>= blk_offset;
@@ -368,16 +365,30 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
 	mutex_init(&efuse->mutex);
 	efuse->dev = &pdev->dev;
 	efuse->var_data = of_device_get_match_data(&pdev->dev);
+	dev_set_drvdata(&pdev->dev, efuse);
 
 	econfig.stride = 1;
 	econfig.word_size = 1;
 	econfig.read_only = true;
 	econfig.name = "sc27xx-efuse";
 	econfig.size = SC27XX_EFUSE_BLOCK_MAX * SC27XX_EFUSE_BLOCK_WIDTH;
-	econfig.reg_read = sc27xx_efuse_read;
 	econfig.priv = efuse;
 	econfig.dev = &pdev->dev;
 	econfig.add_legacy_fixed_of_cells = true;
+
+	/*
+	 * The UMP96xx parts have their own efuse read path; the generic
+	 * SC27xx controller handshake does not apply to them.
+	 */
+	if (of_device_is_compatible(np, "sprd,ump9620-efuse") ||
+	    of_device_is_compatible(np, "sprd,ump9621-efuse") ||
+	    of_device_is_compatible(np, "sprd,ump518-efuse")) {
+		efuse->ump_data = of_device_get_match_data(&pdev->dev);
+		econfig.reg_read = ump962x_efuse_read;
+	} else {
+		econfig.reg_read = sc27xx_efuse_read;
+	}
+
 	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
 	if (IS_ERR(nvmem)) {
 		dev_err(&pdev->dev, "failed to register nvmem config\n");
@@ -387,15 +398,26 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
 	return 0;
 }
 
+static void sc27xx_efuse_remove(struct platform_device *pdev)
+{
+	struct sc27xx_efuse *efuse = dev_get_drvdata(&pdev->dev);
+
+	hwspin_lock_free(efuse->hwlock);
+}
+
 static const struct of_device_id sc27xx_efuse_of_match[] = {
 	{ .compatible = "sprd,sc2731-efuse", .data = &sc2731_edata},
 	{ .compatible = "sprd,sc2730-efuse", .data = &sc2730_edata},
+	{ .compatible = "sprd,ump9620-efuse", .data = &ump9620_edata},
+	{ .compatible = "sprd,ump9621-efuse", .data = &ump9621_edata},
+	{ .compatible = "sprd,ump518-efuse", .data = &ump518_edata},
 	{ }
 };
 MODULE_DEVICE_TABLE(of, sc27xx_efuse_of_match);
 
 static struct platform_driver sc27xx_efuse_driver = {
 	.probe = sc27xx_efuse_probe,
+	.remove = sc27xx_efuse_remove,
 	.driver = {
 		.name = "sc27xx-efuse",
 		.of_match_table = sc27xx_efuse_of_match,

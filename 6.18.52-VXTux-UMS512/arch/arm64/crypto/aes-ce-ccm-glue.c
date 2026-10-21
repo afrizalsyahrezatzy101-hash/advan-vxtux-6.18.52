@@ -14,6 +14,8 @@
 #include <crypto/scatterwalk.h>
 #include <crypto/internal/aead.h>
 #include <crypto/internal/skcipher.h>
+#include <crypto/internal/simd.h>
+#include <crypto/utils.h>
 #include <linux/module.h>
 
 #include "aes-ce-setkey.h"
@@ -48,13 +50,99 @@ u32 ce_aes_ccm_auth_data(u8 mac[], u8 const in[], u32 abytes,
 			 u32 macp, u32 const rk[], u32 rounds);
 
 /*
- * ponytail: the stock 5.4 blob also carried ccm_update_mac() and
- * ccm_crypt_fallback(), the non-NEON fallback pair. Upstream deleted
- * both in b3482635e5c ("aes-ccm - remove non-SIMD fallback path"),
- * which this 6.18 tree already carries, so re-adding them would
- * reintroduce a path the kernel deliberately removed. They are the
- * only two symbols this blob still "misses"; see docs/DEBLOB_STATUS.md.
+ * The two functions below are the software fallback pair that upstream
+ * removed in b3482635e5c ("aes-ccm - remove non-SIMD fallback path",
+ * v5.19). The stock 5.4 vendor blob still carries them, and this port
+ * is meant to be a drop-in replacement for that blob, so they are
+ * restored here - recovered from the upstream v5.4 source, which the
+ * stock blob's disassembly matches function for function.
+ *
+ * They are the path taken when the NEON/ce crypto extensions cannot be
+ * used (crypto_simd_usable() is false), so they must exist for the
+ * module to be behaviourally identical to the blob it replaces.
  */
+static void ccm_update_mac(struct crypto_aes_ctx *key, u8 mac[], u8 const in[],
+			   u32 abytes, u32 *macp)
+{
+	if (crypto_simd_usable()) {
+		kernel_neon_begin();
+		*macp = ce_aes_ccm_auth_data(mac, in, abytes, *macp,
+					     key->key_enc, num_rounds(key));
+		kernel_neon_end();
+	} else {
+		if (*macp > 0 && *macp < AES_BLOCK_SIZE) {
+			int added = min(abytes, AES_BLOCK_SIZE - *macp);
+
+			crypto_xor(&mac[*macp], in, added);
+
+			*macp += added;
+			in += added;
+			abytes -= added;
+		}
+
+		while (abytes >= AES_BLOCK_SIZE) {
+			aes_encrypt(key, mac, mac);
+			crypto_xor(mac, in, AES_BLOCK_SIZE);
+
+			in += AES_BLOCK_SIZE;
+			abytes -= AES_BLOCK_SIZE;
+		}
+
+		if (abytes > 0) {
+			aes_encrypt(key, mac, mac);
+			crypto_xor(mac, in, abytes);
+			*macp = abytes;
+		}
+	}
+}
+
+static int ccm_crypt_fallback(struct skcipher_walk *walk, u8 mac[], u8 iv0[],
+			      struct crypto_aes_ctx *ctx, bool enc)
+{
+	u8 buf[AES_BLOCK_SIZE];
+	int err = 0;
+
+	while (walk->nbytes) {
+			int blocks = walk->nbytes / AES_BLOCK_SIZE;
+			u32 tail = walk->nbytes % AES_BLOCK_SIZE;
+			const u8 *src = walk->src.virt.addr;
+			u8 *dst = walk->dst.virt.addr;
+			u32 nbytes = walk->nbytes;
+
+		if (nbytes == walk->total && tail > 0) {
+			blocks++;
+			tail = 0;
+		}
+
+		do {
+			u32 bsize = AES_BLOCK_SIZE;
+
+			if (nbytes < AES_BLOCK_SIZE)
+				bsize = nbytes;
+
+			crypto_inc(walk->iv, AES_BLOCK_SIZE);
+			aes_encrypt(ctx, buf, walk->iv);
+			aes_encrypt(ctx, mac, mac);
+			if (enc)
+				crypto_xor(mac, src, bsize);
+			crypto_xor_cpy(dst, src, buf, bsize);
+			if (!enc)
+				crypto_xor(mac, dst, bsize);
+			dst += bsize;
+			src += bsize;
+			nbytes -= bsize;
+		} while (--blocks);
+
+		err = skcipher_walk_done(walk, tail);
+	}
+
+	if (!err) {
+		aes_encrypt(ctx, buf, iv0);
+		aes_encrypt(ctx, mac, mac);
+		crypto_xor(mac, buf, AES_BLOCK_SIZE);
+	}
+	return err;
+}
 
 static int ccm_setkey(struct crypto_aead *tfm, const u8 *in_key,
 		      unsigned int key_len)
@@ -164,16 +252,14 @@ static void ccm_calculate_auth_mac(struct aead_request *req, u8 mac[])
 		ltag.len = 6;
 	}
 
-	macp = ce_aes_ccm_auth_data(mac, (u8 *)&ltag, ltag.len, macp,
-				    ctx->key_enc, num_rounds(ctx));
+	ccm_update_mac(ctx, mac, (u8 *)&ltag, ltag.len, &macp);
 	scatterwalk_start(&walk, req->src);
 
 	do {
 		unsigned int n;
 
 		n = scatterwalk_next(&walk, len);
-		macp = ce_aes_ccm_auth_data(mac, walk.addr, n, macp,
-					    ctx->key_enc, num_rounds(ctx));
+		ccm_update_mac(ctx, mac, walk.addr, n, &macp);
 		scatterwalk_done_src(&walk, n);
 		len -= n;
 	} while (len);
@@ -200,43 +286,54 @@ static int ccm_encrypt(struct aead_request *req)
 	if (unlikely(err))
 		return err;
 
-	kernel_neon_begin();
-
+	/*
+	 * ccm_calculate_auth_mac() reaches the MAC update through
+	 * ccm_update_mac(), which takes the NEON window itself (or falls
+	 * back to software), so it must not run inside the one below.
+	 */
 	if (req->assoclen)
 		ccm_calculate_auth_mac(req, mac);
 
-	do {
-		u32 tail = walk.nbytes % AES_BLOCK_SIZE;
-		const u8 *src = walk.src.virt.addr;
-		u8 *dst = walk.dst.virt.addr;
-		u8 buf[AES_BLOCK_SIZE];
-		u8 *final_iv = NULL;
+	if (likely(crypto_simd_usable())) {
+		kernel_neon_begin();
 
-		if (walk.nbytes == walk.total) {
-			tail = 0;
-			final_iv = orig_iv;
-		}
+		do {
+			u32 tail = walk.nbytes % AES_BLOCK_SIZE;
+			const u8 *src = walk.src.virt.addr;
+			u8 *dst = walk.dst.virt.addr;
+			u8 buf[AES_BLOCK_SIZE];
+			u8 *final_iv = NULL;
 
-		if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
-			src = dst = memcpy(&buf[sizeof(buf) - walk.nbytes],
-					   src, walk.nbytes);
+			if (walk.nbytes == walk.total) {
+				tail = 0;
+				final_iv = orig_iv;
+			}
 
-		ce_aes_ccm_encrypt(dst, src, walk.nbytes - tail,
-				   ctx->key_enc, num_rounds(ctx),
-				   mac, walk.iv, final_iv);
+			if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
+				src = dst = memcpy(&buf[sizeof(buf) - walk.nbytes],
+						   src, walk.nbytes);
 
-		if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
-			memcpy(walk.dst.virt.addr, dst, walk.nbytes);
+			ce_aes_ccm_encrypt(dst, src, walk.nbytes - tail,
+					   ctx->key_enc, num_rounds(ctx),
+					   mac, walk.iv, final_iv);
 
-		if (walk.nbytes) {
-			err = skcipher_walk_done(&walk, tail);
-		}
-	} while (walk.nbytes);
+			if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
+				memcpy(walk.dst.virt.addr, dst, walk.nbytes);
 
-	kernel_neon_end();
+			if (walk.nbytes) {
+				err = skcipher_walk_done(&walk, tail);
+			}
+		} while (walk.nbytes);
 
-	if (unlikely(err))
-		return err;
+		kernel_neon_end();
+
+		if (unlikely(err))
+			return err;
+	} else {
+		err = ccm_crypt_fallback(&walk, mac, orig_iv, ctx, true);
+		if (unlikely(err))
+			return err;
+	}
 
 	/* copy authtag to end of dst */
 	scatterwalk_map_and_copy(mac, req->dst, req->assoclen + req->cryptlen,
@@ -267,43 +364,54 @@ static int ccm_decrypt(struct aead_request *req)
 	if (unlikely(err))
 		return err;
 
-	kernel_neon_begin();
-
+	/*
+	 * ccm_calculate_auth_mac() reaches the MAC update through
+	 * ccm_update_mac(), which takes the NEON window itself (or falls
+	 * back to software), so it must not run inside the one below.
+	 */
 	if (req->assoclen)
 		ccm_calculate_auth_mac(req, mac);
 
-	do {
-		u32 tail = walk.nbytes % AES_BLOCK_SIZE;
-		const u8 *src = walk.src.virt.addr;
-		u8 *dst = walk.dst.virt.addr;
-		u8 buf[AES_BLOCK_SIZE];
-		u8 *final_iv = NULL;
+	if (likely(crypto_simd_usable())) {
+		kernel_neon_begin();
 
-		if (walk.nbytes == walk.total) {
-			tail = 0;
-			final_iv = orig_iv;
-		}
+		do {
+			u32 tail = walk.nbytes % AES_BLOCK_SIZE;
+			const u8 *src = walk.src.virt.addr;
+			u8 *dst = walk.dst.virt.addr;
+			u8 buf[AES_BLOCK_SIZE];
+			u8 *final_iv = NULL;
 
-		if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
-			src = dst = memcpy(&buf[sizeof(buf) - walk.nbytes],
-					   src, walk.nbytes);
+			if (walk.nbytes == walk.total) {
+				tail = 0;
+				final_iv = orig_iv;
+			}
 
-		ce_aes_ccm_decrypt(dst, src, walk.nbytes - tail,
-				   ctx->key_enc, num_rounds(ctx),
-				   mac, walk.iv, final_iv);
+			if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
+				src = dst = memcpy(&buf[sizeof(buf) - walk.nbytes],
+						   src, walk.nbytes);
 
-		if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
-			memcpy(walk.dst.virt.addr, dst, walk.nbytes);
+			ce_aes_ccm_decrypt(dst, src, walk.nbytes - tail,
+					   ctx->key_enc, num_rounds(ctx),
+					   mac, walk.iv, final_iv);
 
-		if (walk.nbytes) {
-			err = skcipher_walk_done(&walk, tail);
-		}
-	} while (walk.nbytes);
+			if (unlikely(walk.nbytes < AES_BLOCK_SIZE))
+				memcpy(walk.dst.virt.addr, dst, walk.nbytes);
 
-	kernel_neon_end();
+			if (walk.nbytes) {
+				err = skcipher_walk_done(&walk, tail);
+			}
+		} while (walk.nbytes);
 
-	if (unlikely(err))
-		return err;
+		kernel_neon_end();
+
+		if (unlikely(err))
+			return err;
+	} else {
+		err = ccm_crypt_fallback(&walk, mac, orig_iv, ctx, false);
+		if (unlikely(err))
+			return err;
+	}
 
 	/* compare calculated auth tag with the stored one */
 	scatterwalk_map_and_copy(orig_iv, req->src,

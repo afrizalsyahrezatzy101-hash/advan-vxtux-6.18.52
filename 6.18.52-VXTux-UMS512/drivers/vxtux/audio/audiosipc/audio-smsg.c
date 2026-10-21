@@ -64,7 +64,13 @@ static void aud_smsg_reset(struct aud_smsg_ipc *ipc)
 	writel_relaxed(0, (void *) ipc->rxbuf_rdptr);
 }
 
-static void aud_smsg_dump_func(u32 is_timeout)
+/*
+ * The stock blob carries these as real local functions; gcc inlines both
+ * (each has a single caller), which would drop the symbol the verifier
+ * compares.  ponytail: keep the noinline until the stock symbol list is
+ * satisfied without it; it costs a call per timeout/notify.
+ */
+static noinline void aud_smsg_dump_func(u32 is_timeout)
 {
 	aud_smsg_rx_dump();
 	aud_smsg_tx_dump();
@@ -536,8 +542,8 @@ static int aud_smsg_ch_send(struct aud_smsg_ipc *ipc, struct aud_smsg *msg)
 	return 0;
 }
 
-static int aud_smsg_all_ch_notify(struct aud_smsg_ipc *ipc,
-				  struct aud_smsg *msg)
+static noinline int aud_smsg_all_ch_notify(struct aud_smsg_ipc *ipc,
+					  struct aud_smsg *msg)
 {
 	int i = 0;
 	unsigned long flags;
@@ -588,7 +594,6 @@ EXPORT_SYMBOL(aud_smsg_wakeup_ch);
 
 int aud_smsg_send(u8 dst, struct aud_smsg *msg)
 {
-	unsigned long long msg_val = 0;
 	unsigned long long command;
 	unsigned long long channel;
 	unsigned long long parameter0;
@@ -596,15 +601,29 @@ int aud_smsg_send(u8 dst, struct aud_smsg *msg)
 	uintptr_t txpos;
 	int rval = 0;
 	unsigned long flags;
+	/*
+	 * The stock blob keeps the last SMSG_TX_RING_MSG_COUNT packed mailbox
+	 * words here (0xa0 bytes = 20 * u64) and hands the newest one to the
+	 * channel, instead of calling mbox_raw_sent() with the id.  It is a
+	 * debug ring: only msg_index walks it.  Nothing in this file reads it
+	 * back, so gcc drops the static unless it is marked used.
+	 *
+	 * The asm label pins the stock's own symbol name.  clang 5.4 spells a
+	 * function-static "<enclosing function>.<member>"; gcc numbers its
+	 * own ("msg_val.1") and nothing in the tree maps one to the other, so
+	 * without the label the verifier reads the variable as missing.
+	 */
+	static unsigned long long msg_val[SMSG_TX_RING_MSG_COUNT]
+		__asm__("aud_smsg_send.msg_val") __attribute__((used));
 
-	ipc = aud_smsg_ipcs[dst];
 	pr_info("%s: dst=%d, channel=%d\n", __func__, dst, msg->channel);
+	ipc = aud_smsg_ipcs[dst];
 	if (!ipc)
 		return -ENODEV;
 
 	if (!ipc->channels[msg->channel]) {
 		pr_err(" ERR: channel is null, %s, channel %d not ope\n",
-		__func__, msg->channel);
+			__func__, msg->channel);
 		return -ENODEV;
 	}
 
@@ -649,8 +668,18 @@ int aud_smsg_send(u8 dst, struct aud_smsg *msg)
 	command = msg->command;
 	channel = msg->channel;
 	parameter0 = msg->parameter0;
-	msg_val =  (command << 48) | (channel << 32) | (parameter0);
-	mbox_raw_sent(ipc->target_id, msg_val);
+	/*
+	 * The stock blob stores the packed word in a 20-entry ring before
+	 * ringing the channel (its 5.4 mbox_send_message() took the channel
+	 * alone; the word went out with it).  mbox_raw_sent() is this tree's
+	 * equivalent of that pair - it splits the word and calls
+	 * mbox_send_message() + mbox_chan_txdone() - so the ring keeps the
+	 * history and the transport stays the same.
+	 */
+	msg_val[msg_index] = (command << 48) | (channel << 32) | parameter0;
+	if (mbox_raw_sent(ipc->target_id, msg_val[msg_index]) < 0)
+		pr_err("%s: mbox_send_message failed\n", __func__);
+	msg_index = (msg_index + 1) % SMSG_TX_RING_MSG_COUNT;
 
 send_failed:
 	spin_unlock_irqrestore(&(ipc->txpinlock), flags);

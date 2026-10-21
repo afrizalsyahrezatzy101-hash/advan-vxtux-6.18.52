@@ -119,6 +119,33 @@ static int tui_release(struct inode *inode, struct file *filp)
 	return 0;
 }
 
+/*
+ * The stock blob's _copy_to_user()/_copy_from_user().  The blob was built
+ * against 4.14/5.4, where arm64's copy_to_user() was a macro over a local
+ * _copy_to_user() that toggled the access window around the access; 6.18
+ * moved that into __arch_copy_to_user() and made copy_to_user() a plain
+ * function, and arm64 defines INLINE_COPY_TO_USER, so lib/usercopy.c does
+ * not build the extern _copy_to_user() any more.  The symbol vanished from
+ * the port.
+ *
+ * The blob's tui_read()/tui_write() call it, and this port's do the same,
+ * so the port calls it too.  The body is the kernel's own copy_to_user(),
+ * which is the same access with the same semantics.
+ */
+noinline unsigned long _copy_to_user(void __user *to,
+					    const void *from,
+					    unsigned long n)
+{
+	return copy_to_user(to, from, n);
+}
+
+noinline unsigned long _copy_from_user(void *to,
+					      const void __user *from,
+					      unsigned long n)
+{
+	return copy_from_user(to, from, n);
+}
+
 static ssize_t tui_read(struct file *filp, char __user *ubuf,
 			size_t len, loff_t *ppos)
 {
@@ -130,7 +157,7 @@ static ssize_t tui_read(struct file *filp, char __user *ubuf,
 		return -EINVAL;
 	}
 
-	if (copy_to_user(ubuf, &ts->state, TUI_MSG_LEN))
+	if (_copy_to_user(ubuf, &ts->state, TUI_MSG_LEN))
 		return -EFAULT;
 
 	/* one-shot: the state word is consumed by the read */
@@ -151,7 +178,7 @@ static ssize_t tui_write(struct file *filp, const char __user *ubuf,
 		return -EINVAL;
 	}
 
-	if (copy_from_user(&ts->in_tui, ubuf, TUI_MSG_LEN))
+	if (_copy_from_user(&ts->in_tui, ubuf, TUI_MSG_LEN))
 		return -EFAULT;
 
 	ts->notify_cancel = 1;

@@ -66,6 +66,35 @@ int mtx_dvfs_init(void);
 void mtx_dvfs_exit(void);
 int mmsys_dvfs_init(void);
 void mmsys_dvfs_exit(void);
+/*
+ * The stock-named per-IP accessors, in sprd_mm_dvfs_stock.c.  The
+ * per-IP variants in this file are thin wrappers around these.
+ */
+int ip_dvfs_init(struct ip_dvfs_ops *ops);
+int ip_hw_dvfs_en(struct ip_dvfs_ops *ops, int en);
+int ip_auto_tune_en(struct ip_dvfs_ops *ops, int en);
+int get_ip_dvfs_table(struct ip_dvfs_ops *ops, struct ip_dvfs_map_cfg *table,
+		      int count);
+int set_ip_dvfs_table(struct ip_dvfs_ops *ops, struct ip_dvfs_map_cfg *cfg);
+int get_ip_index_from_table(struct ip_dvfs_ops *ops, u64 freq, u32 *index);
+int set_work_freq(struct ip_dvfs_ops *ops, u64 freq);
+int set_idle_freq(struct ip_dvfs_ops *ops, u64 freq);
+int get_ip_status(struct ip_dvfs_ops *ops, struct ip_dvfs_status *status);
+int power_on_nb(struct ip_dvfs_ops *ops);
+int power_off_nb(struct ip_dvfs_ops *ops);
+int set_ip_gfree_wait_delay(struct ip_dvfs_ops *ops, u32 delay);
+int set_ip_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en);
+int set_ip_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en);
+int set_ip_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en);
+int set_ip_dvfs_swtrig_en(struct ip_dvfs_ops *ops, int en);
+int set_ip_dvfs_work_index(struct ip_dvfs_ops *ops, u32 index);
+int get_ip_dvfs_work_index(struct ip_dvfs_ops *ops, u32 *index);
+int set_ip_dvfs_idle_index(struct ip_dvfs_ops *ops, u32 index);
+int updata_target_freq(struct ip_dvfs_ops *ops, u64 freq, u32 index,
+		       int is_fix);
+int set_fix_dvfs_value(struct ip_dvfs_ops *ops, u32 value);
+int top_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
+int mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt);
 
 static u32 mm_read(u32 off)
 {
@@ -227,32 +256,13 @@ struct ip_dvfs_map_cfg mtx_dvfs_config_table[DVFS_FREQ_LEVEL_NUM] = {
 };
 
 /*
- * The per-IP parameters, read out of the stock blob.
- *
- * sw30_mask	bits to clear in 0x30 (the software DVFS gate)
- * upd220_clear	bits to clear in 0x220 (the update control)
- * upd220_set	bits to set in 0x220
- * delay		the value written to 0x214 (the update delay)
- * hold_clear	bits to clear in 0x0c (the voltage hold), 0 = leave alone
- * work_idx_reg	the work index register, and its default value
- * idle_idx_reg	the idle index register, and its default value
- * gate8		the bits set in 0x8 to clock-gate this IP's registers
+ * struct ip_dvfs_params now lives in sprd_mm_dvfs.h: the port keeps
+ * one set of per-IP callbacks (the stock names) and they read the
+ * variation out of struct ip_dvfs_ops, so the data has to be visible
+ * to the header as well.
  */
-struct ip_dvfs_params {
-	u32 sw30_mask;
-	u32 upd220_clear;
-	u32 upd220_set;
-	u32 delay;
-	u32 hold_clear;
-	u32 work_idx_reg;
-	u32 idle_idx_reg;
-	u32 work_idx_def;
-	u32 idle_idx_def;
-	u32 gate8;
-};
-
 #define IP_PARAMS(ip)							\
-	static const struct ip_dvfs_params ip##_params = {		\
+	const struct ip_dvfs_params ip##_params = {			\
 		.sw30_mask	= ip##_SW30_MASK,			\
 		.upd220_clear	= ip##_UPD220_CLEAR,		\
 		.upd220_set	= ip##_UPD220_SET,			\
@@ -387,248 +397,139 @@ IP_PACK(mtx, PACK_S3V3(cfg));
 /*
  * The per-IP callback template.
  *
- * Every IP gets its own copies of these, differing only in the register
- * window they touch, which comes from <ip>_params.  The names are
- * generated with token pasting so the eight variants stay identical.
+ * The stock blob has one copy of each of these per camera IP, in eight
+ * separate translation units, and the linker suffixes them.  The port
+ * has one translation unit, so the eight variants share ONE set of
+ * functions - the stock's own, in sprd_mm_dvfs_stock.c - and the
+ * per-IP variation is carried in struct ip_dvfs_ops: the register
+ * window in ->params, the frequency table in ->table and the map bit
+ * layout in ->map_apply.
+ *
+ * That is the same shape as the stock's own functions, which all take
+ * struct ip_dvfs_ops * as their first argument and read the variation
+ * from the tables beside them.
  */
 
 #define IP_CALLBACKS(ip, tab)							\
-static int ip##_ops_init(struct ip_dvfs_ops *ops)			\
+static int ip##_ops_init(struct ip_dvfs_ops *ops)				\
 {									\
-	u32 i;								\
-									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	for (i = 0; i < DVFS_FREQ_LEVEL_NUM; i++)			\
-		ip##_map_apply(&tab[i]);			\
-									\
-	mm_update(0x30, ip##_params.sw30_mask, 0);			\
-	mm_update(0x220, ip##_params.upd220_clear,			\
-		 ip##_params.upd220_set);				\
-	mm_write(0x214, ip##_params.delay);				\
-	mm_update(0x0c, ip##_params.hold_clear, 0);			\
-	mm_write(ip##_params.work_idx_reg,				\
-		 (mm_read(ip##_params.work_idx_reg) & ~0x7U) |	\
-		 ip##_params.work_idx_def);				\
-	mm_write(ip##_params.idle_idx_reg,				\
-		 mm_read(ip##_params.idle_idx_reg) & ~0x7U);		\
-	mm_update(0x08, 0, ip##_params.gate8);				\
-									\
-	return 0;							\
+	return ip_dvfs_init(ops);					\
 }									\
 									\
-static int ip##_get_dvfs_table(struct ip_dvfs_ops *ops,		\
-			       struct ip_dvfs_map_cfg *table,		\
-			       int count)				\
+static int ip##_get_dvfs_table(struct ip_dvfs_ops *ops,		       \
+			       struct ip_dvfs_map_cfg *table,	       \
+			       int count)					\
 {									\
-	int i;								\
-									\
-	if (!ops || !table)						\
-		return -EINVAL;						\
-									\
-	for (i = 0; i < count && i < DVFS_FREQ_LEVEL_NUM; i++)		\
-		table[i] = tab[i];			\
-									\
-	return 0;							\
+	return get_ip_dvfs_table(ops, table, count);			\
 }									\
 									\
-static int ip##_set_dvfs_table(struct ip_dvfs_ops *ops,		\
+static int ip##_set_dvfs_table(struct ip_dvfs_ops *ops,		       \
 			       struct ip_dvfs_map_cfg *cfg)		\
 {									\
-	int i;								\
-									\
-	if (!ops || !cfg)						\
-		return -EINVAL;						\
-									\
-	for (i = 0; i < DVFS_FREQ_LEVEL_NUM; i++)			\
-		tab[i].clk_level =			\
-			cfg[i].clk_level;					\
-									\
-	return 0;							\
+	return set_ip_dvfs_table(ops, cfg);				\
 }									\
 									\
-static int ip##_get_index_from_table(struct ip_dvfs_ops *ops,	\
+static int ip##_get_index_from_table(struct ip_dvfs_ops *ops,	      \
 				      u64 freq, u32 *index)		\
 {									\
-	u32 i, best = 0;							\
-									\
-	if (!ops || !index)						\
-		return -EINVAL;						\
-									\
-	for (i = 0; i < DVFS_FREQ_LEVEL_NUM; i++) {			\
-		if (freq > tab[i].clk_level)		\
-			best = i;						\
-	}								\
-	*index = best;							\
-	return 0;							\
+	return get_ip_index_from_table(ops, freq, index);			\
 }									\
 									\
 static int ip##_set_work_index(struct ip_dvfs_ops *ops, u32 index)	\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_write(ip##_params.work_idx_reg,				\
-		 (mm_read(ip##_params.work_idx_reg) & ~0x7U) |	\
-		 (index & 0x7U));					\
-	return 0;							\
+	return set_ip_dvfs_work_index(ops, index);			\
 }									\
 									\
 static int ip##_get_work_index(struct ip_dvfs_ops *ops, u32 *index)	\
 {									\
-	if (!ops || !index)						\
-		return -EINVAL;						\
-									\
-	*index = mm_read(ip##_params.work_idx_reg) & 0x7U;		\
-	return 0;							\
+	return get_ip_dvfs_work_index(ops, index);			\
 }									\
 									\
 static int ip##_set_idle_index(struct ip_dvfs_ops *ops, u32 index)	\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_write(ip##_params.idle_idx_reg,				\
-		 (mm_read(ip##_params.idle_idx_reg) & ~0x7U) |	\
-		 (index & 0x7U));					\
-	return 0;							\
+	return set_ip_dvfs_idle_index(ops, index);			\
 }									\
 									\
 static int ip##_set_work_freq(struct ip_dvfs_ops *ops, u64 freq)	\
 {									\
-	u32 index;							\
-	int ret;								\
-									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	ret = ip##_get_index_from_table(ops, freq, &index);		\
-	if (ret)							\
-		return ret;						\
-									\
-	return ip##_set_work_index(ops, index);			\
+	return set_work_freq(ops, freq);				\
 }									\
 									\
 static int ip##_set_idle_freq(struct ip_dvfs_ops *ops, u64 freq)	\
 {									\
-	return ip##_set_work_freq(ops, freq);				\
+	return set_idle_freq(ops, freq);				\
 }									\
 									\
 static int ip##_set_hw_dvfs_en(struct ip_dvfs_ops *ops, int en)	\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_update(0x30, en ? 0 : ip##_params.sw30_mask,			\
-		 en ? ip##_params.sw30_mask : 0);				\
-	return 0;							\
+	return ip_hw_dvfs_en(ops, en);					\
 }									\
 									\
 static int ip##_set_auto_tune_en(struct ip_dvfs_ops *ops, u32 en)	\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_update(0x30, en ? 0 : ip##_params.sw30_mask,			\
-		 en ? ip##_params.sw30_mask : 0);				\
-	return 0;							\
+	return ip_auto_tune_en(ops, en);				\
 }									\
 									\
 static int ip##_power_on(struct ip_dvfs_ops *ops)			\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_update(0x08, 0, ip##_params.gate8);				\
-	return 0;							\
+	return power_on_nb(ops);					\
 }									\
 									\
 static int ip##_power_off(struct ip_dvfs_ops *ops)			\
 {									\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	mm_update(0x08, ip##_params.gate8, 0);				\
-	return 0;							\
+	return power_off_nb(ops);					\
 }									\
 									\
-static int ip##_set_gfree_wait_delay(struct ip_dvfs_ops *ops, u32 d)\
+static int ip##_set_gfree_wait_delay(struct ip_dvfs_ops *ops, u32 d)	\
 {									\
-	(void)ops;							\
-	mm_write(0x214, d);						\
-	return 0;							\
+	return set_ip_gfree_wait_delay(ops, d);				\
 }									\
-static int ip##_set_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en)\
+									\
+static int ip##_set_freq_upd_en_byp(struct ip_dvfs_ops *ops, int en)	\
 {									\
-	(void)ops;							\
-	mm_update(0x220, en ? BIT(12) : 0, en ? 0 : BIT(12));		\
-	return 0;							\
+	return set_ip_freq_upd_en_byp(ops, en);				\
 }									\
-static int ip##_set_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en)\
+									\
+static int ip##_set_freq_upd_delay_en(struct ip_dvfs_ops *ops, int en)	\
 {									\
-	(void)ops;							\
-	mm_update(0x220, en ? BIT(11) : 0, en ? 0 : BIT(11));		\
-	return 0;							\
+	return set_ip_freq_upd_delay_en(ops, en);			\
 }									\
-static int ip##_set_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en)\
+									\
+static int ip##_set_freq_upd_hdsk_en(struct ip_dvfs_ops *ops, int en)	\
 {									\
-	(void)ops;							\
-	mm_update(0x220, en ? BIT(7) : 0, en ? 0 : BIT(7));		\
-	return 0;							\
+	return set_ip_freq_upd_hdsk_en(ops, en);			\
 }									\
+									\
 static int ip##_set_sw_trig_en(struct ip_dvfs_ops *ops, int en)	\
 {									\
-	(void)ops;							\
-	mm_update(0x220, en ? BIT(4) : 0, en ? 0 : BIT(4));		\
-	return 0;							\
+	return set_ip_dvfs_swtrig_en(ops, en);				\
 }									\
-static int ip##_get_ip_status(struct ip_dvfs_ops *ops,			\
+									\
+static int ip##_get_ip_status(struct ip_dvfs_ops *ops,		       \
 			       struct ip_dvfs_status *status)		\
 {									\
-	if (!ops || !status)						\
-		return -EINVAL;						\
-									\
-	memset(status, 0, sizeof(*status));				\
-	return 0;							\
+	return get_ip_status(ops, status);				\
 }									\
-static int ip##_update_target_freq(struct ip_dvfs_ops *ops,		\
+									\
+static int ip##_update_target_freq(struct ip_dvfs_ops *ops,	    \
 				    u64 freq, u32 index, int is_fix)	\
 {									\
-	int ret;								\
-									\
-	(void)freq;							\
-	(void)is_fix;							\
-	if (!ops)							\
-		return -EINVAL;						\
-									\
-	ret = ip##_get_index_from_table(ops, freq, &index);		\
-	if (ret)							\
-		return ret;						\
-									\
-	return ip##_set_work_index(ops, index);			\
+	return updata_target_freq(ops, freq, index, is_fix);		\
 }									\
+									\
 static int ip##_set_fix_dvfs_value(struct ip_dvfs_ops *ops, u32 v)	\
 {									\
-	(void)ops;							\
-	mmsys_set_fix_dvfs_value(v);					\
-	return 0;							\
+	return set_fix_dvfs_value(ops, v);				\
 }									\
-static int ip##_top_current_volt(struct ip_dvfs_ops *ops, u32 *volt)\
-{									\
-	if (!ops || !volt)						\
-		return -EINVAL;						\
 									\
-	*volt = top_mm_dvfs_current_volt();				\
-	return 0;							\
+static int ip##_top_current_volt(struct ip_dvfs_ops *ops, u32 *volt)	\
+{									\
+	return top_current_volt(ops, volt);				\
 }									\
+									\
 static int ip##_mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt)	\
 {									\
-	if (!ops || !volt)						\
-		return -EINVAL;						\
-									\
-	*volt = mm_dvfs_read_current_volt();				\
-	return 0;							\
+	return mm_current_volt(ops, volt);				\
 }
 
 IP_CALLBACKS(fd, fd_dvfs_config_table);
@@ -747,11 +648,14 @@ static int mmsys_mm_current_volt(struct ip_dvfs_ops *ops, u32 *volt)
 /*
  * The per-IP operations tables.
  */
-#define IP_OPS(ip)							\
-struct ip_dvfs_ops ip##_dvfs_ops = {				\
-	.name			= #ip "_DVFS_OPS",			\
-	.ver			= 1,				\
-	.dvfs_init		= ip##_ops_init,		\
+#define IP_OPS(ip, tab)								\
+struct ip_dvfs_ops ip##_dvfs_ops = {					\
+	.name			= #ip "_DVFS_OPS",				\
+	.ver			= 1,					\
+	.params			= &ip##_params,				\
+	.table			= &tab[0],				\
+	.map_apply		= ip##_map_apply,				\
+	.dvfs_init		= ip##_ops_init,				\
 	.set_hw_dvfs_en		= ip##_set_hw_dvfs_en,		\
 	.set_auto_tune_en	= ip##_set_auto_tune_en,	\
 	.set_work_freq		= ip##_set_work_freq,		\
@@ -777,13 +681,13 @@ struct ip_dvfs_ops ip##_dvfs_ops = {				\
 	.get_mm_current_volt	= ip##_mm_current_volt,	\
 }
 
-IP_OPS(fd);
-IP_OPS(isp);
-IP_OPS(dcam_axi);
-IP_OPS(dcam_if);
-IP_OPS(jpg);
-IP_OPS(cpp);
-IP_OPS(mtx);
+IP_OPS(fd, fd_dvfs_config_table);
+IP_OPS(isp, isp_dvfs_config_table);
+IP_OPS(dcam_axi, dcamaxi_dvfs_config_table);
+IP_OPS(dcam_if, dcam_dvfs_config_table);
+IP_OPS(jpg, jpg_dvfs_config_table);
+IP_OPS(cpp, cpp_dvfs_config_table);
+IP_OPS(mtx, mtx_dvfs_config_table);
 
 /*
  * The mmsys block is not a camera IP: it has no frequency map of its
@@ -812,7 +716,7 @@ struct ip_dvfs_ops mmsys_dvfs_ops = {
  * The governor asks the devfreq core for the target frequency and the
  * core hands the request to the IP's own update_target_freq callback.
  */
-static int mm_dvfs_gov_get_target(struct devfreq *df, unsigned long *freq)
+static int dvfs_gov_get_target(struct devfreq *df, unsigned long *freq)
 {
 	struct ip_dvfs_dev *ip_dev = dev_get_drvdata(df->dev.parent);
 	struct ip_dvfs_ops *ops;
@@ -829,7 +733,7 @@ static int mm_dvfs_gov_get_target(struct devfreq *df, unsigned long *freq)
 	return 0;
 }
 
-static int mm_dvfs_gov_event_handler(struct devfreq *df, unsigned int event,
+static int dvfs_gov_event_handler(struct devfreq *df, unsigned int event,
 				     void *data)
 {
 	struct ip_dvfs_dev *ip_dev = dev_get_drvdata(df->dev.parent);
@@ -936,7 +840,7 @@ static void dvfs_remove(struct platform_device *pdev)
  * substitutes it inside the ".compatible" field name too, which
  * would yield ".sprd,hwdvfs-mtx" and fail to compile.
  */
-#define IP_DRIVER(ip, of_match)					\
+#define IP_DRIVER(ip, of_match, gov)						\
 const struct of_device_id ip##_dvfs_of_match[] = {		\
 	{ .compatible = of_match },				\
 	{ }								\
@@ -953,19 +857,18 @@ struct platform_driver ip##_dvfs_driver = {		\
 };								\
 									\
 struct devfreq_governor ip##_dvfs_gov = {			\
-	.name		= #ip "_governor",			\
-	.get_target_freq = mm_dvfs_gov_get_target,		\
-	.event_handler	= mm_dvfs_gov_event_handler,		\
+	.name		= gov,							\
+	.get_target_freq = dvfs_gov_get_target,		\
+	.event_handler	= dvfs_gov_event_handler,		\
 };
 
-IP_DRIVER(fd, "sprd,hwdvfs-mtx");
-IP_DRIVER(isp, "sprd,hwdvfs-isp");
-IP_DRIVER(dcam_axi, "sprd,hwdvfs-dcam-axi");
-IP_DRIVER(dcam_if, "sprd,hwdvfs-dcam-if");
-IP_DRIVER(jpg, "sprd,hwdvfs-jpg");
-IP_DRIVER(cpp, "sprd,hwdvfs-cpp");
-IP_DRIVER(mtx, "sprd,hwdvfs-mtx");
-IP_DRIVER(mmsys, "sprd,hwdvfs-mmsys");
+IP_DRIVER(fd, "sprd,hwdvfs-mtx", "fd_governor");
+IP_DRIVER(isp, "sprd,hwdvfs-isp", "isp_governor");
+IP_DRIVER(dcam_axi, "sprd,hwdvfs-dcam-axi", "dcam-axi_governor");
+IP_DRIVER(dcam_if, "sprd,hwdvfs-dcam-if", "dcam-if_governor");
+IP_DRIVER(jpg, "sprd,hwdvfs-jpg", "jpg_governor");
+IP_DRIVER(cpp, "sprd,hwdvfs-cpp", "cpp_governor");
+IP_DRIVER(mtx, "sprd,hwdvfs-mtx", "mtx_governor");
 
 /*
  * The init and exit of one IP: register the ops, the governor and the
@@ -1035,14 +938,20 @@ IP_INIT(dcam_if);
 IP_INIT(jpg);
 IP_INIT(cpp);
 IP_INIT(mtx);
-IP_INIT(mmsys);
 /*
- * Module entry/exit.  The vendor blob exposes exactly these two names as its
- * init_module/cleanup_module (confirmed with nm on stock mmdvfs.ko), so the
- * port keeps them rather than a plain module_init(): the per-IP init functions
- * are still exported individually for callers that bring the IPs up by hand.
+ * Module entry/exit.
+ *
+ * The vendor blob exposes exactly these two names as its
+ * init_module/cleanup_module (confirmed with nm on stock mmdvfs.ko), so
+ * the port keeps them rather than a plain module_init(): the per-IP init
+ * functions are still exported individually for callers that bring the
+ * IPs up by hand.
+ *
+ * The mmsys half lives in sprd_mm_dvfs_mmsys.c under the stock's own
+ * names (mmsys_dvfs_init / mmsys_dvfs_exit); the camera IPs come up
+ * here, from the shared template.
  */
-int mmsys_module_init(void);
+static int mmsys_module_init(void)
 {
 	int ret;
 
@@ -1091,7 +1000,7 @@ err_fd:	fd_dvfs_exit();
 	return ret;
 }
 
-void mmsys_module_exit(void);
+static void mmsys_module_exit(void)
 {
 	mtx_dvfs_exit();
 	cpp_dvfs_exit();
@@ -1103,8 +1012,6 @@ void mmsys_module_exit(void);
 	mmsys_dvfs_exit();
 }
 
-EXPORT_SYMBOL_GPL(mmsys_module_init);
-EXPORT_SYMBOL_GPL(mmsys_module_exit);
 
 module_init(mmsys_module_init);
 module_exit(mmsys_module_exit);
@@ -1120,4 +1027,3 @@ IP_EXPORT(dcam_if);
 IP_EXPORT(jpg);
 IP_EXPORT(cpp);
 IP_EXPORT(mtx);
-IP_EXPORT(mmsys);

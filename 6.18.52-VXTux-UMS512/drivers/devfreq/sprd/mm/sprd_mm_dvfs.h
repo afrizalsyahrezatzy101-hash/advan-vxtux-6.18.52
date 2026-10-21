@@ -82,6 +82,38 @@ struct ip_dvfs_regs {
 	u32 idx_shift;		/* the index field shift in those registers */
 };
 
+/*
+ * The per-IP register parameters, recovered from the stock blob.
+ *
+ * The stock driver has one copy of each per-IP callback and gets the
+ * variation from the constant tables that sit next to it; the port has
+ * one translation unit, so the same data is carried in struct
+ * ip_dvfs_ops and the single set of callbacks reads it from there.  That
+ * is also the shape of the stock's own functions: they take
+ * struct ip_dvfs_ops * as their first argument.
+ *
+ * sw30_mask	bits to clear in 0x30 (the software DVFS gate)
+ * upd220_clear	bits to clear in 0x220 (the update control)
+ * upd220_set	bits to set in 0x220
+ * delay		the value written to 0x214 (the update delay)
+ * hold_clear	bits to clear in 0x0c (the voltage hold), 0 = leave alone
+ * work_idx_reg	the work index register, and its default value
+ * idle_idx_reg	the idle index register, and its default value
+ * gate8		the bits set in 0x8 to clock-gate this IP's registers
+ */
+struct ip_dvfs_params {
+	u32 sw30_mask;
+	u32 upd220_clear;
+	u32 upd220_set;
+	u32 delay;
+	u32 hold_clear;
+	u32 work_idx_reg;
+	u32 idle_idx_reg;
+	u32 work_idx_def;
+	u32 idle_idx_def;
+	u32 gate8;
+};
+
 /**
  * struct ip_dvfs_ops - the operations of one camera IP
  *
@@ -94,6 +126,17 @@ struct ip_dvfs_ops {
 	/* "dcam_axi_DVFS_OPS" is 16 characters; char[16] drops the last one. */
 	char name[20];
 	u32 ver;
+
+	/*
+	 * The per-IP data the stock driver keeps in the constant tables
+	 * next to its callbacks.  The port has one translation unit, so
+	 * the callbacks read the variation from here instead of from
+	 * eight copies of themselves.
+	 */
+	const struct ip_dvfs_params *params;
+	struct ip_dvfs_map_cfg *table;
+	/* the bit layout of one map register, per IP */
+	void (*map_apply)(struct ip_dvfs_map_cfg *cfg);
 
 	/* the IP's own dvfs knobs */
 	int (*dvfs_init)(struct ip_dvfs_ops *ops);

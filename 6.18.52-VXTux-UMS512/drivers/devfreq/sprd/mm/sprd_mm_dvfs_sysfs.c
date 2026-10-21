@@ -1357,7 +1357,7 @@ static struct device_attribute dev_attr_set_sys_dvfs_min_volt = {
 	.store = set_sys_dvfs_min_volt_store,
 };
 
-static struct attribute *dev_attrs[] = {
+static struct attribute *dev_entries[] = {
 	&dev_attr_set_hw_dvfs_en.attr,
 	&dev_attr_set_auto_tune_en.attr,
 	&dev_attr_set_dvfs_coffe.attr,
@@ -1371,12 +1371,12 @@ static struct attribute *dev_attrs[] = {
 	NULL
 };
 
-static const struct attribute_group dev_group = {
+static const struct attribute_group dev_attr_group = {
 	.name = "governor",
-	.attrs = dev_attrs,
+	.attrs = dev_entries,
 };
 
-static struct attribute *coeff_attrs[] = {
+static struct attribute *coeff_entries[] = {
 	&dev_attr_set_gfree_wait_delay.attr,
 	&dev_attr_set_freq_upd_hdsk_en.attr,
 	&dev_attr_set_freq_upd_delay_en.attr,
@@ -1388,9 +1388,9 @@ static struct attribute *coeff_attrs[] = {
 	NULL
 };
 
-static const struct attribute_group coeff_group = {
+static const struct attribute_group coeff_attr_group = {
 	.name = "coeff",
-	.attrs = coeff_attrs,
+	.attrs = coeff_entries,
 };
 
 /*
@@ -1503,8 +1503,8 @@ int mm_dvfs_sysfs_create_groups(struct device *dev, int mmsys)
 		groups[0] = &mmsys_dev_group;
 		groups[1] = &mmsys_coeff_group;
 	} else {
-		groups[0] = &dev_group;
-		groups[1] = &coeff_group;
+		groups[0] = &dev_attr_group;
+		groups[1] = &coeff_attr_group;
 	}
 
 	ret = sysfs_create_group(&dev->kobj, groups[0]);
@@ -1528,8 +1528,8 @@ void mm_dvfs_sysfs_remove_groups(struct device *dev, int mmsys)
 		sysfs_remove_group(&dev->kobj, &mmsys_coeff_group);
 		sysfs_remove_group(&dev->kobj, &mmsys_dev_group);
 	} else {
-		sysfs_remove_group(&dev->kobj, &coeff_group);
-		sysfs_remove_group(&dev->kobj, &dev_group);
+		sysfs_remove_group(&dev->kobj, &coeff_attr_group);
+		sysfs_remove_group(&dev->kobj, &dev_attr_group);
 	}
 }
 EXPORT_SYMBOL_GPL(mm_dvfs_sysfs_remove_groups);

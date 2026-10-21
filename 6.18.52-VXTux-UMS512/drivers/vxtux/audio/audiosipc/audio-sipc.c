@@ -191,7 +191,13 @@ static int audio_sipc_create(int target_id)
 	u32  size_inout = 0;
 	u32 smsg_txsize = 0;
 	u32 smsg_rxsize = 0;
-	static struct aud_smsg_ipc s_sipc_inst;
+	/*
+	 * clang 5.4 named this function-static "audio_sipc_create.s_sipc_inst";
+	 * gcc numbers its own ("s_sipc_inst.53") and nothing maps one to the
+	 * other, so pin the stock's name with an asm label.
+	 */
+	static struct aud_smsg_ipc s_sipc_inst
+		__asm__("audio_sipc_create.s_sipc_inst");
 	struct audio_ipc *sipc = aud_ipc_get();
 
 	smsg_base_p = audio_mem_alloc(IRAM_SMS, &size_inout);

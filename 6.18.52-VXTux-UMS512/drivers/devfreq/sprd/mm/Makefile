@@ -5,4 +5,5 @@
 # module per object, and the stock file name would not be reproduced.
 obj-$(CONFIG_SPRD_MM_DVFS) += mmdvfs.o
 
-mmdvfs-y := sprd_mm_dvfs_core.o sprd_mm_dvfs_ip.o sprd_mm_dvfs_pqueue.o sprd_mm_dvfs_sysfs.o
+mmdvfs-y := sprd_mm_dvfs_core.o sprd_mm_dvfs_ip.o sprd_mm_dvfs_pqueue.o \
+	    sprd_mm_dvfs_sysfs.o sprd_mm_dvfs_stock.o sprd_mm_dvfs_mmsys.o

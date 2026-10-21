@@ -128,6 +128,27 @@ void sprd_send_ap_time(void)
 }
 EXPORT_SYMBOL(sprd_send_ap_time);
 
+/*
+ * The stock blob's _copy_to_user().  The blob was built against 4.14/5.4,
+ * where arm64's copy_to_user() was a macro over a local _copy_to_user() that
+ * toggled the access window around the access; 6.18 moved that into
+ * __arch_copy_to_user() and made copy_to_user() a plain function, and arm64
+ * defines INLINE_COPY_TO_USER, so lib/usercopy.c does not build the extern
+ * _copy_to_user() any more.  The symbol vanished from the port.
+ *
+ * The blob's sprd_time_sync_read() calls it, and this port's does the same,
+ * so the port calls it too.  The body is the kernel's own copy_to_user(),
+ * which is the same access with the same semantics.  The stock blob has no
+ * _copy_from_user() - this module never reads from user space - so neither
+ * has the port.
+ */
+noinline unsigned long _copy_to_user(void __user *to,
+					    const void *from,
+					    unsigned long n)
+{
+	return copy_to_user(to, from, n);
+}
+
 static ssize_t sprd_time_sync_read(struct file *file, char __user *buf,
 				    size_t count, loff_t *ppos)
 {
@@ -138,7 +159,7 @@ static ssize_t sprd_time_sync_read(struct file *file, char __user *buf,
 
 	sprd_time_sync_fill(&data);
 
-	if (copy_to_user(buf, &data, SPRD_TIME_SYNC_DATA_SIZE))
+	if (_copy_to_user(buf, &data, SPRD_TIME_SYNC_DATA_SIZE))
 		return -EFAULT;
 
 	return SPRD_TIME_SYNC_DATA_SIZE;
