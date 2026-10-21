@@ -78,6 +78,9 @@ BOOKKEEPING_RE = re.compile(
 # have no meaning across toolchains. gcc's .compoundliteral.N is the
 # same kind of thing.
 CLONE_RE = re.compile(r"^(.+?)\.\d+(?:\.constprop\.\d+)?$")
+# strip_clone() below must substitute \1, not the empty string: the pattern is
+# anchored on the whole name, so replacing it with "" erased the base name
+# along with the suffix and made every renamed clone look unmatchable.
 # gcc's IPA partitioning splits a function into foo.part.0 / foo.part.1 when it
 # inlines one copy into another.  That is a compiler artefact exactly like the
 # clang ".N" clone suffix above and is never part of the module's API, so the
@@ -137,7 +140,6 @@ def strip_clone(s):
     while prev != s:                     # the families can chain
         prev = s
         s = CLONE_FAMILY_RE.sub("", s)
-    s = PART_RE.sub(r"\1", s)
     return CLONE_RE.sub(r"\1", s)
 
 
