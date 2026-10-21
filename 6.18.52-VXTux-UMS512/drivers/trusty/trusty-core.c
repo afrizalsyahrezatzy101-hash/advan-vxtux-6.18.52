@@ -697,6 +697,80 @@ static void __exit trusty_driver_exit(void)
 subsys_initcall(trusty_driver_init);
 module_exit(trusty_driver_exit);
 
+/*
+ * The stock 5.4 blob named these two objects; 6.18 does not.
+ *
+ * In 5.4 CONFIG_HAVE_ARCH_PREL32_RELOCATIONS did not exist on arm64, so
+ * __TRACEPOINT_ENTRY() expanded to
+ *
+ *     static tracepoint_ptr_t __tracepoint_ptr_<name>
+ *         __used __section("__tracepoints_ptrs") = &__tracepoint_<name>;
+ *
+ * and clang emitted a symbol literally named __tracepoint_ptr_<name> for
+ * each of the two smccall tracepoints.  6.18's arch/arm64/Kconfig selects
+ * HAVE_ARCH_PREL32_RELOCATIONS, which takes the asm form instead:
+ *
+ *     asm(".section \"__tracepoints_ptrs\" ..."
+ *         ".long __tracepoint_<name> - .");
+ *
+ * i.e. the same table entry, but an anonymous 4-byte relocatable offset
+ * with no object name behind it.  Nothing in 6.18 references a symbol
+ * called __tracepoint_ptr_<name>, so the name is free to define here.
+ *
+ * These definitions exist ONLY to keep the names present in the built
+ * module.  They are deliberately NOT put in the __tracepoints_ptrs section
+ * and NOT referenced from anything: the tracepoint is registered by the
+ * one anonymous .long the header already emitted, and
+ * kernel/tracepoint.c walks that section via mod->tracepoints_ptrs
+ * (kernel/module/main.c section_objs()).  Adding a second entry here would
+ * make the kernel register smc_entry/smc_exit twice.  Each value is simply
+ * &__tracepoint_smc_<name>, the same pointer the anonymous .long resolves
+ * to, so the two definitions carry the truth and nothing else.
+ *
+ * The type is spelled out as "const struct tracepoint *" rather than
+ * tracepoint_ptr_t: under CONFIG_HAVE_ARCH_PREL32_RELOCATIONS that typedef
+ * is "const int" (include/linux/tracepoint-defs.h), because the section
+ * holds a relocatable offset, not a pointer.  These objects are plain
+ * pointers, and the stock 5.4 symbol was a pointer too.
+ *
+ * They are static so they keep the stock's local linkage (nm "r", not "D")
+ * and cannot collide with another module's name; __used is what forces gcc
+ * to emit an object nothing references.  They land in .data rather than the
+ * stock's __tracepoints_ptrs because &__tracepoint_smc_* is a link-time
+ * constant, not a PREL32 offset the section could hold.
+ */
+#define SPRD_TP_PTR_SYM(suffix) \
+	static const struct tracepoint *__tracepoint_ptr_smc_##suffix \
+	__used = &__tracepoint_smc_##suffix
+
+SPRD_TP_PTR_SYM(entry);
+SPRD_TP_PTR_SYM(exit);
+
+/*
+ * The stock blob ALSO has trace_event_define_fields_smccall, and that one is
+ * deliberately NOT reproduced here.  It was not a compiler artefact: in the
+ * 5.4 struct trace_event_class the member at +0x20 is
+ *
+ *     int (*define_fields)(struct trace_event_call *);
+ *
+ * and in the stock trusty.ko that slot relocates to a thunk that lands on
+ * .init.text+0, i.e. straight at this function, which called trace_define_field()
+ * four times to build the event's field list at registration time.
+ *
+ * 6.18 deleted that member.  The same +0x20 slot is now
+ *
+ *     struct trace_event_fields *fields_array;
+ *
+ * which in the built module points at the static trace_event_fields_smccall
+ * table (the same four fields: ulong arg0..arg3 at offsets 8/16/24/32), and
+ * kernel/trace/trace_events.c:event_define_fields() walks that table at
+ * registration instead of calling a driver-supplied callback.
+ *
+ * So a standalone trace_event_define_fields_smccall() here would have no
+ * struct slot to occupy and no caller: dead code that only satisfies a name
+ * comparison.  Verified against v5.4 and 6.18 include/linux/trace_events.h.
+ */
+
 MODULE_DESCRIPTION("Sprd trusty core driver");
 MODULE_LICENSE("GPL v2");
 
