@@ -213,6 +213,7 @@ struct ip_dvfs_dev {
 	struct devfreq *devfreq;	/* the devfreq device		*/
 	struct notifier_block nb;	/* the layer-change notifier	*/
 	struct platform_device *pdev;	/* its platform device		*/
+	struct kobject *sysfs_kobj;	/* where the sysfs group goes	*/
 };
 
 #endif /* __SPRD_DVFS_SOC_H__ */

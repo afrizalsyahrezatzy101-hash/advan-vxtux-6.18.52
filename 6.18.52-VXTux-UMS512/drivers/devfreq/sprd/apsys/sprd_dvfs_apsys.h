@@ -108,6 +108,16 @@ struct apsys_dvfs_ops {
 void *dvfs_ops_attach(const char *str, struct list_head *head);
 int dvfs_ops_register(struct dvfs_ops_entry *entry, struct list_head *head);
 
+/* the shared apsys callback bodies, in sprd_dvfs_ops.c */
+int  apsys_dvfs_parse_dt(struct apsys_dev *apsys, struct device_node *np);
+void apsys_dvfs_init(struct apsys_dev *apsys);
+void apsys_dvfs_hold_en(struct apsys_dev *apsys, u32 hold_en);
+void apsys_dvfs_auto_gate(struct apsys_dev *apsys, int gate_sel);
+void apsys_dvfs_wait_window(struct apsys_dev *apsys, u32 wait_window);
+void apsys_dvfs_min_volt(struct apsys_dev *apsys, u32 min_volt);
+void apsys_top_dvfs_init(struct apsys_dev *apsys);
+int  dcdc_modem_cur_volt(struct apsys_dev *apsys);
+
 extern struct list_head apsys_dvfs_head;
 extern struct apsys_regmap regmap_ctx;
 extern struct mutex apsys_glb_reg_lock;

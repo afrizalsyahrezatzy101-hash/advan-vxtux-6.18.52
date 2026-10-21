@@ -14,9 +14,6 @@
 #include <linux/property.h>
 #include <linux/spinlock.h>
 
-/* Empty stub in the stock blob; see the definition below. */
-void sprd_pmic_eic_set(void);
-
 /* EIC registers definition */
 #define SPRD_EIC_DBNC_DATA		0x0
 #define SPRD_EIC_DBNC_DMSK		0x4
@@ -726,17 +723,6 @@ static const struct of_device_id sprd_eic_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, sprd_eic_of_match);
 
-
-/*
- * The stock blob carries this as an empty stub: objdump of the blob shows a
- * single "ret" at 0x630 and nothing in the module calls it.  It is a
- * placeholder the vendor left in, and a replacement that drops the name
- * would break anything that looks the symbol up by name.
- */
-void sprd_pmic_eic_set(void)
-{
-}
-EXPORT_SYMBOL_GPL(sprd_pmic_eic_set);
 
 static struct platform_driver sprd_eic_driver = {
 	.probe = sprd_eic_probe,
