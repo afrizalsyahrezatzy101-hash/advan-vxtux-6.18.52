@@ -338,7 +338,7 @@ EXPORT_SYMBOL(qogirn6pro_vpuenc_data);
  * The stock blob's VSP configuration table: the per-SoC entries the VSP
  * driver walks when it brings the block up.
  */
-static const struct dvfs_ops_entry *vsp_dvfs_config_table[] = {
+const struct dvfs_ops_entry *vsp_dvfs_config_table[] = {
 	sharkl5_vsp_data,
 	sharkl5pro_vsp_data,
 	qogirl6_vsp_data,

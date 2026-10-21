@@ -211,8 +211,8 @@ extern const struct ip_dvfs_match_data roc1_vdsp_dvfs[];
 extern const struct ip_dvfs_match_data qogirl6_dpu_dvfs[];
 extern const struct ip_dvfs_match_data qogirl6_vsp_dvfs[];
 extern const struct ip_dvfs_match_data qogirn6pro_dpu_dvfs[];
-extern const struct ip_dvfs_match_data qogirn6pro_vpudec_dvfs[];
-extern const struct ip_dvfs_match_data qogirn6pro_vpuenc_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_vpudec_vsp_dvfs[];
+extern const struct ip_dvfs_match_data qogirn6pro_vpuenc_vsp_dvfs[];
 extern const struct ip_dvfs_match_data qogirn6pro_gsp_dvfs[];
 
 /*
@@ -249,9 +249,9 @@ extern const struct ip_dvfs_match_data qogirn6pro_gsp_dvfs[];
 	{ .compatible = "sprd,hwdvfs-vsp-qogirl6",		\
 	  .data = qogirl6_vsp_dvfs },				\
 	{ .compatible = "sprd,hwdvfs-vsp-qogirn6pro",		\
-	  .data = qogirn6pro_vpudec_dvfs },			\
+	  .data = qogirn6pro_vpudec_vsp_dvfs },			\
 	{ .compatible = "sprd,hwdvfs-vsp-qogirn6pro-vpuenc",	\
-	  .data = qogirn6pro_vpuenc_dvfs }
+	  .data = qogirn6pro_vpuenc_vsp_dvfs }
 
 #define IP_OF_MATCH_ENTRIES_vdsp					\
 	{ .compatible = "sprd,hwdvfs-vdsp-sharkl5pro",		\

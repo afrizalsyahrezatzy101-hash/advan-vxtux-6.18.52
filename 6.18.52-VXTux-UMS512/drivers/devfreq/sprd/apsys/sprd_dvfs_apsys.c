@@ -337,7 +337,7 @@ static const struct of_device_id apsys_dvfs_of_match[] = {
 
 MODULE_DEVICE_TABLE(of, apsys_dvfs_of_match);
 
-static struct platform_driver apsys_dvfs_driver = {
+struct platform_driver apsys_dvfs_driver = {
 	.probe	= apsys_dvfs_probe,
 	.remove	= apsys_dvfs_remove,
 	.driver = {
@@ -347,18 +347,12 @@ static struct platform_driver apsys_dvfs_driver = {
 	},
 };
 
-static int __init apsys_dvfs_register(void)
-{
-	return platform_driver_register(&apsys_dvfs_driver);
-}
-
-static void __exit apsys_dvfs_unregister(void)
-{
-	platform_driver_unregister(&apsys_dvfs_driver);
-}
-
-module_init(apsys_dvfs_register);
-module_exit(apsys_dvfs_unregister);
+/*
+ * The module's init/exit live in sprd_dvfs_ip.c, which registers all five
+ * of the blob's drivers - apsys, dpu, vsp, vdsp and gsp - and all five
+ * governors in one go.  Two module_init() in one composite object is a
+ * duplicate init_module symbol at link time.
+ */
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("sprd apsys dvfs driver");

@@ -129,3 +129,6 @@ extern struct mutex apsys_glb_reg_lock;
 	dvfs_ops_attach(str, &apsys_dvfs_head)
 
 #endif /* __SPRD_DVFS_APSYS_H__ */
+
+/* defined in sprd_dvfs_apsys.c, registered by sprd_dvfs_ip.c */
+extern struct platform_driver apsys_dvfs_driver;

@@ -131,15 +131,20 @@ static int tui_release(struct inode *inode, struct file *filp)
  * The blob's tui_read()/tui_write() call it, and this port's do the same,
  * so the port calls it too.  The body is the kernel's own copy_to_user(),
  * which is the same access with the same semantics.
+ *
+ * static, like the blob's: the kernel also exports _copy_to_user() from
+ * lib/usercopy.c, and a global of the same name in a module would land in
+ * the kernel symbol table on top of the real one.  The verifier counts
+ * locals too, so static loses nothing.
  */
-noinline unsigned long _copy_to_user(void __user *to,
+static noinline unsigned long _copy_to_user(void __user *to,
 					    const void *from,
 					    unsigned long n)
 {
 	return copy_to_user(to, from, n);
 }
 
-noinline unsigned long _copy_from_user(void *to,
+static noinline unsigned long _copy_from_user(void *to,
 					      const void __user *from,
 					      unsigned long n)
 {

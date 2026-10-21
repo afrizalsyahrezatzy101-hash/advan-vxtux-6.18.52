@@ -891,6 +891,7 @@ IP_DVFS_DRIVER(gsp, gsp_dvfs_chain, IP_OF_MATCH_ENTRIES_gsp)
 /* ------------------------------------------------------------------ */
 
 static struct platform_driver *sprd_apsys_dvfs_drivers[] = {
+	&apsys_dvfs_driver,
 	&dpu_dvfs_driver,
 	&vsp_dvfs_driver,
 	&vdsp_dvfs_driver,
