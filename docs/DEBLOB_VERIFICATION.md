@@ -31,7 +31,7 @@ Three levels, each reported on its own:
 | 8 | `mmdvfs` | OK | **48 missing** | 10 | coeff_attr_group, coeff_entries, dev_attr_group |
 | 9 | `novatek_ts_spi` | OK | **84 missing** | 38 | NT36523_hw_info, NT36523_memory_map, NT36526_hw_info |
 | 10 | `nvmem-sc27xx-efuse` | OK | **5 missing** | 5 | sc27xx_efuse_remove, ump518_edata, ump9620_edata |
-| 11 | `nvmem_sprd_cache_efuse` | OK | **2 missing** | 3 | efuse_mem_ram_vmap, ums312_data |
+| 11 | `nvmem_sprd_cache_efuse` | OK | identical | 3 | yes |
 | 12 | `pwm_bl` | OK | identical | 5 | yes |
 | 13 | `rtc-sc27xx` | OK | **2 missing** | 6 | sprd_rtc_remove, sprd_rtcdbg_log_force |
 | 14 | `sc27xx_adc` | OK | **12 missing** | 8 | adc_nvmem_cell_calib_data, sc27xx_adc_free_hwlock, sc27xx_adc_pm_ops |
@@ -57,7 +57,7 @@ Three levels, each reported on its own:
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **8** (25.8%)
+- and it carries the same API: **9** (29.0%)
 
 ### Gaps
 
@@ -79,8 +79,6 @@ Three levels, each reported on its own:
 - `novatek_ts_spi`: kernel API drift (6.18 renamed 38 of the stock blob's imports, all present in the build): ['__copy_overflow', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_large_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__might_fault', '__raw_spin_lock_init']...
 - `nvmem-sc27xx-efuse`: missing ['sc27xx_efuse_remove', 'ump518_edata', 'ump9620_edata', 'ump9621_edata', 'ump962x_efuse_read']
 - `nvmem-sc27xx-efuse`: kernel API drift (6.18 renamed 5 of the stock blob's imports, all present in the build): ['__might_sleep', 'devm_hwspin_lock_request_specific', 'memset', 'mutex_lock_nested', 'usleep_range_state']
-- `nvmem_sprd_cache_efuse`: missing ['efuse_mem_ram_vmap', 'ums312_data']
-- `nvmem_sprd_cache_efuse`: kernel API drift (6.18 renamed 3 of the stock blob's imports, all present in the build): ['__kmalloc_noprof', 'memset', 'mutex_lock_nested']
 - `rtc-sc27xx`: missing ['sprd_rtc_remove', 'sprd_rtcdbg_log_force']
 - `rtc-sc27xx`: kernel API drift (6.18 renamed 6 of the stock blob's imports, all present in the build): ['__devm_rtc_register_device', '__might_sleep', 'device_set_wakeup_capable', 'device_wakeup_disable', 'device_wakeup_enable', 'usleep_range_state']
 - `sc27xx_adc`: missing ['adc_nvmem_cell_calib_data', 'sc27xx_adc_free_hwlock', 'sc27xx_adc_pm_ops', 'sc27xx_adc_pm_resume', 'sc27xx_adc_pm_suspend', 'sc27xx_adc_remove', 'ump518_data', 'ump9620_adc_get_ratio', 'ump9620_adc_scale_init', 'ump9620_bat_det_graph', 'ump9620_data', 'ump96xx_adc_scale_cal']

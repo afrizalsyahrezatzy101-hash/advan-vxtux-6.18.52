@@ -23,7 +23,7 @@ def sections(path):
         m = re.match(r"\s*\d+\s+(\S+)\s+([0-9a-f]+)\s+([0-9a-f]+)\s+"
                      r"([0-9a-f]+)\s+([0-9a-f]+)\s+2\*\*(\d)", line)
         if m:
-            secs[m.group(1)] = (int(m.group(2), 16), int(m.group(4), 16),
+            secs[m.group(1)] = (int(m.group(2), 16), int(m.group(3), 16),
                                 int(m.group(5), 16))
     return secs
 
