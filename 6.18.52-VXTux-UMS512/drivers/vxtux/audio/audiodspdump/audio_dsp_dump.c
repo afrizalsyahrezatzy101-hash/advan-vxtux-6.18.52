@@ -203,8 +203,12 @@ static int audio_dsp_open(struct inode *inode, struct file *filp);
  * ("dsp_log"), so the stock symbol has no counterpart in the port.  The
  * asm label below pins the stock name onto this exact object; it is a
  * naming fix only, the object and its use are unchanged.
+ *
+ * Hoisted to file scope so the asm label has a file-scope declaration to
+ * attach to; it is still used only by audio_dsp_open(), exactly as the
+ * function-local was.
  */
-static void *dsp_log __asm__("audio_dsp_open.dsp_log");
+static struct dsp_log_device *dsp_log __asm__("audio_dsp_open.dsp_log");
 
 static int audio_dsp_open(struct inode *inode, struct file *filp)
 {
