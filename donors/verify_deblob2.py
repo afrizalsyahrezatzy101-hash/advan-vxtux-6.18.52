@@ -78,6 +78,12 @@ BOOKKEEPING_RE = re.compile(
 # have no meaning across toolchains. gcc's .compoundliteral.N is the
 # same kind of thing.
 CLONE_RE = re.compile(r"^.+?\.\d+(?:\.constprop\.\d+)?$")
+# gcc's IPA partitioning splits a function into foo.part.0 / foo.part.1 when it
+# inlines one copy into another.  That is a compiler artefact exactly like the
+# clang ".N" clone suffix above and is never part of the module's API, so the
+# base name is what counts.  Without this, trusty-ipc reported vds_create_channel
+# as missing while the build actually contained vds_create_channel.part.0.
+PART_RE = re.compile(r"^(.*)\.part\.\d+$")
 LABEL_RE = re.compile(r"^\.L(tmp)?\d+!?\d*$|^\.L\d+!?\d*$|"
                       r"^\.L\d+!\d+$|^\.L\d+$|^\.Ltmp\d+$|"
                       r"^\.compoundliteral(\.\d+)?$|^\.L\d+!\d+$")
@@ -111,12 +117,14 @@ def is_artefact(s):
 
 
 def strip_clone(s):
-    """Drop a compiler-generated clone suffix: "foo.421" -> "foo".
+    """Drop a compiler-generated clone or partition suffix.
 
-    clang emits a clone per outlined copy of a function; gcc numbers them
-    differently or not at all.  These are local symbols, never part of the
-    module's API contract.
+    clang emits a clone per outlined copy of a function ("foo.421"), gcc
+    numbers them differently or not at all, and gcc's IPA partitioning
+    splits a function into "foo.part.0".  These are local symbols, never
+    part of the module's API contract.
     """
+    s = PART_RE.sub(r"\1", s)
     return CLONE_RE.sub("", s)
 
 
