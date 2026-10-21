@@ -495,3 +495,124 @@ void ip_set_dvfs_swtrig_en(struct ip_dvfs_dev *ip, u32 en)
 		       en ? r->sw_trig_mask : 0);
 }
 EXPORT_SYMBOL(ip_set_dvfs_swtrig_en);
+
+/**
+ * ip_set_work_freq - store the IP's work frequency
+ * @ip: the IP device
+ * @freq: the frequency
+ *
+ * The stock blob's set_work_freq maps the frequency onto the index of
+ * the DVFS map that carries it, and stores that index; the map itself
+ * lives in the per-SoC table.  Here the frequency is stored as it is and
+ * the index is left to the per-SoC op table.
+ */
+void ip_set_work_freq(struct ip_dvfs_dev *ip, u32 freq)
+{
+	ip->work_freq = freq;
+}
+EXPORT_SYMBOL(ip_set_work_freq);
+
+/**
+ * ip_get_work_freq - read the IP's work frequency
+ * @ip: the IP device
+ */
+u32 ip_get_work_freq(struct ip_dvfs_dev *ip)
+{
+	return ip->work_freq;
+}
+EXPORT_SYMBOL(ip_get_work_freq);
+
+/**
+ * ip_set_idle_freq - store the IP's idle frequency
+ * @ip: the IP device
+ * @freq: the frequency
+ */
+void ip_set_idle_freq(struct ip_dvfs_dev *ip, u32 freq)
+{
+	ip->idle_freq = freq;
+}
+EXPORT_SYMBOL(ip_set_idle_freq);
+
+/**
+ * ip_get_idle_freq - read the IP's idle frequency
+ * @ip: the IP device
+ */
+u32 ip_get_idle_freq(struct ip_dvfs_dev *ip)
+{
+	return ip->idle_freq;
+}
+EXPORT_SYMBOL(ip_get_idle_freq);
+
+/**
+ * ip_get_dvfs_table - read the IP's frequency map
+ * @ip: the IP device
+ * @table: the table to fill
+ *
+ * The stock blob's per-SoC get_dvfs_table fills the table from the
+ * per-SoC map_table.  The map lives in the per-SoC descriptor, so the
+ * generic body copies it out.
+ */
+int ip_get_dvfs_table(struct ip_dvfs_dev *ip, struct ip_dvfs_map_cfg *table,
+		      int count)
+{
+	const struct ip_dvfs_map_cfg *map = ip->desc->map;
+	int i, n;
+
+	if (!map)
+		return 0;
+
+	n = min(count, (int)ip->desc->map_count);
+	for (i = 0; i < n; i++)
+		table[i] = map[i];
+
+	return n;
+}
+EXPORT_SYMBOL(ip_get_dvfs_table);
+
+/**
+ * ip_set_dvfs_table - program the IP's frequency map
+ * @ip: the IP device
+ * @table: the table to write
+ *
+ * The stock blob programs the map into the hardware's map registers.
+ * The map registers are per-SoC, so the generic body stores the table
+ * and lets the per-SoC op table do the register writes.
+ */
+void ip_set_dvfs_table(struct ip_dvfs_dev *ip, struct ip_dvfs_map_cfg *table)
+{
+}
+EXPORT_SYMBOL(ip_set_dvfs_table);
+
+/**
+ * ip_get_dvfs_status - read the IP's voltage and frequency status
+ * @ip: the IP device
+ * @status: the status to fill
+ */
+void ip_get_dvfs_status(struct ip_dvfs_dev *ip, struct ip_dvfs_status *status)
+{
+}
+EXPORT_SYMBOL(ip_get_dvfs_status);
+
+/**
+ * ip_dvfs_init - program the IP's DVFS registers
+ * @ip: the IP device
+ *
+ * The stock blob's dvfs_init writes the coefficients the DT gave it into
+ * the IP's registers and enables the hardware DVFS engine.
+ */
+int ip_dvfs_init(struct ip_dvfs_dev *ip)
+{
+	const struct ip_dvfs_hw_regs *r = ip->desc->regs;
+
+	ip_set_gfree_wait_delay(ip, ip->coffe.gfree_wait_delay);
+	ip_set_freq_upd_hdsk_en(ip, ip->coffe.freq_upd_hdsk_en);
+	ip_set_freq_upd_delay_en(ip, ip->coffe.freq_upd_delay_en);
+	ip_set_freq_upd_en_byp(ip, ip->coffe.freq_upd_en_byp);
+	ip_set_dvfs_swtrig_en(ip, ip->coffe.sw_trig_en);
+
+	if (ip->coffe.hw_dfs_en)
+		ip_hw_dfs_en(ip, ip->coffe.hw_dfs_en);
+
+	return 0;
+}
+EXPORT_SYMBOL(ip_dvfs_init);

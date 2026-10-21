@@ -43,48 +43,55 @@
 #define APSYS_DVFS_NODE_NAME	"apsys-dvfs"
 
 /* the ops list of one IP; one per IP, like the stock blob's */
-#define IP_DVFS_HEAD_DECL(ip)	extern struct list_head ip##_dvfs_head;
+extern struct list_head dpu_dvfs_head;
+extern struct list_head vsp_dvfs_head;
+extern struct list_head vdsp_dvfs_head;
+extern struct list_head gsp_dvfs_head;
 
 /**
  * struct ip_dvfs_ops - the per-IP callback table
  *
- * The slot order is the stock blob's, so that the per-SoC op tables
- * below can be written out slot by slot.  Every entry is optional; a
- * NULL entry means "this SoC does not implement it".
+ * The slot order is the stock blob's, so that the per-SoC tables in
+ * sprd_dvfs_ops.h can be written out slot by slot.  Every entry is
+ * optional; a NULL entry means "this IP does not implement it".
  */
 struct ip_dvfs_ops {
 	/* initialization interface */
-	int  (*parse_dt)(struct ip_dvfs_priv *priv, struct device_node *np);
-	int  (*parse_pll)(struct ip_dvfs_priv *priv, struct device *dev);
-	int  (*dvfs_init)(struct ip_dvfs_priv *priv);
-	void (*hw_dfs_en)(struct ip_dvfs_priv *priv, u32 dfs_en);
+	int  (*parse_dt)(struct ip_dvfs_dev *ip, struct device_node *np);
+	int  (*parse_pll)(struct ip_dvfs_dev *ip, struct device *dev);
+	int  (*dvfs_init)(struct ip_dvfs_dev *ip);
+	void (*hw_dfs_en)(struct ip_dvfs_dev *ip, u32 en);
 
 	/* work-idle dvfs index ops */
-	void (*set_work_index)(struct ip_dvfs_priv *priv, int index);
-	int  (*get_work_index)(struct ip_dvfs_priv *priv);
-	void (*set_idle_index)(struct ip_dvfs_priv *priv, int index);
-	int  (*get_idle_index)(struct ip_dvfs_priv *priv);
+	void (*set_work_index)(struct ip_dvfs_dev *ip, u32 index);
+	u32  (*get_work_index)(struct ip_dvfs_dev *ip);
+	void (*set_idle_index)(struct ip_dvfs_dev *ip, u32 index);
+	u32  (*get_idle_index)(struct ip_dvfs_dev *ip);
 
 	/* work-idle dvfs freq ops */
-	void (*set_work_freq)(struct ip_dvfs_priv *priv, u32 freq);
-	u32  (*get_work_freq)(struct ip_dvfs_priv *priv);
-	void (*set_idle_freq)(struct ip_dvfs_priv *priv, u32 freq);
-	u32  (*get_idle_freq)(struct ip_dvfs_priv *priv);
+	void (*set_work_freq)(struct ip_dvfs_dev *ip, u32 freq);
+	u32  (*get_work_freq)(struct ip_dvfs_dev *ip);
+	void (*set_idle_freq)(struct ip_dvfs_dev *ip, u32 freq);
+	u32  (*get_idle_freq)(struct ip_dvfs_dev *ip);
 
 	/* work-idle dvfs map ops */
-	int  (*get_dvfs_table)(struct ip_dvfs_priv *priv,
-			       struct ip_dvfs_map_cfg *dvfs_table);
-	void (*set_dvfs_table)(struct ip_dvfs_priv *priv,
-			       struct ip_dvfs_map_cfg *dvfs_table);
-	void (*get_dvfs_status)(struct ip_dvfs_priv *priv,
-				struct ip_dvfs_status *dvfs_status);
+	int  (*get_dvfs_table)(struct ip_dvfs_dev *ip,
+			       struct ip_dvfs_map_cfg *table, int count);
+	void (*set_dvfs_table)(struct ip_dvfs_dev *ip,
+			       struct ip_dvfs_map_cfg *table);
+	void (*get_dvfs_status)(struct ip_dvfs_dev *ip,
+				struct ip_dvfs_status *status);
 
 	/* coffe setting ops */
-	void (*set_gfree_wait_delay)(struct ip_dvfs_priv *priv, u32 para);
-	void (*set_freq_upd_en_byp)(struct ip_dvfs_priv *priv, u32 enable);
-	void (*set_freq_upd_delay_en)(struct ip_dvfs_priv *priv, u32 enable);
-	void (*set_freq_upd_hdsk_en)(struct ip_dvfs_priv *priv, u32 enable);
-	void (*set_dvfs_swtrig_en)(struct ip_dvfs_priv *priv, u32 enable);
+	void (*set_gfree_wait_delay)(struct ip_dvfs_dev *ip, u32 delay);
+	void (*set_freq_upd_en_byp)(struct ip_dvfs_dev *ip, u32 en);
+	void (*set_freq_upd_delay_en)(struct ip_dvfs_dev *ip, u32 en);
+	void (*set_freq_upd_hdsk_en)(struct ip_dvfs_dev *ip, u32 en);
+	void (*set_dvfs_swtrig_en)(struct ip_dvfs_dev *ip, u32 en);
+
+	/* the vsp's extra: push a frequency change into the DVFS map */
+	void (*updata_target_freq)(struct ip_dvfs_dev *ip, u32 freq,
+				   int freq_type);
 };
 
 /**
@@ -99,45 +106,6 @@ struct ip_dvfs_match_data {
 	struct ip_dvfs_ops *ops;
 };
 
-/*
- * The runtime state of one IP.
- *
- * The stock blob keeps a private structure per IP whose layout differs
- * slightly (the vsp one is bigger, because it also carries the encoder
- * state).  Only the fields the shared callback bodies actually touch
- * are needed here, so one type serves all four IPs.
- */
-struct ip_dvfs_priv {
-	struct device *dev;		/* the IP's platform device	*/
-	struct device_node *np;		/* its DT node			*/
-	struct apsys_dev *apsys;	/* the shared apsys block	*/
-	const struct soc_dvfs_desc *desc;	/* the per-SoC descriptor	*/
-	struct ip_dvfs_ops *ops;	/* the per-SoC op table		*/
-
-	struct ip_dvfs_coffe coffe;	/* the DT-read coefficients	*/
-	struct ip_dvfs_status status;	/* the last read status		*/
-
-	struct mutex lock;		/* serialises the register writes */
-
-	/*
-	 * The two frequency slots of the IP.  Which one is live depends on
-	 * whether the IP is in its work state or its idle state; the stock
-	 * blob keeps them at +0x3e0 and +0x3e4 of its private structure.
-	 */
-	u32 work_freq;
-	u32 idle_freq;
-	set_freq_type freq_type;
-
-	int dvfs_enable;		/* the software DVFS enable flag	*/
-
-	/* set while the IP is powered; the notify callback drops the
-	 * frequency changes that arrive while it is off */
-	int powered;
-
-	struct devfreq *devfreq;	/* the devfreq device		*/
-	struct notifier_block nb;	/* the layer-change notifier	*/
-};
-
 /* the notifier chains of the IPs */
 extern struct atomic_notifier_head dpu_dvfs_chain;
 extern struct blocking_notifier_head vsp_dvfs_chain;
@@ -145,71 +113,39 @@ extern struct blocking_notifier_head vpuenc_dvfs_chain;
 extern struct atomic_notifier_head vdsp_dvfs_chain;
 extern struct atomic_notifier_head gsp_dvfs_chain;
 
-/* ------------------------------------------------------------------ */
-/* The shared callback bodies.						*/
-/* ------------------------------------------------------------------ */
+/* the shared callback bodies, in sprd_dvfs_ops.c */
+int  ip_dvfs_parse_dt(struct ip_dvfs_dev *ip, struct device_node *np);
+void ip_hw_dfs_en(struct ip_dvfs_dev *ip, u32 en);
+void ip_set_work_index(struct ip_dvfs_dev *ip, u32 index);
+u32  ip_get_work_index(struct ip_dvfs_dev *ip);
+void ip_set_idle_index(struct ip_dvfs_dev *ip, u32 index);
+u32  ip_get_idle_index(struct ip_dvfs_dev *ip);
+void ip_set_gfree_wait_delay(struct ip_dvfs_dev *ip, u32 delay);
+void ip_set_freq_upd_en_byp(struct ip_dvfs_dev *ip, u32 en);
+void ip_set_freq_upd_delay_en(struct ip_dvfs_dev *ip, u32 en);
+void ip_set_freq_upd_hdsk_en(struct ip_dvfs_dev *ip, u32 en);
+void ip_set_dvfs_swtrig_en(struct ip_dvfs_dev *ip, u32 en);
 
-int ip_dvfs_parse_dt(struct ip_dvfs_priv *priv, struct device_node *np);
-int ip_dvfs_init(struct ip_dvfs_priv *priv);
-void ip_hw_dfs_en(struct ip_dvfs_priv *priv, u32 en);
-void ip_set_work_index(struct ip_dvfs_priv *priv, int index);
-int ip_get_work_index(struct ip_dvfs_priv *priv);
-void ip_set_idle_index(struct ip_dvfs_priv *priv, int index);
-int ip_get_idle_index(struct ip_dvfs_priv *priv);
-void ip_set_work_freq(struct ip_dvfs_priv *priv, u32 freq);
-u32 ip_get_work_freq(struct ip_dvfs_priv *priv);
-void ip_set_idle_freq(struct ip_dvfs_priv *priv, u32 freq);
-u32 ip_get_idle_freq(struct ip_dvfs_priv *priv);
-int ip_get_dvfs_table(struct ip_dvfs_priv *priv,
-		      struct ip_dvfs_map_cfg *dvfs_table);
-void ip_set_dvfs_table(struct ip_dvfs_priv *priv,
-		       struct ip_dvfs_map_cfg *dvfs_table);
-void ip_get_dvfs_status(struct ip_dvfs_priv *priv,
-			struct ip_dvfs_status *dvfs_status);
-void ip_set_gfree_wait_delay(struct ip_dvfs_priv *priv, u32 delay);
-void ip_set_freq_upd_en_byp(struct ip_dvfs_priv *priv, u32 en);
-void ip_set_freq_upd_delay_en(struct ip_dvfs_priv *priv, u32 en);
-void ip_set_freq_upd_hdsk_en(struct ip_dvfs_priv *priv, u32 en);
-void ip_set_dvfs_swtrig_en(struct ip_dvfs_priv *priv, u32 en);
-
-/* the shared probe / governor / sysfs bodies */
-int ip_dvfs_probe(struct ip_dvfs_priv *priv, struct platform_device *pdev,
-		  struct devfreq_dev_profile *profile,
-		  struct devfreq_governor *gov,
-		  struct ip_dvfs_ops *ops,
-		  const struct soc_dvfs_desc *desc,
-		  struct notifier_head *chain);
-int ip_dvfs_remove(struct ip_dvfs_priv *priv, struct platform_device *pdev);
-int ip_dvfs_suspend(struct ip_dvfs_priv *priv, struct device *dev);
-int ip_dvfs_resume(struct ip_dvfs_priv *priv, struct device *dev);
-int ip_dvfs_target(struct ip_dvfs_priv *priv, unsigned long *freq, u32 flags);
-int ip_dvfs_get_dev_status(struct ip_dvfs_priv *priv,
-			   struct devfreq_dev_status *stat);
-int ip_dvfs_get_cur_freq(struct ip_dvfs_priv *priv, unsigned long *freq);
-int ip_gov_get_target(struct ip_dvfs_priv *priv, struct devfreq *df,
-		      unsigned long *freq);
-int ip_gov_event_handler(struct ip_dvfs_priv *priv, struct devfreq *df,
-			 unsigned int event, void *data);
-int ip_dvfs_notify_callback(struct ip_dvfs_priv *priv,
-			    struct notifier_block *nb,
-			    unsigned long action, void *data);
-
-/* the shared sysfs bodies */
-ssize_t ip_dvfs_table_show(struct ip_dvfs_priv *priv, char *buf);
-ssize_t ip_dvfs_status_show(struct ip_dvfs_priv *priv, char *buf);
-ssize_t ip_dvfs_index_show(struct ip_dvfs_priv *priv, char *buf,
-			   int (*get)(struct ip_dvfs_priv *));
-ssize_t ip_dvfs_index_store(struct ip_dvfs_priv *priv, const char *buf,
-			    size_t count, void (*set)(struct ip_dvfs_priv *, int));
-ssize_t ip_dvfs_freq_show(struct ip_dvfs_priv *priv, char *buf,
-			  u32 (*get)(struct ip_dvfs_priv *));
-ssize_t ip_dvfs_freq_store(struct ip_dvfs_priv *priv, const char *buf,
-			   size_t count, void (*set)(struct ip_dvfs_priv *, u32));
-ssize_t ip_dvfs_hw_dfs_show(struct ip_dvfs_priv *priv, char *buf);
-ssize_t ip_dvfs_hw_dfs_store(struct ip_dvfs_priv *priv, const char *buf,
-			     size_t count);
-ssize_t ip_dvfs_enable_show(struct ip_dvfs_priv *priv, char *buf);
-ssize_t ip_dvfs_enable_store(struct ip_dvfs_priv *priv, const char *buf,
-			      size_t count);
+/* the shared probe / governor / sysfs bodies, in sprd_dvfs_ip.c */
+int  ip_dvfs_probe(struct ip_dvfs_dev *ip, struct platform_device *pdev,
+		    struct devfreq_dev_profile *profile,
+		    struct devfreq_governor *gov,
+		    struct ip_dvfs_ops *ops,
+		    const struct soc_dvfs_desc *desc,
+		    struct notifier_head *chain);
+int  ip_dvfs_remove(struct ip_dvfs_dev *ip, struct platform_device *pdev);
+int  ip_dvfs_suspend(struct ip_dvfs_dev *ip, struct device *dev);
+int  ip_dvfs_resume(struct ip_dvfs_dev *ip, struct device *dev);
+int  ip_dvfs_target(struct ip_dvfs_dev *ip, unsigned long *freq, u32 flags);
+int  ip_dvfs_get_dev_status(struct ip_dvfs_dev *ip,
+			    struct devfreq_dev_status *stat);
+int  ip_dvfs_get_cur_freq(struct ip_dvfs_dev *ip, unsigned long *freq);
+int  ip_gov_get_target(struct ip_dvfs_dev *ip, struct devfreq *df,
+		       unsigned long *freq);
+int  ip_gov_event_handler(struct ip_dvfs_dev *ip, struct devfreq *df,
+			  unsigned int event, void *data);
+int  ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
+			     struct notifier_block *nb,
+			     unsigned long action, void *data);
 
 #endif /* __SPRD_DVFS_IP_H__ */

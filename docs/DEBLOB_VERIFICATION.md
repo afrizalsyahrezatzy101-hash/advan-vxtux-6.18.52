@@ -43,11 +43,11 @@ Three levels, each reported on its own:
 | 20 | `sprd_flash_drv` | OK | identical | 2 | yes |
 | 21 | `sprd_power_manager` | OK | identical | 15 | yes |
 | 22 | `sprd_time_sync` | OK | **1 missing** | 7 | _copy_to_user |
-| 23 | `trusty-ipc` | OK | identical | 20 | yes |
-| 24 | `trusty-irq` | OK | **2 missing** | 10 | trusty_irq_enable_irqset, trusty_irq_init_normal_irq |
+| 23 | `trusty-ipc` | OK | identical | 18 | yes |
+| 24 | `trusty-irq` | OK | identical | 10 | yes |
 | 25 | `trusty-log` | OK | **1 missing** | 7 | trusty_dump_logs.__print_once |
 | 26 | `trusty-tui` | OK | **2 missing** | 7 | _copy_from_user, _copy_to_user |
-| 27 | `trusty` | OK | **4 missing** | 28 | __tracepoint_ptr_smc_entry, __tracepoint_ptr_smc_exit, trace_event_define_fields_smccall |
+| 27 | `trusty` | OK | **3 missing** | 28 | __tracepoint_ptr_smc_entry, __tracepoint_ptr_smc_exit, trace_event_define_fields_smccall |
 | 28 | `twofish_common` | OK | identical | 0 | yes |
 | 29 | `ums512-clk` | OK | **4 missing** | 1 | dpll0_ftable, ftable, mpll2_ftable |
 | 30 | `unisoc-mailbox` | OK | **30 missing** | 7 | chan_num, g_irq_msk_backup, g_mbox_nowakeup_base |
@@ -57,7 +57,7 @@ Three levels, each reported on its own:
 
 - stock vendor blobs: **31**
 - a .ko with the same file name is built: **30** (96.8%)
-- and it carries the same API: **9** (29.0%)
+- and it carries the same API: **10** (32.3%)
 
 ### Gaps
 
@@ -89,13 +89,11 @@ Three levels, each reported on its own:
 - `sprd_apipe`: kernel API drift (6.18 renamed 8 of the stock blob's imports, all present in the build): ['__might_fault', '__might_sleep', 'mutex_destroy', 'mutex_lock_nested', 'trace_hardirqs_off', 'trace_hardirqs_on', 'vmalloc_noprof', 'warn_bogus_irq_restore']
 - `sprd_time_sync`: missing ['_copy_to_user']
 - `sprd_time_sync`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__might_fault', '_printk', 'class_create', 'memset', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
-- `trusty-irq`: missing ['trusty_irq_enable_irqset', 'trusty_irq_init_normal_irq']
-- `trusty-irq`: kernel API drift (6.18 renamed 10 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__of_parse_phandle_with_args', '__raw_spin_lock_init', '_find_next_bit', 'debug_smp_processor_id', 'memset', 'pcpu_alloc_noprof', 'trace_hardirqs_off']...
 - `trusty-log`: missing ['trusty_dump_logs.__print_once']
 - `trusty-log`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__alloc_pages_noprof', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__raw_spin_lock_init', '__virt_to_phys', '_printk', 'get_free_pages_noprof']
 - `trusty-tui`: missing ['_copy_from_user', '_copy_to_user']
 - `trusty-tui`: kernel API drift (6.18 renamed 7 of the stock blob's imports, all present in the build): ['__kmalloc_cache_noprof', '__might_fault', '_dev_info', '_printk', 'trace_hardirqs_off', 'trace_hardirqs_on', 'warn_bogus_irq_restore']
-- `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall', 'trusty_std_call_inner']
+- `trusty`: missing ['__tracepoint_ptr_smc_entry', '__tracepoint_ptr_smc_exit', 'trace_event_define_fields_smccall']
 - `trusty`: kernel API drift (6.18 renamed 28 of the stock blob's imports, all present in the build): ['__init_swait_queue_head', '__init_work', '__kmalloc_cache_noprof', '__kmalloc_noprof', '__list_add_valid_or_report', '__list_del_entry_valid_or_report', '__raw_spin_lock_init', '__trace_trigger_soft_disabled']...
 - `ums512-clk`: missing ['dpll0_ftable', 'ftable', 'mpll2_ftable', 'mpll_ftable']
 - `ums512-clk`: kernel API drift (6.18 renamed 1 of the stock blob's imports, all present in the build): ['sprd_clk_reset_register']

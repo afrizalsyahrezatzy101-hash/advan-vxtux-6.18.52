@@ -33,6 +33,18 @@
 
 #include <linux/types.h>
 #include <linux/mutex.h>
+#include <linux/notifier.h>
+#include <linux/device.h>
+#include <linux/platform_device.h>
+
+struct device_node;
+struct devfreq;
+struct platform_device;
+
+typedef enum {
+	DVFS_WORK = 0,
+	DVFS_IDLE,
+} set_freq_type;
 
 /*
  * The apsys block's own registers.
@@ -117,6 +129,14 @@ struct ip_dvfs_hw_regs {
 struct soc_dvfs_desc {
 	const char *name;	/* the SoC name, e.g. "sharkl5pro"	*/
 	const struct ip_dvfs_hw_regs *regs;
+
+	/*
+	 * The IP's frequency map: the list of (index, voltage level, clock
+	 * level, clock rate) entries the hardware can be programmed with.
+	 * The stock blob keeps one such table per IP and per SoC.
+	 */
+	const struct ip_dvfs_map_cfg *map;
+	u32 map_count;
 };
 
 /*
@@ -141,14 +161,42 @@ struct ip_dvfs_coffe {
 	u32 idle_index_def;
 };
 
+/*
+ * The runtime state of one DVFS IP.
+ *
+ * The stock blob keeps this in four separate ~1 KiB private structures,
+ * one per IP, whose layouts differ slightly (the vsp one is bigger, it
+ * also carries the encoder state).  Only the fields the shared callback
+ * bodies actually touch are kept here, so one type serves all four IPs.
+ */
 struct ip_dvfs_dev {
 	struct device *dev;		/* the IP's platform device	*/
+	struct device_node *np;		/* its DT node			*/
 	unsigned long regs;		/* the IP's register window	*/
 	const struct soc_dvfs_desc *desc;	/* the per-SoC descriptor	*/
 
 	struct ip_dvfs_coffe coffe;	/* the DT-read coefficients	*/
 
 	struct mutex lock;		/* serialises the register writes */
+
+	/*
+	 * The two frequency slots.  Which one is live depends on whether the
+	 * IP is in its work state or its idle state; the stock blob keeps
+	 * them at +0x3e0 and +0x3e4 of its private structure.
+	 */
+	u32 work_freq;
+	u32 idle_freq;
+	set_freq_type freq_type;
+
+	int dvfs_enable;		/* the software DVFS enable flag	*/
+
+	/* set while the IP is powered; the notify callback drops the
+	 * frequency changes that arrive while it is off */
+	int powered;
+
+	struct devfreq *devfreq;	/* the devfreq device		*/
+	struct notifier_block nb;	/* the layer-change notifier	*/
+	struct platform_device *pdev;	/* its platform device		*/
 };
 
 #endif /* __SPRD_DVFS_SOC_H__ */

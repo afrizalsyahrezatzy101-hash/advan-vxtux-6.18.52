@@ -22,10 +22,7 @@
 
 #include "sprd_dvfs_soc.h"
 
-typedef enum {
-	DVFS_WORK = 0,
-	DVFS_IDLE,
-} set_freq_type;
+/* set_freq_type lives in sprd_dvfs_soc.h */
 
 struct dvfs_ops_entry {
 	const char *ver;

@@ -234,6 +234,139 @@ static const struct nvt_ts_mem_map NT36676F_memory_map = {
 	.DOZE_GM_BTN_SCAN_RAW_ADDR= 0x12BB0,
 };
 
+/*
+ * The Unisoc (NT36523 / NT36526 / NT36675) controllers.
+ *
+ * Every value below is read straight out of the stock vendor blob
+ * (donors/stock_vendor_modules/novatek_ts_spi.ko, .rodata 0x3830 /
+ * 0x38f4 / 0x39b8), not guessed. The stock's nvt_ts_mem_map has 49
+ * words; the field names below were pinned to those words by matching
+ * the four controllers the blob and this file already share
+ * (NT36672A, NT36525, NT36772, NT36676F) - every nonzero value lines up
+ * in the same slot.
+ */
+
+static struct nvt_ts_mem_map NT36523_memory_map = {
+	.EVENT_BUF_ADDR                = 0x2FE00,
+	.RAW_PIPE0_ADDR                = 0x30FA0,
+	.RAW_PIPE1_ADDR                = 0x30FA0,
+	.BASELINE_ADDR                 = 0x36510,
+	.BASELINE_BTN_ADDR             = 0x00000,
+	.DIFF_PIPE0_ADDR               = 0x373E8,
+	.DIFF_PIPE1_ADDR               = 0x38068,
+	.RAW_BTN_PIPE0_ADDR            = 0x00000,
+	.RAW_BTN_PIPE1_ADDR            = 0x00000,
+	.DIFF_BTN_PIPE0_ADDR           = 0x00000,
+	.DIFF_BTN_PIPE1_ADDR           = 0x00000,
+	.READ_FLASH_CHECKSUM_ADDR      = 0x24000,
+	.RW_FLASH_DATA_ADDR            = 0x24002,
+	.DOZE_GM_S1D_SCAN_RAW_ADDR     = 0x38D54,
+	.DOZE_GM_BTN_SCAN_RAW_ADDR     = 0x38D94,
+	.BOOT_RDY_ADDR                 = 0x3F10D,
+	.POR_CD_ADDR                   = 0x00000,
+	.BLD_LENGTH_ADDR               = 0x3F138,
+	.ILM_LENGTH_ADDR               = 0x3F118,
+	.DLM_LENGTH_ADDR               = 0x3F130,
+	.BLD_DES_ADDR                  = 0x3F114,
+	.ILM_DES_ADDR                  = 0x3F128,
+	.DLM_DES_ADDR                  = 0x3F12C,
+	.G_ILM_CHECKSUM_ADDR           = 0x3F100,
+	.G_DLM_CHECKSUM_ADDR           = 0x3F104,
+	.R_ILM_CHECKSUM_ADDR           = 0x3F120,
+	.R_DLM_CHECKSUM_ADDR           = 0x3F124,
+	.BLD_CRC_EN_ADDR               = 0x3F30E,
+	.DMA_CRC_EN_ADDR               = 0x3F136,
+	.BLD_ILM_DLM_CRC_ADDR          = 0x3F133,
+	.DMA_CRC_FLAG_ADDR             = 0x3F134,
+};
+
+static struct nvt_ts_mem_map NT36526_memory_map = {
+	.EVENT_BUF_ADDR                = 0x22D00,
+	.RAW_PIPE0_ADDR                = 0x24000,
+	.RAW_PIPE1_ADDR                = 0x24000,
+	.BASELINE_ADDR                 = 0x21758,
+	.BASELINE_BTN_ADDR             = 0x00000,
+	.DIFF_PIPE0_ADDR               = 0x20AB0,
+	.DIFF_PIPE1_ADDR               = 0x24AB0,
+	.RAW_BTN_PIPE0_ADDR            = 0x00000,
+	.RAW_BTN_PIPE1_ADDR            = 0x00000,
+	.DIFF_BTN_PIPE0_ADDR           = 0x00000,
+	.DIFF_BTN_PIPE1_ADDR           = 0x00000,
+	.READ_FLASH_CHECKSUM_ADDR      = 0x24000,
+	.RW_FLASH_DATA_ADDR            = 0x24002,
+	.DOZE_GM_S1D_SCAN_RAW_ADDR     = 0x00000,
+	.DOZE_GM_BTN_SCAN_RAW_ADDR     = 0x00000,
+	.BOOT_RDY_ADDR                 = 0x3F10D,
+	.POR_CD_ADDR                   = 0x00000,
+	.BLD_LENGTH_ADDR               = 0x3F138,
+	.ILM_LENGTH_ADDR               = 0x3F118,
+	.DLM_LENGTH_ADDR               = 0x3F130,
+	.BLD_DES_ADDR                  = 0x3F114,
+	.ILM_DES_ADDR                  = 0x3F128,
+	.DLM_DES_ADDR                  = 0x3F12C,
+	.G_ILM_CHECKSUM_ADDR           = 0x3F100,
+	.G_DLM_CHECKSUM_ADDR           = 0x3F104,
+	.R_ILM_CHECKSUM_ADDR           = 0x3F120,
+	.R_DLM_CHECKSUM_ADDR           = 0x3F124,
+	.BLD_CRC_EN_ADDR               = 0x3F30E,
+	.DMA_CRC_EN_ADDR               = 0x3F136,
+	.BLD_ILM_DLM_CRC_ADDR          = 0x3F133,
+	.DMA_CRC_FLAG_ADDR             = 0x3F134,
+};
+
+static struct nvt_ts_mem_map NT36675_memory_map = {
+	.EVENT_BUF_ADDR                = 0x22D00,
+	.RAW_PIPE0_ADDR                = 0x24000,
+	.RAW_PIPE1_ADDR                = 0x24000,
+	.BASELINE_ADDR                 = 0x21B90,
+	.BASELINE_BTN_ADDR             = 0x00000,
+	.DIFF_PIPE0_ADDR               = 0x20C60,
+	.DIFF_PIPE1_ADDR               = 0x24C60,
+	.RAW_BTN_PIPE0_ADDR            = 0x00000,
+	.RAW_BTN_PIPE1_ADDR            = 0x00000,
+	.DIFF_BTN_PIPE0_ADDR           = 0x00000,
+	.DIFF_BTN_PIPE1_ADDR           = 0x00000,
+	.READ_FLASH_CHECKSUM_ADDR      = 0x24000,
+	.RW_FLASH_DATA_ADDR            = 0x24002,
+	.DOZE_GM_S1D_SCAN_RAW_ADDR     = 0x00000,
+	.DOZE_GM_BTN_SCAN_RAW_ADDR     = 0x00000,
+	.BOOT_RDY_ADDR                 = 0x3F10D,
+	.POR_CD_ADDR                   = 0x00000,
+	.BLD_LENGTH_ADDR               = 0x3F138,
+	.ILM_LENGTH_ADDR               = 0x3F118,
+	.DLM_LENGTH_ADDR               = 0x3F130,
+	.BLD_DES_ADDR                  = 0x3F114,
+	.ILM_DES_ADDR                  = 0x3F128,
+	.DLM_DES_ADDR                  = 0x3F12C,
+	.G_ILM_CHECKSUM_ADDR           = 0x3F100,
+	.G_DLM_CHECKSUM_ADDR           = 0x3F104,
+	.R_ILM_CHECKSUM_ADDR           = 0x3F120,
+	.R_DLM_CHECKSUM_ADDR           = 0x3F124,
+	.BLD_CRC_EN_ADDR               = 0x3F30E,
+	.DMA_CRC_EN_ADDR               = 0x3F136,
+	.BLD_ILM_DLM_CRC_ADDR          = 0x3F133,
+	.DMA_CRC_FLAG_ADDR             = 0x3F134,
+};
+
+/*
+ * hw_info is two bytes: carrier_system, hw_crc. All three Unisoc parts
+ * read 0x02 0x02 from the blob's .data (0x2a0 / 0x2a2 / 0x2a4).
+ */
+static struct nvt_ts_hw_info NT36523_hw_info = {
+	.carrier_system = 2,
+	.hw_crc         = 2,
+};
+
+static struct nvt_ts_hw_info NT36526_hw_info = {
+	.carrier_system = 2,
+	.hw_crc         = 2,
+};
+
+static struct nvt_ts_hw_info NT36675_hw_info = {
+	.carrier_system = 2,
+	.hw_crc         = 2,
+};
+
 static struct nvt_ts_hw_info NT36672A_hw_info = {
 	.carrier_system = 0,
 	.hw_crc         = 1,
