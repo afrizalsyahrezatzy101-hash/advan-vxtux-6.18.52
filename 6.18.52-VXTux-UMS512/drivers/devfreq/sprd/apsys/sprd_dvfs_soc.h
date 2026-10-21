@@ -41,6 +41,18 @@ struct device_node;
 struct devfreq;
 struct platform_device;
 
+/*
+ * One entry of an IP's frequency map: the map index, the voltage level
+ * and the clock level it selects, and the clock rate that results.
+ */
+struct ip_dvfs_map_cfg {
+	u32 map_index;
+	u32 volt_level;
+	u32 clk_level;
+	u32 clk_rate;
+	char *volt_val;
+};
+
 typedef enum {
 	DVFS_WORK = 0,
 	DVFS_IDLE,
@@ -189,6 +201,10 @@ struct ip_dvfs_dev {
 	set_freq_type freq_type;
 
 	int dvfs_enable;		/* the software DVFS enable flag	*/
+
+	/* the frequency the client last asked for through the notifier;
+	 * the governor clamps the current frequency by it */
+	unsigned long req_freq;
 
 	/* set while the IP is powered; the notify callback drops the
 	 * frequency changes that arrive while it is off */

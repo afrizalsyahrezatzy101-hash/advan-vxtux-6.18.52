@@ -148,4 +148,24 @@ int  ip_dvfs_notify_callback(struct ip_dvfs_dev *ip,
 			     struct notifier_block *nb,
 			     unsigned long action, void *data);
 
+/* ------------------------------------------------------------------ */
+/* The DT match tables.						*/
+/* ------------------------------------------------------------------ */
+
+/*
+ * The stock blob's of_match tables, recovered from the DT compatible
+ * strings it carries.  NOTE: the macro parameter must NOT be called
+ * "compatible" - the preprocessor would substitute it inside the
+ * .compatible field name too.
+ */
+#define IP_OF_MATCH_ENTRIES(ip)						\
+	{ .compatible = "sprd,hwdvfs-" #ip "-sharkl5",			\
+	  .data = (const void *)&sharkl5_##ip##_dvfs },			\
+	{ .compatible = "sprd,hwdvfs-" #ip "-roc1",			\
+	  .data = (const void *)&roc1_##ip##_dvfs },			\
+	{ .compatible = "sprd,hwdvfs-" #ip "-sharkl5pro",		\
+	  .data = (const void *)&sharkl5pro_##ip##_dvfs },		\
+	{ .compatible = "sprd,hwdvfs-" #ip "-qogirl6",			\
+	  .data = (const void *)&qogirl6_##ip##_dvfs },
+
 #endif /* __SPRD_DVFS_IP_H__ */

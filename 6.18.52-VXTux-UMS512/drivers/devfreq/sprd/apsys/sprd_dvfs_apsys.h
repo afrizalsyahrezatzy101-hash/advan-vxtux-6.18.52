@@ -51,13 +51,7 @@ struct apsys_dvfs_coffe {
 };
 
 
-struct ip_dvfs_map_cfg {
-	u32 map_index;
-	u32 volt_level;
-	u32 clk_level;
-	u32 clk_rate;
-	char *volt_val;
-};
+/* struct ip_dvfs_map_cfg and set_freq_type live in sprd_dvfs_soc.h */
 
 struct ip_dvfs_status {
 	char *apsys_cur_volt;
