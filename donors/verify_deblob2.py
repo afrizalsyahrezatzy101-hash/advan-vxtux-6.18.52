@@ -77,6 +77,7 @@ BOOKKEEPING_RE = re.compile(
 # .L14472!<N>. They are numbered per translation unit, so the numbers
 # have no meaning across toolchains. gcc's .compoundliteral.N is the
 # same kind of thing.
+CLONE_RE = re.compile(r"^.+?\.\d+(?:\.constprop\.\d+)?$")
 LABEL_RE = re.compile(r"^\.L(tmp)?\d+!?\d*$|^\.L\d+!?\d*$|"
                       r"^\.L\d+!\d+$|^\.L\d+$|^\.Ltmp\d+$|"
                       r"^\.compoundliteral(\.\d+)?$|^\.L\d+!\d+$")
@@ -107,6 +108,16 @@ def is_artefact(s):
     if LABEL_RE.match(s):
         return True
     return s.startswith(ARTEFACT_PREFIX)
+
+
+def strip_clone(s):
+    """Drop a compiler-generated clone suffix: "foo.421" -> "foo".
+
+    clang emits a clone per outlined copy of a function; gcc numbers them
+    differently or not at all.  These are local symbols, never part of the
+    module's API contract.
+    """
+    return CLONE_RE.sub("", s)
 
 
 def nm(path):
@@ -200,6 +211,14 @@ def main():
             continue
         s_api = {x for x in sd if not is_artefact(x)}
         b_api = {x for x in bd if not is_artefact(x)}
+        # Strip the compiler-generated clone suffix on BOTH sides before
+        # diffing.  "apsys_dvfs_init.421" is a clang clone of
+        # "apsys_dvfs_init"; the same source rebuilt with gcc produces a
+        # different suffix, or none at all, so comparing them verbatim made
+        # apsys-dvfs report 523 "missing" symbols when the real contract gap
+        # was 26.
+        s_api = {strip_clone(x) for x in s_api}
+        b_api = {strip_clone(x) for x in b_api}
         missing = sorted(s_api - b_api)
         newimp = sorted(bu - su)
         if missing:

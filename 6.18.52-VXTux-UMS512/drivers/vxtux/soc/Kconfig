@@ -9,3 +9,4 @@ source "drivers/vxtux/soc/cache_efuse/Kconfig"
 source "drivers/vxtux/soc/power_manager/Kconfig"
 
 source "drivers/vxtux/soc/modem/Kconfig"
+source "drivers/vxtux/soc/time_sync/Kconfig"

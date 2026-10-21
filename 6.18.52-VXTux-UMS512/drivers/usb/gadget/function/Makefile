@@ -14,8 +14,11 @@ obj-$(CONFIG_USB_F_SS_LB)	+= usb_f_ss_lb.o
 obj-$(CONFIG_USB_U_SERIAL)	+= u_serial.o
 usb_f_serial-y			:= f_serial.o
 obj-$(CONFIG_USB_F_SERIAL)	+= usb_f_serial.o
-usb_f_vserial-y			:= f_vserial.o
-obj-$(CONFIG_USB_F_VSERIAL)	+= usb_f_vserial.o
+# The stock blob is named usb_f_vser.ko (lib/modules/usb_f_vser.ko on the
+# stock ROM).  Keep the stock file name so the insmod scripts and the
+# initramfs packaging do not have to special-case this one.
+usb_f_vser-y			:= f_vserial.o
+obj-$(CONFIG_USB_F_VSERIAL)	+= usb_f_vser.o
 usb_f_obex-y			:= f_obex.o
 obj-$(CONFIG_USB_F_OBEX)	+= usb_f_obex.o
 obj-$(CONFIG_USB_U_ETHER)	+= u_ether.o

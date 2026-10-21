@@ -26,3 +26,8 @@ tmp_build*.sh
 # The kernel-object tarballs are build payloads, not sources: 1.8 GB of
 # them exceeded GitHub's 100 MB per-file limit and blocked every push.
 donors/*.tar.gz
+
+# The verifier reads the freshly built modules from here.  They are build
+# output, not sources: 343 MB of .ko that would otherwise be committed and
+# would break the 100 MB per-file push limit.
+built_kos/

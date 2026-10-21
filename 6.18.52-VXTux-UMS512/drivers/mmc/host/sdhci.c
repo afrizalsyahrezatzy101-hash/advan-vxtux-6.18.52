@@ -1753,6 +1753,18 @@ bool sdhci_present_error(struct sdhci_host *host,
 }
 EXPORT_SYMBOL_GPL(sdhci_present_error);
 
+/*
+ * Forwarder for the Unisoc SDHCI extension (sdhci-sprd-ext.c), which needs
+ * the command-send path from atomic and synchronous contexts but cannot
+ * reach it: sdhci_send_command() is static.  Two lines here are cheaper than
+ * duplicating the whole path, and they cannot drift from upstream.
+ */
+bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+{
+	return sdhci_send_command(host, cmd);
+}
+EXPORT_SYMBOL_GPL(sdhci_sprd_send_command);
+
 static bool sdhci_send_command_retry(struct sdhci_host *host,
 				     struct mmc_command *cmd,
 				     unsigned long flags)

@@ -11,6 +11,7 @@
 #include <linux/cdev.h>
 #include <linux/fs.h>
 #include <linux/of.h>
+#include <linux/platform_device.h>
 #include <linux/scatterlist.h>
 #include <linux/slab.h>
 
@@ -58,6 +59,21 @@ static struct bus_type sprd_wp_bus_type;
 
 static int mmc_set_powp(struct mmc_card *card);
 static void mmc_get_wp_current_status_and_type(struct mmc_card *card);
+
+/*
+ * sdhci_send_command() is static inside sdhci.c, and so is
+ * sdhci_manual_cmd23().  Both are needed by the synchronous request paths
+ * below, so sdhci.c exports one small pair of wrappers for them.  A copy of
+ * the command-send path in this file would drift from upstream on every
+ * merge; two forwarders cannot.
+ */
+bool sdhci_sprd_send_command(struct sdhci_host *host, struct mmc_command *cmd);
+
+static inline bool sdhci_sprd_manual_cmd23(struct sdhci_host *host,
+					   struct mmc_request *mrq)
+{
+	return mrq->sbc && !(host->flags & SDHCI_AUTO_CMD23);
+}
 
 /* ------------------------------------------------------------------ */
 /* power-on write protect: status/type read-back                       */
@@ -431,7 +447,6 @@ static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic
 	struct mmc_card *card = host->card;
 	struct sdio_func sf = { .card = card };
 	bool cmdq_dis = false;
-	int busy = 1000;
 	int err = 0;
 
 	if (!card || mmc_card_removed(card))
@@ -462,24 +477,19 @@ static int mmc_wp_ioctl_cmd(struct mmc_host *host, struct mmc_ioc_cmd __user *ic
 	/*
 	 * Serialise against the block queue, then quiesce CQE/HSQ before
 	 * toggling the protection bit, as the reset below re-inits the card.
+	 *
+	 * ponytail: 6.18's mmc_queue has no user-visible 'busy' flag that a char
+	 * device can usefully claim (it tracks internal recovery state only),
+	 * so gate on the host's queue state instead. Replace with a real
+	 * mq->busy claim once the SWCQ block layer is ported.
 	 */
-	err = -EBUSY;
-	while (busy--) {
-		if (host->cqe_enabled) {
-			err = host->cqe_ops->cqe_wait_for_idle(host);
-			if (err) {
-				pr_err("%s:(WP) wait for idle fail\n",
-				       mmc_hostname(host));
-				goto out_free;
-			}
-			break;
+	if (host->cqe_enabled && host->cqe_ops) {
+		err = host->cqe_ops->cqe_wait_for_idle(host);
+		if (err) {
+			pr_err("%s:(WP) wait for idle fail\n",
+			       mmc_hostname(host));
+			goto out_free;
 		}
-		if (!host->hsq_enabled)
-			break;
-		err = mmc_hsq_resume(host);
-		if (!err)
-			break;
-		udelay(10);
 	}
 
 	sdio_claim_host(&sf);
@@ -559,7 +569,7 @@ static const struct file_operations wp_fileops = {
 	.open = mmc_wp_chrdev_open,
 	.release = mmc_wp_chrdev_release,
 	.unlocked_ioctl = mmc_wp_ioctl,
-	.llseek = no_llseek,
+	.llseek = noop_llseek,
 #ifdef CONFIG_COMPAT
 	.compat_ioctl = mmc_wp_ioctl_compat,
 #endif
@@ -720,11 +730,23 @@ EXPORT_SYMBOL_GPL(mmc_send_tuning_read);
 /* ------------------------------------------------------------------ */
 
 /*
- * The SWCQ engine drives the host's registers itself, so these must not go
- * through sdhci_request()/sdhci_request_atomic(): that path defers command
- * completion to complete_work, which the SWCQ completion handler would then
- * race with. Send the command inline and hand the request straight back to
- * the SWCQ on failure.
+ * The software queue calls into these instead of sdhci_request(), because that
+ * path takes host->lock itself and completes requests via complete_work. These
+ * take the lock and issue the command inline, which is what the queue's
+ * polling loop needs in order to observe the inhibit bits itself.
+ *
+ * sdhci_send_command() is static in sdhci.c, so presence is checked with the
+ * exported sdhci_present_error() and the command is handed to the generic
+ * sdhci_request_atomic() once the host is known alive.
+ */
+
+/**
+ * sdhci_sprd_request_sync() - send one request with host->lock already held
+ * @mmc: host
+ * @mrq: request to send
+ *
+ * Return: 0 on success, -EBUSY if the controller has not released its
+ * inhibit bits, in which case the caller retries in non-atomic context.
  */
 int sdhci_sprd_request_sync(struct mmc_host *mmc, struct mmc_request *mrq)
 {
@@ -732,59 +754,38 @@ int sdhci_sprd_request_sync(struct mmc_host *mmc, struct mmc_request *mrq)
 	struct mmc_command *cmd;
 	int ret = 0;
 
-	cmd = host->flags & SDHCI_AUTO_CMD23 ? mrq->sbc : mrq->cmd;
-	if (!cmd)
-		cmd = mrq->cmd;
-
-	if (host->flags & SDHCI_DEVICE_DEAD) {
-		mrq->cmd->error = -ENOMEDIUM;
-		__sdhci_finish_mrq(host, mrq);
-		queue_work(host->complete_wq, &host->complete_work);
-		return 0;
+	if (sdhci_present_error(host, mrq->cmd, true)) {
+		sdhci_finish_mrq(host, mrq);
+		goto out;
 	}
 
-	if (!sdhci_send_command_retry_public(host, cmd))
+	cmd = sdhci_sprd_manual_cmd23(host, mrq) ? mrq->sbc : mrq->cmd;
+
+	if (sdhci_sprd_send_command(host, cmd))
 		ret = -EBUSY;
 
+out:
 	return ret;
 }
 EXPORT_SYMBOL_GPL(sdhci_sprd_request_sync);
 
 /**
- * _sdhci_request_atomic() - issue one request from atomic context
+ * _sdhci_request_atomic() - issue one request from atomic (hard IRQ) context
  * @mmc: host
  * @mrq: request to send
- *
- * Same as sdhci_sprd_request_sync() but takes host->lock, for callers that
- * run in hard IRQ context (the HSQ software queue).
  *
  * Return: 0 on success, -EBUSY if the controller is still busy.
  */
 int _sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
 {
 	struct sdhci_host *host = mmc_priv(mmc);
-	struct mmc_command *cmd;
 	unsigned long flags;
-	int ret = 0;
+	int ret;
 
 	spin_lock_irqsave(&host->lock, flags);
-
-	cmd = host->flags & SDHCI_AUTO_CMD23 ? mrq->sbc : mrq->cmd;
-	if (!cmd)
-		cmd = mrq->cmd;
-
-	if (host->flags & SDHCI_DEVICE_DEAD) {
-		mrq->cmd->error = -ENOMEDIUM;
-		__sdhci_finish_mrq(host, mrq);
-		queue_work(host->complete_wq, &host->complete_work);
-		goto out_unlock;
-	}
-
-	if (!sdhci_send_command_retry_public(host, cmd))
-		ret = -EBUSY;
-
-out_unlock:
+	ret = sdhci_sprd_request_sync(mmc, mrq);
 	spin_unlock_irqrestore(&host->lock, flags);
+
 	return ret;
 }
 EXPORT_SYMBOL_GPL(_sdhci_request_atomic);
@@ -804,17 +805,12 @@ int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev)
 	struct mmc_hsq *hsq;
 	int ret;
 
-	if (SPRD_HOST_IS_EMMC(host->mmc)) {
-		/*
-		 * ponytail: the full mmc_swcq engine (sdhci-sprd-swcq.c,
-		 * 64 KB) is not ported; fall back to HSQ so eMMC still works.
-		 * Replace with mmc_swcq_init() once mmc_swcq.c is in the tree.
-		 */
-		hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
-	} else {
-		hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
-	}
-
+	/*
+	 * ponytail: the Unisoc software command queue (mmc_swcq.c, ~64 KB) is
+	 * not ported to 6.18, so eMMC hosts fall back to HSQ here. Swap in
+	 * mmc_swcq_init() once drivers/mmc/host/mmc_swcq.c is in the tree.
+	 */
+	hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
 	if (!hsq)
 		return -ENOMEM;
 
@@ -824,12 +820,112 @@ int mmc_hsq_swcq_init(struct sdhci_host *host, struct platform_device *pdev)
 }
 EXPORT_SYMBOL_GPL(mmc_hsq_swcq_init);
 
+/*
+ * SWCQ's raw hard-IRQ handler. sdhci_irq() is static in sdhci.c and hands
+ * command/data completion to complete_work, which the SWCQ completion path
+ * must not race with, so the SWCQ carries its own copy of the top-level
+ * handler and re-requests it after every runtime resume.
+ *
+ * ponytail: this is the upstream handler with host->ops->irq kept, because
+ * that hook is where the SWCQ injects its own command/data handling. Replace
+ * with a single shared sdhci_irq() + a queue pointer in sdhci_host once
+ * sdhci.c grows an sdhci_ops entry for the hard-IRQ half.
+ */
+static irqreturn_t sprd_sdhci_raw_irq(int irq, void *dev_id)
+{
+	struct sdhci_host *host = dev_id;
+	u32 intmask, mask, unexpected = 0;
+	int max_loops = 16;
+
+	spin_lock(&host->lock);
+
+	if (host->runtime_suspended) {
+		spin_unlock(&host->lock);
+		return IRQ_NONE;
+	}
+
+	intmask = sdhci_readl(host, SDHCI_INT_STATUS);
+	if (!intmask || intmask == 0xffffffff) {
+		spin_unlock(&host->lock);
+		return IRQ_NONE;
+	}
+
+	do {
+		if (host->ops->irq) {
+			intmask = host->ops->irq(host, intmask);
+			if (!intmask)
+				goto cont;
+		}
+
+		/* Clear selected interrupts. */
+		mask = intmask & (SDHCI_INT_CMD_MASK | SDHCI_INT_DATA_MASK |
+				  SDHCI_INT_BUS_POWER);
+		sdhci_writel(host, mask, SDHCI_INT_STATUS);
+
+		if (intmask & (SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE)) {
+			u32 present = sdhci_readl(host, SDHCI_PRESENT_STATE) &
+				      SDHCI_CARD_PRESENT;
+
+			/*
+			 * Only watch the edge that does not immediately
+			 * re-fire, otherwise the interrupt storms.
+			 */
+			host->ier &= ~(SDHCI_INT_CARD_INSERT |
+				       SDHCI_INT_CARD_REMOVE);
+			host->ier |= present ? SDHCI_INT_CARD_REMOVE :
+					       SDHCI_INT_CARD_INSERT;
+			sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+			sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+
+			sdhci_writel(host, intmask & (SDHCI_INT_CARD_INSERT |
+						     SDHCI_INT_CARD_REMOVE),
+				     SDHCI_INT_STATUS);
+
+			host->thread_isr |= intmask &
+					   (SDHCI_INT_CARD_INSERT |
+					    SDHCI_INT_CARD_REMOVE);
+		}
+
+		if (intmask & (SDHCI_INT_RETUNE))
+			mmc_retune_needed(host->mmc);
+
+		if ((intmask & SDHCI_INT_CARD_INT) &&
+		    (host->ier & SDHCI_INT_CARD_INT)) {
+			sdhci_enable_sdio_irq_nolock(host, false);
+			sdio_signal_irq(host->mmc);
+		}
+
+		intmask &= ~(SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE |
+			     SDHCI_INT_CMD_MASK | SDHCI_INT_DATA_MASK |
+			     SDHCI_INT_ERROR | SDHCI_INT_BUS_POWER |
+			     SDHCI_INT_RETUNE | SDHCI_INT_CARD_INT);
+
+		if (intmask) {
+			unexpected |= intmask;
+			sdhci_writel(host, intmask, SDHCI_INT_STATUS);
+		}
+cont:
+		intmask = sdhci_readl(host, SDHCI_INT_STATUS);
+	} while (intmask && --max_loops);
+
+	spin_unlock(&host->lock);
+
+	if (unexpected) {
+		pr_err("%s: Unexpected interrupt 0x%08x.\n",
+		       mmc_hostname(host->mmc), unexpected);
+		sdhci_dumpregs(host);
+	}
+
+	return IRQ_HANDLED;
+}
+
 /**
  * sdhci_sprd_irq_request_swcq() - re-hook the host IRQ for SWCQ eMMC hosts
  * @host: SDHCI host
  *
- * The SWCQ handlers must stay installed even after runtime resume re-arms
- * the shared threaded IRQ with the generic sdhci handlers, so re-request it.
+ * sdhci_runtime_resume_host() re-arms the shared threaded IRQ with the
+ * generic handlers, which would drop the SWCQ handlers on every resume, so
+ * re-request it here.
  *
  * Return: 0 on success, negative errno on failure.
  */
@@ -840,7 +936,7 @@ int sdhci_sprd_irq_request_swcq(struct sdhci_host *host)
 
 	free_irq(host->irq, host);
 
-	return request_threaded_irq(host->irq, host->thread_irq_fn_raw,
+	return request_threaded_irq(host->irq, sprd_sdhci_raw_irq,
 				    host->thread_irq_fn, IRQF_SHARED,
 				    mmc_hostname(host->mmc), host);
 }

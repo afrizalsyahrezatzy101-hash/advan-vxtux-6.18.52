@@ -9,3 +9,7 @@ obj-$(CONFIG_SPRD_POWER_MANAGER) += power_manager/
 
 # Unisoc modem family (modem_loader/cproc/cp_dump) — 2026-10-10
 obj-$(CONFIG_SPRD_MODEM) += modem/
+
+# Unisoc time correction device (stock blob sprd_time_sync.ko) and its
+# control point (sprd_time_sync_cp.ko).
+obj-$(CONFIG_SPRD_TIME_SYNC) += time_sync/

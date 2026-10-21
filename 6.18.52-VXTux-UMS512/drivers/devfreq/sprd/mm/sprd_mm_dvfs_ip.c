@@ -40,6 +40,7 @@
 #include <linux/platform_device.h>
 #include <linux/pm_opp.h>
 #include <linux/slab.h>
+#include <linux/stringify.h>
 
 #include <linux/of.h>
 #include <linux/pm_opp.h>
@@ -907,12 +908,12 @@ static int dvfs_remove(struct platform_device *pdev)
  * would yield ".sprd,hwdvfs-mtx" and fail to compile.
  */
 #define IP_DRIVER(ip, of_match)					\
-static const struct of_device_id ip##_dvfs_of_match[] = {		\
+const struct of_device_id ip##_dvfs_of_match[] = {		\
 	{ .compatible = of_match },				\
 	{ }								\
 };									\
 									\
-static struct platform_driver ip##_dvfs_driver = {		\
+struct platform_driver ip##_dvfs_driver = {		\
 	.probe		= dvfs_probe,				\
 	.remove		= dvfs_remove,				\
 	.driver		= {					\
@@ -921,7 +922,7 @@ static struct platform_driver ip##_dvfs_driver = {		\
 	},							\
 };								\
 									\
-static struct devfreq_governor ip##_dvfs_gov = {			\
+struct devfreq_governor ip##_dvfs_gov = {			\
 	.name		= #ip "_governor",			\
 	.get_target_freq = mm_dvfs_gov_get_target,		\
 	.event_handler	= mm_dvfs_gov_event_handler,		\
@@ -979,6 +980,23 @@ void ip##_dvfs_exit(void)						\
 	unregister_ip_dvfs_ops(&ip##_dvfs_ops);				\
 }									\
 EXPORT_SYMBOL_GPL(ip##_dvfs_exit);
+/*
+ * The stock mmdvfs.ko exports the per-IP governor, platform driver and
+ * of_device_id table (nm on the stock blob: 'D'/'d' symbols named
+ * <ip>_dvfs_gov, <ip>_dvfs_driver, <ip>_dvfs_of_match).  A consumer that
+ * wants to drive one memory IP by hand looks them up by name, so they
+ * have to be global, not static.
+ */
+
+
+
+/*
+ * EXPORT_SYMBOL_GPL takes an identifier, not a string, so it cannot live
+ * inside IP_INIT: the ## in the macro body would paste before the caller's
+ * argument reaches it.  Invoking a separate macro at file scope after the
+ * IP_INIT expansions does the paste in the right order.
+ */
+#define IP_EXPORT(ip)						EXPORT_SYMBOL_GPL(ip##_dvfs_of_match);			EXPORT_SYMBOL_GPL(ip##_dvfs_driver);			EXPORT_SYMBOL_GPL(ip##_dvfs_gov)
 
 IP_INIT(fd);
 IP_INIT(isp);
@@ -1061,3 +1079,12 @@ module_exit(mmsys_module_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Nonamey <archanaberry>");
 MODULE_DESCRIPTION("Unisoc memory hardware DVFS (replaces vendor mmdvfs.ko)");
+
+IP_EXPORT(fd);
+IP_EXPORT(isp);
+IP_EXPORT(dcam_axi);
+IP_EXPORT(dcam_if);
+IP_EXPORT(jpg);
+IP_EXPORT(cpp);
+IP_EXPORT(mtx);
+IP_EXPORT(mmsys);
