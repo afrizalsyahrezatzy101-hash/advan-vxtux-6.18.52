@@ -1,0 +1,44 @@
+sdhci-sprd.ko - the 28 symbols that were missing from the stock blob's API
+
+stock  = nm type in donors/stock_vendor_modules/sdhci-sprd.ko (the blob)
+before = nm type in the port's sdhci-sprd.ko before this change  ('-' = absent)
+after  = nm type in the port's sdhci-sprd.ko now               ('-' = absent)
+
+symbol                                  stock  before   after   status
+----------------------------------------------------------------------------
+__sdhci_sprd_finish_data                t      -        T       CLOSED
+__sdhci_sprd_finish_mrq                 t      -        T       CLOSED
+_copy_from_user                         t      -        T       CLOSED
+mmc_get_wp_current_status_and_type      t      -        t       CLOSED
+pre_time                                b      -        B       CLOSED
+raw_sdhci_irq                           t      -        t       CLOSED
+raw_sdhci_thread_irq                    t      -        t       CLOSED
+sdhci_sprd_calc_timeout                 t      -        T       CLOSED
+sdhci_sprd_cmd_irq                      t      -        T       CLOSED
+sdhci_sprd_data_irq                     t      -        T       CLOSED
+sdhci_sprd_dumpregs                     t      -        T       CLOSED
+sdhci_sprd_execute_tuning               t      -        T       CLOSED
+sdhci_sprd_finish_command               t      -        T       CLOSED
+sdhci_sprd_int_status                   t      -        T       CLOSED
+sdhci_sprd_irq                          t      -        T       CLOSED
+sdhci_sprd_prepare_data                 t      -        T       CLOSED
+sdhci_sprd_read_block_pio               t      -        T       CLOSED
+sdhci_sprd_send_command                 t      -        T       CLOSED
+sdhci_sprd_set_powp                     t      -        T       CLOSED
+sdhci_sprd_set_transfer_irqs            t      -        T       CLOSED
+sdhci_sprd_signal_voltage_on_off        t      -        T       CLOSED
+sdhci_sprd_transfer_pio                 t      -        T       CLOSED
+sdhci_sprd_write_block_pio              t      -        T       CLOSED
+second_time                             b      -        B       CLOSED
+sprd_calc_hs_mode_tuning_range          t      -        T       CLOSED
+sprd_calc_tuning_range                  t      -        T       CLOSED
+wp_bus_type                             b      -        b       CLOSED
+wp_dat                                  b      -        b       CLOSED
+----------------------------------------------------------------------------
+missing before: 28 / 28
+missing after : 0 / 28
+closed        : 28
+
+note: the blob's 28 are all 't'/'b' (local) except where shown; the
+port carries them at the same or stronger visibility, so the module's
+symbol surface is a superset of the blob's.
