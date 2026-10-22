@@ -197,10 +197,10 @@ struct gsp_r7p0_cfg_user {
 };
 
 struct drm_gsp_r7p0_cfg_user {
-	bool async;
+	_Bool async;
 	__u32 size;
 	__u32 num;
-	bool split;
+	_Bool split;
 	struct gsp_r7p0_cfg_user *config;
 };
 

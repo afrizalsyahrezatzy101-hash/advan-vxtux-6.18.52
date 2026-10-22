@@ -196,18 +196,18 @@ struct gsp_r9p0_hdr10_cfg {
 	__u8 num_bezier_curve_anchors;
 	__u16 bezier_curve_anchors[15];
 
-	bool reg_hdr_slp;
-	bool reg_hdr_bypass_csc1;
-	bool reg_hdr_bypass_degamma;
-	bool reg_hdr_bypass_csc2;
-	bool reg_hdr_maxcll_gain_bypass;
-	bool reg_hdr_bypass_gamma;
-	bool reg_hdr_bypass_csc3;
-	bool reg_hdr_force_in_range_csc1;
-	bool reg_hdr_force_in_range_csc3;
-	bool reg_hdr_gamut_map_en;
-	bool reg_hdr_csc1_cl_en;
-	bool reg_hdr_avg_en;
+	_Bool reg_hdr_slp;
+	_Bool reg_hdr_bypass_csc1;
+	_Bool reg_hdr_bypass_degamma;
+	_Bool reg_hdr_bypass_csc2;
+	_Bool reg_hdr_maxcll_gain_bypass;
+	_Bool reg_hdr_bypass_gamma;
+	_Bool reg_hdr_bypass_csc3;
+	_Bool reg_hdr_force_in_range_csc1;
+	_Bool reg_hdr_force_in_range_csc3;
+	_Bool reg_hdr_gamut_map_en;
+	_Bool reg_hdr_csc1_cl_en;
+	_Bool reg_hdr_avg_en;
 	int reg_hdr_alpha_gain;
 	int reg_hdr_sat_thr;
 
@@ -258,7 +258,7 @@ struct gsp_r9p0_hdr10_cfg {
 	int reg_hdr_rg_step2;
 	int reg_hdr_rg_step3;
 	int reg_hdr_rg_step4;
-	bool reg_hdr_before_gamma;
+	_Bool reg_hdr_before_gamma;
 	int reg_hdr_diff_sat_thr;
 	int reg_hdr_csc3_a11;
 	int reg_hdr_csc3_a12;
@@ -270,12 +270,12 @@ struct gsp_r9p0_hdr10_cfg {
 	int reg_hdr_csc3_a32;
 	int reg_hdr_csc3_a33;
 
-	bool reg_hdr_tm_bypass;
-	bool reg_hdr_tm_force_in_range;
+	_Bool reg_hdr_tm_bypass;
+	_Bool reg_hdr_tm_force_in_range;
 	int reg_hdr_tm_rw_sel;
 	int reg_hdr_tm_use_sel;
-	bool reg_hdr_tm_force_rw_cur;
-	bool reg_hdr_tm1_en;
+	_Bool reg_hdr_tm_force_rw_cur;
+	_Bool reg_hdr_tm1_en;
 	int reg_hdr_tm_step1;
 	int reg_hdr_tm_step2;
 	int reg_hdr_tm_step3;
@@ -298,9 +298,9 @@ struct gsp_r9p0_misc_cfg_user {
 	__u8 work_mod;
 	__u8 pmargb_en;
 	__u8 secure_en;
-	bool hdr_flag[R9P0_IMGL_NUM];
-	bool first10bit_frame[R9P0_IMGL_NUM];
-	bool hdr10plus_update[R9P0_IMGL_NUM];
+	_Bool hdr_flag[R9P0_IMGL_NUM];
+	_Bool first10bit_frame[R9P0_IMGL_NUM];
+	_Bool hdr10plus_update[R9P0_IMGL_NUM];
 	__u32 work_freq;
 	struct gsp_rect workarea_src_rect;
 	struct gsp_pos workarea_des_pos;
@@ -316,10 +316,10 @@ struct gsp_r9p0_cfg_user {
 
 struct drm_gsp_r9p0_cfg_user {
 	__u8 gsp_id;
-	bool async;
+	_Bool async;
 	__u32 size;
 	__u32 num;
-	bool split;
+	_Bool split;
 	struct gsp_r9p0_cfg_user *config;
 };
 
