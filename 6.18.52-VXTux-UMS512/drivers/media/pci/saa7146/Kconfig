@@ -7,10 +7,10 @@ config VIDEO_HEXIUM_GEMINI
 	  This is a video4linux driver for the Hexium Gemini frame
 	  grabber card by Hexium. Please note that the Gemini Dual
 	  card is *not* fully supported.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called hexium_gemini.
-
+	
 config VIDEO_HEXIUM_ORION
 	tristate "Hexium HV-PCI6 and Orion frame grabber"
 	depends on PCI && VIDEO_DEV && I2C
@@ -18,10 +18,10 @@ config VIDEO_HEXIUM_ORION
 	help
 	  This is a video4linux driver for the Hexium HV-PCI6 and
 	  Orion frame grabber cards by Hexium.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called hexium_orion.
-
+	
 config VIDEO_MXB
 	tristate "Siemens-Nixdorf 'Multimedia eXtension Board'"
 	depends on PCI && VIDEO_DEV && I2C
@@ -34,6 +34,7 @@ config VIDEO_MXB
 	help
 	  This is a video4linux driver for the 'Multimedia eXtension Board'
 	  TV card by Siemens-Nixdorf.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called mxb.
+	

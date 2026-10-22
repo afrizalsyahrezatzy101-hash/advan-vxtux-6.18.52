@@ -5,7 +5,8 @@ config USB_HACKRF
 	select VIDEOBUF2_VMALLOC
 	help
 	  This is a video4linux2 driver for HackRF SDR device.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called hackrf
-
+	
+	

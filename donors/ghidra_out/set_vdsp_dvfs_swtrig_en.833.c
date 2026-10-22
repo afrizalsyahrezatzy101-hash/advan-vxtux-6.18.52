@@ -1,0 +1,21 @@
+// set_vdsp_dvfs_swtrig_en.833 @ 00115d58
+// signature: undefined set_vdsp_dvfs_swtrig_en.833(void)
+// calling convention: unknown
+
+
+void set_vdsp_dvfs_swtrig_en_833(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0xc) = *(uint *)(lVar1 + 0xc) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+

@@ -11,6 +11,7 @@
  * GNU General Public License for more details.
  */
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/of_address.h>
 #include <linux/platform_device.h>

@@ -48,7 +48,7 @@
 	load_round_keys	x3, w4, x10
 
 	ld1	{v0.16b}, [x5]			/* load mac */
-	cbz	x2, ce_aes_ccm_final
+	cbz	x2, ce_aes_ccm_final_block
 	ldr	x8, [x6, #8]			/* load lower ctr */
 CPU_LE(	rev	x8, x8			)	/* keep swabbed ctr in reg */
 0:	/* outer loop */
@@ -75,7 +75,7 @@ CPU_LE(	rev	x8, x8			)	/* keep swabbed ctr in reg */
 	bne	0b
 CPU_LE(	rev	x8, x8			)
 	str	x8, [x6, #8]			/* store lsb end of ctr (BE) */
-	cbnz	x7, ce_aes_ccm_final
+	cbnz	x7, ce_aes_ccm_final_block
 	st1	{v0.16b}, [x5]			/* store mac */
 	ret
 	.endm
@@ -104,7 +104,16 @@ SYM_FUNC_START_LOCAL(ce_aes_ccm_crypt_tail)
 	st1	{v7.16b}, [x0]			/* store output block */
 	cbz	x7, 0f
 
-SYM_INNER_LABEL(ce_aes_ccm_final, SYM_L_LOCAL)
+/*
+ * The upstream 6.18 name for this inner label was ce_aes_ccm_final.
+ * The stock 5.4 blob uses ce_aes_ccm_final for a different, GLOBAL
+ * function (the two-block AES helper further down this file), so the
+ * label was renamed to ce_aes_ccm_final_block to free the name. The
+ * stock blob has no local label of this name at all - its 5.4
+ * ce_aes_ccm_encrypt has no final_iv handling, so the two are not
+ * the same code path.
+ */
+SYM_INNER_LABEL(ce_aes_ccm_final_block, SYM_L_LOCAL)
 	ld1	{v1.16b}, [x7]			/* load 1st ctriv */
 
 	aes_encrypt	v0, v1, w4
@@ -132,6 +141,43 @@ SYM_FUNC_START(ce_aes_ccm_decrypt)
 	movi	v22.16b, #0
 	aes_ccm_do_crypt	0
 SYM_FUNC_END(ce_aes_ccm_decrypt)
+
+/*
+ * void ce_aes_ccm_final(u8 out[], u8 const in[], u32 const rk[], int rounds);
+ *
+ * The stock 5.4 blob has this as a separate GLOBAL function, next to
+ * the local label of the same name inside ce_aes_ccm_crypt_tail. The
+ * two are different things: the local label above is the "final round
+ * key cancels out" step of the CCM mac, this one is a standalone
+ * two-block AES helper.
+ *
+ * It encrypts two blocks (out[] and in[]) with the same round key
+ * schedule, in parallel, and then XORs the two results into out[]:
+ *
+ *     out = AES(out, rk) ^ AES(in, rk)
+ *
+ * The aes_encrypt macro above is exactly that primitive: it takes two
+ * data registers and encrypts both with the same schedule, which is
+ * why it has a second argument at all. ce_aes_ccm_encrypt uses it for
+ * the mac and the ctr, this uses it for the two data blocks.
+ *
+ * The stock blob's ce_aes_ccm_encrypt and ce_aes_ccm_decrypt call this
+ * at .text+0x6a4 and .text+0x968, with rounds = ctx->key_length / 4
+ * + 6, i.e. the same round count they pass to ce_aes_ccm_encrypt.
+ */
+SYM_FUNC_START(ce_aes_ccm_final)
+	/* x0 = out, x1 = in, x2 = rk, w3 = rounds */
+	ld1	{v0.16b}, [x0]		/* out */
+	ld1	{v1.16b}, [x1]		/* in */
+
+	load_round_keys	x2, w3, x10
+	aes_encrypt	v0, v1, w3
+
+	/* the two blocks are XORed into out[] */
+	eor	v0.16b, v0.16b, v1.16b
+	st1	{v0.16b}, [x0]
+	ret
+SYM_FUNC_END(ce_aes_ccm_final)
 
 	.section ".rodata", "a"
 	.align	6

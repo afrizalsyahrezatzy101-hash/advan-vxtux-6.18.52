@@ -16,10 +16,11 @@ config VIDEO_COBALT
 	select VIDEOBUF2_DMA_SG
 	help
 	  This is a video4linux driver for the Cisco PCIe Cobalt card.
-
+	
 	  This board is sadly not available outside of Cisco, but it is
 	  very useful as an example of a real driver that uses all the
 	  latest frameworks and APIs.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called cobalt.
+	

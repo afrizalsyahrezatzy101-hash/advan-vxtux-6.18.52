@@ -7,7 +7,7 @@ config MMP_DISP_CONTROLLER
 		Marvell MMP display hw controller support
 		this controller is used on Marvell PXA910 and
 		MMP2 chips
-
+	
 config MMP_DISP_SPI
 	bool "mmp display controller spi port"
 	depends on MMP_DISP_CONTROLLER && SPI_MASTER
@@ -15,3 +15,4 @@ config MMP_DISP_SPI
 	help
 		Marvell MMP display hw controller spi port support
 		will register as a spi master for panel usage
+	

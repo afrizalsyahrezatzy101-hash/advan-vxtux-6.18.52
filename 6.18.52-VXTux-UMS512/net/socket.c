@@ -798,7 +798,7 @@ static bool skb_is_err_queue(const struct sk_buff *skb)
 	 * AF_PACKET outgoing taps use the same pkt_type.
 	 */
 	return skb->pkt_type == PACKET_OUTGOING &&
-	       skb->destructor == sock_rmem_free;
+	       skb->destructor == sock_efree;
 }
 
 /* On transmit, software and hardware timestamps are returned independently.

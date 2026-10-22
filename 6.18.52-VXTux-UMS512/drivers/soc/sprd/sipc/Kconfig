@@ -17,12 +17,12 @@ config SPRD_MAILBOX
 	  mbox_just_sent, mbox_register_irq_handle, mbox_unregister_irq_handle,
 	  mbox_core_fifo_full) on top of mainline generic mailbox framework
 	  (drivers/mailbox/sprd-mailbox.c).
-
+	
 	  Why needed: RE database of 103 blobs (blob_audit_syms.csv) proves
 	  these functions are not exported by any vendor blob — origin is
 	  stock 5.4 vmlinux (built-in). Without this shim all SIPC/audio consumers
 	  cannot build (and if forced, mailbox calls become no-op).
-
+	
 config SPRD_SIPC
 	bool "Spreadtrum SIPC (AP <-> CP/DSP shared memory IPC)"
 	depends on SPRD_MAILBOX
@@ -32,7 +32,7 @@ config SPRD_SIPC
 	  debugfs. Port 5.4 -> 6.18 (access_ok without type, timer_setup).
 	  Provides smsg_ch_open/smsg_send/smsg_recv, smem_alloc,
 	  sbuf_* and sblock_* used by audio AGDSP, WCN, and modem.
-
+	
 # ---------------------------------------------------------------- MODEM
 # SPRD_SIPC_SPIPE/SPOOL/SETH/SIPX = transport MODEM di atas sbuf/sblock
 # (pipe/pool, dan ethernet-over-shared-memory).
@@ -55,7 +55,7 @@ config SPRD_SIPC_SPIPE
 	  "sprd,spipe" per kanal, mendaftarkan ringnr device
 	  /dev/<label><n>. Memakai sbuf_create_ex/sbuf_read/sbuf_write/
 	  sbuf_poll_wait dari inti SIPC.
-
+	
 config SPRD_SIPC_SPOOL
 	tristate "SPRD pool driver based on SBLOCK"
 	depends on SPRD_SIPC
@@ -66,7 +66,7 @@ config SPRD_SIPC_SPOOL
 	  plus atribut sysfs base_addr. Dua mode DT ("sprd,preconfigured",
 	  "sprd,sblock_loop") ditolak eksplisit di probe karena penyedianya
 	  belum ada di port 6.18 - lihat komentar di spool.c.
-
+	
 config SPRD_SIPC_SETH
 	tristate "SPRD Ethernet over shared memory (SETH)"
 	depends on SPRD_SIPC
@@ -76,7 +76,7 @@ config SPRD_SIPC_SETH
 	  konfigurasi device asli (blob seth.ko meng-undef 11 simbol
 	  sipx_*), jadi pilihannya adalah memilih
 	  SPRD_SIPC_ZERO_COPY_SIPX.
-
+	
 config SPRD_SIPC_ZERO_COPY_SIPX
 	bool "SIPX zero-copy transport"
 	depends on SPRD_SIPC
@@ -86,7 +86,7 @@ config SPRD_SIPC_ZERO_COPY_SIPX
 	  send/receive/release dengan pool+fifo di shared memory yang
 	  dipakai bersama CP. Menyediakan 12 simbol sipx_* yang di-`undef`
 	  oleh seth.ko pada device ini.
-
+	
 config SPRD_SIPC_SWCNBLK
 	tristate "WCN block transport on SIPC"
 	depends on SPRD_SIPC
@@ -95,3 +95,4 @@ config SPRD_SIPC_SWCNBLK
 	  WCN-specific SBLK transport (swcnblk.o, self-contained: only calls
 	  core SIPC exported symbols which are built-in). Modular so it can be insmod'd
 	  and tested one by one (e.g. QEMU boot + insmod chain).
+	

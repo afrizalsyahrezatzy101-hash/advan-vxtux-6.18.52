@@ -15,9 +15,9 @@ menuconfig ISDN
 	  (though still much slower than with DSL) or to make and accept
 	  voice calls (eg. turning your PC into a software answering machine
 	  or PABX).
-
+	
 	  Select this option if you want your kernel to support ISDN.
-
+	
 if ISDN
 
 source "drivers/isdn/capi/Kconfig"

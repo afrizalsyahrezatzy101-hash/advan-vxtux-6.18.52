@@ -10,18 +10,18 @@ menuconfig NETDEVICES
 	help
 	  You can say N here if you don't intend to connect your Linux box to
 	  any other computer at all.
-
+	
 	  You'll have to say Y if your computer contains a network card that
 	  you want to use under Linux. If you are going to run SLIP or PPP over
 	  telephone line or null modem cable you need say Y here. Connecting
 	  two machines with parallel ports using PLIP needs this, as well as
 	  AX.25/KISS for sending Internet traffic over amateur radio links.
-
+	
 	  See also "The Linux Network Administrator's Guide" by Olaf Kirch and
 	  Terry Dawson. Available at <http://www.tldp.org/guides.html>.
-
+	
 	  If unsure, say Y.
-
+	
 # All the following symbols are dependent on NETDEVICES - do not repeat
 # that for each of the symbols.
 if NETDEVICES
@@ -35,7 +35,7 @@ config NET_CORE
 	help
 	  You can say N here if you do not intend to use any of the
 	  networking core drivers (i.e. VLAN, bridging, bonding, etc.)
-
+	
 if NET_CORE
 
 config BONDING
@@ -47,16 +47,16 @@ config BONDING
 	  Say 'Y' or 'M' if you wish to be able to 'bond' multiple Ethernet
 	  Channels together. This is called 'Etherchannel' by Cisco,
 	  'Trunking' by Sun, 802.3ad by the IEEE, and 'Bonding' in Linux.
-
+	
 	  The driver supports multiple bonding modes to allow for both high
 	  performance and high availability operation.
-
+	
 	  Refer to <file:Documentation/networking/bonding.rst> for more
 	  information.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called bonding.
-
+	
 config DUMMY
 	tristate "Dummy net driver support"
 	help
@@ -68,10 +68,10 @@ config DUMMY
 	  enlarge your kernel. What a deal. Read about it in the Network
 	  Administrator's Guide, available from
 	  <http://www.tldp.org/docs.html#guide>.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called dummy.
-
+	
 config WIREGUARD
 	tristate "WireGuard secure network tunnel"
 	depends on NET && INET
@@ -87,10 +87,10 @@ config WIREGUARD
 	  designed to be fairly general purpose and abstract enough to fit most
 	  use cases, while at the same time remaining extremely simple to
 	  configure. See www.wireguard.com for more info.
-
+	
 	  It's safe to say Y or M here, as the driver is very lightweight and
 	  is only in use when an administrator chooses to add an interface.
-
+	
 config WIREGUARD_DEBUG
 	bool "Debugging checks and verbose messages"
 	depends on WIREGUARD
@@ -99,9 +99,9 @@ config WIREGUARD_DEBUG
 	  that occur for a WireGuard interface. It will also perform some
 	  extra validation checks and unit tests at various points. This is
 	  only useful for debugging.
-
+	
 	  Say N here unless you know what you're doing.
-
+	
 config OVPN
 	tristate "OpenVPN data channel offload"
 	depends on NET && INET
@@ -116,7 +116,7 @@ config OVPN
 	help
 	  This module enhances the performance of the OpenVPN userspace software
 	  by offloading the data channel processing to kernelspace.
-
+	
 config EQUALIZER
 	tristate "EQL (serial line load balancing) support"
 	help
@@ -127,15 +127,15 @@ config EQUALIZER
 	  one double speed connection using this driver.  Naturally, this has
 	  to be supported at the other end as well, either with a similar EQL
 	  Linux driver or with a Livingston Portmaster 2e.
-
+	
 	  Say Y if you want this and read
 	  <file:Documentation/networking/eql.rst>.  You may also want to read
 	  section 6.2 of the NET-3-HOWTO, available from
 	  <http://www.tldp.org/docs.html#howto>.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called eql.  If unsure, say N.
-
+	
 config NET_FC
 	bool "Fibre Channel driver support"
 	depends on SCSI && PCI
@@ -143,12 +143,12 @@ config NET_FC
 	  Fibre Channel is a high speed serial protocol mainly used to connect
 	  large storage devices to the computer; it is compatible with and
 	  intended to replace SCSI.
-
+	
 	  If you intend to use Fibre Channel, you need to have a Fibre channel
 	  adaptor card in your computer; say Y here and to the driver for your
 	  adaptor below. You also should have said Y to "SCSI support" and
 	  "SCSI generic support".
-
+	
 config IFB
 	tristate "Intermediate Functional Block support"
 	depends on NET_ACT_MIRRED || NFT_FWD_NETDEV
@@ -162,7 +162,7 @@ config IFB
 	  Instead of 'ifb', the devices will then be called 'ifb0',
 	  'ifb1' etc.
 	  Look at the iproute2 documentation directory for usage etc
-
+	
 source "drivers/net/team/Kconfig"
 
 config MACVLAN
@@ -170,15 +170,15 @@ config MACVLAN
 	help
 	  This allows one to create virtual interfaces that map packets to
 	  or from specific MAC addresses to a particular interface.
-
+	
 	  Macvlan devices can be added using the "ip" command from the
 	  iproute2 package starting with the iproute2-2.6.23 release:
-
+	
 	  "ip link add link <real dev> [ address MAC ] [ NAME ] type macvlan"
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called macvlan.
-
+	
 config MACVTAP
 	tristate "MAC-VLAN based tap driver"
 	depends on MACVLAN
@@ -189,10 +189,10 @@ config MACVTAP
 	  on the MAC-VLAN network interface, called macvtap. A macvtap device
 	  can be added in the same way as a macvlan device, using 'type
 	  macvtap', and then be accessed through the tap user space interface.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called macvtap.
-
+	
 config IPVLAN_L3S
 	depends on NETFILTER
 	depends on IPVLAN
@@ -208,15 +208,15 @@ config IPVLAN
 	  and packets will be delivered based on the dest L3 (IPv6/IPv4 addr)
 	  on packets. All interfaces (including the main interface) share L2
 	  making it transparent to the connected L2 switch.
-
+	
 	  Ipvlan devices can be added using the "ip" command from the
 	  iproute2 package starting with the iproute2-3.19 release:
-
+	
 	  "ip link add link <main-dev> [ NAME ] type ipvlan"
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called ipvlan.
-
+	
 config IPVTAP
 	tristate "IP-VLAN based tap driver"
 	depends on IPVLAN
@@ -227,10 +227,10 @@ config IPVTAP
 	  on the IP-VLAN network interface, called ipvtap. An ipvtap device
 	  can be added in the same way as a ipvlan device, using 'type
 	  ipvtap', and then be accessed through the tap user space interface.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called ipvtap.
-
+	
 config VXLAN
 	tristate "Virtual eXtensible Local Area Network (VXLAN)"
 	depends on INET
@@ -242,10 +242,10 @@ config VXLAN
 	  to tunnel virtual network infrastructure in virtualized environments.
 	  For more information see:
 	    http://tools.ietf.org/html/draft-mahalingam-dutt-dcops-vxlan-02
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called vxlan.
-
+	
 config GENEVE
 	tristate "Generic Network Virtualization Encapsulation"
 	depends on INET
@@ -258,10 +258,10 @@ config GENEVE
 	  to tunnel virtual network infrastructure in virtualized environments.
 	  For more information see:
 	    http://tools.ietf.org/html/draft-gross-geneve-02
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called geneve.
-
+	
 config BAREUDP
 	tristate "Bare UDP Encapsulation"
 	depends on INET
@@ -271,10 +271,10 @@ config BAREUDP
 	help
 	  This adds a bare UDP tunnel module for tunnelling different
 	  kinds of traffic like MPLS, IP, etc. inside a UDP tunnel.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called bareudp.
-
+	
 config GTP
 	tristate "GPRS Tunneling Protocol datapath (GTP-U)"
 	depends on INET
@@ -288,10 +288,10 @@ config GTP
 	  base, such as OpenGGSN <http://git.osmocom.org/openggsn/). This
 	  tunneling protocol is implemented according to the GSM TS 09.60 and
 	  3GPP TS 29.060 standards.
-
+	
 	  To compile this drivers as a module, choose M here: the module
 	  will be called gtp.
-
+	
 config PFCP
 	tristate "Packet Forwarding Control Protocol (PFCP)"
 	depends on INET
@@ -301,10 +301,10 @@ config PFCP
 	  set up software and hardware offload of PFCP packets.
 	  Note that this module does not support PFCP protocol in the kernel space.
 	  There is no support for parsing any PFCP messages.
-
+	
 	  To compile this drivers as a module, choose M here: the module
 	  will be called pfcp.
-
+	
 config AMT
 	tristate "Automatic Multicast Tunneling (AMT)"
 	depends on INET && IP_MULTICAST
@@ -318,10 +318,10 @@ config AMT
 	  Gateway Decapsulates multicast traffic from the Relay to Listeners.
 	  Relay Encapsulates multicast traffic from Sources to Gateway.
 	  Relay Decapsulates IGMP/MLD traffic from Gateway.
-
+	
 	  To compile this drivers as a module, choose M here: the module
 	  will be called amt.
-
+	
 config MACSEC
 	tristate "IEEE 802.1AE MAC-level encryption (MACsec)"
 	select CRYPTO
@@ -330,13 +330,13 @@ config MACSEC
 	select GRO_CELLS
 	help
 	   MACsec is an encryption standard for Ethernet.
-
+	
 config NETCONSOLE
 	tristate "Network console logging support"
 	help
 	  If you want to log kernel messages over the network, enable this.
 	  See <file:Documentation/networking/netconsole.rst> for details.
-
+	
 config NETCONSOLE_DYNAMIC
 	bool "Dynamic reconfiguration of logging targets"
 	depends on NETCONSOLE && SYSFS && CONFIGFS_FS && \
@@ -346,7 +346,7 @@ config NETCONSOLE_DYNAMIC
 	  parameters (interface, IP addresses, port numbers, MAC addresses)
 	  at runtime through a userspace interface exported using configfs.
 	  See <file:Documentation/networking/netconsole.rst> for details.
-
+	
 config NETCONSOLE_EXTENDED_LOG
 	bool "Set kernel extended message by default"
 	depends on NETCONSOLE
@@ -356,7 +356,7 @@ config NETCONSOLE_EXTENDED_LOG
 	  set, log messages are transmitted with extended metadata header in a
 	  format similar to /dev/kmsg.  See
 	  <file:Documentation/networking/netconsole.rst> for details.
-
+	
 config NETCONSOLE_PREPEND_RELEASE
 	bool "Prepend kernel release version in the message by default"
 	depends on NETCONSOLE_EXTENDED_LOG
@@ -368,7 +368,7 @@ config NETCONSOLE_PREPEND_RELEASE
 	  server/peer can easily identify what kernel release is logging each
 	  message.  See <file:Documentation/networking/netconsole.rst> for
 	  details.
-
+	
 config NETPOLL
 	def_bool NETCONSOLE
 
@@ -403,26 +403,26 @@ config TUN
 	  device, which instead of receiving packets from a physical media,
 	  receives them from user space program and instead of sending packets
 	  via physical media writes them to the user space program.
-
+	
 	  When a program opens /dev/net/tun, driver creates and registers
 	  corresponding net device tunX or tapX.  After a program closed above
 	  devices, driver will automatically delete tunXX or tapXX device and
 	  all routes corresponding to it.
-
+	
 	  Please read <file:Documentation/networking/tuntap.rst> for more
 	  information.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called tun.
-
+	
 	  If you don't know what to use this for, you don't need it.
-
+	
 config TAP
 	tristate
 	help
 	  This option is selected by any driver implementing tap user space
 	  interface for a virtual interface to re-use core tap functionality.
-
+	
 config TUN_VNET_CROSS_LE
 	bool "Support for cross-endian vnet headers on little-endian kernels"
 	default n
@@ -430,13 +430,13 @@ config TUN_VNET_CROSS_LE
 	  This option allows TUN/TAP and MACVTAP device drivers in a
 	  little-endian kernel to parse vnet headers that come from a
 	  big-endian legacy virtio device.
-
+	
 	  Userspace programs can control the feature using the TUNSETVNETBE
 	  and TUNGETVNETBE ioctls.
-
+	
 	  Unless you have a little-endian system hosting a big-endian virtual
 	  machine with a legacy virtio NIC, you should say N.
-
+	
 config VETH
 	tristate "Virtual ethernet pair device"
 	select PAGE_POOL
@@ -444,7 +444,7 @@ config VETH
 	  This device is a local ethernet tunnel. Devices are created in pairs.
 	  When one end receives the packet it appears on its pair and vice
 	  versa.
-
+	
 config VIRTIO_NET
 	tristate "Virtio network driver"
 	depends on VIRTIO
@@ -453,7 +453,7 @@ config VIRTIO_NET
 	help
 	  This is the virtual network driver for virtio.  It can be used with
 	  QEMU based VMMs (like KVM or Xen).  Say Y or M.
-
+	
 config NLMON
 	tristate "Virtual netlink monitoring device"
 	help
@@ -463,7 +463,7 @@ config NLMON
 	  messages if they tap into the netlink device, record pcaps for further
 	  diagnostics, etc. This is mostly intended for developers or support
 	  to debug netlink issues. If unsure, say N.
-
+	
 config NETKIT
 	bool "BPF-programmable network device"
 	depends on BPF_SYSCALL
@@ -472,7 +472,7 @@ config NETKIT
 	  can be attached to the device(s) transmission routine in order to
 	  implement the driver's internal logic. The device can be configured
 	  to operate in L3 or L2 mode. If unsure, say N.
-
+	
 config NET_VRF
 	tristate "Virtual Routing and Forwarding (Lite)"
 	depends on IP_MULTIPLE_TABLES
@@ -482,7 +482,7 @@ config NET_VRF
 	help
 	  This option enables the support for mapping interfaces into VRF's. The
 	  support enables VRF devices.
-
+	
 config VSOCKMON
 	tristate "Virtual vsock monitoring device"
 	depends on VHOST_VSOCK
@@ -490,7 +490,7 @@ config VSOCKMON
 	  This option enables a monitoring net device for vsock sockets. It is
 	  mostly intended for developers or support to debug vsock issues. If
 	  unsure, say N.
-
+	
 config MHI_NET
 	tristate "MHI network driver"
 	depends on MHI_BUS
@@ -498,7 +498,7 @@ config MHI_NET
 	  This is the network driver for MHI bus.  It can be used with
 	  QCOM based WWAN modems for IP or QMAP/rmnet protocol (like SDX55).
 	  Say Y or M.
-
+	
 endif # NET_CORE
 
 config SUNGEM_PHY
@@ -557,14 +557,14 @@ config XEN_NETFRONT
 	help
 	  The corresponding Linux backend driver is enabled by the
 	  CONFIG_XEN_NETDEV_BACKEND option.
-
+	
 	  If you are compiling a kernel for use as Xen guest, you
 	  should say Y here. To compile this driver as a module, chose
 	  M here: the module will be called xen-netfront.
-
+	
 	  The corresponding Linux frontend driver is enabled by the
 	  CONFIG_XEN_NETDEV_FRONTEND configuration option.
-
+	
 config XEN_NETBACK
 	tristate "Xen virtual network device backend"
 	default X
@@ -574,12 +574,12 @@ config XEN_NETBACK
 	  endpoint for each paravirtual network device to the driver
 	  domain network stack. These can then be bridged or routed
 	  etc in order to provide full network connectivity.
-
+	
 	  If you are compiling a kernel to run in a Xen network driver
 	  domain (often this is domain 0) you should say Y here. To
 	  compile this driver as a module, chose M here: the module
 	  will be called xen-netback.
-
+	
 config VMXNET3
 	tristate "VMware VMXNET3 ethernet driver"
 	depends on PCI && INET
@@ -589,14 +589,14 @@ config VMXNET3
 	  This driver supports VMware's vmxnet3 virtual ethernet NIC.
 	  To compile this driver as a module, choose M here: the
 	  module will be called vmxnet3.
-
+	
 config FUJITSU_ES
 	tristate "FUJITSU Extended Socket Network Device driver"
 	depends on ACPI
 	help
 	  This driver provides support for Extended Socket network device
 	  on Extended Partitioning of FUJITSU PRIMEQUEST 2000 E2 series.
-
+	
 source "drivers/net/thunderbolt/Kconfig"
 
 config NETDEVSIM
@@ -613,10 +613,10 @@ config NETDEVSIM
 	  This driver is a developer testing tool and software model that can
 	  be used to test various control path networking APIs, especially
 	  HW-offload related.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called netdevsim.
-
+	
 config NET_FAILOVER
 	tristate "Failover driver"
 	select FAILOVER
@@ -628,12 +628,12 @@ config NET_FAILOVER
 	  an alternate low latency datapath. It also enables live migration of
 	  a VM with direct attached VF by failing over to the paravirtual
 	  datapath when the VF is unplugged.
-
+	
 config NETDEV_LEGACY_INIT
 	bool
 	depends on ISA
 	help
 	  Drivers that call netdev_boot_setup_check() should select this
 	  symbol, everything else no longer needs it.
-
+	
 endif # NETDEVICES

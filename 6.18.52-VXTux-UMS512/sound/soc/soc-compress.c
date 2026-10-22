@@ -8,6 +8,7 @@
 //          Ramesh Babu K V <ramesh.babu@linux.intel.com>
 //          Vinod Koul <vinod.koul@linux.intel.com>
 
+#include <linux/berry_compat.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/delay.h>

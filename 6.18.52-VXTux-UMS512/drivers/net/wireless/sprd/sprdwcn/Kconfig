@@ -1,8 +1,19 @@
 #
+# D5(c) (2026-10-21): simbol Kconfig di tree ini DUPLIKAT dengan
+# drivers/vxtux/net/wireless/sprdwcn/Kconfig. Dua Kconfig dengan
+# "config SC23XX" yang sama = symbol ambiguity, dan kedua Makefile
+# memakai symbol itu => driver WCN ter-build DUA KALI =>
+# "multiple definition of slp_mgr_reset/sdio_int/..." saat link vmlinux.
+#
+# Tree ini adalah copy LAMA (88 file .c identik dengan vxtux tree,
+# tanpa export fixes). Prefix SPRD_LEGACY_ dipakai supaya symbol tak
+# bentrok; default n => tree ini mati, vxtux tree yang hidup.
+#
+#
 # Spreadtrum WCN device (NEW )configuration
 #
 menu "Spreadtrum WCN Device Drivers (VXTux port)"
-config SC23XX
+config SPRD_LEGACY_SC23XX
 	bool "SC23XX chip Support"
 	#depends on MMC
 	default n
@@ -10,58 +21,58 @@ config SC23XX
 	  This is support wcn chip for spreadtrum.
 	  if you want to use 23xx series wcn chip of spreadtrum.
 	  please say "y".
-
+	
 # NOTE (18 Sep 2026): this symbol MISSING from port despite being used by source and
 # vendor Kconfig. `include/wcn_glb.h` selects chip register header via
 # `#ifdef CONFIG_SC2355`; without this symbol no `*_glb.h` gets included
 # so dozens of register macros (GNSS_CP_START_ADDR, DCACHE_REG_BASE, DUMP_PACKET_SIZE,
 # FIRMWARE_MAX_SIZE, SYNC_ADDR, REG_CP_SLP_CTL, ...) missing
 # "sprd,sc2355-sdio-wifi"; blob wcn_bsp.ko full of sdiohal_* strings.
-config SC2355
+config SPRD_LEGACY_SC2355
 	bool "SC2355 chip Support"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
   SC2355 WCN chip support (used on Advan Tab VX Lite T1030/UMS512).
   Enabling this makes wcn_glb.h include sc2355_glb.h.
-
-config WCN_INTEG
+	
+config SPRD_LEGACY_WCN_INTEG
 	tristate "WCN Integrated chip Support"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
 	  This is support wcn chip for spreadtrum.
 	  If you want to use WCN integrated chip of spreadtrum.
 	  Please say "y".
-
-config UMW2652
+	
+config SPRD_LEGACY_UMW2652
 	tristate "UMW2652 chip Support (not used on T618)"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
   PCIe/dual-bin chip variant -- keep n on T618 board.
-
-config UMW2653
+	
+config SPRD_LEGACY_UMW2653
 	tristate "UMW2653 chip Support (not used on T618)"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
   SWD/debug chip variant -- keep n on T618 board.
-
-config SC2342_I
+	
+config SPRD_LEGACY_SC2342_I
 	tristate "SC2342 integrated chip Support (not used on T618)"
-	depends on WCN_INTEG
+	depends on SPRD_LEGACY_WCN_INTEG
 	default n
 	help
   Other chip variant -- keep n on T618 board.
-
-config UMW2631_I
+	
+config SPRD_LEGACY_UMW2631_I
 	tristate "UMW2631 integrated chip Support (not used on T618)"
-	depends on WCN_INTEG
+	depends on SPRD_LEGACY_WCN_INTEG
 	default n
 	help
   Other chip variant -- keep n on T618 board.
-
+	
 # ---------------------------------------------------------------------------
 # Bluetooth (sprdbt_tty) + FM (sprd_fm)
 #
@@ -73,22 +84,22 @@ config UMW2631_I
 # (sprdbt_tty.ko, sprd_fm.ko), so correct module form -- also produces .ko
 # verifiable via modinfo/vermagic.
 
-config WCN_BLUETOOTH
+config SPRD_LEGACY_WCN_BLUETOOTH
 	tristate "Spreadtrum WCN bluetooth driver (sprdbt_tty)"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
   BT HCI over tty-sdio. Replaces sprdbt_tty.ko blob (5.4.210).
   Source: wcn/bluetooth/driver/tty-sdio (4.14 generation).
-
-config WCN_FM
+	
+config SPRD_LEGACY_WCN_FM
 	tristate "Spreadtrum WCN FM driver (sprd_fm)"
-	depends on SC23XX
+	depends on SPRD_LEGACY_SC23XX
 	default n
 	help
   MARLIN3 FM Radio. Replaces sprd_fm.ko blob.
   Source: wcn/fm/driver/fm_sdio (older generation than blob).
-
+	
 # sprd's SDIO device driver based on SC2355...,etc
 source "drivers/net/wireless/sprd/sprdwcn/sdio/Kconfig"
 

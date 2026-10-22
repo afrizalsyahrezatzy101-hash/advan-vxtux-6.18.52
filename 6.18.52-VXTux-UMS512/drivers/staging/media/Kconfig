@@ -9,14 +9,14 @@ menuconfig STAGING_MEDIA
 	  so, they won't likely work fine with the existing applications.
 	  That also means that, once fixed, their API's will change to match
 	  the existing ones.
-
+	
 	  If you wish to work on these drivers, to help improve them, or
 	  to report problems you have with them, please use the
 	  linux-media@vger.kernel.org mailing list.
-
+	
 	  If in doubt, say N here.
-
-
+	
+	
 if STAGING_MEDIA && MEDIA_SUPPORT
 
 # Please keep them in alphabetic order
@@ -46,12 +46,12 @@ menuconfig STAGING_MEDIA_DEPRECATED
 	help
 	  This option enables deprecated media drivers that are
 	  scheduled for future removal from the kernel.
-
+	
 	  If you wish to work on these drivers to prevent their removal,
 	  then contact the linux-media@vger.kernel.org mailing list.
-
+	
 	  If in doubt, say N here.
-
+	
 if STAGING_MEDIA_DEPRECATED
 source "drivers/staging/media/deprecated/atmel/Kconfig"
 endif

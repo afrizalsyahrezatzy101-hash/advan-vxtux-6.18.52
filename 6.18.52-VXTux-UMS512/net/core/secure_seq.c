@@ -70,9 +70,9 @@ secure_tcpv6_seq_and_ts_off(const struct net *net, const __be32 *saddr,
 			    &net_secret);
 
 	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
-		st.ts_off = 0;
+		st.off.ts_off = 0;
 
-	st.seq = seq_scale(st.seq);
+	st.off.seq = seq_scale(st.off.seq);
 	return st;
 }
 EXPORT_SYMBOL(secure_tcpv6_seq_and_ts_off);
@@ -117,9 +117,9 @@ secure_tcp_seq_and_ts_off(const struct net *net, __be32 saddr, __be32 daddr,
 				 ports, &net_secret);
 
 	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
-		st.ts_off = 0;
+		st.off.ts_off = 0;
 
-	st.seq = seq_scale(st.seq);
+	st.off.seq = seq_scale(st.off.seq);
 	return st;
 }
 EXPORT_SYMBOL_GPL(secure_tcp_seq_and_ts_off);

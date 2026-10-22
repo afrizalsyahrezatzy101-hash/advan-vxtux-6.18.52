@@ -9,7 +9,7 @@ config VIRTIO
 	  This option is selected by any driver which implements the virtio
 	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
 	  or CONFIG_S390_GUEST.
-
+	
 config VIRTIO_PCI_LIB
 	tristate
 	help
@@ -17,7 +17,7 @@ config VIRTIO_PCI_LIB
 	  basic probe and control for devices which are based on modern
 	  PCI device with possible vendor specific extensions. Any
 	  module that selects this module must depend on PCI.
-
+	
 config VIRTIO_PCI_LIB_LEGACY
 	tristate
 	help
@@ -26,7 +26,7 @@ config VIRTIO_PCI_LIB_LEGACY
 	  This module implements the basic probe and control for devices
 	  which are based on legacy PCI device. Any module that selects this
 	  module must depend on PCI.
-
+	
 menuconfig VIRTIO_MENU
 	bool "Virtio drivers"
 	default y
@@ -39,14 +39,14 @@ config VIRTIO_HARDEN_NOTIFICATION
         help
           Enable this to harden the device notifications and suppress
           those that happen at a time where notifications are illegal.
-
+	
           Experimental: Note that several drivers still have issues that
           may cause crashes or hangs when correct handling of
           notifications is enforced; depending on the subset of
           drivers and devices you use, this may or may not work.
-
+	
           If unsure, say N.
-
+	
 config VIRTIO_PCI
 	tristate "PCI driver for virtio devices"
 	depends on PCI
@@ -57,9 +57,9 @@ config VIRTIO_PCI
 	  drivers over PCI.  This requires that your VMM has appropriate PCI
 	  virtio backends.  Most QEMU based VMMs should support these devices
 	  (like KVM or Xen).
-
+	
 	  If unsure, say M.
-
+	
 config VIRTIO_PCI_ADMIN_LEGACY
 	bool
 	depends on VIRTIO_PCI && (X86 || COMPILE_TEST)
@@ -72,19 +72,19 @@ config VIRTIO_PCI_LEGACY
 	select VIRTIO_PCI_LIB_LEGACY
 	help
           Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
-
+	
 	  This option enables building a transitional driver, supporting
 	  both devices conforming to Virtio 1 specification, and legacy devices.
 	  If disabled, you get a slightly smaller, non-transitional driver,
 	  with no legacy compatibility.
-
+	
           So look out into your driveway.  Do you have a flying car?  If
           so, you can happily disable this option and virtio will not
           break.  Otherwise, leave it set.  Unless you're testing what
           life will be like in The Future.
-
+	
 	  If unsure, say Y.
-
+	
 config VIRTIO_VDPA
 	tristate "vDPA driver for virtio devices"
 	depends on VDPA
@@ -95,9 +95,9 @@ config VIRTIO_VDPA
 	  an appropriate vDPA device implementation that operates on a
 	  physical device to allow the datapath of virtio to be
 	  offloaded to hardware.
-
+	
 	  If unsure, say M.
-
+	
 config VIRTIO_PMEM
 	tristate "Support for virtio pmem driver"
 	depends on VIRTIO
@@ -106,9 +106,9 @@ config VIRTIO_PMEM
 	  This driver provides access to virtio-pmem devices, storage devices
 	  that are mapped into the physical address space - similar to NVDIMMs
 	   - with a virtio-based flushing interface.
-
+	
 	  If unsure, say Y.
-
+	
 config VIRTIO_BALLOON
 	tristate "Virtio balloon driver"
 	depends on VIRTIO
@@ -117,9 +117,9 @@ config VIRTIO_BALLOON
 	help
 	 This driver supports increasing and decreasing the amount
 	 of memory within a KVM guest.
-
+	
 	 If unsure, say M.
-
+	
 config VIRTIO_MEM
 	tristate "Virtio mem driver"
 	depends on X86_64 || ARM64 || RISCV || S390
@@ -131,15 +131,15 @@ config VIRTIO_MEM
 	help
 	 This driver provides access to virtio-mem paravirtualized memory
 	 devices, allowing to hotplug and hotunplug memory.
-
+	
 	 This driver currently supports x86-64, arm64, riscv and s390.
 	 Although it should compile on other architectures that implement
 	 memory hot(un)plug, architecture-specific and/or common
 	 code changes may be required for virtio-mem, kdump and kexec to
 	 work as expected.
-
+	
 	 If unsure, say M.
-
+	
 config VIRTIO_INPUT
 	tristate "Virtio input driver"
 	depends on VIRTIO
@@ -147,9 +147,9 @@ config VIRTIO_INPUT
 	help
 	 This driver supports virtio input devices such as
 	 keyboards, mice and tablets.
-
+	
 	 If unsure, say M.
-
+	
 config VIRTIO_MMIO
 	tristate "Platform bus driver for memory mapped virtio devices"
 	depends on HAS_IOMEM && HAS_DMA
@@ -157,9 +157,9 @@ config VIRTIO_MMIO
 	help
 	 This drivers provides support for memory mapped virtio
 	 platform device driver.
-
+	
  	 If unsure, say N.
-
+	
 config VIRTIO_MMIO_CMDLINE_DEVICES
 	bool "Memory mapped virtio devices parameter parsing"
 	depends on VIRTIO_MMIO
@@ -168,16 +168,16 @@ config VIRTIO_MMIO_CMDLINE_DEVICES
 	 or module parameters. Be aware that using incorrect parameters (base
 	 address in particular) can crash your system - you have been warned.
 	 See Documentation/admin-guide/kernel-parameters.rst for details.
-
+	
 	 If unsure, say 'N'.
-
+	
 config VIRTIO_DMA_SHARED_BUFFER
 	tristate
 	depends on DMA_SHARED_BUFFER
 	help
 	 This option adds a flavor of dma buffers that are backed by
 	 virtio resources.
-
+	
 config VIRTIO_DEBUG
 	bool "Debug facilities"
 	depends on VIRTIO
@@ -185,9 +185,9 @@ config VIRTIO_DEBUG
 	  Enable this to expose debug facilities over debugfs.
 	  This allows to debug features, to see what features the device
 	  advertises and to set filter for features used by driver.
-
+	
 	  If unsure, say N.
-
+	
 config VIRTIO_RTC
 	tristate "Virtio RTC driver"
 	depends on VIRTIO
@@ -197,12 +197,12 @@ config VIRTIO_RTC
 	 provides the time through one or more clocks. The Virtio RTC PTP
 	 clocks and/or the Real Time Clock driver for Virtio RTC must be
 	 enabled to expose the clocks to userspace.
-
+	
 	 To compile this code as a module, choose M here: the module will be
 	 called virtio_rtc.
-
+	
 	 If unsure, say M.
-
+	
 if VIRTIO_RTC
 
 comment "WARNING: Consider enabling VIRTIO_RTC_PTP and/or VIRTIO_RTC_CLASS."
@@ -219,9 +219,9 @@ config VIRTIO_RTC_PTP
 	 This exposes any Virtio RTC clocks as PTP Hardware Clocks (PHCs) to
 	 userspace. The PHC sysfs attribute "clock_name" describes the clock
 	 type.
-
+	
 	 If unsure, say Y.
-
+	
 config VIRTIO_RTC_ARM
 	bool "Virtio RTC cross-timestamping using Arm Generic Timer"
 	default y
@@ -232,9 +232,9 @@ config VIRTIO_RTC_ARM
 	 cross-timestamp is available through the PTP clock driver precise
 	 cross-timestamp ioctl (PTP_SYS_OFFSET_PRECISE2 aka
 	 PTP_SYS_OFFSET_PRECISE).
-
+	
 	 If unsure, say Y.
-
+	
 comment "Enable RTC_CLASS in order to enable VIRTIO_RTC_CLASS."
 	depends on RTC_CLASS=n
 
@@ -247,9 +247,9 @@ config VIRTIO_RTC_CLASS
 	 It only has an effect if the Virtio RTC device has a UTC-like clock
 	 which smears leap seconds to avoid steps. The Real Time Clock is
 	 read-only, and may support setting an alarm.
-
+	
 	 If unsure, say Y.
-
+	
 endif # VIRTIO_RTC
 
 endif # VIRTIO_MENU

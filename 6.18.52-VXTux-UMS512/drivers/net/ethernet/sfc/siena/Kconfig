@@ -8,7 +8,7 @@ config SFC_SIENA
 	help
 	  This driver supports 10-gigabit Ethernet cards based on
 	  the Solarflare SFC9000 controller.
-
+	
 	  To compile this driver as a module, choose M here.  The module
 	  will be called sfc-siena.
 config SFC_SIENA_MTD
@@ -44,3 +44,4 @@ config SFC_SIENA_MCDI_LOGGING
 	  driver/firmware interaction.  The tracing is actually enabled by
 	  a sysfs file 'mcdi_logging' under the PCI device, or via module
 	  parameter mcdi_logging_default.
+	

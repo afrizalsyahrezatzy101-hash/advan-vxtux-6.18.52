@@ -6,3 +6,4 @@ config DVB_CXD2880
 	default m if !MEDIA_SUBDRV_AUTOSELECT
 	help
 	  Say Y when you want to support this frontend.
+	

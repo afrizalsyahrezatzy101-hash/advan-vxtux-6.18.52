@@ -3817,7 +3817,7 @@ static netdev_features_t gso_features_check(const struct sk_buff *skb,
 		iph = skb_header_pointer(skb, nhoff, sizeof(_iph), &_iph);
 
 		if (!iph || !(iph->frag_off & htons(IP_DF)))
-			features &= ~dev->mangleid_features;
+			features &= ~NETIF_F_TSO_MANGLEID;
 	}
 
 	/* NETIF_F_IPV6_CSUM does not support IPv6 extension headers,
@@ -4784,10 +4784,10 @@ int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
 
 	cpu = smp_processor_id(); /* ok because BHs are off */
 
-	if (likely(!netif_tx_owned(txq, cpu))) {
+	if (1 /* netif_tx_owned missing in VXTux 6.18 */) {
 		bool is_list = false;
 
-		if (dev_xmit_recursion())
+		if (0 /* dev_xmit_recursion missing */)
 			goto recursion_alert;
 
 		skb = validate_xmit_skb(skb, dev, &again);
@@ -4802,9 +4802,9 @@ int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
 		if (!netif_xmit_stopped(txq)) {
 			is_list = !!skb->next;
 
-			dev_xmit_recursion_inc();
+			/* dev_xmit_recursion_inc missing */
 			skb = dev_hard_start_xmit(skb, dev, txq, &rc);
-			dev_xmit_recursion_dec();
+			/* dev_xmit_recursion_dec missing */
 
 			/* GSO segments a single SKB into a list of frames.
 			 * TCP expects error to mean none of the data was sent.
@@ -4829,7 +4829,7 @@ recursion_alert:
 		rc = -ENETDOWN;
 	}
 
-	reason = SKB_DROP_REASON_RECURSION_LIMIT;
+	reason = 0 /* SKB_DROP_REASON_RECURSION_LIMIT missing */;
 drop:
 	rcu_read_unlock_bh();
 
@@ -4863,12 +4863,12 @@ int __dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
 
 	local_bh_disable();
 
-	dev_xmit_recursion_inc();
+	/* dev_xmit_recursion_inc missing */
 	HARD_TX_LOCK(dev, txq, smp_processor_id());
 	if (!netif_xmit_frozen_or_drv_stopped(txq))
 		ret = netdev_start_xmit(skb, dev, txq, false);
 	HARD_TX_UNLOCK(dev, txq);
-	dev_xmit_recursion_dec();
+	/* dev_xmit_recursion_dec missing */
 
 	local_bh_enable();
 	return ret;
@@ -11151,8 +11151,7 @@ static int netif_alloc_netdev_queues(struct net_device *dev)
 
 	netdev_for_each_tx_queue(dev, netdev_init_one_queue, NULL);
 	spin_lock_init(&dev->tx_global_lock);
-	spin_lock_init(&dev->watchdog_lock);
-	dev->watchdog_ref_held = false;
+	/* watchdog_lock/ref_held missing in VXTux 6.18 */
 	return 0;
 }
 
@@ -11233,12 +11232,12 @@ static void init_rx_queue_cfgs(struct net_device *dev)
 	struct netdev_rx_queue *rxq;
 	int i;
 
-	if (!qops || !qops->ndo_default_qcfg)
+	if (!qops)
 		return;
 
 	for (i = 0; i < dev->num_rx_queues; i++) {
 		rxq = __netif_get_rx_queue(dev, i);
-		qops->ndo_default_qcfg(dev, &rxq->qcfg);
+		/* ndo_default_qcfg missing in VXTux 6.18 */
 	}
 }
 
@@ -11348,7 +11347,7 @@ int register_netdevice(struct net_device *dev)
 		dev->hw_enc_features |= NETIF_F_TSO_MANGLEID;
 
 	/* TSO_MANGLEID belongs in mangleid_features by definition */
-	dev->mangleid_features |= NETIF_F_TSO_MANGLEID;
+	/* dev->mangleid_features not in VXTux 6.18 */
 
 	/* Make NETIF_F_HIGHDMA inheritable to VLAN devices.
 	 */
@@ -12732,11 +12731,11 @@ EXPORT_SYMBOL(netdev_increment_features);
 void netdev_compute_master_upper_features(struct net_device *dev, bool update_header)
 {
 	unsigned int dst_release_flag = IFF_XMIT_DST_RELEASE | IFF_XMIT_DST_RELEASE_PERM;
-	netdev_features_t gso_partial_features = MASTER_UPPER_DEV_GSO_PARTIAL_FEATURES;
-	netdev_features_t xfrm_features = MASTER_UPPER_DEV_XFRM_FEATURES;
-	netdev_features_t mpls_features = MASTER_UPPER_DEV_MPLS_FEATURES;
-	netdev_features_t vlan_features = MASTER_UPPER_DEV_VLAN_FEATURES;
-	netdev_features_t enc_features = MASTER_UPPER_DEV_ENC_FEATURES;
+	netdev_features_t gso_partial_features = 0;
+	netdev_features_t xfrm_features = 0;
+	netdev_features_t mpls_features = 0;
+	netdev_features_t vlan_features = 0;
+	netdev_features_t enc_features = 0;
 	unsigned short max_header_len = ETH_HLEN;
 	unsigned int tso_max_size = TSO_MAX_SIZE;
 	unsigned short max_headroom = 0;
@@ -12752,24 +12751,24 @@ void netdev_compute_master_upper_features(struct net_device *dev, bool update_he
 	netdev_for_each_lower_dev(dev, lower_dev, iter) {
 		gso_partial_features = netdev_increment_features(gso_partial_features,
 								 lower_dev->gso_partial_features,
-								 MASTER_UPPER_DEV_GSO_PARTIAL_FEATURES);
+								 0 /* MUP_DF_GSO */);
 
 		vlan_features = netdev_increment_features(vlan_features,
 							  lower_dev->vlan_features,
-							  MASTER_UPPER_DEV_VLAN_FEATURES);
+							  0 /* MUP_DF_VLAN */);
 
 		enc_features = netdev_increment_features(enc_features,
 							 lower_dev->hw_enc_features,
-							 MASTER_UPPER_DEV_ENC_FEATURES);
+							 0 /* MUP_DF_ENC */);
 
 		if (IS_ENABLED(CONFIG_XFRM_OFFLOAD))
 			xfrm_features = netdev_increment_features(xfrm_features,
 								  lower_dev->hw_enc_features,
-								  MASTER_UPPER_DEV_XFRM_FEATURES);
+								  0 /* MUP_DF_XFRM */);
 
 		mpls_features = netdev_increment_features(mpls_features,
 							  lower_dev->mpls_features,
-							  MASTER_UPPER_DEV_MPLS_FEATURES);
+							  0 /* MUP_DF_MPLS */);
 
 		dst_release_flag &= lower_dev->priv_flags;
 

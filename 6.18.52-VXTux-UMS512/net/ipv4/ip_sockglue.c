@@ -520,7 +520,7 @@ static bool ipv4_datagram_support_cmsg(const struct sock *sk,
 /*
  *	Handle MSG_ERRQUEUE
  */
-int ip_recv_error(struct sock *sk, struct msghdr *msg, int len)
+int ip_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 {
 	struct sock_exterr_skb *serr;
 	struct sk_buff *skb;
@@ -576,6 +576,8 @@ int ip_recv_error(struct sock *sk, struct msghdr *msg, int len)
 	/* Now we could try to dump offended packet options */
 
 	msg->msg_flags |= MSG_ERRQUEUE;
+	if (addr_len)
+		*addr_len = 0; /* not available */
 	err = copied;
 
 	consume_skb(skb);
@@ -1634,7 +1636,7 @@ int do_ip_getsockopt(struct sock *sk, int level, int optname,
 		val = 0;
 		dst = sk_dst_get(sk);
 		if (dst) {
-			val = dst4_mtu(dst);
+			val = dst_mtu(dst);
 			dst_release(dst);
 		}
 		if (!val)

@@ -568,7 +568,7 @@ static bool btree_dirty_folio(struct address_space *mapping,
 #endif
 
 static const struct address_space_operations btree_aops = {
-	.writepages	= btree_writepages,
+	.writepages	= btrfs_writepages,
 	.release_folio	= btree_release_folio,
 	.invalidate_folio = btree_invalidate_folio,
 	.migrate_folio	= btree_migrate_folio,

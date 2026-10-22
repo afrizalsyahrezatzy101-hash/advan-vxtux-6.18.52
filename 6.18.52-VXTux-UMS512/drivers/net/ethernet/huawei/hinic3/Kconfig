@@ -15,6 +15,7 @@ config HINIC3
 	help
 	  This driver supports HiNIC 3rd gen Network Adapter (HINIC3).
 	  The driver is supported on X86_64 and ARM64 little endian.
-
+	
 	  To compile this driver as a module, choose M here.
 	  The module will be called hinic3.
+	

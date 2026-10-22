@@ -21,7 +21,7 @@ config INV_MPU6050_I2C
 	  and IAM20680 motion tracking devices over I2C.
 	  This driver can be built as a module. The module will be called
 	  inv-mpu6050-i2c.
-
+	
 config INV_MPU6050_SPI
 	tristate "Invensense MPU6050 devices (SPI)"
 	depends on SPI_MASTER
@@ -33,3 +33,4 @@ config INV_MPU6050_SPI
 	  and IAM20680 motion tracking devices over SPI.
 	  This driver can be built as a module. The module will be called
 	  inv-mpu6050-spi.
+	

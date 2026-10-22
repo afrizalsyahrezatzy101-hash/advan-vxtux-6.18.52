@@ -13,15 +13,16 @@ config RDMA_RXE
 	Documentation on InfiniBand and RoCE can be downloaded at
 	www.infinibandta.org and www.openfabrics.org. (See also
 	siw which is a similar software driver for iWARP.)
-
+	
 	The driver is split into two layers, one interfaces with the
 	Linux RDMA stack and implements a kernel or user space
 	verbs API. The user space verbs API requires a support
 	library named librxe which is loaded by the generic user
 	space verbs API, libibverbs. The other layer interfaces
 	with the Linux network stack at layer 3.
-
+	
 	To configure and work with soft-RoCE driver please use the
 	following wiki page under "configure Soft-RoCE (RXE)" section:
-
+	
 	https://github.com/linux-rdma/rdma-core/blob/master/Documentation/rxe.md
+	

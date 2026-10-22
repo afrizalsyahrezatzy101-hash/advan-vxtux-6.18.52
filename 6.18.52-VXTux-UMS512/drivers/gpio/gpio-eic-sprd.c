@@ -723,6 +723,7 @@ static const struct of_device_id sprd_eic_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, sprd_eic_of_match);
 
+
 static struct platform_driver sprd_eic_driver = {
 	.probe = sprd_eic_probe,
 	.driver = {

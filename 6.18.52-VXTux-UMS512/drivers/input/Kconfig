@@ -13,16 +13,16 @@ config INPUT
 	  joystick, steering wheel ...) connected to your system and want
 	  it to be available to applications. This includes standard PS/2
 	  keyboard and mouse.
-
+	
 	  Say N here if you have a headless (no monitor, no keyboard) system.
-
+	
 	  More information is available: <file:Documentation/input/input.rst>
-
+	
 	  If unsure, say Y.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called input.
-
+	
 if INPUT
 
 config INPUT_LEDS
@@ -32,12 +32,12 @@ config INPUT_LEDS
 	help
 	  Say Y here if you would like to export LEDs on input devices
 	  as standard LED class devices in sysfs.
-
+	
 	  If unsure, say Y.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called input-leds.
-
+	
 config INPUT_FF_MEMLESS
 	tristate "Support for memoryless force-feedback devices"
 	help
@@ -45,12 +45,12 @@ config INPUT_FF_MEMLESS
 	  such as Logitech WingMan Force 3D, ThrustMaster FireStorm Dual
 	  Power 2, or similar. You will also need to enable hardware-specific
 	  driver.
-
+	
 	  If unsure, say N.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called ff-memless.
-
+	
 config INPUT_SPARSEKMAP
 	tristate "Sparse keymap support library"
 	help
@@ -58,12 +58,12 @@ config INPUT_SPARSEKMAP
 	  device that uses sparse keymap. This option is only
 	  useful for out-of-tree drivers since in-tree drivers
 	  select it automatically.
-
+	
 	  If unsure, say N.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called sparse-keymap.
-
+	
 config INPUT_MATRIXKMAP
 	tristate "Matrix keymap support library"
 	help
@@ -71,19 +71,19 @@ config INPUT_MATRIXKMAP
 	  device that uses matrix keymap. This option is only
 	  useful for out-of-tree drivers since in-tree drivers
 	  select it automatically.
-
+	
 	  If unsure, say N.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called matrix-keymap.
-
+	
 config INPUT_VIVALDIFMAP
 	tristate
 	help
 	  ChromeOS Vivaldi keymap support library. This is a hidden
 	  option so that drivers can use common code to parse and
 	  expose the vivaldi function row keymap.
-
+	
 comment "Userland interfaces"
 
 config INPUT_MOUSEDEV
@@ -94,12 +94,12 @@ config INPUT_MOUSEDEV
 	  emulated IntelliMouse Explorer PS/2 mouse. That way, all user space
 	  programs (including SVGAlib, GPM and X) will be able to use your
 	  mouse.
-
+	
 	  If unsure, say Y.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called mousedev.
-
+	
 config INPUT_MOUSEDEV_PSAUX
 	bool "Provide legacy /dev/psaux device"
 	depends on INPUT_MOUSEDEV
@@ -107,9 +107,9 @@ config INPUT_MOUSEDEV_PSAUX
 	  Say Y here if you want your mouse also be accessible as char device
 	  10:1 - /dev/psaux. The data available through /dev/psaux is exactly
 	  the same as the data from /dev/input/mice.
-
+	
 	  If unsure, say Y.
-
+	
 config INPUT_MOUSEDEV_SCREEN_X
 	int "Horizontal screen resolution"
 	depends on INPUT_MOUSEDEV
@@ -119,7 +119,7 @@ config INPUT_MOUSEDEV_SCREEN_X
 	  it as a mouse then the mousedev driver needs to know the X window
 	  screen resolution you are using to correctly scale the data. If
 	  you're not using a digitizer, this value is ignored.
-
+	
 config INPUT_MOUSEDEV_SCREEN_Y
 	int "Vertical screen resolution"
 	depends on INPUT_MOUSEDEV
@@ -129,29 +129,29 @@ config INPUT_MOUSEDEV_SCREEN_Y
 	  it as a mouse then the mousedev driver needs to know the X window
 	  screen resolution you are using to correctly scale the data. If
 	  you're not using a digitizer, this value is ignored.
-
+	
 config INPUT_JOYDEV
 	tristate "Joystick interface"
 	help
 	  Say Y here if you want your joystick or gamepad to be
 	  accessible as char device 13:0+ - /dev/input/jsX device.
-
+	
 	  If unsure, say Y.
-
+	
 	  More information is available: <file:Documentation/input/joydev/joystick.rst>
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called joydev.
-
+	
 config INPUT_EVDEV
 	tristate "Event interface"
 	help
 	  Say Y here if you want your input device events be accessible
 	  under char device 13:64+ - /dev/input/eventX in a generic way.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called evdev.
-
+	
 config INPUT_KUNIT_TEST
 	tristate "KUnit tests for Input" if !KUNIT_ALL_TESTS
 	depends on INPUT && KUNIT
@@ -159,9 +159,9 @@ config INPUT_KUNIT_TEST
 	help
 	  Say Y here if you want to build the KUnit tests for the input
 	  subsystem.
-
+	
 	  If in doubt, say "N".
-
+	
 config INPUT_APMPOWER
 	tristate "Input Power Event -> APM Bridge" if EXPERT
 	depends on INPUT && APM_EMULATION
@@ -170,10 +170,10 @@ config INPUT_APMPOWER
 	  requested suspend through APM. This is useful on embedded
 	  systems where such behaviour is desired without userspace
 	  interaction. If unsure, say N.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called apm-power.
-
+	
 comment "Input Device Drivers"
 
 source "drivers/input/keyboard/Kconfig"

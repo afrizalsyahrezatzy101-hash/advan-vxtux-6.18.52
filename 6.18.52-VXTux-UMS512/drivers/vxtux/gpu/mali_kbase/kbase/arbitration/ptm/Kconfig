@@ -25,4 +25,5 @@ config MALI_PARTITION_MANAGER
 	help
 	  This option enables the compilation of the partition manager
 	  modules used to configure the Mali-G78AE GPU.
-
+	
+	

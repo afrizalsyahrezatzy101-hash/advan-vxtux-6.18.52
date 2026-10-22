@@ -13,7 +13,7 @@ config CRYPTO_DEV_STM32_HASH
 	help
 	  This enables support for the HASH hw accelerator which can be found
 	  on STMicroelectronics STM32 SOC.
-
+	
 config CRYPTO_DEV_STM32_CRYP
 	tristate "Support for STM32 cryp accelerators"
 	depends on ARCH_STM32 || ARCH_U8500
@@ -23,3 +23,4 @@ config CRYPTO_DEV_STM32_CRYP
 	help
 	  This enables support for the CRYP (AES/DES/TDES) hw accelerator which
 	  can be found on STMicroelectronics STM32 SOC.
+	

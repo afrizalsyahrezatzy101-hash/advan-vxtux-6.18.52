@@ -69,7 +69,16 @@ obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
 
 obj-$(CONFIG_SUN6I_MSGBOX)	+= sun6i-msgbox.o
 
-obj-$(CONFIG_SPRD_MBOX)		+= sprd-mailbox.o
+# The composite module is named after the vendor blob it
+# replaces (unisoc-mailbox.ko). The stock module's own
+# name is unisoc_mailbox.
+#
+# The stock blob carries TWO layers: the Linux mbox_controller
+# framework driver (sprd-mailbox.c) and the OEM layer, revision 1
+# (sprd-mailbox-r1.c). Both are in the composite, because the stock
+# blob has both, and the deblob check compares the local symbols too.
+obj-$(CONFIG_SPRD_MBOX)		+= unisoc-mailbox.o
+unisoc-mailbox-y := sprd-mailbox.o sprd-mailbox-r1.o
 
 obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
 

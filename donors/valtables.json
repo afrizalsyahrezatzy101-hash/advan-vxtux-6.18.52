@@ -1,0 +1,150 @@
+{
+ "qogirl6_apsys_val_to_volt": [
+  "0.7v",
+  "0.75v",
+  "0.8v"
+ ],
+ "qogirl6_dpu_val_to_freq": [
+  "153.6M",
+  "192M",
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "qogirl6_vsp_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "qogirl6_vdsp_val_to_freq": [
+  "256M",
+  "384M",
+  "512M",
+  "614.4M",
+  "768M",
+  "936M"
+ ],
+ "qogirn6pro_apsys_val_to_volt": [
+  "0.7v",
+  "0.75v",
+  "0.8v"
+ ],
+ "qogirn6pro_dpu_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M",
+  "409.6M",
+  "512M",
+  "614.4M"
+ ],
+ "qogirn6pro_vpudec_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M",
+  "512M",
+  "680M"
+ ],
+ "qogirn6pro_vpuenc_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M",
+  "512M"
+ ],
+ "qogirn6pro_vdsp_val_to_freq": [
+  "256M",
+  "384M",
+  "512M",
+  "614.4M",
+  "768M",
+  "936M"
+ ],
+ "qogirn6pro_gsp_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M",
+  "512M"
+ ],
+ "qogirn6pro_gsp_val_to_volt": [
+  "0.55v",
+  "0.6v",
+  "0.65v",
+  "0.7v",
+  "0.75v"
+ ],
+ "qogirn6pro_vpu_val_to_volt": [
+  "0.55v",
+  "0.6v",
+  "0.65v",
+  "0.7v",
+  "0.75v"
+ ],
+ "roc1_apsys_val_to_volt": [
+  "0.7v",
+  "0.75v",
+  "0.8v"
+ ],
+ "roc1_dpu_val_to_freq": [
+  "153.6M",
+  "192M",
+  "256M",
+  "307.2M",
+  "384M",
+  "468M"
+ ],
+ "roc1_vdsp_val_to_freq": [
+  "192M",
+  "307.2M",
+  "468M",
+  "614.4M",
+  "702M",
+  "768M"
+ ],
+ "roc1_vsp_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M",
+  "512M"
+ ],
+ "sharkl5_apsys_val_to_volt": [
+  "0.7v",
+  "0.75v",
+  "0.8v"
+ ],
+ "sharkl5_dpu_val_to_freq": [
+  "153.6M",
+  "192M",
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "sharkl5_vsp_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "sharkl5pro_apsys_val_to_volt": [
+  "0.7v",
+  "0.75v",
+  "0.8v"
+ ],
+ "sharkl5pro_dpu_val_to_freq": [
+  "153.6M",
+  "192M",
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "sharkl5pro_vsp_val_to_freq": [
+  "256M",
+  "307.2M",
+  "384M"
+ ],
+ "sharkl5pro_vdsp_val_to_freq": [
+  "256M",
+  "384M",
+  "512M",
+  "614.4M",
+  "768M",
+  "936M"
+ ]
+}

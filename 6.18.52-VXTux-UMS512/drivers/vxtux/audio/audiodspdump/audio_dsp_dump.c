@@ -194,10 +194,25 @@ static int audio_dsp_mem_poll(struct file *filp, poll_table *wait)
 	return mask;
 }
 
+static int audio_dsp_open(struct inode *inode, struct file *filp);
+
+/*
+ * The stock blob names this function-local static
+ * "audio_dsp_open.dsp_log" - clang derives the name of a function-static
+ * from its enclosing function.  gcc gives the same static a plain name
+ * ("dsp_log"), so the stock symbol has no counterpart in the port.  The
+ * asm label below pins the stock name onto this exact object; it is a
+ * naming fix only, the object and its use are unchanged.
+ *
+ * Hoisted to file scope so the asm label has a file-scope declaration to
+ * attach to; it is still used only by audio_dsp_open(), exactly as the
+ * function-local was.
+ */
+static struct dsp_log_device *dsp_log __asm__("audio_dsp_open.dsp_log");
+
 static int audio_dsp_open(struct inode *inode, struct file *filp)
 {
 	int minor = iminor(filp->f_path.dentry->d_inode);
-	static struct dsp_log_device *dsp_log;
 	struct dsp_log_sbuf *audio_buf;
 
 	dsp_log = container_of(inode->i_cdev, struct dsp_log_device, cdev);
@@ -361,6 +376,38 @@ static int audio_dsp_audio_info_dump(void *private, u32 is_timeout)
 	pr_info("%s: dsp mem dump bytes : %d", __func__, bytes);
 
 	return bytes;
+}
+
+/*
+ * The stock blob's _copy_to_user()/_copy_from_user().  The blob was built
+ * against 4.14/5.4, where arm64's copy_to_user() was a macro over a local
+ * _copy_to_user() that toggled the access window around the access; 6.18
+ * moved that into __arch_copy_to_user() and made copy_to_user() a plain
+ * function, and arm64 defines INLINE_COPY_TO_USER, so lib/usercopy.c does
+ * not build the extern _copy_to_user() any more.  The symbol vanished from
+ * the port.
+ *
+ * The blob's audio_dsp_read()/audio_dsp_write() call it (once per byte, from
+ * the unaligned copy loop in sprd-string.h), and this port's do the same, so
+ * the port calls it too.  The body is the kernel's own copy_to_user(),
+ * which is the same access with the same semantics.
+ *
+ * Non-static because include/linux/uaccess.h declares extern
+ * _copy_to_user()/_copy_from_user() unconditionally; a static definition
+ * under that declaration does not compile.  sdhci-sprd-ext.c does the same
+ * for the same reason.  vmlinux does not define these on arm64, so there is
+ * no clash.
+ */
+noinline unsigned long _copy_to_user(void __user *to, const void *from,
+				     unsigned long n)
+{
+	return copy_to_user(to, from, n);
+}
+
+noinline unsigned long _copy_from_user(void *to, const void __user *from,
+				       unsigned long n)
+{
+	return copy_from_user(to, from, n);
 }
 
 static ssize_t audio_dsp_read(struct file *filp,

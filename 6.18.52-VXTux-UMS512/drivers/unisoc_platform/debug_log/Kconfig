@@ -18,20 +18,20 @@ config SPRD_MODEM_DEBUG
 	  Spreadtrum modem debug log is a module that
 	  just for modem engineers to catch modem debug
 	  logs through MIPI D-PHY interface.
-
+	
 	  Ini substitusi sumber-terbuka untuk blob vendor sprd_mipi.ko
 	  (modinfo: description="Add modem dbg log attribute nodes for
 	  userspace"). Diekspor: dbg_log_device_register,
 	  dbg_log_sysfs_init, dbg_log_channel_sel, dbg_log_is_freq_valid,
 	  dbg_log_fill_freq_array, dbg_log_get_valid_channel, serdes_enable.
-
+	
 config SPRD_MIPI_LOG_R5P0
 	tristate "Spreadtrum SoC Modem Debug Log Driver_R5P0 (sharkl5/sharkl5pro)"
 	depends on OF
 	help
 	  Just for sprd D-PHY that support SerDes R5P0 and CSI_DSI TWPLL
 	  Say Y here to support R5P0 MIPI LOG support.
-
+	
 	  Varian sharkl5/sharkl5pro dari SPRD_MODEM_DEBUG (donor
 	  .../debug_log/sharkl5/{main.c,phy.c}, sumber blob mipi_driver.ko).
 	  Driver platform-nya mencocokkan node DT modem-dbg-log@324f0000 yang
@@ -42,3 +42,4 @@ config SPRD_MIPI_LOG_R5P0
 	  (0x0008, 0x0078, 0x008C) didefinisikan lokal di main.c dengan
 	  kutipan header ASIC auto-generated milik vendor di fork U-Boot
 	  (chip_sharkl5pro/{mm_ahb.h,anlg_phy_g10.h}).
+	

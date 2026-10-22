@@ -1,0 +1,5 @@
+00101000 __cfi_check_fail Function
+00101030 sprd_time_sync_fn Function
+00102000 __cfi_check Function
+00103000 sprd_send_ap_time Function
+00103008 __ubsan_handle_cfi_check_fail_abort Function

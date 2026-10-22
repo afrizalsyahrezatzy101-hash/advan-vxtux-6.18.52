@@ -11,7 +11,7 @@ config HSA_AMD
 	select DRM_AMDGPU_USERPTR
 	help
 	  Enable this if you want to use HSA features on AMD GPU devices.
-
+	
 config HSA_AMD_SVM
 	bool "Enable HMM-based shared virtual memory manager"
 	depends on HSA_AMD && DEVICE_PRIVATE
@@ -24,7 +24,7 @@ config HSA_AMD_SVM
 	  preemptions and one based on page faults. To enable page fault
 	  based memory management on most GFXv9 GPUs, set the module
 	  parameter amdgpu.noretry=0.
-
+	
 config HSA_AMD_P2P
 	bool "HSA kernel driver support for peer-to-peer for AMD GPU devices"
 	depends on HSA_AMD && PCI_P2PDMA && DMABUF_MOVE_NOTIFY
@@ -33,8 +33,9 @@ config HSA_AMD_P2P
 	  the PCIe bus. This can improve performance of multi-GPU compute
 	  applications and libraries by enabling GPUs to access data directly
 	  in peer GPUs' memory without intermediate copies in system memory.
-
+	
 	  This P2P feature is only enabled on compatible chipsets, and between
 	  GPUs with large memory BARs that expose the entire VRAM in PCIe bus
 	  address space within the physical address limits of the GPUs.
-
+	
+	

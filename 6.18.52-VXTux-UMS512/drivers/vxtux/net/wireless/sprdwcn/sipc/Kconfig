@@ -7,3 +7,4 @@ config WCN_SIPC
 	  chip sipc Support.
 	  Please insmod this module before any other
 	  WCN subsystems. Thanks.
+	

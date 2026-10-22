@@ -14,24 +14,24 @@ config VIDEO_V4L2_SUBDEV_API
 	help
 	  Enables the V4L2 sub-device pad-level userspace API used to configure
 	  video format, size and frame rate between hardware blocks.
-
+	
 	  This API is mostly used by camera interfaces in embedded platforms.
-
+	
 config VIDEO_ADV_DEBUG
 	bool "Enable advanced debug functionality on V4L2 drivers"
 	help
 	  Say Y here to enable advanced debugging functionality on some
 	  V4L devices.
 	  In doubt, say N.
-
+	
 config VIDEO_FIXED_MINOR_RANGES
 	bool "Enable old-style fixed minor ranges on drivers/video devices"
 	help
 	  Say Y here to enable the old-style fixed-range minor assignments.
 	  Only useful if you rely on the old behavior and use mknod instead of udev.
-
+	
 	  When in doubt, say N.
-
+	
 # Used by drivers that need tuner.ko
 config VIDEO_TUNER
 	tristate
@@ -64,9 +64,9 @@ config V4L2_FLASH_LED_CLASS
 	help
 	  Say Y here to enable V4L2 flash API support for LED flash
 	  class drivers.
-
+	
 	  When in doubt, say N.
-
+	
 config V4L2_FWNODE
 	tristate
 	select V4L2_ASYNC

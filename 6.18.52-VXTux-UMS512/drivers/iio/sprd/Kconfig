@@ -14,3 +14,4 @@ config VXTUX_SENSORHUB
 	  (identical build v4 vermagic, in Magisk overlay). get_hardware_info_data
 	  available as built-in (kallsyms hardware_info_*). This folder only
 	  symbol bridge for fuel_gauge/tddi/tp if needed; default n.
+	

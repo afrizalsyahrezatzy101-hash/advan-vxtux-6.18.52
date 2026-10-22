@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
 /*
  * Copyright (C) 2020 Unisoc Inc.
  */
@@ -182,10 +183,10 @@ struct gsp_lite_r2p0_cfg_user {
 
 struct drm_gsp_lite_r2p0_cfg_user {
 	__u8 gsp_id;
-	bool async;
+	_Bool async;
 	__u32 size;
 	__u32 num;
-	bool split;
+	_Bool split;
 	struct gsp_lite_r2p0_cfg_user *config;
 };
 

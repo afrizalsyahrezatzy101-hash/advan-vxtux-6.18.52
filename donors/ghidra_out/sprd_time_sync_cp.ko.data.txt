@@ -1,0 +1,12 @@
+00102014 __UNIQUE_ID_author132 Label
+00102029 __UNIQUE_ID_description133 Label
+0010204e __UNIQUE_ID_license134 Label
+0010205d __UNIQUE_ID_depends128 Label
+00102074 __UNIQUE_ID_intree127 Label
+0010207d __UNIQUE_ID_name126 Label
+00102094 __UNIQUE_ID_vermagic125 Label
+001020d0 ____versions Label
+00102190 _note_6 Label
+001021c0 __this_module Label
+.comment::00000000 ElfComment[0] Label
+.comment::0000009d ElfComment[1] Label

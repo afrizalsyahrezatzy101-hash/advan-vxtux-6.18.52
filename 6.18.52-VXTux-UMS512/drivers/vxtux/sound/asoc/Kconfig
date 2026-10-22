@@ -18,7 +18,7 @@ menuconfig VXTUX_SND_SPRD_ASOC
 	  Utilitas ASoC Unisoc dari fork GPL 5.4: sprd-asoc-common (regmap
 	  AGCP/AON/PMU + debug), sprd-asoc-card-utils (+hook/legacy), codec
 	  dummy playback, dan manajer daya audio SC27xx.
-
+	
 if VXTUX_SND_SPRD_ASOC
 
 config VXTUX_SND_SPRD_CARD
@@ -28,7 +28,7 @@ config VXTUX_SND_SPRD_CARD
 	  Menyediakan simbol yang di blob diekspor snd-soc-sprd-card.ko:
 	  arch_audio_{get,set}_{aon_apb,agcp_ahb,pmu_apb,ap_apb,anlg_phy}_gpr,
 	  set_agcp_ahb_offset, sprd_audio_debug_init, asoc_sprd_card_probe dll.
-
+	
 config VXTUX_SND_SPRD_DUMMY_CODEC
 	bool "Unisoc ASoC dummy playback codec"
 	depends on VXTUX_SND_SPRD_CARD
@@ -36,16 +36,16 @@ config VXTUX_SND_SPRD_DUMMY_CODEC
 	help
 	  Pengganti blob snd-soc-sprd-dummy-codec.ko: dummy_playback_dai,
 	  sprd_dummy_playback_codec_{init,exit}.
-
+	
 config VXTUX_SND_SPRD_SC2730_POWER
 	bool "Unisoc SC27xx audio power manager"
 	depends on VXTUX_SND_SPRD_CARD
 	default n
 	help
 	  Pengganti blob snd-soc-sprd-codec-sc2730-power.ko.
-
+	
 config VXTUX_SND_SPRD_VBC_V4
-	bool "Unisoc VBC v4 codec-DAI + FE-DAI + pcm-routing (vbc-v4)"
+	tristate "Unisoc VBC v4 codec-DAI + FE-DAI + pcm-routing (vbc-v4)"
 	depends on SPRD_AUDIO_MCDT && SPRD_AUDIO_SIPC
 	depends on VXTUX_SND_SPRD_CARD
 	default n
@@ -54,7 +54,7 @@ config VXTUX_SND_SPRD_VBC_V4
 	  Pengganti blob snd-soc-sprd-vbc-v4.ko + snd-soc-sprd-vbc-fe.ko:
 	  vbc-dai/vbc-phy-v4/vbc-codec (4332 baris, shim API legacy->component),
 	  sprd-fe-dai, dan pcm-routing (blob snd-soc-sprd-pcm-routing).
-
+	
 config VXTUX_SND_SPRD_PCM_ROUTING
 	bool "Unisoc ASoC pcm-routing platform"
 	depends on VXTUX_SND_SPRD_CARD
@@ -62,7 +62,18 @@ config VXTUX_SND_SPRD_PCM_ROUTING
 	help
 	  Pengganti blob snd-soc-sprd-pcm-routing.ko: sprd_routing_pcm_driver,
 	  agdsp_access_enable/disable, get_dma_data_params antar-komponen.
-
+	
+config VXTUX_SND_SPRD_DMAENGINE_PCM
+	tristate "Unisoc ASoC DMA-engine platform (sprd-dmaengine-pcm)"
+	depends on VXTUX_SND_SPRD_CARD
+	depends on SPRD_AUDIO_MEMORY_MANAGER && SPRD_AUDIO_AGDSP_ACCESS
+	default n
+	help
+	  Pengganti blob sprd-dmaengine-pcm.ko (5.4.210). Platform ASoC
+	  component "sprd-pcm-dma" untuk i2s/tdm DMA: hw_params, trigger,
+	  pointer, mmap, PM notifier, dan proc ALSA "sprd-dmaengine".
+	  Modul harus tetap bernama sprd-dmaengine-pcm.ko.
+	
 config VXTUX_SND_SPRD_SC2730
 	bool "Unisoc SC2730 audio codec + headset"
 	depends on VXTUX_SND_SPRD_CARD
@@ -72,5 +83,5 @@ config VXTUX_SND_SPRD_SC2730
 	  Pengganti blob snd-soc-sprd-codec-sc2730.ko: sprd-codec.c (regmap-less
 	  codec, read/write ops langsung), headset deteksi jack, termasuk
 	  driver mesin vbc-rxpx-codec-sc27xx (compatible "sprd,vbc-v4-codec-sc2730").
-
+	
 endif # VXTUX_SND_SPRD_ASOC

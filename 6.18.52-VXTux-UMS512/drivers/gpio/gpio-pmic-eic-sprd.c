@@ -12,6 +12,9 @@
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
 
+/* Empty stub in the stock blob; see the definition below. */
+void sprd_pmic_eic_set(void);
+
 /* EIC registers definition */
 #define SPRD_PMIC_EIC_DATA		0x0
 #define SPRD_PMIC_EIC_DMSK		0x4
@@ -374,6 +377,17 @@ static struct platform_driver sprd_pmic_eic_driver = {
 		.of_match_table	= sprd_pmic_eic_of_match,
 	},
 };
+
+/*
+ * The stock blob carries this as an empty stub: objdump of the blob shows a
+ * single "ret" at 0x630 and nothing in the module calls it.  It is a
+ * placeholder the vendor left in, and a port that drops the name breaks
+ * anything looking the symbol up by name.
+ */
+void sprd_pmic_eic_set(void)
+{
+}
+EXPORT_SYMBOL_GPL(sprd_pmic_eic_set);
 
 module_platform_driver(sprd_pmic_eic_driver);
 

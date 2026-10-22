@@ -3234,17 +3234,17 @@ static const struct l2cap_ops smp_chan_ops = {
 	.get_sndtimeo		= l2cap_chan_no_get_sndtimeo,
 };
 
-static inline int smp_new_conn_cb(struct l2cap_chan *chan,
-				  struct l2cap_chan *new_chan)
+static inline int smp_new_conn_cb(struct l2cap_chan *pchan,
+				  struct l2cap_chan *chan)
 {
-	new_chan->ops = &smp_chan_ops;
+	chan->ops = &smp_chan_ops;
 
 	/* Other L2CAP channels may request SMP routines in order to
 	 * change the security level. This means that the SMP channel
 	 * lock must be considered in its own category to avoid lockdep
 	 * warnings.
 	 */
-	atomic_set(&new_chan->nesting, L2CAP_NESTING_SMP);
+	atomic_set(&chan->nesting, L2CAP_NESTING_SMP);
 
 	return 0;
 }

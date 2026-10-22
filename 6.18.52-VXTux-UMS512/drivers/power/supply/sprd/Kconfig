@@ -25,11 +25,12 @@ config SPRD_BATTERY_INFO
 	  out of device tree, from the node pointed at by the "monitored-battery"
 	  phandle of the fuel gauge. No MMIO access. Five EXPORT_SYMBOL_GPL,
 	  identical to the vendor blob sprd_battery_info.ko.
-
+	
 	  Ported from drivers/power/supply/sprd_battery_info.c of the GPL donor
 	  (951 lines, md5 identical between bocchi and marohinmark).
-
+	
 	  fgauge_get_profile_id() (battery profile index) is provided by
 	  unisoc_battery_id.c — a port of the donor's unisoc_battery.c
 	  detection path (ADC + NTC ranges). Without an io-channel "batt_id"
 	  in DT, the donor's own fallback applies: profile 0 (single battery).
+	

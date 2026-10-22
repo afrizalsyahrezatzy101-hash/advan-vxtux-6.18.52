@@ -319,7 +319,7 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
 	 */
 	cpu_uninstall_idmap();
 
-	xen_early_init();
+	/* XEN disabled in V17 build - was: xen_early_init(); */
 	efi_init();
 
 	if (!efi_enabled(EFI_BOOT)) {

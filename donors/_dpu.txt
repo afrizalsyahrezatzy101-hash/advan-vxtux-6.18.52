@@ -1,0 +1,495 @@
+/*======== get_dpu_work_index ========*/
+// get_dpu_work_index @ 0010b8c8
+// signature: undefined get_dpu_work_index(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_work_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc);
+}
+
+
+/*======== set_dpu_work_index ========*/
+// set_dpu_work_index @ 0010b8b8
+// signature: undefined set_dpu_work_index(void)
+// calling convention: unknown
+
+
+void set_dpu_work_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc) = param_2;
+  return;
+}
+
+
+/*======== get_dpu_work_freq ========*/
+// get_dpu_work_freq @ 0010b9c4
+// signature: undefined get_dpu_work_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_work_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc);
+  if (map_table == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_001013c0 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_001013d8 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_001013f0 == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_00101408 == iVar1) {
+    lVar2 = 4;
+  }
+  else if (DAT_00101420 == iVar1) {
+    lVar2 = 5;
+  }
+  else if (DAT_00101438 == iVar1) {
+    lVar2 = 6;
+  }
+  else {
+    if (DAT_00101450 != iVar1) {
+      return 0;
+    }
+    lVar2 = 7;
+  }
+  return (&DAT_001013b4)[lVar2 * 6];
+}
+
+
+/*======== set_dpu_work_freq ========*/
+// set_dpu_work_freq @ 0010b8f8
+// signature: undefined set_dpu_work_freq(void)
+// calling convention: unknown
+
+
+void set_dpu_work_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (DAT_001013b4 == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_001013cc == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_001013e4 == param_2) {
+    uVar1 = 2;
+  }
+  else if (DAT_001013fc == param_2) {
+    uVar1 = 3;
+  }
+  else if (DAT_00101414 == param_2) {
+    uVar1 = 4;
+  }
+  else if (DAT_0010142c == param_2) {
+    uVar1 = 5;
+  }
+  else if (DAT_00101444 == param_2) {
+    uVar1 = 6;
+  }
+  else {
+    if (DAT_0010145c != param_2) {
+      return;
+    }
+    uVar1 = 7;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc) = uVar1;
+  return;
+}
+
+
+/*======== get_dpu_idle_index ========*/
+// get_dpu_idle_index @ 0010b8e8
+// signature: undefined get_dpu_idle_index(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_idle_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0);
+}
+
+
+/*======== set_dpu_idle_index ========*/
+// set_dpu_idle_index @ 0010b8d8
+// signature: undefined set_dpu_idle_index(void)
+// calling convention: unknown
+
+
+void set_dpu_idle_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0) = param_2;
+  return;
+}
+
+
+/*======== get_dpu_idle_freq ========*/
+// get_dpu_idle_freq @ 0010bb78
+// signature: undefined get_dpu_idle_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_idle_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0);
+  if (map_table == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_001013c0 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_001013d8 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_001013f0 == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_00101408 == iVar1) {
+    lVar2 = 4;
+  }
+  else if (DAT_00101420 == iVar1) {
+    lVar2 = 5;
+  }
+  else if (DAT_00101438 == iVar1) {
+    lVar2 = 6;
+  }
+  else {
+    if (DAT_00101450 != iVar1) {
+      return 0;
+    }
+    lVar2 = 7;
+  }
+  return (&DAT_001013b4)[lVar2 * 6];
+}
+
+
+/*======== set_dpu_idle_freq ========*/
+// set_dpu_idle_freq @ 0010baac
+// signature: undefined set_dpu_idle_freq(void)
+// calling convention: unknown
+
+
+void set_dpu_idle_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (DAT_001013b4 == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_001013cc == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_001013e4 == param_2) {
+    uVar1 = 2;
+  }
+  else if (DAT_001013fc == param_2) {
+    uVar1 = 3;
+  }
+  else if (DAT_00101414 == param_2) {
+    uVar1 = 4;
+  }
+  else if (DAT_0010142c == param_2) {
+    uVar1 = 5;
+  }
+  else if (DAT_00101444 == param_2) {
+    uVar1 = 6;
+  }
+  else {
+    if (DAT_0010145c != param_2) {
+      return;
+    }
+    uVar1 = 7;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0) = uVar1;
+  return;
+}
+
+
+/*======== get_dpu_dvfs_table ========*/
+// get_dpu_dvfs_table @ 0010bc60
+// signature: undefined get_dpu_dvfs_table(void)
+// calling convention: unknown
+
+
+undefined8 get_dpu_dvfs_table(undefined4 *param_1)
+
+{
+  *param_1 = map_table;
+  param_1[1] = DAT_001013ac;
+  param_1[2] = DAT_001013b0;
+  param_1[3] = DAT_001013b4;
+  param_1[6] = DAT_001013c0;
+  param_1[7] = DAT_001013c4;
+  param_1[8] = DAT_001013c8;
+  param_1[9] = DAT_001013cc;
+  param_1[0xc] = DAT_001013d8;
+  param_1[0xd] = DAT_001013dc;
+  param_1[0xe] = DAT_001013e0;
+  param_1[0xf] = DAT_001013e4;
+  param_1[0x12] = DAT_001013f0;
+  param_1[0x13] = DAT_001013f4;
+  param_1[0x14] = DAT_001013f8;
+  param_1[0x15] = DAT_001013fc;
+  param_1[0x18] = DAT_00101408;
+  param_1[0x19] = DAT_0010140c;
+  param_1[0x1a] = DAT_00101410;
+  param_1[0x1b] = DAT_00101414;
+  param_1[0x1e] = DAT_00101420;
+  param_1[0x1f] = DAT_00101424;
+  param_1[0x20] = DAT_00101428;
+  param_1[0x21] = DAT_0010142c;
+  param_1[0x24] = DAT_00101438;
+  param_1[0x25] = DAT_0010143c;
+  param_1[0x26] = DAT_00101440;
+  param_1[0x27] = DAT_00101444;
+  param_1[0x2a] = DAT_00101450;
+  param_1[0x2b] = DAT_00101454;
+  param_1[0x2c] = DAT_00101458;
+  param_1[0x2d] = DAT_0010145c;
+  return 8;
+}
+
+
+/*======== set_dpu_dvfs_table ========*/
+// set_dpu_dvfs_table @ 0010bd74
+// signature: undefined set_dpu_dvfs_table(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_dpu_dvfs_table(undefined8 *param_1)
+
+{
+  _DAT_001013b0 = param_1[1];
+  DAT_001013b8 = param_1[2];
+  _map_table = *param_1;
+  return;
+}
+
+
+/*======== get_dpu_dvfs_status ========*/
+// get_dpu_dvfs_status @ 0010bd90
+// signature: undefined get_dpu_dvfs_status(void)
+// calling convention: unknown
+
+
+void get_dpu_dvfs_status(long param_1,undefined8 *param_2)
+
+{
+  ulong uVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 0xc) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  *param_2 = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 6) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[4] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 3) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[1] = puVar2;
+  param_2[6] = &DAT_001023b6;
+  param_2[10] = &DAT_001023b6;
+  uVar1 = (ulong)*(uint *)(lVar3 + 0x7c) & 7;
+  if ((uint)uVar1 < 6) {
+    puVar2 = (&PTR_DAT_00105d00)[uVar1];
+  }
+  else {
+    printk(&DAT_001035ed);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[7] = puVar2;
+  param_2[0xc] = &DAT_001023b6;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== set_dpu_gfree_wait_delay ========*/
+// set_dpu_gfree_wait_delay @ 0010bec8
+// signature: undefined set_dpu_gfree_wait_delay(void)
+// calling convention: unknown
+
+
+void set_dpu_gfree_wait_delay(long param_1,int param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x944) = *(uint *)(lVar1 + 0x944) & 0x3ff | param_2 << 10;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== set_dpu_freq_upd_en_byp ========*/
+// set_dpu_freq_upd_en_byp @ 0010bf20
+// signature: undefined set_dpu_freq_upd_en_byp(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_en_byp(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x48) = *(uint *)(lVar1 + 0x48) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== set_dpu_freq_upd_delay_en ========*/
+// set_dpu_freq_upd_delay_en @ 0010bf78
+// signature: undefined set_dpu_freq_upd_delay_en(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_delay_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x20;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffffdf | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== set_dpu_freq_upd_hdsk_en ========*/
+// set_dpu_freq_upd_hdsk_en @ 0010bfe0
+// signature: undefined set_dpu_freq_upd_hdsk_en(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_hdsk_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x10;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffffef | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== set_dpu_dvfs_swtrig_en ========*/
+// set_dpu_dvfs_swtrig_en @ 0010c048
+// signature: undefined set_dpu_dvfs_swtrig_en(void)
+// calling convention: unknown
+
+
+void set_dpu_dvfs_swtrig_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x1c) = *(uint *)(lVar1 + 0x1c) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+/*======== dpu_hw_dfs_en ========*/
+// dpu_hw_dfs_en @ 0010b860
+// signature: undefined dpu_hw_dfs_en(void)
+// calling convention: unknown
+
+
+void dpu_hw_dfs_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x14) = *(uint *)(lVar1 + 0x14) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+

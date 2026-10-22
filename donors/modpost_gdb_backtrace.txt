@@ -1,0 +1,237 @@
+modpost SIGSEGV — gdb backtrace, valgrind, root cause, fix
+==========================================================
+Date: 2026-10-20
+Workspace: /workspaces/vxtux-build/6.18.52-VXTux-UMS512  (codespace solid-tribble-9rjjxvjqq5pcpq5g)
+Binary under test: scripts/mod/modpost  (ELF64 x86-64 PIE, not stripped)
+Inputs: init/main.o, init/version.o, init/do_mounts.o  (all EM_AARCH64)
+Tools: gdb 15.1 (Ubuntu 15.1-1ubuntu1~24.04.1) — ALREADY PRESENT, no apt install needed.
+       valgrind 3.22.0, gcc 13, aarch64-linux-gnu-gcc.
+
+Test command:
+  gdb --batch -ex run -ex bt -ex 'bt full' -ex 'info registers' \
+      -ex 'thread apply all bt' -ex 'disassemble $pc-32,$pc+32' -ex quit \
+      --args ./scripts/mod/modpost -o /tmp/out.symvers -e \
+        ./init/main.o ./init/version.o ./init/do_mounts.o
+
+Invocation note: passing the whole gdb command as the last arg to
+`gh codespace ssh` is fragile — gh parses `--args` itself and the
+shell redirection captured gh's USAGE text instead of gdb output.
+Working form used here:
+  gh codespace ssh -c <cs> -- "cd <repo> && gdb --batch -ex run -ex bt -ex quit --args ./scripts/mod/modpost ..."
+
+==============================================================
+1. RAW gdb BACKTRACE (verbatim)
+==============================================================
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000055555555a9bf in read_symbols ()
+ERROR: modpost: missing MODULE_LICENSE() in ./init/main.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in ./init/main.o
+#0  0x000055555555a9bf in read_symbols ()
+#1  0x0000555555557b18 in main ()
+#0  0x000055555555a9bf in read_symbols ()
+No symbol table info available.
+#1  0x0000555555557b18 in main ()
+No symbol table info available.
+rax            0x0                 0
+rbx            0x8010d7d4b990      140809828874640   <-- BAD PTR (non-canonical on x86-64)
+rcx            0x7fffffffdefc      140737488346876
+rdx            0x21c000003         9059696643
+rsi            0xb400000113        773094113555
+rdi            0x13                19
+rbp            0x7ffff7d9f148      140737351337288
+rsp            0x7fffffffdea0      0x7fffffffdea0
+r8             0x0                 0
+r9             0x0                 0
+r10            0x7ffff7d4b978      140737351301496   <-- relocation buffer (mmap'd, valid)
+r11            0x7ffff7cf6000      140737350950912   <-- Elf64_Ehdr* of the .o being parsed
+r12            0xc                 12
+r13            0x7ffff7d515c0      140737351325120
+r14            0x5555555685e0      93824992314848
+r15            0x7ffff7d502e8      140737351320296
+rip            0x55555555a9bf      0x55555555a9bf <read_symbols+3727>
+eflags         0x10212             [ AF IF RF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7ffff7da1740      140737351653184
+gs_base        0x0                 0
+
+Thread 1 (Thread 0x7ffff7da1740 (LWP 225056) "modpost"):
+#0  0x000055555555a9bf in read_symbols ()
+#1  0x0000555555557b18 in main ()
+Dump of assembler code from 0x55555555a99f to 0x55555555a9df:
+   0x000055555555a99f <read_symbols+3695>: trex.WR and $0x28,%al
+   0x000055555555a9a2 <read_symbols+3698>: mov    0x10(%rsp),%rdx
+   0x000055555555a9a7 <read_symbols+3703>: mov    %r11,%rdi
+   0x000055555555a9aa <read_symbols+3706>: call   0x555555558530 <get_rel_type_and_sym.isra.0>
+   0x000055555555a9af <read_symbols+3711>: mov    0x5c(%rsp),%edx
+   0x000055555555a9b3 <read_symbols+3715>: mov    0x10(%r15),%rax
+   0x000055555555a9b7 <read_symbols+3719>: lea    (%rdx,%rdx,2),%rdx        ; rdx = rel_index*3
+   0x000055555555a9bb <read_symbols+3723>: lea    (%r10,%rdx,8),%rbx       ; rbx = r10 + rel_index*24
+=> 0x000055555555a9bf <read_symbols+3727>: mov    0x8(%rbx),%rcx         <-- SIGSEGV HERE
+   0x000055555555a9c3 <read_symbols+3731>: lea    (%rax,%rcx,1),%r14
+   0x000055555555a9c7 <read_symbols+3735>: movzwl 0x12(%r11),%eax
+   0x000055555555a9cc <read_symbols+3740>: cmp    $0xf3,%ax                ; 0xf3 == 243 == EM_RISCV
+   0x000055555555a9d0 <read_symbols+3744>: jne    0x55555555a917 <read_symbols+3559>
+   0x000055555555a9d6 <read_symbols+3750>: mov    %rbp,%rsi
+   0x000055555555a9d9 <read_symbols+3753>: lea    0x88a1(%rip),%rdi
+End of assembler dump.
+
+Identical crash for: main.o alone, version.o alone, do_mounts.o alone,
+main+version, and all three. Always rc=139 (SIGSEGV), always core dumped.
+Even a 3-line hello-world .o (x86-64) crashes it.
+
+==============================================================
+2. VALGRIND (--tool=memcheck --num-callers=25 --track-origins=yes)
+==============================================================
+==229277== Memcheck, a memory error detector
+==229277== Command: ./scripts/mod/modpost -o /tmp/out.symvers -e ./init/main.o
+ERROR: modpost: missing MODULE_LICENSE() in ./init/main.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in ./init/main.o
+==229277== Invalid read of size 8
+==229277==    at 0x10E9BF: read_symbols (in .../scripts/mod/modpost)
+==229277==    by 0x10BB17: main      (in .../scripts/mod/modpost)
+==229277==  Address 0x10e4acb998 is not stack'd, malloc'd or (recently) free'd
+==229277== Process terminating with default action of signal 11 (SIGSEGV)
+==229277==  Access not within mapped region at address 0x10E4ACB998
+==229277==    at 0x10E9BF: read_symbols
+==229277==    by 0x10BB17: main
+==229277== HEAP SUMMARY: 225 allocs, 1 frees, 30,581 bytes allocated
+==229277== LEAK SUMMARY: definitely lost: 0 ; indirectly lost: 0
+==229277==   possibly lost: 17,673 bytes in 222 blocks
+==229277==   still reachable: 6,540 bytes in 2 blocks
+==229277== ERROR SUMMARY: 1 errors from 1 contexts
+
+=> Exactly ONE error, an unmapped read. NOT a use-after-free, NOT a
+   heap overflow, NOT corruption of earlier allocations. The pointer
+   was simply never valid.
+
+==============================================================
+3. FAULT ANALYSIS
+==============================================================
+r11 = 0x7ffff7cf6000 is the Elf64_Ehdr of init/main.o. Verified live in gdb:
+    e_ident[EI_CLASS] = 2        (ELFCLASS64)
+    e_machine        = 183      (EM_AARCH64)
+    e_shoff          = 693240    (0xa93f8)
+    e_shnum          = 71
+
+Section headers of init/main.o were parsed independently and are CLEAN:
+    .symtab           type=2   off=0x000000055978  size=11640 entsz=24
+    .rela.text        type=4   off=0x00000005a2e8  size=4824
+    .rela.debug_info  type=4   off=0x0000000601f8  size=265776
+    -> no 4 GiB bias, no bit-32 corruption, no injected garbage.
+       (An earlier hypothesis that section offsets carried a 0x100000000
+        bias was MY OWN parsing bug — I read sh_size at +0x20 and used it
+        as the offset. Correct Elf64_Shdr layout is name/4, type/4,
+        flags/8, addr/8, offset/8, size/8. The headers are fine.)
+
+The bad rbx decomposes exactly:
+    rbx - r10 = 72477573144
+    72477573144 / 24 = 3,019,898,881  == exactly the r_sym modpost printed
+    via its own OOBRELA diagnostic.
+
+modpost's own log lines during the crash:
+    WARNING: modpost: OOBRELA r_sym=3019898881 nsym=485 fromsec=.text
+    WARNING: modpost: OOBRELA r_sym=33554432   nsym=4    fromsec=.eh_frame
+    WARNING: modpost: OOBRELA r_sym=83886081    nsym=15   fromsec=.text.h
+
+==============================================================
+4. ROOT CAUSE — PROVEN
+==============================================================
+`git diff scripts/mod/modpost.h` shows a local "Bionic <elf.h>"
+compatibility shim (65 added lines, pre-existing in the tree, NOT mine):
+
+  +#define ELF_R_SYM(i)     ((i) >> 8)
+  +#define ELF_R_TYPE(i)    ((i) & 0xff)
+  ...
+  +#define ELF64_R_SYM(i)   ELF_R_SYM(i)     <-- 32-bit ARM encoding!
+  +#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+  +#define ELF32_R_SYM(i)   ELF_R_SYM(i)
+  (this block is repeated THREE times, at lines ~19, ~46 and ~107)
+
+scripts/mod/elfconfig.h:  #define KERNEL_ELFCLASS ELFCLASS64
+so modpost.c resolves ELF_R_SYM -> ELF64_R_SYM -> ((i) >> 8).
+
+CORRECT ELF64 encoding is (i) >> 32.  The >>8 form is the 32-bit ARM
+relocation encoding. Mixing them shifts every symbol index by 24 bits.
+
+ARITHMETIC PROOF (ground truth read straight out of the .o files):
+
+  /tmp/t3.o  (3-line x86-64 hello world), .rela.eh_frame:
+      r_info = 0x0000000200000002
+      r_info >> 32 = 2                  (true r_sym; nsym=4)
+      r_info >> 8  = 0x2000000 = 33554432
+      modpost printed: OOBRELA r_sym=33554432   -> EXACT MATCH
+
+  init/main.o (EM_AARCH64), .rela.text:
+      r_info = 0x000000b400000101
+      r_info >> 32 = 0xb4 = 180          (true r_sym; nsym=485)
+      r_info >> 8  = 0xb4000001 = 3019898881
+      modpost printed: OOBRELA r_sym=3019898881  -> EXACT MATCH
+      (r_type low-32 = 0x101 = 257 = R_AARCH64_ABS64, correct)
+
+A standalone probe compiled on the codespace reproduces both numbers
+bit-for-bit from the two shift amounts. Root cause is certain.
+
+CONSEQUENCE: r_sym = 3,019,898,881 feeds `tsym = elf->symtab_start + r_sym`
+(modpost.c section_rela, ~line 1390). Elf_Sym is 24 bytes, so the pointer
+lands ~72 GB past the mmap'd image -> non-canonical -> SIGSEGV on the next
+load, which is `mov 0x8(%rbx),%rcx` at read_symbols+3727.
+
+This also explains why the crash is 100% reproducible and
+input-independent: every relocation-bearing object is mis-decoded.
+
+==============================================================
+5. CJK-INJECTION HYPOTHESIS (from MEMORY.md) — RULED OUT
+==============================================================
+- Scanned all .c/.h/.S/.lds/Makefile under scripts/mod/ plus
+  init/main.c, init/version.c, init/do_mounts.c, init/Kconfig,
+  init/Makefile for codepoints U+4E00..U+9FFF: ZERO hits.
+- init/main.o string table contains only normal kernel symbols.
+- The single apparent "CJK hit" under scripts/mod/ was my own Python
+  scan decoding the modpost ELF binary as UTF-8 — a tool artifact.
+- No CJK injection is present. It is NOT the cause of this SIGSEGV.
+  (The write_file CJK hazard noted in MEMORY.md is real as a general
+   hazard, but it did not manifest in these sources.)
+
+==============================================================
+6. FIX
+==============================================================
+In scripts/mod/modpost.h, at ALL THREE shim blocks (lines ~51, ~112,
+and wherever ELF64_R_SYM is re-aliased), change:
+
+  -#define ELF64_R_SYM(i)   ELF_R_SYM(i)
+  -#define ELF64_R_TYPE(i)  ELF_R_TYPE(i)
+  +#define ELF64_R_SYM(i)   ((i) >> 32)
+  +#define ELF64_R_TYPE(i)  ((i) & 0xffffffff)
+
+ELF32_R_SYM/ELF32_R_TYPE and the base ELF_R_SYM/ELF_R_TYPE/ELF_ST_* may
+stay as-is (they are correct for ELF32 and for the 32-bit ARM case the
+shim may still serve). Only the ELF64 family is wrong.
+
+Cleaner alternative if the shim is no longer needed on the build host:
+delete the shim entirely and just `#include <elf.h>`, letting glibc's
+correct ELF64_R_SYM/ELF64_R_TYPE win.
+
+AFTER FIX, modpost should parse cleanly with no OOBRELA warnings:
+    ./scripts/mod/modpost -o /tmp/out.symvers -e ./init/main.o init/version.o init/do_mounts.o
+
+==============================================================
+7. HYPOTHESIS LINE
+==============================================================
+H: modpost SIGSEGVs because the Bionic-compat shim in
+   scripts/mod/modpost.h hard-codes ELF64_R_SYM as (i)>>8 — the 32-bit
+   ARM relocation encoding — instead of the ELF64-correct (i)>>32. With
+   KERNEL_ELFCLASS==ELFCLASS64, modpost.c binds ELF_R_SYM to that broken
+   macro, so every ELF64 r_info is mis-decoded and the symbol index comes
+   back ~24 bits too large (e.g. 3019898881 instead of 180). That index is
+   added to elf->symtab_start, producing a non-canonical address, and the
+   next load — `mov 0x8(%rbx),%rcx` in section_rela's loop at
+   read_symbols+3727 — traps. Deterministic on every input, not CJK
+   injection, not heap corruption.

@@ -661,6 +661,18 @@ struct hci_dev {
 				     __u8 **vnd_data);
 	u8 (*classify_pkt_type)(struct hci_dev *hdev, struct sk_buff *skb);
 };
+/* ====== HCI PAST (Power Aware Scanning) not ported to VXTux 6.18 ====== */
+static inline bool past_receiver_capable(struct hci_dev *hdev)
+{
+	(void)hdev;
+	return false;
+}
+static inline bool past_sender_capable(struct hci_dev *hdev)
+{
+	(void)hdev;
+	return false;
+}
+
 
 #define hci_set_quirk(hdev, nr) set_bit((nr), (hdev)->quirk_flags)
 #define hci_clear_quirk(hdev, nr) clear_bit((nr), (hdev)->quirk_flags)
@@ -984,6 +996,7 @@ enum {
 	HCI_CONN_AUTH_FAILURE,
 	HCI_CONN_PER_ADV,
 	HCI_CONN_BIG_CREATED,
+	HCI_CONN_CREATE,
 	HCI_CONN_CREATE_CIS,
 	HCI_CONN_CREATE_BIG_SYNC,
 	HCI_CONN_BIG_SYNC,

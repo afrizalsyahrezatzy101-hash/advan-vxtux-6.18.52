@@ -8,3 +8,4 @@ config ZYNQMP_PM_DOMAINS
 	help
 	  Say yes to enable device power management through PM domains
 	  If in doubt, say N.
+	

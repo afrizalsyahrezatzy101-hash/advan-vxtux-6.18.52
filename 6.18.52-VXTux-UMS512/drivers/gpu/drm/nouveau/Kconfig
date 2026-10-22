@@ -30,7 +30,7 @@ config DRM_NOUVEAU
 	select SND_HDA_COMPONENT if SND_HDA_CORE
 	help
 	  Choose this option for open-source NVIDIA support.
-
+	
 config NOUVEAU_PLATFORM_DRIVER
 	bool "Nouveau (NVIDIA) SoC GPUs"
 	depends on DRM_NOUVEAU && ARCH_TEGRA
@@ -38,7 +38,7 @@ config NOUVEAU_PLATFORM_DRIVER
 	help
 	  Support for Nouveau platform driver, used for SoC GPUs as found
 	  on NVIDIA Tegra K1.
-
+	
 config NOUVEAU_DEBUG
 	int "Maximum debug level"
 	depends on DRM_NOUVEAU
@@ -46,7 +46,7 @@ config NOUVEAU_DEBUG
 	default 5
 	help
 	  Selects the maximum debug level to compile support for.
-
+	
 	  0 - fatal
 	  1 - error
 	  2 - warning
@@ -55,10 +55,10 @@ config NOUVEAU_DEBUG
 	  5 - trace (recommended)
 	  6 - paranoia
 	  7 - spam
-
+	
 	  The paranoia and spam levels will add a lot of extra checks which
 	  may potentially slow down driver operation.
-
+	
 config NOUVEAU_DEBUG_DEFAULT
 	int "Default debug level"
 	depends on DRM_NOUVEAU
@@ -66,14 +66,14 @@ config NOUVEAU_DEBUG_DEFAULT
 	default 3
 	help
 	  Selects the default debug level
-
+	
 config NOUVEAU_DEBUG_MMU
 	bool "Enable additional MMU debugging"
 	depends on DRM_NOUVEAU
 	default n
 	help
 	  Say Y here if you want to enable verbose MMU debug output.
-
+	
 config NOUVEAU_DEBUG_PUSH
 	bool "Enable additional push buffer debugging"
 	depends on DRM_NOUVEAU
@@ -81,7 +81,7 @@ config NOUVEAU_DEBUG_PUSH
 	help
 	  Say Y here if you want to enable verbose push buffer debug output
 	  and sanity checks.
-
+	
 config DRM_NOUVEAU_BACKLIGHT
 	bool "Support for backlight control"
 	depends on DRM_NOUVEAU
@@ -89,7 +89,7 @@ config DRM_NOUVEAU_BACKLIGHT
 	help
 	  Say Y here if you want to control the backlight of your display
 	  (e.g. a laptop panel).
-
+	
 config DRM_NOUVEAU_SVM
 	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
 	depends on DEVICE_PRIVATE
@@ -101,17 +101,17 @@ config DRM_NOUVEAU_SVM
 	help
 	  Say Y here if you want to enable experimental support for
 	  Shared Virtual Memory (SVM).
-
+	
 config DRM_NOUVEAU_CH7006
 	tristate "Chrontel ch7006 TV encoder"
 	depends on DRM_NOUVEAU
 	default m
 	help
 	  Support for Chrontel ch7006 and similar TV encoders.
-
+	
 	  This driver is currently only useful if you're also using
 	  the nouveau driver.
-
+	
 config DRM_NOUVEAU_SIL164
 	tristate "Silicon Image sil164 TMDS transmitter"
 	depends on DRM_NOUVEAU
@@ -119,3 +119,4 @@ config DRM_NOUVEAU_SIL164
 	help
 	  Support for sil164 and similar single-link (or dual-link
 	  when used in pairs) TMDS transmitters.
+	

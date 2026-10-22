@@ -22,6 +22,230 @@
 #include "gate.h"
 #include "mux.h"
 #include "pll.h"
+#include "reset.h"
+
+/*
+ * Soft reset maps owned by this driver.
+ *
+ * These are the stock ums512-clk.ko's own .data, decoded verbatim: the
+ * stock blob carries the eight tables below as module-local symbols and
+ * points its clock nodes' reset controllers at them. The reset id a
+ * consumer uses is the index into the table, which is what the stock
+ * DTB's "resets" property refers to (the i2c nodes use ids 3 and 8..12
+ * of ums512_ap_apb_resets, and ids 17 and 41 of ums512_aon_ahb_resets).
+ *
+ * They live here rather than in a separate file so ARRAY_SIZE() works:
+ * the tables are static, so their size is known at compile time.
+ */
+static const struct sprd_reset_map ums512_ap_apb_resets[] = {
+	{ 0x0004, BIT(0), 0x1000 },
+	{ 0x0004, BIT(1), 0x1000 },
+	{ 0x0004, BIT(2), 0x1000 },
+	{ 0x0004, BIT(3), 0x1000 },
+	{ 0x0004, BIT(4), 0x1000 },
+	{ 0x0004, BIT(5), 0x1000 },
+	{ 0x0004, BIT(6), 0x1000 },
+	{ 0x0004, BIT(7), 0x1000 },
+	{ 0x0004, BIT(8), 0x1000 },
+	{ 0x0004, BIT(9), 0x1000 },
+	{ 0x0004, BIT(10), 0x1000 },
+	{ 0x0004, BIT(11), 0x1000 },
+	{ 0x0004, BIT(12), 0x1000 },
+	{ 0x0004, BIT(13), 0x1000 },
+	{ 0x0004, BIT(14), 0x1000 },
+	{ 0x0004, BIT(15), 0x1000 },
+	{ 0x0004, BIT(16), 0x1000 },
+	{ 0x0004, BIT(17), 0x1000 },
+	{ 0x0004, BIT(18), 0x1000 },
+	{ 0x0004, BIT(19), 0x1000 },
+	{ 0x0004, BIT(20), 0x1000 },
+	{ 0x0004, BIT(21), 0x1000 },
+	{ 0x0004, BIT(22), 0x1000 },
+};
+
+/* ums512_mm_ahb_resets: 27 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_mm_ahb_resets[] = {
+	{ 0x0004, BIT(0), 0x1000 },
+	{ 0x0004, BIT(1), 0x1000 },
+	{ 0x0004, BIT(2), 0x1000 },
+	{ 0x0004, BIT(3), 0x1000 },
+	{ 0x0004, BIT(4), 0x1000 },
+	{ 0x0004, BIT(5), 0x1000 },
+	{ 0x0004, BIT(6), 0x1000 },
+	{ 0x0004, BIT(7), 0x1000 },
+	{ 0x0004, BIT(8), 0x1000 },
+	{ 0x0004, BIT(9), 0x1000 },
+	{ 0x0004, BIT(10), 0x1000 },
+	{ 0x0004, BIT(11), 0x1000 },
+	{ 0x0004, BIT(12), 0x1000 },
+	{ 0x0004, BIT(13), 0x1000 },
+	{ 0x0004, BIT(14), 0x1000 },
+	{ 0x0004, BIT(15), 0x1000 },
+	{ 0x0004, BIT(16), 0x1000 },
+	{ 0x0004, BIT(17), 0x1000 },
+	{ 0x0004, BIT(18), 0x1000 },
+	{ 0x0004, BIT(19), 0x1000 },
+	{ 0x0004, BIT(20), 0x1000 },
+	{ 0x0004, BIT(21), 0x1000 },
+	{ 0x0004, BIT(22), 0x1000 },
+	{ 0x0004, BIT(23), 0x1000 },
+	{ 0x0004, BIT(24), 0x1000 },
+	{ 0x0004, BIT(26), 0x1000 },
+	{ 0x0004, BIT(27), 0x1000 },
+};
+
+/* ums512_gpu_apb_resets: 2 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_gpu_apb_resets[] = {
+	{ 0x0000, BIT(0), 0x1000 },
+	{ 0x0000, BIT(1), 0x1000 },
+};
+
+/* ums512_audcp_ahb_resets: 15 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_audcp_ahb_resets[] = {
+	{ 0x0008, BIT(0), 0x1000 },
+	{ 0x0008, BIT(1), 0x1000 },
+	{ 0x0008, BIT(5), 0x1000 },
+	{ 0x0008, BIT(6), 0x1000 },
+	{ 0x0008, BIT(7), 0x1000 },
+	{ 0x0008, BIT(8), 0x1000 },
+	{ 0x0008, BIT(9), 0x1000 },
+	{ 0x0008, BIT(10), 0x1000 },
+	{ 0x0008, BIT(11), 0x1000 },
+	{ 0x0008, BIT(12), 0x1000 },
+	{ 0x0008, BIT(13), 0x1000 },
+	{ 0x0008, BIT(14), 0x1000 },
+	{ 0x0008, BIT(16), 0x1000 },
+	{ 0x0008, BIT(25), 0x1000 },
+	{ 0x0008, BIT(26), 0x1000 },
+};
+
+/* ums512_audcp_apb_resets: 3 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_audcp_apb_resets[] = {
+	{ 0x0004, BIT(1), 0x1000 },
+	{ 0x0004, BIT(2), 0x1000 },
+	{ 0x0004, BIT(3), 0x1000 },
+};
+
+/* ums512_aon_ahb_resets: 67 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_aon_ahb_resets[] = {
+	{ 0x000c, BIT(0), 0x1000 },
+	{ 0x000c, BIT(1), 0x1000 },
+	{ 0x000c, BIT(2), 0x1000 },
+	{ 0x000c, BIT(3), 0x1000 },
+	{ 0x000c, BIT(4), 0x1000 },
+	{ 0x000c, BIT(5), 0x1000 },
+	{ 0x000c, BIT(6), 0x1000 },
+	{ 0x000c, BIT(7), 0x1000 },
+	{ 0x000c, BIT(8), 0x1000 },
+	{ 0x000c, BIT(9), 0x1000 },
+	{ 0x000c, BIT(10), 0x1000 },
+	{ 0x000c, BIT(11), 0x1000 },
+	{ 0x000c, BIT(12), 0x1000 },
+	{ 0x000c, BIT(13), 0x1000 },
+	{ 0x000c, BIT(14), 0x1000 },
+	{ 0x0010, BIT(0), 0x1000 },
+	{ 0x0010, BIT(1), 0x1000 },
+	{ 0x0010, BIT(2), 0x1000 },
+	{ 0x0010, BIT(3), 0x1000 },
+	{ 0x0010, BIT(4), 0x1000 },
+	{ 0x0010, BIT(5), 0x1000 },
+	{ 0x0010, BIT(6), 0x1000 },
+	{ 0x0010, BIT(7), 0x1000 },
+	{ 0x0010, BIT(8), 0x1000 },
+	{ 0x0010, BIT(9), 0x1000 },
+	{ 0x0010, BIT(10), 0x1000 },
+	{ 0x0010, BIT(11), 0x1000 },
+	{ 0x0010, BIT(12), 0x1000 },
+	{ 0x0010, BIT(13), 0x1000 },
+	{ 0x0010, BIT(14), 0x1000 },
+	{ 0x0010, BIT(17), 0x1000 },
+	{ 0x0010, BIT(18), 0x1000 },
+	{ 0x0010, BIT(19), 0x1000 },
+	{ 0x0010, BIT(20), 0x1000 },
+	{ 0x0014, BIT(0), 0x1000 },
+	{ 0x0014, BIT(1), 0x1000 },
+	{ 0x0014, BIT(2), 0x1000 },
+	{ 0x0014, BIT(3), 0x1000 },
+	{ 0x0014, BIT(4), 0x1000 },
+	{ 0x0014, BIT(5), 0x1000 },
+	{ 0x0014, BIT(6), 0x1000 },
+	{ 0x0014, BIT(7), 0x1000 },
+	{ 0x0014, BIT(8), 0x1000 },
+	{ 0x0014, BIT(9), 0x1000 },
+	{ 0x0014, BIT(10), 0x1000 },
+	{ 0x0014, BIT(11), 0x1000 },
+	{ 0x0014, BIT(12), 0x1000 },
+	{ 0x0014, BIT(13), 0x1000 },
+	{ 0x0014, BIT(14), 0x1000 },
+	{ 0x0014, BIT(15), 0x1000 },
+	{ 0x0014, BIT(16), 0x1000 },
+	{ 0x0014, BIT(17), 0x1000 },
+	{ 0x0014, BIT(18), 0x1000 },
+	{ 0x0014, BIT(19), 0x1000 },
+	{ 0x0014, BIT(20), 0x1000 },
+	{ 0x0014, BIT(21), 0x1000 },
+	{ 0x0014, BIT(22), 0x1000 },
+	{ 0x0014, BIT(23), 0x1000 },
+	{ 0x0014, BIT(24), 0x1000 },
+	{ 0x0014, BIT(25), 0x1000 },
+	{ 0x0014, BIT(26), 0x1000 },
+	{ 0x0014, BIT(27), 0x1000 },
+	{ 0x0014, BIT(28), 0x1000 },
+	{ 0x0014, BIT(29), 0x1000 },
+	{ 0x0014, BIT(30), 0x1000 },
+	{ 0x0014, BIT(31), 0x1000 },
+	{ 0x0130, BIT(10), 0x1000 },
+};
+
+/* ums512_ap_ahb_resets: 15 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_ap_ahb_resets[] = {
+	{ 0x0004, BIT(0), 0x1000 },
+	{ 0x0004, BIT(1), 0x1000 },
+	{ 0x0004, BIT(2), 0x1000 },
+	{ 0x0004, BIT(3), 0x1000 },
+	{ 0x0004, BIT(4), 0x1000 },
+	{ 0x0004, BIT(5), 0x1000 },
+	{ 0x0004, BIT(6), 0x1000 },
+	{ 0x0004, BIT(7), 0x1000 },
+	{ 0x0004, BIT(8), 0x1000 },
+	{ 0x0004, BIT(9), 0x1000 },
+	{ 0x0004, BIT(10), 0x1000 },
+	{ 0x0004, BIT(11), 0x1000 },
+	{ 0x0004, BIT(12), 0x1000 },
+	{ 0x0004, BIT(13), 0x1000 },
+	{ 0x0004, BIT(14), 0x1000 },
+};
+
+/* ums512_pmu_apb_resets: 27 entries, decoded from the stock ums512-clk.ko .data */
+static const struct sprd_reset_map ums512_pmu_apb_resets[] = {
+	{ 0x00b0, BIT(0), 0x1000 },
+	{ 0x00b0, BIT(1), 0x1000 },
+	{ 0x00b0, BIT(2), 0x1000 },
+	{ 0x00b0, BIT(3), 0x1000 },
+	{ 0x00b0, BIT(4), 0x1000 },
+	{ 0x00b0, BIT(5), 0x1000 },
+	{ 0x00b0, BIT(6), 0x1000 },
+	{ 0x00b0, BIT(7), 0x1000 },
+	{ 0x00b0, BIT(8), 0x1000 },
+	{ 0x00b0, BIT(9), 0x1000 },
+	{ 0x00b0, BIT(11), 0x1000 },
+	{ 0x0000, 0x00000000, 0x0000 },
+	{ 0x00b0, BIT(12), 0x1000 },
+	{ 0x00b0, BIT(13), 0x1000 },
+	{ 0x00b0, BIT(14), 0x1000 },
+	{ 0x00b0, BIT(15), 0x1000 },
+	{ 0x00b0, BIT(16), 0x1000 },
+	{ 0x00b0, BIT(17), 0x1000 },
+	{ 0x00b0, BIT(18), 0x1000 },
+	{ 0x00b0, BIT(19), 0x1000 },
+	{ 0x00b0, BIT(20), 0x1000 },
+	{ 0x00b0, BIT(21), 0x1000 },
+	{ 0x00b0, BIT(22), 0x1000 },
+	{ 0x00b0, BIT(23), 0x1000 },
+	{ 0x00b0, BIT(24), 0x1000 },
+	{ 0x00b0, BIT(25), 0x1000 },
+	{ 0x00b0, BIT(26), 0x1000 },
+};
 
 #define UMS512_MUX_FLAG	\
 	(CLK_GET_RATE_NOCACHE | CLK_SET_RATE_NO_REPARENT)
@@ -109,10 +333,12 @@ static struct sprd_clk_desc ums512_pmu_gate_desc = {
 	.clk_clks	= ums512_pmu_gate_clks,
 	.num_clk_clks	= ARRAY_SIZE(ums512_pmu_gate_clks),
 	.hw_clks        = &ums512_pmu_gate_hws,
+	.resets		= ums512_pmu_apb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_pmu_apb_resets),
 };
 
 /* pll clock at g0 */
-static const u64 itable_dpll0[7] = { 6, 0, 0,
+static const u64 dpll0_ftable[7] = { 6, 0, 0,
 			1173000000ULL, 1475000000ULL,
 			1855000000ULL, 1866000000ULL };
 
@@ -130,7 +356,7 @@ static struct clk_bit_field f_dpll0[PLL_FACT_MAX] = {
 	{ .shift = 0,	.width = 0 },	/* postdiv	*/
 };
 static SPRD_PLL_HW(dpll0, "dpll0", &dpll0_gate.common.hw, 0x4, 3,
-		   itable_dpll0, f_dpll0, 240, 1000, 1000, 0, 0);
+		   dpll0_ftable, f_dpll0, 240, 1000, 1000, 0, 0);
 static CLK_FIXED_FACTOR_HW(dpll0_58m31, "dpll0-58m31", &dpll0.common.hw,
 			   32, 1, 0);
 
@@ -154,7 +380,7 @@ static struct sprd_clk_desc ums512_g0_pll_desc = {
 };
 
 /* pll clock at g2 */
-static const u64 itable_mpll[8] = { 7, 0,
+static const u64 mpll_ftable[8] = { 7, 0,
 			1400000000ULL, 1600000000ULL,
 			1800000000ULL, 2000000000ULL,
 			2200000000ULL, 2500000000ULL };
@@ -173,7 +399,7 @@ static struct clk_bit_field f_mpll[PLL_FACT_MAX] = {
 	{ .shift = 77,	.width = 1 },	/* postdiv	*/
 };
 static SPRD_PLL_HW(mpll1, "mpll1", &mpll1_gate.common.hw, 0x0, 3,
-		   itable_mpll, f_mpll, 240, 1000, 1000, 1, 1200000000);
+		   mpll_ftable, f_mpll, 240, 1000, 1000, 1, 1200000000);
 static CLK_FIXED_FACTOR_HW(mpll1_63m38, "mpll1-63m38", &mpll1.common.hw,
 			   32, 1, 0);
 
@@ -197,7 +423,7 @@ static struct sprd_clk_desc ums512_g2_pll_desc = {
 };
 
 /* pll at g3 */
-static const u64 itable[8] = { 7, 0, 0,
+static const u64 ftable[8] = { 7, 0, 0,
 			900000000ULL, 1100000000ULL,
 			1300000000ULL, 1500000000ULL,
 			1600000000ULL };
@@ -217,7 +443,7 @@ static struct clk_bit_field f_pll[PLL_FACT_MAX] = {
 };
 
 static SPRD_PLL_FW_NAME(rpll, "rpll", "ext-26m", 0x0, 3,
-			itable, f_pll, 240, 1000, 1000, 1, 750000000);
+			ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 
 static SPRD_SC_GATE_CLK_FW_NAME(audio_gate, "audio-gate", "ext-26m", 0x24,
 				0x1000, BIT(1), CLK_IGNORE_UNUSED, 0);
@@ -236,17 +462,17 @@ static struct clk_bit_field f_mpll2[PLL_FACT_MAX] = {
 	{ .shift = 77,	.width = 1 },	/* postdiv	*/
 };
 static SPRD_PLL_HW(mpll0, "mpll0", &mpll0_gate.common.hw, 0x54, 3,
-		   itable_mpll, f_mpll, 240, 1000, 1000, 1, 1200000000);
+		   mpll_ftable, f_mpll, 240, 1000, 1000, 1, 1200000000);
 static CLK_FIXED_FACTOR_HW(mpll0_56m88, "mpll0-56m88", &mpll0.common.hw,
 			   32, 1, 0);
 
-static const u64 itable_mpll2[6] = { 5,
+static const u64 mpll2_ftable[6] = { 5,
 			1200000000ULL, 1400000000ULL,
 			1600000000ULL, 1800000000ULL,
 			2000000000ULL };
 
 static SPRD_PLL_HW(mpll2, "mpll2", &mpll2_gate.common.hw, 0x9c, 3,
-		   itable_mpll2, f_mpll2, 240, 1000, 1000, 1, 1000000000);
+		   mpll2_ftable, f_mpll2, 240, 1000, 1000, 1, 1000000000);
 static CLK_FIXED_FACTOR_HW(mpll2_47m13, "mpll2-47m13", &mpll2.common.hw,
 			   32, 1, 0);
 
@@ -278,7 +504,7 @@ static struct sprd_clk_desc ums512_g3_pll_desc = {
 
 /* pll clock at gc */
 static SPRD_PLL_FW_NAME(twpll, "twpll", "ext-26m", 0x0, 3,
-			itable, f_pll, 240, 1000, 1000, 1, 750000000);
+			ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 static CLK_FIXED_FACTOR_HW(twpll_768m, "twpll-768m", &twpll.common.hw,
 			   2, 1, 0);
 static CLK_FIXED_FACTOR_HW(twpll_384m, "twpll-384m", &twpll.common.hw,
@@ -321,7 +547,7 @@ static CLK_FIXED_FACTOR_HW(twpll_12m29, "twpll-12m29", &twpll.common.hw,
 			   125, 1, 0);
 
 static SPRD_PLL_FW_NAME(lpll, "lpll", "ext-26m", 0x18, 3,
-			itable, f_pll, 240, 1000, 1000, 1, 750000000);
+			ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 static CLK_FIXED_FACTOR_HW(lpll_614m4, "lpll-614m4", &lpll.common.hw,
 			   2, 1, 0);
 static CLK_FIXED_FACTOR_HW(lpll_409m6, "lpll-409m6", &lpll.common.hw,
@@ -332,19 +558,19 @@ static CLK_FIXED_FACTOR_HW(lpll_30m72, "lpll-30m72", &lpll.common.hw,
 			   40, 1, 0);
 
 static SPRD_PLL_FW_NAME(isppll, "isppll", "ext-26m", 0x30, 3,
-			itable, f_pll, 240, 1000, 1000, 1, 750000000);
+			ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 static CLK_FIXED_FACTOR_HW(isppll_468m, "isppll-468m", &isppll.common.hw,
 			   2, 1, 0);
 static CLK_FIXED_FACTOR_HW(isppll_78m, "isppll-78m", &isppll.common.hw,
 			   12, 1, 0);
 
 static SPRD_PLL_HW(gpll, "gpll", &gpll_gate.common.hw, 0x48, 3,
-		   itable, f_pll, 240, 1000, 1000, 1, 750000000);
+		   ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 static CLK_FIXED_FACTOR_HW(gpll_40m, "gpll-40m", &gpll.common.hw,
 			   20, 1, 0);
 
 static SPRD_PLL_HW(cppll, "cppll", &cppll_gate.common.hw, 0x60, 3,
-		   itable, f_pll, 240, 1000, 1000, 1, 750000000);
+		   ftable, f_pll, 240, 1000, 1000, 1, 750000000);
 static CLK_FIXED_FACTOR_HW(cppll_39m32, "cppll-39m32", &cppll.common.hw,
 			   26, 1, 0);
 
@@ -454,6 +680,8 @@ static struct sprd_clk_desc ums512_apahb_gate_desc = {
 	.clk_clks	= ums512_apahb_gate,
 	.num_clk_clks	= ARRAY_SIZE(ums512_apahb_gate),
 	.hw_clks	= &ums512_apahb_gate_hws,
+	.resets		= ums512_ap_ahb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_ap_ahb_resets),
 };
 
 /* ap clks */
@@ -1546,6 +1774,8 @@ static struct sprd_clk_desc ums512_aon_gate_desc = {
 	.clk_clks	= ums512_aon_gate,
 	.num_clk_clks	= ARRAY_SIZE(ums512_aon_gate),
 	.hw_clks	= &ums512_aon_gate_hws,
+	.resets		= ums512_aon_ahb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_aon_ahb_resets),
 };
 
 /* audcp apb gates */
@@ -1588,6 +1818,8 @@ static const struct sprd_clk_desc ums512_audcpapb_gate_desc = {
 	.clk_clks	= ums512_audcpapb_gate,
 	.num_clk_clks	= ARRAY_SIZE(ums512_audcpapb_gate),
 	.hw_clks	= &ums512_audcpapb_gate_hws,
+	.resets		= ums512_audcp_apb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_audcp_apb_resets),
 };
 
 /* audcp ahb gates */
@@ -1700,6 +1932,8 @@ static const struct sprd_clk_desc ums512_audcpahb_gate_desc = {
 	.clk_clks	= ums512_audcpahb_gate,
 	.num_clk_clks	= ARRAY_SIZE(ums512_audcpahb_gate),
 	.hw_clks	= &ums512_audcpahb_gate_hws,
+	.resets		= ums512_audcp_ahb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_audcp_ahb_resets),
 };
 
 /* gpu clocks */
@@ -1756,6 +1990,8 @@ static struct sprd_clk_desc ums512_gpu_clk_desc = {
 	.clk_clks	= ums512_gpu_clk,
 	.num_clk_clks	= ARRAY_SIZE(ums512_gpu_clk),
 	.hw_clks	= &ums512_gpu_clk_hws,
+	.resets		= ums512_gpu_apb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_gpu_apb_resets),
 };
 
 /* mm clocks */
@@ -1998,6 +2234,8 @@ static struct sprd_clk_desc ums512_mm_gate_clk_desc = {
 	.clk_clks	= ums512_mm_gate_clk,
 	.num_clk_clks	= ARRAY_SIZE(ums512_mm_gate_clk),
 	.hw_clks	= &ums512_mm_gate_clk_hws,
+	.resets		= ums512_mm_ahb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_mm_ahb_resets),
 };
 
 /* ap apb gates */
@@ -2136,6 +2374,8 @@ static struct sprd_clk_desc ums512_apapb_gate_desc = {
 	.clk_clks	= ums512_apapb_gate,
 	.num_clk_clks	= ARRAY_SIZE(ums512_apapb_gate),
 	.hw_clks	= &ums512_apapb_gate_hws,
+	.resets		= ums512_ap_apb_resets,
+	.num_resets	= ARRAY_SIZE(ums512_ap_apb_resets),
 };
 
 static const struct of_device_id sprd_ums512_clk_ids[] = {
@@ -2176,6 +2416,7 @@ MODULE_DEVICE_TABLE(of, sprd_ums512_clk_ids);
 static int ums512_clk_probe(struct platform_device *pdev)
 {
 	const struct sprd_clk_desc *desc;
+	struct regmap *regmap;
 	int ret;
 
 	desc = device_get_match_data(&pdev->dev);
@@ -2185,6 +2426,20 @@ static int ums512_clk_probe(struct platform_device *pdev)
 	ret = sprd_clk_regmap_init(pdev, desc);
 	if (ret)
 		return ret;
+
+	regmap = platform_get_drvdata(pdev);
+
+	/*
+	 * The clock nodes that own soft-reset bits double as reset
+	 * providers: the stock DTB points the i2c nodes' "resets"
+	 * property at them. The stock blob registers the controller
+	 * before it registers the clocks.
+	 */
+	ret = sprd_clk_reset_register(&pdev->dev, regmap, desc);
+	if (ret) {
+		dev_err(&pdev->dev, "Failed to register reset controller\n");
+		return ret;
+	}
 
 	return sprd_clk_probe(&pdev->dev, desc->hw_clks);
 }

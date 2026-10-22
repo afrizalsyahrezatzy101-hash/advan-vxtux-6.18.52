@@ -58,7 +58,7 @@ ifneq ($(c-getrandom-y),)
 endif
 
 targets += vdso.lds
-CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+CPPFLAGS_vdso.lds += -P -U$(ARCH)
 
 # Link rule for the .so file, .lds has to be first
 $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE

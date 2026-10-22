@@ -5,7 +5,7 @@ config HAVE_CLK
 	help
 	  The <linux/clk.h> calls support software clock gating and
 	  thus are a key power management tool on many systems.
-
+	
 config HAVE_CLK_PREPARE
 	bool
 
@@ -17,7 +17,7 @@ config HAVE_LEGACY_CLK # TODO: Remove once all legacy users are migrated
 	  by platform/architecture code. This method is deprecated. Modern
 	  code should select COMMON_CLK instead and not define a custom
 	  'struct clk'.
-
+	
 menuconfig COMMON_CLK
 	bool "Common Clock Framework"
 	depends on !HAVE_LEGACY_CLK
@@ -30,7 +30,7 @@ menuconfig COMMON_CLK
 	  implementation of the clock API in include/linux/clk.h.
 	  Architectures utilizing the common struct clk should select
 	  this option.
-
+	
 if COMMON_CLK
 
 config COMMON_CLK_WM831X
@@ -39,7 +39,7 @@ config COMMON_CLK_WM831X
 	help
 	  Supports the clocking subsystem of the WM831x/2x series of
 	  PMICs from Wolfson Microelectronics.
-
+	
 source "drivers/clk/versatile/Kconfig"
 
 config COMMON_CLK_SCMI
@@ -48,34 +48,34 @@ config COMMON_CLK_SCMI
 	help
 	  This driver provides support for clocks that are controlled
 	  by firmware that implements the SCMI interface.
-
+	
 	  This driver uses SCMI Message Protocol to interact with the
 	  firmware providing all the clock controls.
-
+	
 config COMMON_CLK_SCPI
 	tristate "Clock driver controlled via SCPI interface"
 	depends on ARM_SCPI_PROTOCOL || COMPILE_TEST
 	help
 	  This driver provides support for clocks that are controlled
 	  by firmware that implements the SCPI interface.
-
+	
 	  This driver uses SCPI Message Protocol to interact with the
 	  firmware providing all the clock controls.
-
+	
 config COMMON_CLK_PWM
 	tristate "Clock driver for PWMs used as clock outputs"
 	depends on PWM
 	help
 	  Adapter driver so that any PWM output can be (mis)used as clock signal
 	  at 50% duty cycle.
-
+	
 config COMMON_CLK_FIXED_MMIO
 	bool "Clock driver for Memory Mapped Fixed values"
 	depends on COMMON_CLK && OF
 	depends on HAS_IOMEM
 	help
 	  Support for Memory Mapped IO Fixed clocks
-
+	
 source "drivers/clk/actions/Kconfig"
 source "drivers/clk/analogbits/Kconfig"
 source "drivers/clk/baikal-t1/Kconfig"
@@ -124,7 +124,7 @@ config CLK_KUNIT_TEST
 	select DTC
 	help
 	  Kunit tests for the common clock framework.
-
+	
 config CLK_FIXED_RATE_KUNIT_TEST
 	tristate "Basic fixed rate clk type KUnit test" if !KUNIT_ALL_TESTS
 	depends on KUNIT
@@ -132,7 +132,7 @@ config CLK_FIXED_RATE_KUNIT_TEST
 	select DTC
 	help
 	  KUnit tests for the basic fixed rate clk type.
-
+	
 config CLK_GATE_KUNIT_TEST
 	tristate "Basic gate type Kunit test" if !KUNIT_ALL_TESTS
 	depends on KUNIT
@@ -140,12 +140,12 @@ config CLK_GATE_KUNIT_TEST
 	default KUNIT_ALL_TESTS
 	help
 	  Kunit test for the basic clk gate type.
-
+	
 config CLK_FD_KUNIT_TEST
 	tristate "Basic fractional divider type Kunit test" if !KUNIT_ALL_TESTS
 	depends on KUNIT
 	default KUNIT_ALL_TESTS
 	help
 	  Kunit test for the clk-fractional-divider type.
-
+	
 endif

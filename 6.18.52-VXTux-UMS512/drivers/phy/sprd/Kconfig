@@ -13,12 +13,13 @@ config PHY_SPRD_UMS512_USB2
 	  USB2 High-Speed PHY untuk Unisoc UMS512/T618 (sharkl5pro),
 	  hasil port ABI dari blob vendor phy-sprd-sharkl5Pro.ko (5.4.210)
 	  ke API legacy usb_phy mainline 6.18.
-
+	
 	  Driver ini adalah GERBANG stack USB: MUSB (musb_sprd_vxtux)
 	  memanggil devm_usb_get_phy_by_phandle() lewat properti DT
 	  "usb-phy" dan tidak akan probe tanpa PHY terdaftar.
-
+	
 	  Node DT yang cocok: "sprd,sharkl5-phy" / "sprd,sharkl5pro-phy"
 	  (yaitu /soc/aon/hsphy@323b0000 di FDT stok).
 	  Register: AON APB 0x327D0000 + ANLG PHY G2 0x323B0000 lewat
 	  dua syscon; peta lengkap di docs/usb_register_map.md.
+	

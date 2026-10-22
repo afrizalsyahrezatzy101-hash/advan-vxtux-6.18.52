@@ -136,3 +136,6 @@ void sprd_destroy_action_queue(void *action_queue)
 
 	kfree(aq);
 }
+EXPORT_SYMBOL_GPL(sprd_add_action_ex);
+EXPORT_SYMBOL_GPL(sprd_create_action_queue);
+EXPORT_SYMBOL_GPL(sprd_destroy_action_queue);

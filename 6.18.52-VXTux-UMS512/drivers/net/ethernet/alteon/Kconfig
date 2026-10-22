@@ -9,12 +9,12 @@ config NET_VENDOR_ALTEON
 	depends on PCI
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Alteon cards. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_ALTEON
 
 config ACENIC
@@ -27,10 +27,10 @@ config ACENIC
 	  bytes/frame) however it requires that your switches can handle this
 	  as well. To enable Jumbo Frames, add `mtu 9000' to your ifconfig
 	  line.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called acenic.
-
+	
 config ACENIC_OMIT_TIGON_I
 	bool "Omit support for old Tigon I based AceNICs"
 	depends on ACENIC
@@ -41,7 +41,7 @@ config ACENIC_OMIT_TIGON_I
 	  version)).  This will reduce the size of the driver object by
 	  app. 100KB.  If you are not sure whether your card is a Tigon I or a
 	  Tigon II, say N here.
-
+	
 	  The safe and default value for this is N.
-
+	
 endif # NET_VENDOR_ALTEON

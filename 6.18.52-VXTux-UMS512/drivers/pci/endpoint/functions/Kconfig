@@ -10,9 +10,9 @@ config PCI_EPF_TEST
 	help
 	   Enable this configuration option to enable the test driver
 	   for PCI Endpoint.
-
+	
 	   If in doubt, say "N" to disable Endpoint test driver.
-
+	
 config PCI_EPF_NTB
 	tristate "PCI Endpoint NTB driver"
 	depends on PCI_ENDPOINT
@@ -23,9 +23,9 @@ config PCI_EPF_NTB
 	  controller functionality using multiple PCIe endpoint instances.
 	  It can support NTB endpoint function devices created using
 	  device tree.
-
+	
 	  If in doubt, say "N" to disable Endpoint NTB driver.
-
+	
 config PCI_EPF_VNTB
 	tristate "PCI Endpoint Virtual NTB driver"
 	depends on PCI_ENDPOINT
@@ -35,9 +35,9 @@ config PCI_EPF_VNTB
 	  Select this configuration option to enable the Non-Transparent
 	  Bridge (NTB) driver for PCIe Endpoint. NTB driver implements NTB
 	  between PCI Root Port and PCIe Endpoint.
-
+	
 	  If in doubt, say "N" to disable Endpoint NTB driver.
-
+	
 config PCI_EPF_MHI
 	tristate "PCI Endpoint driver for MHI bus"
 	depends on PCI_ENDPOINT && MHI_BUS_EP
@@ -45,5 +45,6 @@ config PCI_EPF_MHI
 	   Enable this configuration option to enable the PCI Endpoint
 	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
 	   devices such as SDX55.
-
+	
 	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
+	

@@ -26,10 +26,8 @@
 
 #if NVT_TOUCH_EXT_PROC
 
-#define NVT_FW_VERSION "nvt_fw_version"
-#define NVT_BASELINE "nvt_baseline"
-#define NVT_RAW "nvt_raw"
-#define NVT_DIFF "nvt_diff"
+/* NVT_FW_VERSION / NVT_BASELINE / NVT_RAW / NVT_DIFF are in nt36xxx.h,
+ * shared with nt36xxx_pen.c's teardown path. */
 
 extern int32_t nvt_selftest_open(struct inode *inode, struct file *file);
 extern int g_gesture;
@@ -52,10 +50,16 @@ static int32_t xdata[2048] = {0};
 static int32_t xdata_i[2048] = {0};
 static int32_t xdata_q[2048] = {0};
 
-static struct proc_dir_entry *NVT_proc_fw_version_entry;
-static struct proc_dir_entry *NVT_proc_baseline_entry;
-static struct proc_dir_entry *NVT_proc_raw_entry;
-static struct proc_dir_entry *NVT_proc_diff_entry;
+/*
+ * These four are referenced by nt36xxx_pen.c's nvt_extra_proc_deinit(),
+ * which removes the whole /proc set the way the stock blob does. The stock
+ * carries them as module bss symbols, not file-local ones, so they are
+ * non-static here for the same reason.
+ */
+struct proc_dir_entry *NVT_proc_fw_version_entry;
+struct proc_dir_entry *NVT_proc_baseline_entry;
+struct proc_dir_entry *NVT_proc_raw_entry;
+struct proc_dir_entry *NVT_proc_diff_entry;
 
 extern void nvt_rest_ddi(void);
 extern int gloal_reset_flag;
@@ -92,6 +96,7 @@ void nvt_change_mode(uint8_t mode)
 		msleep(20);
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_change_mode);
 
 /*******************************************************
 Description:
@@ -116,6 +121,7 @@ uint8_t nvt_get_fw_pipe(void)
 
 	return (buf[1] & 0x01);
 }
+EXPORT_SYMBOL_GPL(nvt_get_fw_pipe);
 
 /*******************************************************
 Description:
@@ -205,6 +211,7 @@ void nvt_read_mdata(uint32_t xdata_addr, uint32_t xdata_btn_addr)
 	//---set xdata index to EVENT BUF ADDR---
 	nvt_set_page(ts->mmap->EVENT_BUF_ADDR);
 }
+EXPORT_SYMBOL_GPL(nvt_read_mdata);
 
 /*******************************************************
 Description:
@@ -241,6 +248,7 @@ void nvt_get_mdata(int32_t *buf, uint8_t *m_x_num, uint8_t *m_y_num)
     *m_y_num = ts->y_num;
     memcpy(buf, xdata, ((ts->x_num * ts->y_num + TOUCH_KEY_NUM) * sizeof(int32_t)));
 }
+EXPORT_SYMBOL_GPL(nvt_get_mdata);
 
 /*******************************************************
 Description:
@@ -335,6 +343,7 @@ const struct seq_operations nvt_fw_version_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_fw_version_show
 };
+EXPORT_SYMBOL_GPL(nvt_fw_version_seq_ops);
 
 const struct seq_operations nvt_seq_ops = {
 	.start  = c_start,
@@ -342,6 +351,7 @@ const struct seq_operations nvt_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_show
 };
+EXPORT_SYMBOL_GPL(nvt_seq_ops);
 
 /*******************************************************
 Description:
@@ -351,7 +361,7 @@ Description:
 return:
 	n.a.
 *******************************************************/
-static int32_t nvt_fw_version_open(struct inode *inode, struct file *file)
+int32_t nvt_fw_version_open(struct inode *inode, struct file *file)
 {
 	if (mutex_lock_interruptible(&ts->lock)) {
 		return -ERESTARTSYS;
@@ -389,7 +399,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
-static int32_t nvt_baseline_open(struct inode *inode, struct file *file)
+int32_t nvt_baseline_open(struct inode *inode, struct file *file)
 {
 	if (mutex_lock_interruptible(&ts->lock)) {
 		return -ERESTARTSYS;
@@ -448,7 +458,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
-static int32_t nvt_raw_open(struct inode *inode, struct file *file)
+int32_t nvt_raw_open(struct inode *inode, struct file *file)
 {
 	if (mutex_lock_interruptible(&ts->lock)) {
 		return -ERESTARTSYS;
@@ -514,7 +524,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed. negative---failed.
 *******************************************************/
-static int32_t nvt_diff_open(struct inode *inode, struct file *file)
+int32_t nvt_diff_open(struct inode *inode, struct file *file)
 {
 	if (mutex_lock_interruptible(&ts->lock)) {
 		return -ERESTARTSYS;
@@ -1499,7 +1509,7 @@ int32_t nvt_extra_proc_init(void)
 
 
 
-	NVT_proc_fw_version_entry = proc_create(NVT_FW_VERSION, 0444, NULL, &nvt_fw_version_pops);
+	NVT_proc_fw_version_entry = proc_create(NVT_FW_VERSION, 0444, NULL, &nvt_fw_version_fops_proc_ops);
 	if (NVT_proc_fw_version_entry == NULL) {
 		NVT_ERR("create proc/nvt_fw_version Failed!\n");
 		return -ENOMEM;
@@ -1507,7 +1517,7 @@ int32_t nvt_extra_proc_init(void)
 		NVT_LOG("create proc/nvt_fw_version Succeeded!\n");
 	}
 
-	NVT_proc_baseline_entry = proc_create(NVT_BASELINE, 0444, NULL, &baseline_pops);
+	NVT_proc_baseline_entry = proc_create(NVT_BASELINE, 0444, NULL, &nvt_baseline_fops_proc_ops);
 	if (NVT_proc_baseline_entry == NULL) {
 		NVT_ERR("create proc/nvt_baseline Failed!\n");
 		return -ENOMEM;
@@ -1515,7 +1525,7 @@ int32_t nvt_extra_proc_init(void)
 		NVT_LOG("create proc/nvt_baseline Succeeded!\n");
 	}
 
-	NVT_proc_raw_entry = proc_create(NVT_RAW, 0444, NULL, &nvt_raw_pops);
+	NVT_proc_raw_entry = proc_create(NVT_RAW, 0444, NULL, &nvt_raw_fops_proc_ops);
 	if (NVT_proc_raw_entry == NULL) {
 		NVT_ERR("create proc/nvt_raw Failed!\n");
 		return -ENOMEM;
@@ -1523,7 +1533,7 @@ int32_t nvt_extra_proc_init(void)
 		NVT_LOG("create proc/nvt_raw Succeeded!\n");
 	}
 
-	NVT_proc_diff_entry = proc_create(NVT_DIFF, 0444, NULL, &delta_pops);
+	NVT_proc_diff_entry = proc_create(NVT_DIFF, 0444, NULL, &nvt_diff_fops_proc_ops);
 	if (NVT_proc_diff_entry == NULL) {
 		NVT_ERR("create proc/nvt_diff Failed!\n");
 		return -ENOMEM;
@@ -1534,4 +1544,5 @@ int32_t nvt_extra_proc_init(void)
 	return 0;
 
 }
+EXPORT_SYMBOL_GPL(nvt_extra_proc_init);
 #endif

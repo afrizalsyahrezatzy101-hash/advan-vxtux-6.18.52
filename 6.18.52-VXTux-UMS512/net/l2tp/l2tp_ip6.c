@@ -690,7 +690,7 @@ static int l2tp_ip6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 		goto out;
 
 	if (flags & MSG_ERRQUEUE)
-		return ipv6_recv_error(sk, msg, len);
+			return ipv6_recv_error(sk, msg, len, NULL);
 
 	skb = skb_recv_datagram(sk, flags, &err);
 	if (!skb)

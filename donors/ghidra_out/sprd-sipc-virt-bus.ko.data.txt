@@ -1,0 +1,17 @@
+00100008 sprd_sipc_virt_bus_driver Label
+00100158 sprd_sipc_virt_bus_of_match Label
+00100158 __mod_of__sprd_sipc_virt_bus_of_match_device_table Label
+001020e4 __UNIQUE_ID_author126 Label
+00102110 __UNIQUE_ID_description127 Label
+0010213c __UNIQUE_ID_license128 Label
+0010214b __UNIQUE_ID_alias129 Label
+0010216e __UNIQUE_ID_alias130 Label
+00102193 __UNIQUE_ID_depends128 Label
+0010219c __UNIQUE_ID_intree127 Label
+001021a5 __UNIQUE_ID_name126 Label
+001021bd __UNIQUE_ID_vermagic125 Label
+00102200 ____versions Label
+001023c0 _note_6 Label
+00102400 __this_module Label
+.comment::00000000 ElfComment[0] Label
+.comment::0000009d ElfComment[1] Label

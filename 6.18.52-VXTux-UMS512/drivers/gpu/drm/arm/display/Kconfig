@@ -10,5 +10,6 @@ config DRM_KOMEDA
 	help
 	  Choose this option if you want to compile the ARM Komeda display
 	  Processor driver. It supports the D71 variants of the hardware.
-
+	
 	  If compiled as a module it will be called komeda.
+	

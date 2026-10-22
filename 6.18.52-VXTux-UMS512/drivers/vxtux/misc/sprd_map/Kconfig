@@ -6,3 +6,4 @@ config SPRD_MAP
 	  Driver misc map_user Unisoc (port GPL 5.4 -> 6.18). Menyediakan /dev/map_user
 	  untuk mmap memori reserved (faceid-mem) oleh userspace vendor. ABI ioctl
 	  dipertahankan identik dengan blob.
+	

@@ -65,6 +65,16 @@ static inline void INET_ECN_dontxmit(struct sock *sk)
 		inet6_sk(sk)->tclass &= ~INET_ECN_MASK;
 }
 
+/* VXTux 6.18 backport: ECT(1) negotiation hook removed in upstream 6.18.
+ * The original negotiated between ECT(0) and ECT(1) codepoints per CA
+ * preference; 6.18 mainline collapses to ECT(0) only. The stub preserves
+ * the existing CA-side ECN setup behaviour.
+ */
+static inline void INET_ECN_xmit_ect_1_negotiation(struct sock *sk)
+{
+	INET_ECN_xmit(sk);
+}
+
 #define IP6_ECN_flow_init(label) do {		\
       (label) &= ~htonl(INET_ECN_MASK << 20);	\
     } while (0)

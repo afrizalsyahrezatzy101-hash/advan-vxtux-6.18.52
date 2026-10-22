@@ -191,7 +191,13 @@ static int audio_sipc_create(int target_id)
 	u32  size_inout = 0;
 	u32 smsg_txsize = 0;
 	u32 smsg_rxsize = 0;
-	static struct aud_smsg_ipc s_sipc_inst;
+	/*
+	 * clang 5.4 named this function-static "audio_sipc_create.s_sipc_inst";
+	 * gcc numbers its own ("s_sipc_inst.53") and nothing maps one to the
+	 * other, so pin the stock's name with an asm label.
+	 */
+	static struct aud_smsg_ipc s_sipc_inst
+		__asm__("audio_sipc_create.s_sipc_inst");
 	struct audio_ipc *sipc = aud_ipc_get();
 
 	smsg_base_p = audio_mem_alloc(IRAM_SMS, &size_inout);
@@ -707,6 +713,20 @@ err:
 	return ret;
 }
 
+/*
+ * The audio pipe is a MODULE (audio-pipe.ko) and it calls
+ * aud_send_cmd(). The SIPC core is built-in, so the symbol has to be
+ * exported for the module to link:
+ *
+ *   ERROR: modpost: "aud_send_cmd"
+ *   [drivers/vxtux/audio/audiosipc/audio-pipe.ko] undefined!
+ *
+ * The other aud_send_cmd_* variants are already exported for the same
+ * reason (EXPORT_SYMBOL_GPL(aud_send_cmd_no_wait) and
+ * EXPORT_SYMBOL_GPL(aud_send_cmd_no_param)).
+ */
+EXPORT_SYMBOL_GPL(aud_send_cmd);
+
 int aud_send_cmd_no_wait_param(u16 channel, int id, int stream,
 			       u32 cmd, void *para, size_t n)
 {
@@ -945,3 +965,16 @@ module_exit(audio_sipc_exit);
 
 MODULE_DESCRIPTION("audio_sipc");
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(aud_recv_block_param);
+EXPORT_SYMBOL(aud_send_use_noreplychan);
+
+EXPORT_SYMBOL(aud_get_aud_ipc_smsg_addr);
+EXPORT_SYMBOL(aud_get_aud_ipc_smsg_para_addr);
+EXPORT_SYMBOL(aud_send_block_param);
+EXPORT_SYMBOL(aud_send_cmd_no_wait_param);
+EXPORT_SYMBOL(aud_send_cmd_result);
+
+EXPORT_SYMBOL(aud_recv_cmd);
+EXPORT_SYMBOL(g_aud_ipc);
+EXPORT_SYMBOL(snd_vbc_sipc_deinit);

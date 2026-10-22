@@ -1,0 +1,1343 @@
+
+
+########## get_tx_fifo_mask.c ##########
+// get_tx_fifo_mask @ 00102030
+// signature: undefined get_tx_fifo_mask(void)
+// calling convention: unknown
+
+
+uint get_tx_fifo_mask(uint param_1,undefined8 param_2,undefined8 param_3,ulong param_4,ulong param_5
+                     ,ulong param_6,ulong param_7)
+
+{
+  uint uVar1;
+  uint uVar2;
+  uint uVar3;
+  uint uVar4;
+  uint uVar5;
+  ulong uVar6;
+  ulong uVar7;
+  int *piVar8;
+  uint uVar9;
+  ulong uVar10;
+  long lVar11;
+  undefined8 *in_x18;
+  uint uVar12;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  _raw_spin_lock(&mbox_lock);
+  uVar6 = (ulong)chan_num;
+  if (chan_num == 0) {
+    uVar12 = 0;
+  }
+  else {
+    param_1 = param_1 & 0xff;
+    if (chan_num == 1) {
+      uVar7 = 0;
+      uVar12 = 0;
+    }
+    else {
+      uVar10 = 0;
+      uVar9 = 0;
+      uVar12 = 0;
+      uVar7 = uVar6 & 0xfffffffe;
+      lVar11 = tx_data;
+      do {
+        uVar4 = 1 << (ulong)((uint)uVar10 & 0x1f);
+        uVar2 = uVar4 & param_1;
+        if (uVar2 != 0) {
+          param_4 = (ulong)*(uint *)(lVar11 + 0x200);
+        }
+        uVar5 = 1 << (ulong)((uint)uVar10 + 1 & 0x1f);
+        uVar1 = uVar5 & param_1;
+        if (uVar1 != 0) {
+          param_5 = (ulong)*(uint *)(lVar11 + 0x408);
+        }
+        if (uVar2 != 0) {
+          param_7 = (ulong)*(uint *)(lVar11 + 0x204);
+        }
+        if (uVar1 != 0) {
+          param_6 = (ulong)*(uint *)(lVar11 + 0x40c);
+        }
+        uVar3 = 0;
+        if ((int)param_4 != (int)param_7 && uVar2 != 0) {
+          uVar3 = uVar4;
+        }
+        uVar10 = uVar10 + 2;
+        uVar9 = uVar9 | uVar3;
+        uVar2 = 0;
+        if ((int)param_5 != (int)param_6 && uVar1 != 0) {
+          uVar2 = uVar5;
+        }
+        uVar12 = uVar12 | uVar2;
+        lVar11 = lVar11 + 0x410;
+      } while (uVar7 != uVar10);
+      uVar12 = uVar12 | uVar9;
+      if (uVar7 == uVar6) goto LAB_00102114;
+    }
+    piVar8 = (int *)(tx_data + uVar7 * 0x208 + 0x204);
+    do {
+      uVar9 = 1 << (ulong)((uint)uVar7 & 0x1f);
+      if (((uVar9 & param_1) != 0) && (piVar8[-1] != *piVar8)) {
+        uVar12 = uVar12 | uVar9;
+      }
+      uVar7 = uVar7 + 1;
+      piVar8 = piVar8 + 0x82;
+    } while (uVar6 != uVar7);
+  }
+LAB_00102114:
+  _raw_spin_unlock(&mbox_lock);
+  return uVar12;
+}
+
+
+
+
+########## mbox_phy_outbox_has_irq.c ##########
+// mbox_phy_outbox_has_irq @ 00103de4
+// signature: undefined mbox_phy_outbox_has_irq(void)
+// calling convention: unknown
+
+
+uint mbox_phy_outbox_has_irq(void)
+
+{
+  DataMemoryBarrier(0,1);
+  return *(uint *)(sprd_outbox_base + 0x18) & 1;
+}
+
+
+
+
+########## mbox_pm_event.c ##########
+// mbox_pm_event @ 00103510
+// signature: undefined mbox_pm_event(void)
+// calling convention: unknown
+
+
+undefined8 mbox_pm_event(undefined8 param_1,long param_2)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (g_mbox_nowakeup_base != 0) {
+    if (param_2 == 4) {
+      *(undefined4 *)(g_mbox_nowakeup_base + 0x1c) = g_irq_msk_backup;
+    }
+    else if (param_2 == 3) {
+      g_irq_msk_backup = *(undefined4 *)(g_mbox_nowakeup_base + 0x1c);
+      DataMemoryBarrier(0,1);
+      *(undefined4 *)(g_mbox_nowakeup_base + 0x1c) = 0xffffffff;
+    }
+  }
+  return 0;
+}
+
+
+
+
+########## mbox_pm_notifier.c ##########
+// mbox_pm_notifier @ 00102ad8
+// signature: undefined mbox_pm_notifier(void)
+// calling convention: unknown
+
+
+undefined8 mbox_pm_notifier(undefined8 param_1,long param_2)
+
+{
+  ulong uVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (param_2 == 5) {
+    pcVar2 = *(code **)(mbox_phy_ops + 0x30);
+    if (pcVar2 == __typeid__ZTSFbvE_global_addr) {
+      uVar1 = __typeid__ZTSFbvE_global_addr();
+      pcVar2 = mbox_wakeup_flag_callback_r1;
+    }
+    else {
+      __cfi_slowpath(0x741b966c574d47b1,pcVar2);
+      uVar1 = (*pcVar2)();
+      pcVar2 = mbox_wakeup_flag_callback_r1;
+    }
+    mbox_wakeup_flag_callback_r1 = pcVar2;
+    if ((uVar1 & 1) != 0) {
+      if (pcVar2 == (code *)0x0) {
+        printk(&DAT_00100953);
+      }
+      else {
+        if (pcVar2 != __typeid__ZTSFvbE_global_addr) {
+          __cfi_slowpath(0x301714697a011648,pcVar2);
+        }
+        (*pcVar2)(1);
+      }
+    }
+  }
+  return 1;
+}
+
+
+
+
+########## mbox_start_send_tx_fifo.c ##########
+// mbox_start_send_tx_fifo @ 00102178
+// signature: undefined mbox_start_send_tx_fifo(void)
+// calling convention: unknown
+
+
+void mbox_start_send_tx_fifo(undefined1 param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  mbox_tx_mask = param_1;
+  __wake_up(&deliver_thread_wait,3,1,0);
+  return;
+}
+
+
+
+
+########## sprd_mbox_change_wakeup_flag_r1.c ##########
+// sprd_mbox_change_wakeup_flag_r1 @ 001033a4
+// signature: undefined sprd_mbox_change_wakeup_flag_r1(void)
+// calling convention: unknown
+
+
+void sprd_mbox_change_wakeup_flag_r1(uint param_1)
+
+{
+  code *pcVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  pcVar1 = mbox_wakeup_flag_callback_r1;
+  if (mbox_wakeup_flag_callback_r1 == (code *)0x0) {
+    printk(&DAT_00100953);
+  }
+  else {
+    if (mbox_wakeup_flag_callback_r1 != __typeid__ZTSFvbE_global_addr) {
+      __cfi_slowpath(0x301714697a011648,mbox_wakeup_flag_callback_r1);
+    }
+    (*pcVar1)(param_1 & 1);
+  }
+  return;
+}
+
+
+
+
+########## sprd_mbox_debug_open.c ##########
+// sprd_mbox_debug_open @ 00102aa8
+// signature: undefined sprd_mbox_debug_open(void)
+// calling convention: unknown
+
+
+void sprd_mbox_debug_open(long param_1,undefined8 param_2)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  single_open(param_2,*(undefined8 *)(*(long *)(*(long *)(param_1 + 0x280) + 0xe0) + 0x38));
+  return;
+}
+
+
+
+
+########## sprd_mbox_debug_show.c ##########
+// sprd_mbox_debug_show @ 00103e0c
+// signature: undefined sprd_mbox_debug_show(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_debug_show(long param_1)
+
+{
+  undefined8 *in_x18;
+  int iVar1;
+  long lVar2;
+  int iVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(param_1 + 0x78);
+  iVar1 = 0x6e;
+  do {
+    seq_putc(param_1,0x2a);
+    iVar1 = iVar1 + -1;
+  } while (iVar1 != 0);
+  seq_putc(param_1,10);
+  seq_printf(param_1,"CHAN_NUM : %d\n",*(undefined4 *)(lVar2 + 0x18));
+  seq_printf(param_1,"INBOX_IRQ : %d\n",*(undefined4 *)(lVar2 + 0xbc));
+  seq_printf(param_1,"OUTBOX_IRQ : %d\n",*(undefined4 *)(lVar2 + 0xc0));
+  seq_printf(param_1,"OOB_IRQ : %d\n",*(undefined4 *)(lVar2 + 0xd0));
+  seq_printf(param_1,"OOB_ID : %ld\n",*(undefined8 *)(lVar2 + 0xd8));
+  seq_printf(param_1,"VERSION : 0x%x\n",*(undefined4 *)(lVar2 + 0xb8));
+  seq_printf(param_1,"mbox_rx_fifo_cnt : %d\n",mbox_rx_fifo_cnt);
+  seq_printf(param_1,"started_chan_msk : 0x%02x\n",g_started_chan_msk);
+  iVar1 = 0;
+  do {
+    iVar3 = 0x6e;
+    do {
+      seq_putc(param_1,0x2a);
+      iVar3 = iVar3 + -1;
+    } while (iVar3 != 0);
+    seq_putc(param_1,10);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    seq_printf(param_1,
+               "[INBOX %d]\n\t id: 0x%08x | msg_low: 0x%08x | msg_high:  0x%08x\n\t fifo_reset: 0x%08x | fifo_status: 0x%08x | irq_status: 0x%08x | irq_mask: 0x%08x\n"
+               ,iVar1);
+    iVar3 = 100;
+    do {
+      seq_putc(param_1,0x2d);
+      iVar3 = iVar3 + -1;
+    } while (iVar3 != 0);
+    seq_putc(param_1,10);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,1);
+    seq_printf(param_1,
+               "[OUTBOX %d]\n\t id: 0x%08x | msg_low: 0x%08x | msg_high:  0x%08x\n\t fifo_reset: 0x%08x | fifo_status: 0x%08x | irq_status: 0x%08x | irq_mask: 0x%08x\n\t depth: 0x%08x\n"
+               ,iVar1);
+    iVar1 = iVar1 + 1;
+  } while (iVar1 != 8);
+  iVar1 = 0x6e;
+  do {
+    seq_putc(param_1,0x2a);
+    iVar1 = iVar1 + -1;
+  } while (iVar1 != 0);
+  seq_putc(param_1,10);
+  return 0;
+}
+
+
+
+
+########## sprd_mbox_deliver_thread.c ##########
+// sprd_mbox_deliver_thread @ 00102868
+// signature: undefined sprd_mbox_deliver_thread(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 sprd_mbox_deliver_thread(long param_1)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  undefined8 uVar4;
+  long lVar5;
+  long lVar6;
+  undefined8 *in_x18;
+  uint uVar7;
+  ulong uVar8;
+  code *pcVar9;
+  undefined8 unaff_x30;
+  undefined8 local_98;
+  undefined8 local_90;
+  undefined8 uStack_88;
+  undefined8 local_80;
+  undefined8 uStack_78;
+  undefined8 local_70;
+  long local_68;
+  
+  *in_x18 = unaff_x30;
+  local_68 = ___stack_chk_guard;
+  local_70 = 0;
+  uVar2 = kthread_should_stop();
+joined_r0x001028a4:
+  do {
+    if ((uVar2 & 1) != 0) {
+      if (___stack_chk_guard == local_68) {
+        return 0;
+      }
+                    /* WARNING: Subroutine does not return */
+      __stack_chk_fail();
+    }
+    if (mbox_tx_mask == 0) {
+      local_80 = 0;
+      uStack_78 = 0;
+      local_90 = 0;
+      uStack_88 = 0;
+      local_98 = 0;
+      init_wait_entry(&local_98,0);
+      while (lVar3 = prepare_to_wait_event(&deliver_thread_wait,&local_98,1), mbox_tx_mask == 0) {
+        if (lVar3 != 0) {
+          if ((int)lVar3 == 0) goto LAB_0010295c;
+          _dev_warn(*(undefined8 *)(param_1 + 0x88),"mbox_deliver_thread is interrupted\n");
+          uVar2 = kthread_should_stop();
+          goto joined_r0x001028a4;
+        }
+        schedule();
+      }
+      finish_wait(&deliver_thread_wait,&local_98);
+    }
+LAB_0010295c:
+    uVar4 = _raw_spin_lock_irqsave(&mbox_lock);
+    uVar2 = (ulong)chan_num;
+    if (chan_num != 0) {
+      uVar8 = 0;
+      do {
+        if (((mbox_tx_mask >> (ulong)((uint)uVar8 & 0x1f) & 1) != 0) &&
+           (lVar3 = tx_data + uVar8 * 0x208, uVar7 = *(uint *)(lVar3 + 0x204),
+           *(uint *)(lVar3 + 0x200) != uVar7)) {
+          lVar5 = *(long *)(param_1 + 0x10);
+          lVar3 = tx_data;
+          do {
+            local_70 = *(undefined8 *)(lVar3 + uVar8 * 0x208 + (ulong)(uVar7 & 0x3f) * 8);
+            pcVar9 = *(code **)(*(long *)(param_1 + 0xe0) + 0x18);
+            if (1 < ((ulong)(pcVar9 + -0x10437c) >> 2 | (long)pcVar9 << 0x3e)) {
+              __cfi_slowpath(0xc19c8378abe429fc,pcVar9);
+            }
+            iVar1 = (*pcVar9)(lVar5 + uVar8 * 0xf8,&local_70);
+            lVar3 = tx_data;
+            if (iVar1 != 0) break;
+            uVar7 = uVar7 + 1;
+            lVar6 = tx_data + uVar8 * 0x208;
+            *(uint *)(lVar6 + 0x204) = uVar7;
+          } while (uVar7 != *(uint *)(lVar6 + 0x200));
+          uVar2 = (ulong)chan_num;
+        }
+        uVar8 = uVar8 + 1;
+      } while (uVar8 < uVar2);
+    }
+    mbox_tx_mask = 0;
+    _raw_spin_unlock_irqrestore(&mbox_lock,uVar4);
+    uVar2 = kthread_should_stop();
+  } while( true );
+}
+
+
+
+
+########## sprd_mbox_disable.c ##########
+// sprd_mbox_disable @ 001027fc
+// signature: undefined sprd_mbox_disable(void)
+// calling convention: unknown
+
+
+void sprd_mbox_disable(long param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (reg_ctrl_0 != 0) {
+    regmap_update_bits_base(reg_ctrl_0,reg_ctrl_1,reg_ctrl_2,0,0,0,0);
+    _dev_info(*(undefined8 *)(param_1 + 0x88),"mailbox disabled.\n");
+  }
+  return;
+}
+
+
+
+
+########## sprd_mbox_flush.c ##########
+// sprd_mbox_flush @ 00102d7c
+// signature: undefined sprd_mbox_flush(void)
+// calling convention: unknown
+
+
+void sprd_mbox_flush(long *param_1,undefined8 param_2)
+
+{
+  code *pcVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *param_1;
+  _dev_info(*(undefined8 *)(lVar2 + 0x88),"flush chan%ld\n",param_1[0x1e]);
+  pcVar1 = *(code **)(*(long *)(lVar2 + 0xe0) + 0x10);
+  if (1 < ((ulong)(pcVar1 + -0x104374) >> 2 | (long)pcVar1 << 0x3e)) {
+    __cfi_slowpath(0xb7f6835fab7e2fce,pcVar1);
+  }
+  (*pcVar1)(param_1,param_2);
+  return;
+}
+
+
+
+
+########## sprd_mbox_inbox_isr.c ##########
+// sprd_mbox_inbox_isr @ 001026ec
+// signature: undefined sprd_mbox_inbox_isr(void)
+// calling convention: unknown
+
+
+void sprd_mbox_inbox_isr(ulong param_1,long param_2)
+
+{
+  code *pcVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  pcVar1 = *(code **)(*(long *)(param_2 + 0xe0) + 0x20);
+  if (3 < ((ulong)(pcVar1 + -0x104384) >> 2 | (long)pcVar1 << 0x3e)) {
+    __cfi_slowpath(0xc6783f1d911d68d7,pcVar1);
+    param_1 = param_1 & 0xffffffff;
+  }
+  (*pcVar1)(param_1,param_2);
+  return;
+}
+
+
+
+
+########## sprd_mbox_index_xlate.c ##########
+// sprd_mbox_index_xlate @ 00102658
+// signature: undefined sprd_mbox_index_xlate(void)
+// calling convention: unknown
+
+
+long sprd_mbox_index_xlate(long param_1,long param_2)
+
+{
+  int iVar1;
+  long lVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = *(int *)(param_2 + 0xc);
+  if (iVar1 < *(int *)(param_1 + 0x18)) {
+    if (*(int *)(param_2 + 0x10) != 0) {
+      *(long *)(param_1 + 0xd8) = (long)iVar1;
+      *(ulong *)(param_1 + 200) =
+           *(long *)(param_1 + 0x98) + (ulong)(uint)(*(int *)(param_1 + 0xb4) * iVar1);
+    }
+    lVar2 = *(long *)(param_1 + 0x10) + (long)iVar1 * 0xf8;
+  }
+  else {
+    lVar2 = -0x16;
+  }
+  return lVar2;
+}
+
+
+
+
+########## sprd_mbox_outbox_isr.c ##########
+// sprd_mbox_outbox_isr @ 0010275c
+// signature: undefined sprd_mbox_outbox_isr(void)
+// calling convention: unknown
+
+
+undefined4 sprd_mbox_outbox_isr(undefined4 param_1,long param_2)
+
+{
+  undefined4 uVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  _raw_spin_lock(&outbox_lock);
+  pcVar2 = *(code **)(*(long *)(param_2 + 0xe0) + 0x28);
+  if (3 < ((ulong)(pcVar2 + -0x104384) >> 2 | (long)pcVar2 << 0x3e)) {
+    __cfi_slowpath(0xc6783f1d911d68d7,pcVar2);
+  }
+  uVar1 = (*pcVar2)(param_1,param_2);
+  _raw_spin_unlock(&outbox_lock);
+  return uVar1;
+}
+
+
+
+
+########## sprd_mbox_phy_flush.c ##########
+// sprd_mbox_phy_flush @ 001037b8
+// signature: undefined sprd_mbox_phy_flush(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 sprd_mbox_phy_flush(long *param_1,undefined8 param_2)
+
+{
+  long lVar1;
+  long lVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  ulong uVar4;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = _jiffies;
+  lVar3 = *param_1;
+  uVar4 = param_1[0x1e];
+  lVar2 = __msecs_to_jiffies(param_2);
+  if (_jiffies - (lVar2 + lVar1) < 0) {
+    do {
+      DataMemoryBarrier(0,1);
+      if ((1L << (uVar4 & 0x3f) & (ulong)(*(uint *)(*(long *)(lVar3 + 0x90) + 0x14) & 0xff)) == 0) {
+        mbox_chan_txdone(param_1,0);
+        return 0;
+      }
+      __const_udelay(0x10c7);
+    } while (_jiffies - (lVar2 + lVar1) < 0);
+  }
+  return 0xffffffc2;
+}
+
+
+
+
+########## sprd_mbox_phy_inbox_isr.c ##########
+// sprd_mbox_phy_inbox_isr @ 0010399c
+// signature: undefined sprd_mbox_phy_inbox_isr(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_phy_inbox_isr(undefined8 param_1,long param_2)
+
+{
+  uint uVar1;
+  char cVar2;
+  undefined4 uVar3;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar1 = *(uint *)(*(long *)(param_2 + 0x90) + 0x14);
+  DataMemoryBarrier(0,1);
+  DataMemoryBarrier(0,2);
+  *(uint *)(*(long *)(param_2 + 0x90) + 0x10) = uVar1 & 0xffff00;
+  DataMemoryBarrier(0,1);
+  cVar2 = get_tx_fifo_mask(~uVar1 & uVar1 >> 0x10);
+  if (cVar2 != '\0') {
+    mbox_tx_mask = cVar2;
+    __wake_up(&deliver_thread_wait,3,1,0);
+  }
+  DataMemoryBarrier(0,2);
+  uVar3 = 3;
+  if ((uVar1 & 0xff) == 0) {
+    uVar3 = 4;
+  }
+  *(undefined4 *)(*(long *)(param_2 + 0x90) + 0x1c) = uVar3;
+  DataMemoryBarrier(0,2);
+  *(undefined4 *)(*(long *)(param_2 + 0x90) + 0x18) = 1;
+  return 1;
+}
+
+
+
+
+########## sprd_mbox_phy_outbox_isr.c ##########
+// sprd_mbox_phy_outbox_isr @ 00103b34
+// signature: undefined sprd_mbox_phy_outbox_isr(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 sprd_mbox_phy_outbox_isr(int param_1,long param_2)
+
+{
+  long lVar1;
+  uint uVar2;
+  uint uVar3;
+  code *pcVar4;
+  int iVar5;
+  int iVar6;
+  ulong uVar7;
+  undefined8 *in_x18;
+  int *piVar8;
+  undefined8 unaff_x30;
+  undefined8 local_70;
+  long local_68;
+  
+  *in_x18 = unaff_x30;
+  local_68 = ___stack_chk_guard;
+  local_70 = 0;
+  lVar1 = 200;
+  if (*(int *)(param_2 + 0xd0) != param_1) {
+    lVar1 = 0x98;
+  }
+  piVar8 = *(int **)(param_2 + lVar1);
+  uVar2 = piVar8[5];
+  DataMemoryBarrier(0,1);
+  uVar3 = uVar2 >> 0x10 & 0xff;
+  iVar5 = uVar3 - (uVar2 >> 0x18);
+  if (iVar5 == 0) {
+    if ((uVar2 >> 2 & 1) != 0) {
+      iVar5 = *(int *)(param_2 + 0xb0);
+      goto LAB_00103bc8;
+    }
+  }
+  else {
+    if (uVar3 < uVar2 >> 0x18) {
+      iVar5 = iVar5 + *(int *)(param_2 + 0xb0);
+    }
+LAB_00103bc8:
+    if (iVar5 != 0) {
+      do {
+        uVar2 = mbox_rx_fifo_cnt;
+        DataMemoryBarrier(0,1);
+        DataMemoryBarrier(0,1);
+        local_70 = CONCAT44(piVar8[2],piVar8[1]);
+        if (*(int *)(param_2 + 0xd0) == param_1) {
+          iVar6 = *(int *)(param_2 + 0xd8);
+        }
+        else {
+          iVar6 = *piVar8;
+          DataMemoryBarrier(0,1);
+        }
+        if (*(long *)(*(long *)(param_2 + 0x10) + (long)iVar6 * 0xf8 + 0x10) == 0) {
+          if (mbox_rx_fifo_cnt < 0x40) {
+            if (0x3f < mbox_rx_fifo_cnt) {
+              __ubsan_handle_cfi_check_fail_abort(0x12);
+              goto LAB_00103d14;
+            }
+            uVar7 = (ulong)mbox_rx_fifo_cnt;
+            (&mbox_rx_fifo)[uVar7 * 2] = (long)iVar6;
+            if (0x400 < (uVar7 << 4 | 8)) {
+                    /* WARNING: Does not return */
+              pcVar4 = (code *)SoftwareBreakpoint(1,0x103dc4);
+              (*pcVar4)();
+            }
+            mbox_rx_fifo_cnt = uVar2 + 1;
+            *(undefined8 *)(&DAT_001001e8 + uVar7 * 0x10) = local_70;
+          }
+          else {
+            _dev_err(*(undefined8 *)(param_2 + 0x88),"mbox_mbox_rx_fifo full, core_id = %d\n",iVar6)
+            ;
+          }
+        }
+        else {
+          mbox_chan_received_data(*(long *)(param_2 + 0x10) + (long)iVar6 * 0xf8,&local_70);
+        }
+        DataMemoryBarrier(0,2);
+        iVar5 = iVar5 + -1;
+        piVar8[3] = 1;
+      } while (iVar5 != 0);
+      goto LAB_00103d2c;
+    }
+  }
+LAB_00103d14:
+  iVar5 = ___ratelimit(&sprd_mbox_phy_outbox_isr__rs,"sprd_mbox_phy_outbox_isr");
+  if (iVar5 != 0) {
+    _dev_warn(*(undefined8 *)(param_2 + 0x88),"spurious outbox interrupt\n");
+  }
+LAB_00103d2c:
+  pcVar4 = mbox_wakeup_flag_callback_r1;
+  if (mbox_wakeup_flag_callback_r1 == (code *)0x0) {
+    printk(&DAT_00100953);
+  }
+  else {
+    if (mbox_wakeup_flag_callback_r1 != __typeid__ZTSFvbE_global_addr) {
+      __cfi_slowpath(0x301714697a011648,mbox_wakeup_flag_callback_r1);
+    }
+    (*pcVar4)(0);
+  }
+  DataMemoryBarrier(0,2);
+  piVar8[6] = 1;
+  if (___stack_chk_guard != local_68) {
+                    /* WARNING: Subroutine does not return */
+    __stack_chk_fail();
+  }
+  return 1;
+}
+
+
+
+
+########## sprd_mbox_phy_r1_init.c ##########
+// sprd_mbox_phy_r1_init @ 00103424
+// signature: undefined sprd_mbox_phy_r1_init(void)
+// calling convention: unknown
+
+
+ulong sprd_mbox_phy_r1_init(long param_1)
+
+{
+  int iVar1;
+  ulong uVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(param_1 + 0x88) + -0x10;
+  uVar2 = devm_platform_ioremap_resource(lVar3,0);
+  *(ulong *)(param_1 + 0x90) = uVar2;
+  if (uVar2 < 0xfffffffffffff001) {
+    uVar2 = devm_platform_ioremap_resource(lVar3,1);
+    *(ulong *)(param_1 + 0x98) = uVar2;
+    if (uVar2 < 0xfffffffffffff001) {
+      iVar1 = *(int *)(uVar2 + 0x24);
+      DataMemoryBarrier(0,1);
+      sprd_outbox_base = uVar2;
+      *(undefined4 *)(param_1 + 0x18) = 8;
+      *(int *)(param_1 + 0xb0) = iVar1 + 1;
+      *(undefined4 *)(param_1 + 0xb4) = 0x1000;
+      DataMemoryBarrier(0,1);
+      *(uint *)(param_1 + 0xb8) = *(uint *)(*(long *)(param_1 + 0x90) + 0x28) & 0xffff;
+      *(undefined ***)(param_1 + 0xe0) = &sprd_mbox_phy_ops_r1;
+      uVar2 = register_pm_notifier(&mbox_pm_notifier_block_19);
+      if ((int)uVar2 != 0) {
+        _dev_err(*(undefined8 *)(param_1 + 0x88),"failed to register pm notifier\n");
+        uVar2 = 0;
+      }
+    }
+  }
+  return uVar2;
+}
+
+
+
+
+########## sprd_mbox_phy_send.c ##########
+// sprd_mbox_phy_send @ 00103870
+// signature: undefined sprd_mbox_phy_send(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_phy_send(long *param_1,undefined4 *param_2)
+
+{
+  uint uVar1;
+  undefined8 uVar2;
+  uint uVar3;
+  long lVar4;
+  uint uVar5;
+  int iVar6;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *param_1;
+  uVar5 = *(uint *)(*(long *)(lVar4 + 0x90) + 0x14);
+  DataMemoryBarrier(0,1);
+  uVar3 = (uint)param_1[0x1e];
+  uVar1 = 1 << (ulong)(uVar3 & 0x1f);
+  if ((uVar1 & uVar5) == 0) {
+    if (*(uint *)(lVar4 + 0xb8) < 0x101) {
+LAB_00103940:
+      DataMemoryBarrier(0,2);
+      uVar2 = 0;
+      *(undefined4 *)(*(long *)(lVar4 + 0x90) + 4) = *param_2;
+      DataMemoryBarrier(0,2);
+      *(undefined4 *)(*(long *)(lVar4 + 0x90) + 8) = param_2[1];
+      DataMemoryBarrier(0,2);
+      **(uint **)(lVar4 + 0x90) = uVar3;
+      DataMemoryBarrier(0,2);
+      *(undefined4 *)(*(long *)(lVar4 + 0x90) + 0xc) = 1;
+    }
+    else {
+      iVar6 = 1000;
+      do {
+        if ((uVar5 & 1 << (ulong)(uVar3 + 0x18 & 0x1f)) == 0) goto LAB_00103940;
+        uVar5 = *(uint *)(*(long *)(lVar4 + 0x90) + 0x14);
+        DataMemoryBarrier(0,1);
+        if ((uVar5 & uVar1) != 0) goto LAB_001038b4;
+        iVar6 = iVar6 + -1;
+      } while (iVar6 != 0);
+      uVar2 = 0xffffff92;
+    }
+  }
+  else {
+LAB_001038b4:
+    uVar2 = 0xffffff97;
+  }
+  return uVar2;
+}
+
+
+
+
+########## sprd_mbox_phy_shutdown.c ##########
+// sprd_mbox_phy_shutdown @ 0010371c
+// signature: undefined sprd_mbox_phy_shutdown(void)
+// calling convention: unknown
+
+
+void sprd_mbox_phy_shutdown(long *param_1)
+
+{
+  char cVar1;
+  long lVar2;
+  long lVar3;
+  
+  lVar3 = *param_1;
+  lVar2 = param_1[0x1e];
+  cVar1 = *(char *)(lVar3 + 0xc4) + -1;
+  *(char *)(lVar3 + 0xc4) = cVar1;
+  if (cVar1 == '\0') {
+    DataMemoryBarrier(0,2);
+    *(undefined4 *)(*(long *)(lVar3 + 0x90) + 0x1c) = 7;
+    DataMemoryBarrier(0,2);
+    *(undefined4 *)(*(long *)(lVar3 + 0x98) + 0x1c) = 0x1f;
+    g_started_chan_msk = g_started_chan_msk & 0xfffffffe;
+  }
+  if ((*(long *)(lVar3 + 0xd8) == param_1[0x1e]) && (*(char *)(lVar3 + 0xd4) != '\0')) {
+    DataMemoryBarrier(0,2);
+    *(undefined4 *)(*(long *)(lVar3 + 200) + 0x1c) = 0x1f;
+    *(undefined1 *)(lVar3 + 0xd4) = 0;
+  }
+  g_started_chan_msk = g_started_chan_msk & (1 << (ulong)((uint)lVar2 & 0x1f) ^ 0xffffffffU);
+  return;
+}
+
+
+
+
+########## sprd_mbox_phy_startup.c ##########
+// sprd_mbox_phy_startup @ 001035d4
+// signature: undefined sprd_mbox_phy_startup(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_phy_startup(long *param_1)
+
+{
+  char cVar1;
+  long lVar2;
+  long lVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *param_1;
+  lVar4 = param_1[0x1e];
+  cVar1 = *(char *)(lVar2 + 0xc4);
+  *(char *)(lVar2 + 0xc4) = cVar1 + '\x01';
+  if (cVar1 == '\0') {
+    DataMemoryBarrier(0,2);
+    *(undefined4 *)(*(long *)(lVar2 + 0x98) + 0x10) = 0;
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,2);
+    *(uint *)(*(long *)(lVar2 + 0x90) + 0x1c) =
+         *(uint *)(*(long *)(lVar2 + 0x90) + 0x1c) & 0xfffffff8 | 4;
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,2);
+    *(uint *)(*(long *)(lVar2 + 0x98) + 0x1c) =
+         *(uint *)(*(long *)(lVar2 + 0x98) + 0x1c) & 0xfffffffe;
+    g_started_chan_msk = g_started_chan_msk | 1;
+    lVar3 = *(long *)(lVar2 + 200);
+  }
+  else {
+    lVar3 = *(long *)(lVar2 + 200);
+  }
+  if ((lVar3 != 0) && (*(char *)(lVar2 + 0xd4) == '\0')) {
+    DataMemoryBarrier(0,2);
+    *(undefined4 *)(*(long *)(lVar2 + 200) + 0x10) = 0;
+    DataMemoryBarrier(0,1);
+    DataMemoryBarrier(0,2);
+    *(uint *)(*(long *)(lVar2 + 200) + 0x1c) = *(uint *)(*(long *)(lVar2 + 200) + 0x1c) & 0xfffffffe
+    ;
+    g_mbox_nowakeup_base = *(undefined8 *)(lVar2 + 200);
+    *(undefined1 *)(lVar2 + 0xd4) = 1;
+  }
+  sprd_mbox_process_rx_fifo();
+  g_started_chan_msk = g_started_chan_msk | 1 << (ulong)((uint)lVar4 & 0x1f);
+  return 0;
+}
+
+
+
+
+########## sprd_mbox_probe.c ##########
+// sprd_mbox_probe @ 001021cc
+// signature: undefined sprd_mbox_probe(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+int sprd_mbox_probe(long param_1)
+
+{
+  long lVar1;
+  bool bVar2;
+  int iVar3;
+  long *plVar4;
+  ulong uVar5;
+  long lVar6;
+  char *pcVar7;
+  long lVar8;
+  long lVar9;
+  long lVar10;
+  undefined8 *in_x18;
+  undefined8 uVar11;
+  long *plVar12;
+  long *plVar13;
+  undefined8 unaff_x30;
+  undefined8 local_70;
+  long local_68;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = param_1 + 0x10;
+  local_68 = ___stack_chk_guard;
+  uVar11 = *(undefined8 *)(param_1 + 0x310);
+  local_70 = 0;
+  plVar4 = (long *)devm_kmalloc(lVar1,0xf0,0xdc0);
+  if (plVar4 == (long *)0x0) {
+LAB_00102450:
+    iVar3 = -0xc;
+    goto LAB_00102454;
+  }
+  plVar4[0x11] = lVar1;
+  uVar5 = syscon_regmap_lookup_by_phandle_args(uVar11,"sprd,mailbox_clk",2,&local_70);
+  if (0xfffffffffffff000 < uVar5) {
+    _dev_err(lVar1,"failed to get mailbox clock\n");
+    iVar3 = -0x16;
+    goto LAB_00102454;
+  }
+  regmap_update_bits_base(uVar5,local_70 & 0xffffffff,local_70._4_4_,local_70._4_4_,0,0,0);
+  reg_ctrl_1 = (undefined4)local_70;
+  reg_ctrl_2 = local_70._4_4_;
+  reg_ctrl_0 = uVar5;
+  iVar3 = sprd_mbox_phy_r1_init(plVar4);
+  if (iVar3 != 0) goto LAB_00102454;
+  mbox_phy_ops = plVar4[0x1c];
+  chan_num = (int)plVar4[3];
+  *plVar4 = lVar1;
+  plVar4[1] = (long)&sprd_mbox_ops;
+  *(undefined1 *)((long)plVar4 + 0x1c) = 1;
+  plVar4[5] = (long)&LAB_00104334;
+  lVar6 = devm_kmalloc(lVar1,(long)chan_num * 0xf8,0xdc0);
+  plVar4[2] = lVar6;
+  if (lVar6 == 0) goto LAB_00102450;
+  lVar8 = (long)chan_num;
+  if ((chan_num != 0) && (bVar2 = chan_num != 1, *(undefined8 *)(lVar6 + 0xf0) = 0, bVar2)) {
+    lVar10 = 0x1e8;
+    for (lVar9 = 2; *(long *)(lVar6 + lVar10) = lVar9 + -1, lVar8 != lVar9; lVar9 = lVar9 + 1) {
+      lVar6 = plVar4[2];
+      lVar10 = lVar10 + 0xf8;
+    }
+  }
+  outbox_lock = 0;
+  mbox_lock = 0;
+  __init_waitqueue_head(&deliver_thread_wait,"&deliver_thread_wait",&sprd_mbox_probe___key);
+  plVar12 = (long *)plVar4[0x11];
+  plVar13 = plVar12 + -2;
+  iVar3 = platform_get_irq_byname(plVar13,"inbox");
+  *(int *)((long)plVar4 + 0xbc) = iVar3;
+  if (iVar3 < 0) {
+LAB_001024f8:
+    pcVar7 = "failed to request IRQ\n";
+  }
+  else {
+    lVar6 = plVar12[0xe];
+    if (lVar6 == 0) {
+      lVar6 = *plVar12;
+    }
+    iVar3 = devm_request_threaded_irq
+                      (plVar12,iVar3,__typeid__ZTSF9irqreturniPvE_global_addr,0,0x4000,lVar6,plVar4)
+    ;
+    if (iVar3 != 0) {
+      pcVar7 = "failed to request inbox IRQ: %d\n";
+LAB_001024ec:
+      _dev_err(plVar12,pcVar7,iVar3);
+      goto LAB_001024f8;
+    }
+    iVar3 = platform_get_irq_byname(plVar13,"outbox");
+    *(int *)(plVar4 + 0x18) = iVar3;
+    if (iVar3 < 0) goto LAB_001024f8;
+    lVar6 = plVar12[0xe];
+    if (lVar6 == 0) {
+      lVar6 = *plVar12;
+    }
+    iVar3 = devm_request_threaded_irq(plVar12,iVar3,&LAB_00104388,0,0x4000,lVar6,plVar4);
+    if (iVar3 != 0) {
+      pcVar7 = "failed to request outbox IRQ: %d\n";
+      goto LAB_001024ec;
+    }
+    iVar3 = platform_get_irq_byname(plVar13,"oob-outbox");
+    *(int *)(plVar4 + 0x1a) = iVar3;
+    if (iVar3 < 0) {
+      _dev_warn(plVar12,"failed to get oob_irq\n");
+    }
+    else {
+      lVar6 = plVar12[0xe];
+      if (lVar6 == 0) {
+        lVar6 = *plVar12;
+      }
+      iVar3 = devm_request_threaded_irq(plVar12,iVar3,&LAB_00104388,0,0,lVar6,plVar4);
+      if (iVar3 != 0) {
+        _dev_err(plVar12,"failed to request oob_irq: %d\n",iVar3);
+      }
+    }
+    iVar3 = devm_add_action(lVar1,__typeid__ZTSFvPvE_global_addr,plVar4);
+    if (iVar3 == 0) {
+      iVar3 = devm_mbox_controller_register(lVar1,plVar4);
+      if (iVar3 != 0) {
+        _dev_err(lVar1,"failed to register mailbox: %d\n",iVar3);
+        goto LAB_00102454;
+      }
+      tx_data = devm_kmalloc(lVar1,(long)chan_num * 0x208,0xdc0);
+      if (tx_data == 0) goto LAB_00102450;
+      iVar3 = cpu_pm_register_notifier(&mbox_pm_notifier_block);
+      if (iVar3 == 0) {
+        mbox_deliver_thread =
+             kthread_create_on_node(&LAB_0010433c,plVar4,0xffffffff,"mbox-deliver-thread");
+        wake_up_process();
+        uVar5 = debugfs_initialized();
+        if ((uVar5 & 1) != 0) {
+          lVar6 = debugfs_create_dir("mailbox",0);
+          plVar4[0x1d] = lVar6;
+          if (lVar6 == 0) {
+            _dev_err(lVar1,"failed to create debugfs! ret = %d\n",0xffffffea);
+          }
+          else {
+            debugfs_create_file(&DAT_00100cd8,0x124,lVar6,plVar4,&sprd_mbox_debugfs_ops);
+          }
+        }
+        _dev_info(plVar4[0x11],"probe done, version=0x%x\n",(int)plVar4[0x17]);
+        iVar3 = 0;
+        goto LAB_00102454;
+      }
+      pcVar7 = "failed to register cpu pm notifier\n";
+    }
+    else {
+      if (reg_ctrl_0 != 0) {
+        regmap_update_bits_base(reg_ctrl_0,reg_ctrl_1,reg_ctrl_2,0,0,0,0);
+        _dev_info(plVar4[0x11],"mailbox disabled.\n");
+      }
+      pcVar7 = "failed to add mailbox disable action\n";
+    }
+  }
+  _dev_err(lVar1,pcVar7);
+LAB_00102454:
+  if (___stack_chk_guard == local_68) {
+    return iVar3;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+
+########## sprd_mbox_process_rx_fifo.c ##########
+// sprd_mbox_process_rx_fifo @ 00104228
+// signature: undefined sprd_mbox_process_rx_fifo(void)
+// calling convention: unknown
+
+
+void sprd_mbox_process_rx_fifo(long param_1)
+
+{
+  ulong uVar1;
+  undefined8 *in_x18;
+  ulong uVar2;
+  long lVar3;
+  undefined *puVar4;
+  int iVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar1 = (ulong)mbox_rx_fifo_cnt;
+  if (mbox_rx_fifo_cnt != 0) {
+    lVar3 = *(long *)(param_1 + 0xf0);
+    uVar2 = 0;
+    iVar5 = 0;
+    puVar4 = &DAT_001001e8;
+    do {
+      if (uVar2 == 0x40) {
+        __ubsan_handle_cfi_check_fail_abort(0x12);
+        init_module();
+        return;
+      }
+      if (*(long *)(puVar4 + -8) == 8) {
+LAB_00104288:
+        iVar5 = iVar5 + 1;
+      }
+      else if ((*(long *)(puVar4 + -8) == lVar3) && (*(long *)(param_1 + 0x10) != 0)) {
+        mbox_chan_received_data(param_1,puVar4);
+        uVar1 = (ulong)mbox_rx_fifo_cnt;
+        *(undefined8 *)(puVar4 + -8) = 8;
+        goto LAB_00104288;
+      }
+      uVar2 = uVar2 + 1;
+      puVar4 = puVar4 + 0x10;
+    } while (uVar2 < uVar1);
+    if (iVar5 != (int)uVar1) {
+      return;
+    }
+  }
+  mbox_rx_fifo_cnt = 0;
+  return;
+}
+
+
+
+
+########## sprd_mbox_send_data.c ##########
+// sprd_mbox_send_data @ 00102bac
+// signature: undefined sprd_mbox_send_data(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_send_data(long *param_1,undefined8 *param_2)
+
+{
+  uint uVar1;
+  uint uVar2;
+  int iVar3;
+  undefined8 uVar4;
+  code *pcVar5;
+  long lVar6;
+  ulong uVar7;
+  undefined8 *in_x18;
+  long lVar8;
+  long lVar9;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar9 = *param_1;
+  lVar8 = param_1[0x1e];
+  uVar4 = _raw_spin_lock_irqsave(&mbox_lock);
+  lVar6 = tx_data + lVar8 * 0x208;
+  uVar1 = *(uint *)(lVar6 + 0x204);
+  uVar2 = *(uint *)(lVar6 + 0x200);
+  if (uVar1 == uVar2) {
+    pcVar5 = *(code **)(*(long *)(lVar9 + 0xe0) + 0x18);
+    if (1 < ((ulong)(pcVar5 + -0x10437c) >> 2 | (long)pcVar5 << 0x3e)) {
+      __cfi_slowpath(0xc19c8378abe429fc,pcVar5);
+    }
+    iVar3 = (*pcVar5)(param_1,param_2);
+    if (iVar3 != 0) {
+      lVar6 = tx_data + lVar8 * 0x208;
+      uVar7 = (ulong)*(uint *)(lVar6 + 0x200) & 0x3f;
+      if ((*(uint *)(lVar6 + 0x204) == *(uint *)(lVar6 + 0x200)) ||
+         ((*(uint *)(lVar6 + 0x204) & 0x3f) != (uint)uVar7)) {
+        *(undefined8 *)(tx_data + lVar8 * 0x208 + uVar7 * 8) = *param_2;
+        *(int *)(lVar6 + 0x200) = *(int *)(lVar6 + 0x200) + 1;
+      }
+      else {
+        printk(&DAT_0010090e,lVar8);
+      }
+    }
+  }
+  else if ((uVar1 == uVar2) || ((uVar1 & 0x3f) != (uVar2 & 0x3f))) {
+    lVar6 = tx_data + lVar8 * 0x208;
+    *(undefined8 *)(lVar6 + (ulong)(uVar2 & 0x3f) * 8) = *param_2;
+    *(int *)(lVar6 + 0x200) = *(int *)(lVar6 + 0x200) + 1;
+  }
+  else {
+    printk(&DAT_0010090e,lVar8);
+  }
+  _raw_spin_unlock_irqrestore(&mbox_lock,uVar4);
+  return 0;
+}
+
+
+
+
+########## sprd_mbox_shutdown.c ##########
+// sprd_mbox_shutdown @ 00102ea8
+// signature: undefined sprd_mbox_shutdown(void)
+// calling convention: unknown
+
+
+void sprd_mbox_shutdown(long *param_1)
+
+{
+  code *pcVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *param_1;
+  _dev_info(*(undefined8 *)(lVar2 + 0x88),"shutdown chan-%ld\n",param_1[0x1e]);
+  pcVar1 = *(code **)(*(long *)(lVar2 + 0xe0) + 8);
+  if (1 < ((ulong)(pcVar1 + -0x10436c) >> 2 | (long)pcVar1 << 0x3e)) {
+    __cfi_slowpath(0xf769d37fdf578bba,pcVar1);
+  }
+  (*pcVar1)(param_1);
+  return;
+}
+
+
+
+
+########## sprd_mbox_startup.c ##########
+// sprd_mbox_startup @ 00102e14
+// signature: undefined sprd_mbox_startup(void)
+// calling convention: unknown
+
+
+undefined8 sprd_mbox_startup(long *param_1)
+
+{
+  code *pcVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *param_1;
+  _dev_info(*(undefined8 *)(lVar2 + 0x88),"startup chan-%ld\n",param_1[0x1e]);
+  pcVar1 = (code *)**(undefined8 **)(lVar2 + 0xe0);
+  if (1 < ((ulong)(pcVar1 + -0x104364) >> 2 | (long)pcVar1 << 0x3e)) {
+    __cfi_slowpath(0xed5c207f8272b5da,pcVar1);
+  }
+  (*pcVar1)(param_1);
+  return 0;
+}
+
+
+
+
+########## sprd_mbox_wakeup_flag_callback_register_r1.c ##########
+// sprd_mbox_wakeup_flag_callback_register_r1 @ 00103398
+// signature: undefined sprd_mbox_wakeup_flag_callback_register_r1(void)
+// calling convention: unknown
+
+
+void sprd_mbox_wakeup_flag_callback_register_r1(undefined8 param_1)
+
+{
+  mbox_wakeup_flag_callback_r1 = param_1;
+  return;
+}
+
+
+
+
+########## sprd_mbox_wakeup_flag_callback_unregister_r1.c ##########
+// sprd_mbox_wakeup_flag_callback_unregister_r1 @ 0010338c
+// signature: undefined sprd_mbox_wakeup_flag_callback_unregister_r1(void)
+// calling convention: unknown
+
+
+void sprd_mbox_wakeup_flag_callback_unregister_r1(void)
+
+{
+  mbox_wakeup_flag_callback_r1 = 0;
+  return;
+}
+
+

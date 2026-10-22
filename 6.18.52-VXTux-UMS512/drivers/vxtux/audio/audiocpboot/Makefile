@@ -6,4 +6,4 @@ ccflags-y += -I$(srctree)/$(SPRD_AUDIO_ASSISTANT_TREE)/audiomem/ \
 		-I$(srctree)/$(SPRD_AUDIO_ASSISTANT_TREE)/audiosipc/ \
 		-I$(srctree)/$(SPRD_AUDIO_ASSISTANT_TREE)/audiosipc/include/ \
          -I$(srctree)/$(SPRD_SND_TREE)/include
-obj-y     += sprd_audcp_boot.o
+obj-$(CONFIG_SPRD_AUDIO_CPBOOT) += sprd_audcp_boot.o

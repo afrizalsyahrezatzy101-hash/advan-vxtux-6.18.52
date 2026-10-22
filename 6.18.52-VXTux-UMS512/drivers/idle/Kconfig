@@ -9,3 +9,4 @@ config INTEL_IDLE
 	  native Intel hardware idle features.  The acpi_idle driver
 	  can be configured at the same time, in order to handle
 	  processors intel_idle does not support.
+	

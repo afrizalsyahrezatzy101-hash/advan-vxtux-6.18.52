@@ -15,12 +15,12 @@ menuconfig SCSI_UFSHCD
 	  communicate with a UFS card. UFS host controllers occur in
 	  smartphones, laptops, digital cameras and also in cars.
 	  The kernel module will be called ufshcd.
-
+	
 	  To compile this driver as a module, choose M here and read
 	  <file:Documentation/scsi/ufs.rst>.
 	  However, do not compile this as a module if your root file system
 	  (the one containing the directory /) is located on a UFS device.
-
+	
 if SCSI_UFSHCD
 
 source "drivers/ufs/core/Kconfig"

@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# Kconfig for the sprd time correction device.
+
+config SPRD_TIME_SYNC
+	tristate "Unisoc time correction device (sprd_time_sync)"
+	depends on OF && HAS_IOMEM
+	select SPRD_SYSTIMER
+	default n
+	help
+	  The sprd_time_sync character device hands out a snapshot of the
+	  system clocks - the monotonic time, the boot time, the realtime
+	  time, the generic timer counter, the 26MHz systimer counter and
+	  the timezone - and can push the same snapshot to userspace as a
+	  uevent.
+	
+	  To compile this driver as a module, choose M here: the module
+	  will be called sprd_time_sync.
+	
+config SPRD_TIME_SYNC_CP
+	tristate "Unisoc time correction control point (sprd_time_sync_cp)"
+	depends on SPRD_TIME_SYNC
+	default n
+	help
+	  The control point of the time correction device. It offers one
+	  entry point that pushes a fresh time snapshot to userspace, so
+	  that a daemon can ask for the time without opening the character
+	  device.
+	
+	  To compile this driver as a module, choose M here: the module
+	  will be called sprd_time_sync_cp.
+	

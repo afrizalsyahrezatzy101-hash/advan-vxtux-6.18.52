@@ -12,7 +12,7 @@ menuconfig TYPEC
 	  Accessory Modes - Analog Audio and Debug - and if USB Power Delivery
 	  is supported, the Alternate Modes, where the connector is used for
 	  something else then USB communication.
-
+	
 	  USB Power Delivery Specification defines a protocol that can be used
 	  to negotiate the voltage and current levels with the connected
 	  partners. USB Power Delivery allows higher voltages then the normal
@@ -21,7 +21,7 @@ menuconfig TYPEC
 	  Modes when they are supported. USB Power Delivery does not depend on
 	  USB Type-C connector, however it is mostly used together with USB
 	  Type-C connectors.
-
+	
 	  USB Type-C and USB Power Delivery Specifications define a set of state
 	  machines that need to be implemented in either software or firmware.
 	  Simple USB Type-C PHYs, for example USB Type-C Port Controller
@@ -30,7 +30,7 @@ menuconfig TYPEC
 	  Delivery controllers handle the state machines inside their firmware.
 	  The USB Type-C and Power Delivery controllers usually function
 	  autonomously, and do not necessarily require drivers.
-
+	
 	  Enable this configurations option if you have USB Type-C connectors on
 	  your system and 1) you know your USB Type-C hardware requires OS
 	  control (a driver) to function, or 2) if you need to be able to read
@@ -38,12 +38,12 @@ menuconfig TYPEC
 	  to be able to swap the power role (decide are you supplying or
 	  consuming power over the cable) or data role (host or device) when
 	  both roles are supported.
-
+	
 	  For more information, see the kernel documentation for USB Type-C
 	  Connector Class API (Documentation/driver-api/usb/typec.rst)
 	  <https://www.kernel.org/doc/html/latest/driver-api/usb/typec.html>
 	  and ABI (Documentation/ABI/testing/sysfs-class-typec).
-
+	
 if TYPEC
 
 source "drivers/usb/typec/tcpm/Kconfig"
@@ -60,10 +60,10 @@ config TYPEC_ANX7411
 	help
 	  Say Y or M here if your system has Analogix ANX7411 Type-C DRP Port
 	  controller driver.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called anx7411.ko.
-
+	
 config TYPEC_RT1719
 	tristate "Richtek RT1719 Sink Only Type-C controller driver"
 	depends on USB_ROLE_SWITCH || !USB_ROLE_SWITCH
@@ -73,10 +73,10 @@ config TYPEC_RT1719
 	help
 	  Say Y or M here if your system has Richtek RT1719 sink only
 	  Type-C port controller driver.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called rt1719.ko
-
+	
 config TYPEC_HD3SS3220
 	tristate "TI HD3SS3220 Type-C DRP Port controller driver"
 	depends on I2C
@@ -84,10 +84,10 @@ config TYPEC_HD3SS3220
 	help
 	  Say Y or M here if your system has TI HD3SS3220 Type-C DRP Port
 	  controller driver.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called hd3ss3220.ko.
-
+	
 config TYPEC_STUSB160X
 	tristate "STMicroelectronics STUSB160x Type-C controller driver"
 	depends on USB_ROLE_SWITCH || !USB_ROLE_SWITCH
@@ -96,20 +96,20 @@ config TYPEC_STUSB160X
 	help
 	  Say Y or M here if your system has STMicroelectronics STUSB160x
 	  Type-C port controller.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called stusb160x.ko.
-
+	
 config TYPEC_WUSB3801
 	tristate "Willsemi WUSB3801 Type-C port controller driver"
 	depends on I2C
 	select REGMAP_I2C
 	help
 	  Say Y or M here if your system has a WUSB3801 Type-C port controller.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called wusb3801.ko.
-
+	
 source "drivers/usb/typec/mux/Kconfig"
 
 source "drivers/usb/typec/altmodes/Kconfig"

@@ -7,5 +7,6 @@ config DVB_PT3
 	select MEDIA_TUNER_MXL301RF if MEDIA_SUBDRV_AUTOSELECT
 	help
 	  Support for Earthsoft PT3 PCIe cards.
-
+	
 	  Say Y or M if you own such a device and want to use it.
+	

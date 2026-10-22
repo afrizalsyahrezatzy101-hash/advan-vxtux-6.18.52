@@ -13,6 +13,7 @@ config VIDEO_INTEL_IPU6
 	help
 	  This is the 6th Gen Intel Image Processing Unit, found in Intel SoCs
 	  and used for capturing images and video from camera sensors.
-
+	
 	  To compile this driver, say Y here! It contains 2 modules -
 	  intel_ipu6 and intel_ipu6_isys.
+	

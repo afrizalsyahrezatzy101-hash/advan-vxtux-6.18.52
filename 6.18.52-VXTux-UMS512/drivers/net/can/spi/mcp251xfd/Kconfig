@@ -8,7 +8,7 @@ config CAN_MCP251XFD
 	help
 	  Driver for the Microchip MCP251XFD SPI FD-CAN controller
 	  family.
-
+	
 config CAN_MCP251XFD_SANITY
 	depends on CAN_MCP251XFD
 	bool "Additional Sanity Checks"
@@ -17,3 +17,4 @@ config CAN_MCP251XFD_SANITY
 	  that compares various internal counters with the in chip
 	  variants. This comes with a runtime overhead.
 	  Disable if unsure.
+	

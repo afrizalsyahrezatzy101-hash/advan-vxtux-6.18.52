@@ -9,7 +9,7 @@ config SFC_FALCON
 	help
 	  This driver supports 10-gigabit Ethernet cards based on
 	  the Solarflare SFC4000 controller.
-
+	
 	  To compile this driver as a module, choose M here.  The module
 	  will be called sfc-falcon.
 config SFC_FALCON_MTD
@@ -20,3 +20,4 @@ config SFC_FALCON_MTD
 	  This exposes the on-board flash and/or EEPROM as MTD devices
 	  (e.g. /dev/mtd1).  This is required to update the boot
 	  configuration under Linux.
+	

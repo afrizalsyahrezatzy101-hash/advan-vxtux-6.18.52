@@ -422,7 +422,8 @@ static bool expect_iter_me(struct nf_conntrack_expect *exp, void *data)
 	if (this == me)
 		return true;
 
-	this = rcu_dereference_protected(exp->assign_helper,
+	/* VXTux 6.18 backport: assign_helper removed; upstream uses just exp->helper */
+	this = rcu_dereference_protected(exp->helper,
 					 lockdep_is_held(&nf_conntrack_expect_lock));
 	return this == me;
 }

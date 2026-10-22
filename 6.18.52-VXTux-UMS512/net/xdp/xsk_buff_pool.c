@@ -96,8 +96,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
 	INIT_LIST_HEAD(&pool->xskb_list);
 	INIT_LIST_HEAD(&pool->xsk_tx_list);
 	spin_lock_init(&pool->xsk_tx_list_lock);
-	spin_lock_init(&pool->cq_prod_lock);
-	spin_lock_init(&pool->cq_cached_prod_lock);
+	spin_lock_init(&pool->cq_lock);
 	refcount_set(&pool->users, 1);
 
 	pool->fq = xs->fq_tmp;
@@ -228,7 +227,7 @@ int xp_assign_dev(struct xsk_buff_pool *pool,
 	 * set yet at this point; we are before getting down to driver
 	 */
 	frame_size = __xsk_pool_get_rx_frame_size(pool) -
-		     xsk_pool_get_tailroom(mbuf);
+		     xsk_pool_get_tailroom(pool);
 	frame_size = ALIGN_DOWN(frame_size, 128);
 
 	if (needed > frame_size * segs) {

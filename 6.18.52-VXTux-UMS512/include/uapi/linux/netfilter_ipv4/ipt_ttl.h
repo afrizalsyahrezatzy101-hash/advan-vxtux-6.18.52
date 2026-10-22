@@ -8,11 +8,12 @@
 #include <linux/types.h>
 
 enum {
-	IPT_TTL_EQ = 0,		/* equals */
-	IPT_TTL_NE,		/* not equals */
-	IPT_TTL_LT,		/* less than */
-	IPT_TTL_GT,		/* greater than */
+	IPT_TTL_SET = 0,	/* set TTL to value */
+	IPT_TTL_INC,		/* increment TTL by 1 */
+	IPT_TTL_DEC,		/* decrement TTL by 1 */
 };
+
+#define IPT_TTL_MAXMODE	IPT_TTL_DEC
 
 
 struct ipt_ttl_info {

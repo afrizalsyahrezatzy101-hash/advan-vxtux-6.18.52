@@ -10,7 +10,7 @@ menuconfig LOGO
 	  Enable and select frame buffer bootup logos.
 	  Monochrome logos will also be used by the DRM panic handler, if
 	  enabled.
-
+	
 if LOGO
 
 config FB_LOGO_EXTRA

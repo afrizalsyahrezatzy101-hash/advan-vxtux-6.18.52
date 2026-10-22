@@ -401,4 +401,17 @@ do {						\
 	*(_fsgid) = __cred->fsgid;		\
 } while(0)
 
+/* V17: DEFINE_CLASS for override_creds - was missing in cred.h */
+#ifndef DEFINE_CLASS_OVERRIDE_CREDS_DONE
+#define DEFINE_CLASS_OVERRIDE_CREDS_DONE
+#include <linux/cleanup.h>
+DEFINE_CLASS(override_creds, const struct cred *,
+		if (_T) revert_creds(_T),
+		override_creds(new), const struct cred *new)
+
+/* Provide _lock_ptr, _is_conditional for the base class */
+static inline const struct cred **class_override_creds_lock_ptr(const struct cred **p) { return p; }
+static inline bool class_override_creds_is_conditional(void) { return false; }
+#endif
+
 #endif /* _LINUX_CRED_H */

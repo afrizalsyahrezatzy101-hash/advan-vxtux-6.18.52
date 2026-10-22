@@ -58,7 +58,7 @@ static bool vsock_msg_wait_data(struct sock *sk, struct sk_psock *psock, long ti
 	return ret;
 }
 
-static int __vsock_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags)
+static int __vsock_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags, int *addr_len)
 {
 	struct socket *sock = sk->sk_socket;
 	int err;
@@ -74,7 +74,7 @@ static int __vsock_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int 
 }
 
 static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
-			     size_t len, int flags)
+			     size_t len, int flags, int *addr_len)
 {
 	struct sk_psock *psock;
 	struct vsock_sock *vsk;
@@ -82,7 +82,7 @@ static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
 
 	psock = sk_psock_get(sk);
 	if (unlikely(!psock))
-		return __vsock_recvmsg(sk, msg, len, flags);
+		return __vsock_recvmsg(sk, msg, len, flags, addr_len);
 
 	lock_sock(sk);
 	vsk = vsock_sk(sk);
@@ -95,7 +95,7 @@ static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
 	if (vsock_has_data(sk, psock) && sk_psock_queue_empty(psock)) {
 		release_sock(sk);
 		sk_psock_put(sk, psock);
-		return __vsock_recvmsg(sk, msg, len, flags);
+		return __vsock_recvmsg(sk, msg, len, flags, addr_len);
 	}
 
 	copied = sk_msg_recvmsg(sk, psock, msg, len, flags);
@@ -110,7 +110,7 @@ static int vsock_bpf_recvmsg(struct sock *sk, struct msghdr *msg,
 		if (sk_psock_queue_empty(psock)) {
 			release_sock(sk);
 			sk_psock_put(sk, psock);
-			return __vsock_recvmsg(sk, msg, len, flags);
+			return __vsock_recvmsg(sk, msg, len, flags, addr_len);
 		}
 
 		copied = sk_msg_recvmsg(sk, psock, msg, len, flags);

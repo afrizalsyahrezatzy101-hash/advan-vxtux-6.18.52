@@ -46,47 +46,47 @@ config DRM_I915
 	  including 830M, 845G, 852GM, 855GM, 865G, 915G, 945G, 965G,
 	  G35, G41, G43, G45 chipsets and Celeron, Pentium, Core i3,
 	  Core i5, Core i7 as well as Atom CPUs with integrated graphics.
-
+	
 	  This driver is used by the Intel driver in X.org 6.8 and
 	  XFree86 4.4 and above. It replaces the older i830 module that
 	  supported a subset of the hardware in older X.org releases.
-
+	
 	  Note that the older i810/i815 chipsets require the use of the
 	  i810 driver instead, and the Atom z5xx series has an entirely
 	  different implementation.
-
+	
 	  If "M" is selected, the module will be called i915.
-
+	
 config DRM_I915_FORCE_PROBE
 	string "Force probe i915 for selected Intel hardware IDs"
 	depends on DRM_I915
 	help
 	  This is the default value for the i915.force_probe module
 	  parameter. Using the module parameter overrides this option.
-
+	
 	  Force probe the i915 driver for Intel graphics devices that are
 	  recognized but not properly supported by this kernel version. Force
 	  probing an unsupported device taints the kernel. It is recommended to
 	  upgrade to a kernel version with proper support as soon as it is
 	  available.
-
+	
 	  It can also be used to block the probe of recognized and fully
 	  supported devices.
-
+	
 	  Use "" to disable force probe. If in doubt, use this.
-
+	
 	  Use "<pci-id>[,<pci-id>,...]" to force probe the i915 for listed
 	  devices. For example, "4500" or "4500,4571".
-
+	
 	  Use "*" to force probe the driver for all known devices. Not
 	  recommended.
-
+	
 	  Use "!" right before the ID to block the probe of the device. For
 	  example, "4500,!4571" forces the probe of 4500 and blocks the probe of
 	  4571.
-
+	
 	  Use "!*" to block the probe of the driver for all known devices.
-
+	
 config DRM_I915_CAPTURE_ERROR
 	bool "Enable capturing GPU state following a hang"
 	depends on DRM_I915
@@ -96,9 +96,9 @@ config DRM_I915_CAPTURE_ERROR
 	  This information is vital for triaging hangs and assists in debugging.
 	  Please report any hang for triaging according to:
 	    https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
-
+	
 	  If in doubt, say "Y".
-
+	
 config DRM_I915_COMPRESS_ERROR
 	bool "Compress GPU error state"
 	depends on DRM_I915_CAPTURE_ERROR
@@ -108,9 +108,9 @@ config DRM_I915_COMPRESS_ERROR
 	  This option selects ZLIB_DEFLATE if it isn't already
 	  selected and causes any error state captured upon a GPU hang
 	  to be compressed using zlib.
-
+	
 	  If in doubt, say "Y".
-
+	
 config DRM_I915_USERPTR
 	bool "Always enable userptr support"
 	depends on DRM_I915
@@ -119,9 +119,9 @@ config DRM_I915_USERPTR
 	help
 	  This option selects CONFIG_MMU_NOTIFIER if it isn't already
 	  selected to enabled full userptr support.
-
+	
 	  If in doubt, say "Y".
-
+	
 config DRM_I915_GVT_KVMGT
 	tristate "Enable KVM host support Intel GVT-g graphics virtualization"
 	depends on DRM_I915
@@ -137,13 +137,13 @@ config DRM_I915_GVT_KVMGT
 	  virtualization technology host support with integrated graphics.
 	  With GVT-g, it's possible to have one integrated graphics
 	  device shared by multiple VMs under KVM.
-
+	
 	  Note that this driver only supports newer device from Broadwell on.
 	  For further information and setup guide, you can visit:
 	  https://github.com/intel/gvt-linux/wiki.
-
+	
 	  If in doubt, say "N".
-
+	
 config DRM_I915_PXP
 	bool "Enable Intel PXP support"
 	depends on DRM_I915
@@ -154,7 +154,7 @@ config DRM_I915_PXP
 	  version 12 and newer GPUs, that helps to establish the hardware
 	  protected session and manage the status of the alive software session,
 	  as well as its life cycle.
-
+	
 config DRM_I915_DP_TUNNEL
 	bool "Enable DP tunnel support"
 	depends on DRM_I915
@@ -166,9 +166,9 @@ config DRM_I915_DP_TUNNEL
 	  Allocation mode for such tunnels. This allows using the maximum
 	  resolution allowed by the link BW on all displays sharing the
 	  link BW, for instance on a Thunderbolt link.
-
+	
 	  If in doubt, say "Y".
-
+	
 menu "drm/i915 Debugging"
 depends on DRM_I915
 depends on EXPERT

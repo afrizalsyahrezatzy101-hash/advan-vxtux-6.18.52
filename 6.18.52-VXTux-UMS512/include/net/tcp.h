@@ -524,11 +524,16 @@ struct sock *tcp_create_openreq_child(const struct sock *sk,
 				      struct request_sock *req,
 				      struct sk_buff *skb);
 void tcp_ca_openreq_child(struct sock *sk, const struct dst_entry *dst);
+bool tcp_ca_no_fallback_rfc3168(struct sock *sk);
+void tcp_reqsk_send_challenge_ack(struct sock *sk, struct sk_buff *skb,
+				  struct request_sock *req);
 struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 				  struct request_sock *req,
 				  struct dst_entry *dst,
 				  struct request_sock *req_unhash,
-				  bool *own_req);
+				  bool *own_req,
+				  void (*opt_child_init)(struct sock *newsk,
+							 const struct sock *sk));
 int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb);
 int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
 int tcp_connect(struct sock *sk);
@@ -2094,6 +2099,17 @@ enum tcp_chrono {
 
 void tcp_chrono_start(struct sock *sk, const enum tcp_chrono type);
 void tcp_chrono_stop(struct sock *sk, const enum tcp_chrono type);
+
+/* VXTux 6.18 backport: vendor-only stubs (function removed in 6.18) */
+static inline unsigned int tcp_dst_advmss(const struct dst_entry *dst)
+{
+	return dst_metric_raw(dst, RTAX_ADVMSS);
+}
+
+static inline void tcp_chrono_set(struct tcp_sock *tp, enum tcp_chrono c)
+{
+	tcp_chrono_stop((struct sock *)tp, c);
+}
 
 /* This helper is needed, because skb->tcp_tsorted_anchor uses
  * the same memory storage than skb->destructor/_skb_refdst

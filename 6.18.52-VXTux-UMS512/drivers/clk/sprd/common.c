@@ -10,6 +10,9 @@
 #include <linux/of_address.h>
 #include <linux/platform_device.h>
 #include <linux/regmap.h>
+#include <linux/reset-controller.h>
+#include <linux/slab.h>
+#include <linux/spinlock.h>
 
 #include "common.h"
 
@@ -76,9 +79,54 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
 
 	sprd_clk_set_regmap(desc, regmap);
 
+	/*
+	 * The reset controller this node owns needs the same regmap, and
+	 * the SoC drivers reach it through platform_get_drvdata().
+	 */
+	platform_set_drvdata(pdev, regmap);
+
 	return 0;
 }
 EXPORT_SYMBOL_GPL(sprd_clk_regmap_init);
+
+/*
+ * sprd_clk_reset_register - register the reset lines this clock
+ * controller owns.
+ *
+ * The stock ums512-clk.ko does this itself in its probe: it devm_kmalloc()s
+ * a struct sprd_reset, fills in the ops (sprd_sc_reset_ops), the regmap,
+ * the reset map and the reset count, then hands it to
+ * devm_reset_controller_register(). The stock DTB relies on it: the i2c
+ * nodes' "resets" property points at the apapb-gate and aonapb-gate
+ * clock nodes, which are the reset providers.
+ */
+int sprd_clk_reset_register(struct device *dev, struct regmap *regmap,
+			     const struct sprd_clk_desc *desc)
+{
+	struct sprd_reset *reset;
+	int ret;
+
+	if (!desc->num_resets)
+		return 0;
+
+	reset = devm_kzalloc(dev, sizeof(*reset), GFP_KERNEL);
+	if (!reset)
+		return -ENOMEM;
+
+	reset->rcdev.ops = &sprd_sc_reset_ops;
+	reset->rcdev.of_node = dev->of_node;
+	reset->rcdev.nr_resets = desc->num_resets;
+	reset->reset_map = desc->resets;
+	reset->regmap = regmap;
+	spin_lock_init(&reset->lock);
+
+	ret = devm_reset_controller_register(dev, &reset->rcdev);
+	if (ret)
+		return ret;
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(sprd_clk_reset_register);
 
 int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw)
 {

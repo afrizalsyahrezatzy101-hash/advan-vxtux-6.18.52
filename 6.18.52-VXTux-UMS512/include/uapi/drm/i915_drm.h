@@ -1,3 +1,4 @@
+#include <linux/types.h>
 /*
  * Copyright 2003 Tungsten Graphics, Inc., Cedar Park, Texas.
  * All Rights Reserved.

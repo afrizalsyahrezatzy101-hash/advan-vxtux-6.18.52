@@ -11,3 +11,4 @@ config CRYPTO_DEV_VIRTIO
 	help
 	  This driver provides support for virtio crypto device. If you
 	  choose 'M' here, this module will be called virtio_crypto.
+	

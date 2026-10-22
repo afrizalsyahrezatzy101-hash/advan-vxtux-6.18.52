@@ -8,7 +8,7 @@ menuconfig SPMI
 	  SPMI (System Power Management Interface) is a two-wire
 	  serial interface between baseband and application processors
 	  and Power Management Integrated Circuits (PMIC).
-
+	
 if SPMI
 
 config SPMI_APPLE
@@ -18,7 +18,7 @@ config SPMI_APPLE
 	  If you say yes to this option, support will be included for the
 	  SPMI controller present on many Apple SoCs, including the
 	  t8103 (M1) and t600x (M1 Pro/Max).
-
+	
 config SPMI_HISI3670
 	tristate "Hisilicon 3670 SPMI Controller"
 	select IRQ_DOMAIN_HIERARCHY
@@ -28,7 +28,7 @@ config SPMI_HISI3670
 	  If you say yes to this option, support will be included for the
 	  built-in SPMI PMIC Arbiter interface on Hisilicon 3670
 	  processors.
-
+	
 config SPMI_MSM_PMIC_ARB
 	tristate "Qualcomm MSM SPMI Controller (PMIC Arbiter)"
 	select IRQ_DOMAIN_HIERARCHY
@@ -39,10 +39,10 @@ config SPMI_MSM_PMIC_ARB
 	  If you say yes to this option, support will be included for the
 	  built-in SPMI PMIC Arbiter interface on Qualcomm MSM family
 	  processors.
-
+	
 	  This is required for communicating with Qualcomm PMICs and
 	  other devices that have the SPMI interface.
-
+	
 config SPMI_MTK_PMIF
 	tristate "Mediatek SPMI Controller (PMIC Arbiter)"
 	depends on ARCH_MEDIATEK || COMPILE_TEST
@@ -50,8 +50,8 @@ config SPMI_MTK_PMIF
 	  If you say yes to this option, support will be included for the
 	  built-in SPMI PMIC Arbiter interface on Mediatek family
 	  processors.
-
+	
 	  This is required for communicating with Mediatek PMICs and
 	  other devices that have the SPMI interface.
-
+	
 endif

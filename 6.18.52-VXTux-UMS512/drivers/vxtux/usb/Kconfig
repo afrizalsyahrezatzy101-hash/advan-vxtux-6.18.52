@@ -20,7 +20,7 @@ config VXTUX_SC27XX_TYPEC
 	  Node DT = replika FDT stok anak PMIC: reg <0x380>, interrupts
 	  <0x8> (parent PMIC), sprd,mode <2>, nvmem typec_cc1_cal/cc2_cal.
 	  Bila =m, modulnya bernama sc27xx_typec.
-
+	
 config VXTUX_SPRD_U_ETHER
 	tristate "Unisoc sprd_u_ether ABI provider (RE port)"
 	depends on USB_U_ETHER
@@ -37,7 +37,7 @@ config VXTUX_SPRD_U_ETHER
 	  punya API itu. Batas jujur: MESIN transfer SG-nya belum ada (jalur
 	  data u_ether masih jalur copy) — lihat kepala berkas untuk bukti.
 	  Bila =m, modulnya bernama sprd_u_ether (sama dgn blob vendor).
-
+	
 config VXTUX_SPRD_F_RNDIS
 	tristate "Unisoc sprd_usb_f_rndis ABI provider (RE port)"
 	depends on USB_F_RNDIS && VXTUX_SPRD_U_ETHER
@@ -50,5 +50,5 @@ config VXTUX_SPRD_F_RNDIS
 	  nama fungsi "rndis" (alias usbfunc:rndis) yang identik dengan
 	  f_rndis.c mainline, jadi pendaftar kedua hanya akan gagal.
 	  Bila =m, modulnya bernama sprd_usb_f_rndis (sama dgn blob vendor).
-
+	
 endmenu

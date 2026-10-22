@@ -9,3 +9,4 @@ config SND_BCM2835
 	  This driver handles both 3.5mm and HDMI audio, by leveraging
 	  the VCHIQ messaging interface between the kernel and the firmware
 	  running on VideoCore.
+	

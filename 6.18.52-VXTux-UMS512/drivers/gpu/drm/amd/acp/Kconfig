@@ -13,5 +13,5 @@ config DRM_AMD_ACP
 	it up into the amdgpu driver.  The ACP block provides the DMA
 	engine for the i2s-based ALSA driver. It is required for audio
 	on APUs which utilize an i2s codec.
-
+	
 endmenu

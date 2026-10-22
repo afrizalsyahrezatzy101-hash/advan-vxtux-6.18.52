@@ -18,3 +18,4 @@ config TYPEC_SPRD
 	  Type-C / Power Delivery port driver for the Unisoc SC27xx family
 	  (SC2730 PMIC). Provides CC detection, RdWw attach/detach and PD
 	  contract negotiation for the USB-C port on UMS512 / T618.
+	

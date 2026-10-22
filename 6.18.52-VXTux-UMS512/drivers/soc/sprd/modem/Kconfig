@@ -6,7 +6,7 @@ config SPRD_MODEM
 	  Loads modem firmware from partition and provides
 	  kernel interface for userspace RIL daemon.
 	  Full modem bring-up requires vendor RIL + SIPC stack.
-
+	
 # Port 2026-10-04: the Kconfig above was a stub that only described the modem,
 # with no sub-options, so none of the real drivers below could ever be selected.
 # Each sub-directory now contributes its own options.
@@ -30,3 +30,4 @@ config SPRD_SYSDUMP
 	  Requires the sprd debug/sysdump subsystem, which is not present in this
 	  tree. Only turn this on after porting it, or the link will fail with an
 	  undefined symbol.
+	

@@ -22,6 +22,19 @@
 #define SC27XX_CLK_ADC_EN		BIT(5)
 #define SC27XX_CLK_ADC_CLK_EN		BIT(6)
 
+/* UMP96xx PMIC global registers definition */
+#define UMP518_MODULE_EN		0x1808
+#define UMP518_ARM_CLK_EN		0x180c
+#define UMP9620_MODULE_EN		0x2008
+#define UMP9620_ARM_CLK_EN		0x200c
+#define UMP9620_ANA_REG			0x2010
+#define UMP518_ANA_REG			0x1810
+
+/* UMP9620 PMIC registers used to gate the ADC 26MHz sinout */
+#define UMP9620_ADC_CLK26M_MASK		BIT(8)
+#define UMP9620_ADC_CLK26M_SHIFT	8
+#define UMP9620_ADC_CLK26M_EN		BIT(8)
+
 /* ADC controller registers definition */
 #define SC27XX_ADC_CTL			0x0
 #define SC27XX_ADC_CH_CFG		0x4
@@ -94,6 +107,11 @@ struct sc27xx_adc_data {
 	u32 base;
 	int irq;
 	const struct sc27xx_adc_variant_data *var_data;
+	/* UMP96xx: the ADC 26MHz sinout gate, from the DT. */
+	u32 pm_reg;
+	u32 pm_mask;
+	bool pm_reg_valid;
+	bool pm_clk26m_off;
 };
 
 /*
@@ -111,6 +129,12 @@ struct sc27xx_adc_variant_data {
 	void (*init_scale)(struct sc27xx_adc_data *data);
 	int (*get_ratio)(int channel, int scale);
 	bool set_volref;
+	/* UMP96xx only: the register pair gating the ADC 26MHz sinout. */
+	u32 pm_reg;
+	u32 pm_mask;
+	u32 pm_val;
+	/* UMP96xx only: the nvmem cells holding the ratio calibration. */
+	const struct sc27xx_adc_ump_cal *ump_cal;
 };
 
 struct sc27xx_adc_linear_graph {
@@ -118,6 +142,20 @@ struct sc27xx_adc_linear_graph {
 	int adc0;
 	int volt1;
 	int adc1;
+};
+
+/*
+ * UMP96xx per-chip calibration description: the nvmem cells holding the
+ * two big-scale calibration words, and the live graph they correct.
+ * `bat_*` are present on the UMP9620 only.
+ */
+struct sc27xx_adc_ump_cal {
+	const char *big_scale_calib1;
+	const char *big_scale_calib2;
+	struct sc27xx_adc_linear_graph *bscale_graph;
+	const char *bat_calib1;
+	const char *bat_calib2;
+	struct sc27xx_adc_linear_graph *bat_graph;
 };
 
 /*
@@ -134,6 +172,15 @@ static struct sc27xx_adc_linear_graph big_scale_graph = {
 static struct sc27xx_adc_linear_graph small_scale_graph = {
 	1000, 3413,
 	100, 341,
+};
+
+/*
+ * UMP96xx battery detection graph: the same shape as the ADC graphs but
+ * calibrated from its own nvmem cells (vbat_det_cal1 / vbat_det_cal2).
+ */
+static struct sc27xx_adc_linear_graph ump9620_bat_det_graph = {
+	1400, 3482,
+	200, 476,
 };
 
 static const struct sc27xx_adc_linear_graph sc2731_big_scale_graph_calib = {
@@ -479,6 +526,138 @@ static void sc2731_adc_scale_init(struct sc27xx_adc_data *data)
 			break;
 		}
 	}
+}
+
+/*
+ * UMP96xx channel scales.
+ *
+ * Channels 10, 21..23, 30 and 31 run on scale 3; channels 7 and 9 on
+ * scale 2; channels 0 and 13 on scale 1; the rest on scale 0.
+ */
+static void ump9620_adc_scale_init(struct sc27xx_adc_data *data)
+{
+	int i;
+
+	for (i = 0; i < SC27XX_ADC_CHANNEL_MAX; i++) {
+		switch (i) {
+		case 0:
+		case 13:
+			data->channel_scale[i] = 1;
+			break;
+		case 7:
+		case 9:
+			data->channel_scale[i] = 2;
+			break;
+		case 10:
+		case 21:
+		case 22:
+		case 23:
+		case 30:
+		case 31:
+			data->channel_scale[i] = 3;
+			break;
+		default:
+			data->channel_scale[i] = 0;
+			break;
+		}
+	}
+}
+
+/*
+ * UMP96xx voltage ratios.
+ *
+ * Channel 11 (battery) always uses 1:1.  Channel 14 uses a fixed
+ * 4.4M/900 divider on scale 0 and 1:1 elsewhere; channel 15 uses 1:1 on
+ * scale 0 and 1:3 above it; channels 21..23 use 3:8 on scale 0 and
+ * 1:1 above.  Everything else follows the per-scale default table.
+ */
+static int ump9620_adc_get_ratio(int channel, int scale)
+{
+	switch (channel) {
+	case 11:
+		return SC27XX_VOLT_RATIO(1, 1);
+	case 14:
+		return scale ? SC27XX_VOLT_RATIO(1, 1) :
+			SC27XX_VOLT_RATIO(4400, 900);
+	case 15:
+		return scale ? SC27XX_VOLT_RATIO(1, 3) :
+			SC27XX_VOLT_RATIO(1, 1);
+	case 21:
+	case 22:
+	case 23:
+		return scale ? SC27XX_VOLT_RATIO(1, 1) :
+			SC27XX_VOLT_RATIO(3, 8);
+	default:
+		switch (scale) {
+		case 1:
+			return SC27XX_VOLT_RATIO(1000, 1955);
+		case 2:
+			return SC27XX_VOLT_RATIO(1000, 2586);
+		case 3:
+			return SC27XX_VOLT_RATIO(1000, 4060);
+		default:
+			return SC27XX_VOLT_RATIO(1, 1);
+		}
+	}
+}
+
+/*
+ * UMP96xx scale calibration.
+ *
+ * The UMP96xx keeps two calibration cells per graph rather than one, so
+ * both are read and their 12-bit fields folded into the live graph:
+ *
+ *   calib1 -> big_scale_graph.adc0, calib2 -> big_scale_graph.adc1
+ *
+ * for the UMP9620 the same pair also drives ump9620_bat_det_graph.  A zero
+ * in either cell means the part was not calibrated in the factory, and the
+ * graph is left at its default.
+ */
+/*
+ * The stock blob carries ump96xx_adc_scale_cal as its own symbol; keep it
+ * out of line so the local symbol survives at -O2.
+ * ponytail: the noinline/noclone pair is what keeps a local symbol; drop it
+ * if this function ever grows callers that want it inlined.
+ */
+static noinline int ump96xx_adc_scale_cal(struct sc27xx_adc_data *data,
+					  const struct sc27xx_adc_ump_cal *cal)
+	__noclone;
+
+static noinline int ump96xx_adc_scale_cal(struct sc27xx_adc_data *data,
+					  const struct sc27xx_adc_ump_cal *cal)
+{
+	struct sc27xx_adc_linear_graph *graph;
+	int calib1, calib2;
+	int ret;
+
+	if (!data)
+		return -EINVAL;
+
+	ret = adc_nvmem_cell_calib_data(data, cal->big_scale_calib1);
+	if (ret < 0) {
+		dev_err(data->dev, "err! %s:%d\n", cal->big_scale_calib1, ret);
+		return ret;
+	}
+	calib1 = ret;
+
+	ret = adc_nvmem_cell_calib_data(data, cal->big_scale_calib2);
+	if (ret < 0) {
+		dev_err(data->dev, "err! %s:%d\n", cal->big_scale_calib2, ret);
+		return ret;
+	}
+	calib2 = ret;
+
+	/* Only the ADC values in the linear graphs are calibrated. */
+	calib1 = (calib1 >> 4) & 0xfff;
+	calib2 = (calib2 >> 4) & 0xfff;
+	if (!calib1 || !calib2)
+		return 0;
+
+	graph = cal->bscale_graph;
+	graph->adc0 = calib1;
+	graph->adc1 = calib2;
+
+	return 0;
 }
 
 static int sc27xx_adc_read(struct sc27xx_adc_data *data, int channel,
@@ -857,6 +1036,140 @@ static const struct sc27xx_adc_variant_data sc2720_data = {
 	.set_volref = false,
 };
 
+/*
+ * UMP96xx calibration.
+ *
+ * The UMP9620 and the UMP518 share the same big-scale pair; only the
+ * UMP9620 has the extra battery-detection cells.
+ */
+static const struct sc27xx_adc_ump_cal ump9620_adc_cal = {
+	.big_scale_calib1 = "big_scale_calib1",
+	.big_scale_calib2 = "big_scale_calib2",
+	.bscale_graph = &big_scale_graph,
+	.bat_calib1 = "vbat_det_cal1",
+	.bat_calib2 = "vbat_det_cal2",
+	.bat_graph = &ump9620_bat_det_graph,
+};
+
+static const struct sc27xx_adc_ump_cal ump518_adc_cal = {
+	.big_scale_calib1 = "big_scale_calib1",
+	.big_scale_calib2 = "big_scale_calib2",
+	.bscale_graph = &big_scale_graph,
+};
+
+static const struct sc27xx_adc_variant_data ump9620_data = {
+	.module_en = UMP9620_MODULE_EN,
+	.clk_en = UMP9620_ARM_CLK_EN,
+	.scale_shift = SC27XX_ADC_SCALE_SHIFT,
+	.scale_mask = SC27XX_ADC_SCALE_MASK,
+	.bscale_cal = &big_scale_graph,
+	.sscale_cal = &small_scale_graph,
+	.init_scale = ump9620_adc_scale_init,
+	.get_ratio = ump9620_adc_get_ratio,
+	.set_volref = false,
+	.pm_reg = UMP9620_ANA_REG,
+	.pm_mask = UMP9620_ADC_CLK26M_MASK,
+	.pm_val = UMP9620_ADC_CLK26M_EN,
+	.ump_cal = &ump9620_adc_cal,
+};
+
+static const struct sc27xx_adc_variant_data ump518_data = {
+	.module_en = UMP518_MODULE_EN,
+	.clk_en = UMP518_ARM_CLK_EN,
+	.scale_shift = SC27XX_ADC_SCALE_SHIFT,
+	.scale_mask = SC27XX_ADC_SCALE_MASK,
+	.bscale_cal = &big_scale_graph,
+	.sscale_cal = &small_scale_graph,
+	.init_scale = ump9620_adc_scale_init,
+	.get_ratio = ump9620_adc_get_ratio,
+	.set_volref = false,
+	.pm_reg = UMP518_ANA_REG,
+	.pm_mask = UMP9620_ADC_CLK26M_MASK,
+	.pm_val = UMP9620_ADC_CLK26M_EN,
+	.ump_cal = &ump518_adc_cal,
+};
+
+/*
+ * The UMP96xx needs the ADC 26MHz sinout gated on and off around a
+ * conversion.  The register pair comes from the DT ("sprd_adc_pm_reg"),
+ * and the state of the gate is tracked so the PM callbacks know whether
+ * there is anything to do.
+ */
+static int sc27xx_adc_pm_set_clk26m(struct sc27xx_adc_data *data, bool on)
+{
+	int ret;
+
+	mutex_lock(&data->lock);
+	ret = regmap_update_bits(data->regmap, data->var_data->pm_reg,
+				 data->var_data->pm_mask,
+				 on ? data->var_data->pm_val : 0);
+	mutex_unlock(&data->lock);
+
+	return ret;
+}
+
+static int sc27xx_adc_pm_suspend(struct device *dev)
+{
+	struct sc27xx_adc_data *data = dev_get_drvdata(dev);
+	int ret;
+
+	if (!data->pm_reg_valid)
+		return 0;
+
+	ret = sc27xx_adc_pm_set_clk26m(data, false);
+	if (ret) {
+		dev_err(dev, "clean clk26m_sinout_pmic failed\n");
+		return ret;
+	}
+	data->pm_clk26m_off = true;
+
+	return 0;
+}
+
+static int sc27xx_adc_pm_resume(struct device *dev)
+{
+	struct sc27xx_adc_data *data = dev_get_drvdata(dev);
+	int ret;
+
+	if (!data->pm_reg_valid)
+		return 0;
+
+	ret = sc27xx_adc_pm_set_clk26m(data, true);
+	if (ret) {
+		dev_err(dev, "failed to set the UMP9620 ADC clk26m bit8 on IP\n");
+		return ret;
+	}
+	data->pm_clk26m_off = false;
+
+	return 0;
+}
+
+static const struct dev_pm_ops sc27xx_adc_pm_ops = {
+	.suspend = sc27xx_adc_pm_suspend,
+	.resume = sc27xx_adc_pm_resume,
+};
+
+static void sc27xx_adc_free_hwlock(void *hwlock)
+{
+	hwspin_lock_free(hwlock);
+}
+
+static void sc27xx_adc_remove(struct platform_device *pdev)
+{
+	struct sc27xx_adc_data *data = dev_get_drvdata(&pdev->dev);
+
+	/*
+	 * The UMP96xx gates the ADC 26MHz sinout from a register pair given
+	 * in the DT; release it on the way out.
+	 */
+	if (data->pm_reg_valid) {
+		int ret = sc27xx_adc_pm_set_clk26m(data, false);
+
+		if (ret)
+			dev_err(&pdev->dev, "clean clk26m_sinout_pmic failed\n");
+	}
+}
+
 static int sc27xx_adc_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -906,6 +1219,17 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
 		return -ENXIO;
 	}
 
+	/*
+	 * The stock blob releases the hwspinlock from a devm action, not
+	 * from the remove path.
+	 */
+	ret = devm_add_action_or_reset(dev, sc27xx_adc_free_hwlock,
+					sc27xx_data->hwlock);
+	if (ret) {
+		dev_err(dev, "failed to add ADC hwlock free action\n");
+		return ret;
+	}
+
 	sc27xx_data->dev = dev;
 	if (pdata->set_volref) {
 		sc27xx_data->volref = devm_regulator_get(dev, "vref");
@@ -917,11 +1241,32 @@ static int sc27xx_adc_probe(struct platform_device *pdev)
 
 	sc27xx_data->var_data = pdata;
 	sc27xx_data->var_data->init_scale(sc27xx_data);
+	dev_set_drvdata(dev, sc27xx_data);
+
+	/*
+	 * The UMP96xx gates its ADC 26MHz sinout through the register pair
+	 * named in the DT; the SC27xx parts have no such gate.
+	 */
+	if (of_property_read_u32_array(np, "sprd_adc_pm_reg",
+					&sc27xx_data->pm_reg, 1) == 0) {
+		sc27xx_data->pm_mask = sc27xx_data->pm_reg >> 16;
+		sc27xx_data->pm_reg &= GENMASK(15, 0);
+		sc27xx_data->pm_reg_valid = true;
+	}
 
 	ret = sc27xx_adc_enable(sc27xx_data);
 	if (ret) {
 		dev_err(dev, "failed to enable ADC module\n");
 		return ret;
+	}
+
+	/* UMP96xx scale calibration comes from its own nvmem cell pair. */
+	if (pdata->ump_cal) {
+		ret = ump96xx_adc_scale_cal(sc27xx_data, pdata->ump_cal);
+		if (ret) {
+			dev_err(dev, "failed to calibrate ADC scale\n");
+			return ret;
+		}
 	}
 
 	ret = devm_add_action_or_reset(dev, sc27xx_adc_disable, sc27xx_data);
@@ -950,15 +1295,19 @@ static const struct of_device_id sc27xx_adc_of_match[] = {
 	{ .compatible = "sprd,sc2730-adc", .data = &sc2730_data},
 	{ .compatible = "sprd,sc2721-adc", .data = &sc2721_data},
 	{ .compatible = "sprd,sc2720-adc", .data = &sc2720_data},
+	{ .compatible = "sprd,ump9620-adc", .data = &ump9620_data},
+	{ .compatible = "sprd,ump518-adc", .data = &ump518_data},
 	{ }
 };
 MODULE_DEVICE_TABLE(of, sc27xx_adc_of_match);
 
 static struct platform_driver sc27xx_adc_driver = {
 	.probe = sc27xx_adc_probe,
+	.remove = sc27xx_adc_remove,
 	.driver = {
 		.name = "sc27xx-adc",
 		.of_match_table = sc27xx_adc_of_match,
+		.pm = &sc27xx_adc_pm_ops,
 	},
 };
 

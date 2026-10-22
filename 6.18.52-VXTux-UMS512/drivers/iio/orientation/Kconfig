@@ -15,7 +15,7 @@ config HID_SENSOR_INCLINOMETER_3D
 	help
 	  Say yes here to build support for the HID SENSOR
 	  Inclinometer 3D.
-
+	
 config HID_SENSOR_DEVICE_ROTATION
 	depends on HID_SENSOR_HUB
 	select IIO_BUFFER
@@ -26,5 +26,5 @@ config HID_SENSOR_DEVICE_ROTATION
 	  Say yes here to build support for the HID SENSOR
 	  device rotation. The output of a device rotation sensor
 	  is presented using quaternion format.
-
+	
 endmenu

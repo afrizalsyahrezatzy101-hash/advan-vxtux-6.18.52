@@ -10,7 +10,7 @@ config SPRD_SOCID
 	  Pembaca identitas SoC dari syscon chipid (0x402e0000):
 	  sprd_get_soc_id() untuk konsumen in-tree. Port dari
 	  drivers/misc/sprd_soc_id.c (GPL fork Samsung T618).
-
+	
 config SPRD_UID
 	tristate "Unisoc device UID via eFuse nvmem (VXTux port)"
 	depends on NVMEM
@@ -18,3 +18,4 @@ config SPRD_UID
 	help
 	  /dev/sprd_uid + atribut sysfs uid, dibaca dari sel efuse
 	  uid_start/uid_end. Port dari drivers/misc/sprd_uid.c (GPL).
+	

@@ -22,6 +22,13 @@
 #define CHAN_STATE_FREE		3
 
 #define SMSG_CACHE_NR		256
+/*
+ * The stock blob keeps the last 20 packed mailbox words of every
+ * aud_smsg_send() in a function-local ring (aud_smsg_send.msg_val,
+ * 0xa0 bytes) walked by the global msg_index.  Kept for the same reason:
+ * a dump hook reads the history the DSP was actually rung with.
+ */
+#define SMSG_TX_RING_MSG_COUNT	20
 
 /* flag for CONNECT/DISCONNECT msg type */
 #define	SMSG_CONNECT_MAGIC	0xBEEE

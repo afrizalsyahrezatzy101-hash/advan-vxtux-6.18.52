@@ -16,8 +16,8 @@ config ACPI_AGDI
 	  Arm Generic Diagnostic Dump and Reset Device Interface (AGDI) is
 	  a standard that enables issuing a non-maskable diagnostic dump and
 	  reset command.
-
+	
 	  If set, the kernel parses AGDI table and listens for the command.
-
+	
 config ACPI_APMT
 	bool

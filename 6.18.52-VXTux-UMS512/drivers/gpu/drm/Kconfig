@@ -25,7 +25,7 @@ menuconfig DRM
 	  DMA transfers. Please see <http://dri.sourceforge.net/> for more
 	  details.  You should also select and configure AGP
 	  (/dev/agpgart) support if it is available for your platform.
-
+	
 menu "DRM debugging options"
 depends on DRM
 source "drivers/gpu/drm/Kconfig.debug"
@@ -48,7 +48,7 @@ config DRM_KMS_HELPER
 	select FB_CORE if DRM_FBDEV_EMULATION
 	help
 	  CRTC helpers for KMS drivers.
-
+	
 config DRM_DRAW
 	bool
 	depends on DRM
@@ -65,7 +65,7 @@ config DRM_PANIC
 	  It will only work if your graphic driver supports this feature.
 	  To support Hi-DPI Display, you can enable bigger fonts like
 	  FONT_TER16x32
-
+	
 config DRM_PANIC_FOREGROUND_COLOR
 	hex "Drm panic screen foreground color, in RGB"
 	depends on DRM_PANIC
@@ -84,7 +84,7 @@ config DRM_PANIC_DEBUG
 	  panic handler to write the panic message to this plane scanout buffer.
 	  This is unsafe and should not be enabled on a production build.
 	  If in doubt, say "N".
-
+	
 config DRM_PANIC_SCREEN
 	string "Panic screen formatter"
 	default "user"
@@ -97,7 +97,7 @@ config DRM_PANIC_SCREEN
 	  This can also be overridden by drm.panic_screen=xxxx kernel parameter
 	  or by writing to /sys/module/drm/parameters/panic_screen sysfs entry
 	  Default is "user"
-
+	
 config DRM_PANIC_SCREEN_QR_CODE
 	bool "Add a panic screen with a QR code"
 	depends on DRM_PANIC && RUST
@@ -108,7 +108,7 @@ config DRM_PANIC_SCREEN_QR_CODE
 	  information. This should be easier for the user to report a kernel
 	  panic, with all debug information available.
 	  To use this panic screen, also set DRM_PANIC_SCREEN to "qr_code"
-
+	
 config DRM_PANIC_SCREEN_QR_CODE_URL
 	string "Base URL of the QR code in the panic screen"
 	depends on DRM_PANIC_SCREEN_QR_CODE
@@ -119,7 +119,7 @@ config DRM_PANIC_SCREEN_QR_CODE_URL
 	  uncompressed text only.
 	  There is a demo code in javascript, to decode and uncompress the kmsg
 	  data from the URL parameter at https://github.com/kdj0c/panic_report
-
+	
 config DRM_PANIC_SCREEN_QR_VERSION
 	int "Maximum version (size) of the QR code."
 	depends on DRM_PANIC_SCREEN_QR_CODE
@@ -129,7 +129,7 @@ config DRM_PANIC_SCREEN_QR_VERSION
 	  version ranges from Version 1 (21x21) to Version 40 (177x177).
 	  Smaller QR code are easier to read, but will contain less debugging
 	  data. Default is 40.
-
+	
 config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
         bool "Enable refcount backtrace history in the DP MST helpers"
 	depends on STACKTRACE_SUPPORT
@@ -141,10 +141,10 @@ config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
           Enables debug tracing for topology refs in DRM's DP MST helpers. A
           history of each topology reference/dereference will be printed to the
           kernel log once a port or branch device's topology refcount reaches 0.
-
+	
           This has the potential to use a lot of memory and print some very
           large kernel messages. If in doubt, say "N".
-
+	
 config DRM_DEBUG_MODESET_LOCK
 	bool "Enable backtrace history for lock contention"
 	depends on STACKTRACE_SUPPORT
@@ -157,9 +157,9 @@ config DRM_DEBUG_MODESET_LOCK
 	  contention. A history of each drm modeset lock path hitting -EDEADLK
 	  will be saved until gracefully handled, and the backtrace will be
 	  printed when attempting to lock a contended lock.
-
+	
 	  If in doubt, say "N".
-
+	
 config DRM_CLIENT
 	bool
 	depends on DRM
@@ -168,7 +168,7 @@ config DRM_CLIENT
 	  struct drm_client_dev and its interfaces should select this
 	  option. Drivers that support the default clients should
 	  select DRM_CLIENT_SELECTION instead.
-
+	
 source "drivers/gpu/drm/clients/Kconfig"
 
 config DRM_LOAD_EDID_FIRMWARE
@@ -182,7 +182,7 @@ config DRM_LOAD_EDID_FIRMWARE
 	  feature is provided as a workaround for broken hardware, the
 	  default case is N. Details and instructions how to build your own
 	  EDID data are given in Documentation/admin-guide/edid.rst.
-
+	
 source "drivers/gpu/drm/display/Kconfig"
 
 config DRM_TTM
@@ -193,13 +193,13 @@ config DRM_TTM
 	  GPU memory management subsystem for devices with multiple
 	  GPU memory types. Will be enabled automatically if a device driver
 	  uses it.
-
+	
 config DRM_EXEC
 	tristate
 	depends on DRM
 	help
 	  Execution context for command submissions
-
+	
 config DRM_GPUVM
 	tristate
 	depends on DRM
@@ -207,7 +207,7 @@ config DRM_GPUVM
 	help
 	  GPU-VM representation providing helpers to manage a GPUs virtual
 	  address space
-
+	
 config DRM_GPUSVM
 	tristate
 	depends on DRM
@@ -216,20 +216,20 @@ config DRM_GPUSVM
 	help
 	  GPU-SVM representation providing helpers to manage a GPUs shared
 	  virtual memory
-
+	
 config DRM_BUDDY
 	tristate
 	depends on DRM
 	select GPU_BUDDY
 	help
 	  A page based buddy allocator
-
+	
 config DRM_VRAM_HELPER
 	tristate
 	depends on DRM
 	help
 	  Helpers for VRAM memory management
-
+	
 config DRM_TTM_HELPER
 	tristate
 	depends on DRM
@@ -239,7 +239,7 @@ config DRM_TTM_HELPER
 	select FB_SYSMEM_HELPERS_DEFERRED if DRM_FBDEV_EMULATION
 	help
 	  Helpers for ttm-based gem objects
-
+	
 config DRM_GEM_DMA_HELPER
 	tristate
 	depends on DRM
@@ -248,7 +248,7 @@ config DRM_GEM_DMA_HELPER
 	select FB_DMAMEM_HELPERS_DEFERRED if DRM_FBDEV_EMULATION
 	help
 	  Choose this if you need the GEM DMA helper functions
-
+	
 config DRM_GEM_SHMEM_HELPER
 	tristate
 	depends on DRM && MMU
@@ -257,7 +257,7 @@ config DRM_GEM_SHMEM_HELPER
 	select FB_SYSMEM_HELPERS_DEFERRED if DRM_FBDEV_EMULATION
 	help
 	  Choose this if you need the GEM shmem helper functions
-
+	
 config DRM_SUBALLOC_HELPER
 	tristate
 	depends on DRM
@@ -292,7 +292,7 @@ config DRM_VGEM
 	  Choose this option to get a virtual graphics memory manager,
 	  as used by Mesa's software renderer for enhanced performance.
 	  If M is selected the module will be called vgem.
-
+	
 source "drivers/gpu/drm/vkms/Kconfig"
 
 source "drivers/gpu/drm/exynos/Kconfig"

@@ -13,3 +13,4 @@ config VIDEO_SUN6I_ISP
 	help
 	   Support for the Allwinner A31 Image Signal Processor (ISP), also
 	   found on other platforms such as the A80, A83T or V3/V3s.
+	

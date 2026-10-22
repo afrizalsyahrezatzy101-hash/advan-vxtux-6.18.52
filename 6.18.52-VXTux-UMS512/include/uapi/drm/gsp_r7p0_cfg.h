@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
  * Copyright (C) 2018 Spreadtrum Communications Inc.
  *
@@ -178,12 +179,12 @@ struct gsp_r7p0_des_layer_user {
 };
 
 struct gsp_r7p0_misc_cfg_user {
-	uint8_t gsp_gap;
-	uint8_t core_num;
-	uint8_t co_work0;
-	uint8_t co_work1;
-	uint8_t work_mod;
-	uint8_t pmargb_en;
+	__u8 gsp_gap;
+	__u8 core_num;
+	__u8 co_work0;
+	__u8 co_work1;
+	__u8 work_mod;
+	__u8 pmargb_en;
 	struct gsp_rect workarea_src_rect;
 	struct gsp_pos workarea_des_pos;
 };
@@ -196,10 +197,10 @@ struct gsp_r7p0_cfg_user {
 };
 
 struct drm_gsp_r7p0_cfg_user {
-	bool async;
+	_Bool async;
 	__u32 size;
 	__u32 num;
-	bool split;
+	_Bool split;
 	struct gsp_r7p0_cfg_user *config;
 };
 

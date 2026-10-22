@@ -13,7 +13,7 @@ config CEC_CH7322
 	  generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_NXP_TDA9950
 	tristate "NXP Semiconductors TDA9950/TDA998X HDMI CEC"
 	depends on I2C
@@ -23,3 +23,4 @@ config CEC_NXP_TDA9950
 	help
 	  This is a driver for the NXP TDA9950 CEC controller and for the CEC
 	  controller block integrated into several NXP TDA998x HDMI encoders.
+	

@@ -10,7 +10,7 @@ config INTEL_VSC
 	select V4L2_FWNODE
 	help
 	  This adds support for Intel Visual Sensing Controller (IVSC).
-
+	
 	  The IVSC support is split into two devices, ACE (Algorithm
 	  Context Engine) and CSI (Camera Serial Interface), each of which
 	  have their own drivers. The ACE is used to select the ownership
@@ -18,5 +18,6 @@ config INTEL_VSC
 	  used to both select the routing destination for the data the
 	  sensor transmits over the CSI-2 bus between the IVSC and the
 	  host CPU and to configure the CSI-2 bus itself.
-
+	
 	  The modules will be called ivsc-ace and ivsc-csi.
+	

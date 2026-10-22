@@ -43,6 +43,9 @@
 #define MGMT_VERSION	1
 #define MGMT_REVISION	23
 
+static inline bool past_sender_enabled(struct hci_dev *hdev) { return false; }
+static inline bool past_receiver_enabled(struct hci_dev *hdev) { return false; }
+
 static const u16 mgmt_commands[] = {
 	MGMT_OP_READ_INDEX_LIST,
 	MGMT_OP_READ_INFO,

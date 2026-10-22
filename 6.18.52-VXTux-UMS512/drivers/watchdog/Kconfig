@@ -19,15 +19,15 @@ menuconfig WATCHDOG
 	  are more robust and can also keep track of the temperature inside
 	  your computer. For details, read
 	  <file:Documentation/watchdog/watchdog-api.rst> in the kernel source.
-
+	
 	  The watchdog is usually used together with the watchdog daemon
 	  which is available from
 	  <https://ibiblio.org/pub/Linux/system/daemons/watchdog/>. This daemon
 	  can also monitor NFS connections and can reboot the machine when the
 	  process table is full.
-
+	
 	  If unsure, say N.
-
+	
 if WATCHDOG
 
 config WATCHDOG_CORE
@@ -37,7 +37,7 @@ config WATCHDOG_CORE
 	  This driver provides a framework for all watchdog timer drivers
 	  and gives them the /dev/watchdog interface (and later also the
 	  sysfs interface).
-
+	
 config WATCHDOG_NOWAYOUT
 	bool "Disable watchdog shutdown on close"
 	help
@@ -46,7 +46,7 @@ config WATCHDOG_NOWAYOUT
 	  /dev/watchdog. It's always remotely possible that this process might
 	  get killed. If you say Y here, the watchdog cannot be stopped once
 	  it has been started.
-
+	
 config WATCHDOG_HANDLE_BOOT_ENABLED
 	bool "Update boot-enabled watchdog until userspace takes over"
 	default y
@@ -57,7 +57,7 @@ config WATCHDOG_HANDLE_BOOT_ENABLED
 	  /dev/watchdog file. If you say N here, the kernel will not update
 	  the watchdog on its own. Thus if your userspace does not start fast
 	  enough your device will reboot.
-
+	
 config WATCHDOG_OPEN_TIMEOUT
 	int "Timeout value for opening watchdog device"
 	default 0
@@ -66,13 +66,13 @@ config WATCHDOG_OPEN_TIMEOUT
 	  care of pinging a hardware watchdog.  A value of 0 means infinite. The
 	  value set here can be overridden by the commandline parameter
 	  "watchdog.open_timeout".
-
+	
 config WATCHDOG_SYSFS
 	bool "Read different watchdog information through sysfs"
 	help
 	  Say Y here if you want to enable watchdog device status read through
 	  sysfs attributes.
-
+	
 config WATCHDOG_HRTIMER_PRETIMEOUT
 	bool "Enable watchdog hrtimer-based pretimeouts"
 	help
@@ -80,7 +80,7 @@ config WATCHDOG_HRTIMER_PRETIMEOUT
 	  watchdogs that do not natively support pretimeout support. Be aware
 	  that because this pretimeout functionality uses hrtimers, it may not
 	  be able to fire before the actual watchdog fires in some situations.
-
+	
 comment "Watchdog Pretimeout Governors"
 
 config WATCHDOG_PRETIMEOUT_GOV
@@ -88,7 +88,7 @@ config WATCHDOG_PRETIMEOUT_GOV
 	depends on WATCHDOG_CORE
 	help
 	  The option allows to select watchdog pretimeout governors.
-
+	
 config WATCHDOG_PRETIMEOUT_GOV_SEL
 	tristate
 	depends on WATCHDOG_PRETIMEOUT_GOV
@@ -104,7 +104,7 @@ config WATCHDOG_PRETIMEOUT_GOV_NOOP
 	help
 	  Noop watchdog pretimeout governor, only an informational
 	  message is added to kernel log buffer.
-
+	
 config WATCHDOG_PRETIMEOUT_GOV_PANIC
 	tristate "Panic watchdog pretimeout governor"
 	depends on WATCHDOG_CORE
@@ -112,7 +112,7 @@ config WATCHDOG_PRETIMEOUT_GOV_PANIC
 	help
 	  Panic watchdog pretimeout governor, on watchdog pretimeout
 	  event put the kernel into panic.
-
+	
 choice
 	prompt "Default Watchdog Pretimeout Governor"
 	default WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
@@ -120,7 +120,7 @@ choice
 	  This option selects a default watchdog pretimeout governor.
 	  The governor takes its action, if a watchdog is capable
 	  to report a pretimeout event.
-
+	
 config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
 	bool "noop"
 	depends on WATCHDOG_PRETIMEOUT_GOV_NOOP
@@ -128,7 +128,7 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_NOOP
 	  Use noop watchdog pretimeout governor by default. If noop
 	  governor is selected by a user, write a short message to
 	  the kernel log buffer and don't do any system changes.
-
+	
 config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
 	bool "panic"
 	depends on WATCHDOG_PRETIMEOUT_GOV_PANIC
@@ -136,7 +136,7 @@ config WATCHDOG_PRETIMEOUT_DEFAULT_GOV_PANIC
 	  Use panic watchdog pretimeout governor by default, if
 	  a watchdog pretimeout event happens, consider that
 	  a watchdog feeder is dead and reboot is unavoidable.
-
+	
 endchoice
 
 endif # WATCHDOG_PRETIMEOUT_GOV
@@ -156,10 +156,10 @@ config SOFT_WATCHDOG
 	  A software monitoring watchdog. This will fail to reboot your system
 	  from some situations that the hardware watchdog will recover
 	  from. Equally it's a lot cheaper to install.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called softdog.
-
+	
 config SOFT_WATCHDOG_PRETIMEOUT
 	bool "Software watchdog pretimeout governor support"
 	depends on SOFT_WATCHDOG && WATCHDOG_PRETIMEOUT_GOV
@@ -167,7 +167,7 @@ config SOFT_WATCHDOG_PRETIMEOUT
 	  Enable this if you want to use pretimeout governors with the software
 	  watchdog. Be aware that governors might affect the watchdog because it
 	  is purely software, e.g. the panic governor will stall it!
-
+	
 config GPIO_WATCHDOG
 	tristate "Watchdog device controlled through GPIO-line"
 	depends on OF_GPIO
@@ -175,7 +175,7 @@ config GPIO_WATCHDOG
 	help
 	  If you say yes here you get support for watchdog device
 	  controlled through GPIO-line.
-
+	
 config GPIO_WATCHDOG_ARCH_INITCALL
 	bool "Register the watchdog as early as possible"
 	depends on GPIO_WATCHDOG=y
@@ -186,7 +186,7 @@ config GPIO_WATCHDOG_ARCH_INITCALL
 	  If you say yes here, the initcall level would be raised to
 	  arch_initcall.
 	  If in doubt, say N.
-
+	
 config WDAT_WDT
 	tristate "ACPI Watchdog Action Table (WDAT)"
 	depends on ACPI
@@ -197,10 +197,10 @@ config WDAT_WDT
 	  Table (WDAT) table. Servers typically have this but it can be
 	  found on some desktop machines as well. This driver will take
 	  over the native iTCO watchdog driver found on many Intel CPUs.
-
+	
 	  To compile this driver as module, choose M here: the module will
 	  be called wdat_wdt.
-
+	
 # ARM Architecture
 
 config ARM_SP805_WATCHDOG
@@ -210,7 +210,7 @@ config ARM_SP805_WATCHDOG
 	help
 	  ARM Primecell SP805 Watchdog timer. This will reboot your system when
 	  the timeout is reached.
-
+	
 config ARM_SBSA_WATCHDOG
 	tristate "ARM SBSA Generic Watchdog"
 	depends on ARM64
@@ -221,16 +221,16 @@ config ARM_SBSA_WATCHDOG
 	  the first signal (WS0) is for alerting the system by interrupt,
 	  the second one (WS1) is a real hardware reset.
 	  More details: ARM DEN0029B - Server Base System Architecture (SBSA)
-
+	
 	  This driver can operate ARM SBSA Generic Watchdog as a single stage
 	  or a two stages watchdog, it depends on the module parameter "action".
-
+	
 	  Note: the maximum timeout in the two stages mode is half of that in
 	  the single stage mode.
-
+	
 	  To compile this driver as module, choose M here: The module
 	  will be called sbsa_gwdt.
-
+	
 config DW_WATCHDOG
 	tristate "Synopsys DesignWare watchdog"
 	depends on HAS_IOMEM
@@ -239,11 +239,11 @@ config DW_WATCHDOG
 	  Say Y here if to include support for the Synopsys DesignWare
 	  Watchdog IP block. This driver provides a watchdog that can be
 	  used to restart the system if it becomes unresponsive.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called dw_wdt.
-
-
+	
+	
 config SPRD_WATCHDOG_FIQ
 	tristate "Unisoc watchdog FIQ helper (sprd,wdt-r2p0-fiq)"
 	help
@@ -251,12 +251,12 @@ config SPRD_WATCHDOG_FIQ
 	  the feed detector below needs. Ported from the marohinmark_ums512 5.4 tree
 	  (same UMS512 SoC); it binds to its own compatible and does not share any
 	  internals with the sp9860 watchdog driver, so it stands alone.
-
+	
 	  The symbol is SPRD_WATCHDOG_FIQ, not SPRD_WDT_FIQ, because sprd_wdf.c guards its
 	  whole FIQ integration with IS_ENABLED(CONFIG_SPRD_WATCHDOG_FIQ) in eight places.
 	  Naming it anything else compiles the driver but silently drops every one of those
 	  blocks, leaving the detector with no way to reach the watchdog.
-
+	
 config SPRD_WDF
 	tristate "Unisoc watchdog feed detector"
 	depends on SPRD_WATCHDOG_FIQ
@@ -264,11 +264,11 @@ config SPRD_WDF
 	  Detects a stuck CPU by watching whether the running task feeds the
 	  watchdog, rather than registering a watchdog of its own. Replaces the
 	  sprd_wdf vendor blob.
-
+	
 	  Ported from the marohinmark_ums512 tree. It lives here rather than under
 	  drivers/soc/sprd/debug/hang_debug because that whole subdirectory chain
 	  has no Makefile in this tree and could never have been built there.
-
+	
 config SPRD_WATCHDOG
 	tristate "Unisoc SP9860 watchdog (sprd,sp9860-wdt)"
 	depends on HAS_IOMEM
@@ -278,6 +278,6 @@ config SPRD_WATCHDOG
 	  "sprd,sp9860-wdt", i.e. the SP9860 part, not UMS512/T618 -- it is listed
 	  here because the source was already present and unreferenced, but nothing
 	  in the UMS512 device tree matches it.
-
-
+	
+	
 endif

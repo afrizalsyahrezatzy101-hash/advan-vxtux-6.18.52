@@ -1,3 +1,6 @@
+/* V17: SB_I_NO_DATA_INTEGRITY was missing */
+#define SB_I_NO_DATA_INTEGRITY (1<<16)
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_FS_H
 #define _LINUX_FS_H
@@ -2207,6 +2210,8 @@ struct dir_context {
 	 * INT_MAX  unlimited
 	 */
 	int count;
+	/* V18: Added for newer kernel compat (VXTux 6.18) */
+	u32 dt_flags_mask;
 };
 
 /* If OR-ed with d_type, pending signals are not checked */

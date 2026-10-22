@@ -1222,3 +1222,5 @@ EXPORT_SYMBOL_GPL(sblock_init_debugfs);
 MODULE_AUTHOR("Chen Gaopeng");
 MODULE_DESCRIPTION("SIPC/SBLOCK driver");
 MODULE_LICENSE("GPL v2");
+EXPORT_SYMBOL_GPL(sblock_has_data);
+EXPORT_SYMBOL_GPL(sblock_register_notifier_ex);

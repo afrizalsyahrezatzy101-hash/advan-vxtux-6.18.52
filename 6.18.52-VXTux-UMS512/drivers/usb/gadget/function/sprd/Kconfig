@@ -19,3 +19,4 @@ config USB_GADGET_SPRD
 	  side, sprd_usb_f_rndis the RNDIS protocol glue. These replace the
 	  vendor modules sprd_u_ether.ko / sprd_usb_f_rndis.ko and are what
 	  fastbootd RNDIS and USB tethering on this device need.
+	

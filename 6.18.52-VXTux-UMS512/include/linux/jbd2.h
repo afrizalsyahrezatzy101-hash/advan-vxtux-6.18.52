@@ -1252,6 +1252,7 @@ struct journal_s
 	 * require transaction commit to finish.
 	 */
 	struct lockdep_map	j_trans_commit_map;
+	struct lock_class_key j_trans_commit_key; /* V17: needed for register/unregister */
 #endif
 
 	/**

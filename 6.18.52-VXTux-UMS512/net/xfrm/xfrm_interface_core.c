@@ -46,6 +46,7 @@
 #include <net/netns/generic.h>
 #include <linux/etherdevice.h>
 
+
 static int xfrmi_dev_init(struct net_device *dev);
 static void xfrmi_dev_setup(struct net_device *dev);
 static struct rtnl_link_ops xfrmi_link_ops __read_mostly;

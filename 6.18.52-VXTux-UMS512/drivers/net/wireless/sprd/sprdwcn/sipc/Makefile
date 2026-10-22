@@ -1,4 +1,4 @@
-obj-$(CONFIG_WCN_SIPC) += wcn_sipc.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_SIPC) += wcn_sipc.o
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

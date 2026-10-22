@@ -21,10 +21,10 @@ config CRYPTO_DEV_QAT_DH895xCC
 	help
 	  Support for Intel(R) DH895xcc with Intel(R) QuickAssist Technology
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_dh895xcc.
-
+	
 config CRYPTO_DEV_QAT_C3XXX
 	tristate "Support for Intel(R) C3XXX"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -32,10 +32,10 @@ config CRYPTO_DEV_QAT_C3XXX
 	help
 	  Support for Intel(R) C3xxx with Intel(R) QuickAssist Technology
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_c3xxx.
-
+	
 config CRYPTO_DEV_QAT_C62X
 	tristate "Support for Intel(R) C62X"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -43,10 +43,10 @@ config CRYPTO_DEV_QAT_C62X
 	help
 	  Support for Intel(R) C62x with Intel(R) QuickAssist Technology
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_c62x.
-
+	
 config CRYPTO_DEV_QAT_4XXX
 	tristate "Support for Intel(R) QAT_4XXX"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -54,10 +54,10 @@ config CRYPTO_DEV_QAT_4XXX
 	help
 	  Support for Intel(R) QuickAssist Technology QAT_4xxx
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_4xxx.
-
+	
 config CRYPTO_DEV_QAT_420XX
 	tristate "Support for Intel(R) QAT_420XX"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -65,10 +65,10 @@ config CRYPTO_DEV_QAT_420XX
 	help
 	  Support for Intel(R) QuickAssist Technology QAT_420xx
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_420xx.
-
+	
 config CRYPTO_DEV_QAT_6XXX
 	tristate "Support for Intel(R) QuickAssist Technology QAT_6XXX"
 	depends on (X86 || COMPILE_TEST)
@@ -77,10 +77,10 @@ config CRYPTO_DEV_QAT_6XXX
 	help
 	  Support for Intel(R) QuickAssist Technology QAT_6xxx
 	  for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_6xxx.
-
+	
 config CRYPTO_DEV_QAT_DH895xCCVF
 	tristate "Support for Intel(R) DH895xCC Virtual Function"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -90,10 +90,10 @@ config CRYPTO_DEV_QAT_DH895xCCVF
 	help
 	  Support for Intel(R) DH895xcc with Intel(R) QuickAssist Technology
 	  Virtual Function for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_dh895xccvf.
-
+	
 config CRYPTO_DEV_QAT_C3XXXVF
 	tristate "Support for Intel(R) C3XXX Virtual Function"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -102,10 +102,10 @@ config CRYPTO_DEV_QAT_C3XXXVF
 	help
 	  Support for Intel(R) C3xxx with Intel(R) QuickAssist Technology
 	  Virtual Function for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_c3xxxvf.
-
+	
 config CRYPTO_DEV_QAT_C62XVF
 	tristate "Support for Intel(R) C62X Virtual Function"
 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
@@ -114,10 +114,10 @@ config CRYPTO_DEV_QAT_C62XVF
 	help
 	  Support for Intel(R) C62x with Intel(R) QuickAssist Technology
 	  Virtual Function for accelerating crypto and compression workloads.
-
+	
 	  To compile this as a module, choose M here: the module
 	  will be called qat_c62xvf.
-
+	
 config CRYPTO_DEV_QAT_ERROR_INJECTION
 	bool "Support for Intel(R) QAT Devices Heartbeat Error Injection"
 	depends on CRYPTO_DEV_QAT
@@ -125,9 +125,10 @@ config CRYPTO_DEV_QAT_ERROR_INJECTION
 	help
 	  Enables a mechanism that allows to inject a heartbeat error on
 	  Intel(R) QuickAssist devices for testing purposes.
-
+	
 	  This is intended for developer use only.
 	  If unsure, say N.
-
+	
 	  This functionality is available via debugfs entry of the Intel(R)
 	  QuickAssist device
+	

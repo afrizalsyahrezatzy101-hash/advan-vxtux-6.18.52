@@ -8,3 +8,4 @@ config INTEL_LDMA
 	  Enable support for Intel Lightning Mountain SOC DMA controllers.
 	  These controllers provide DMA capabilities for a variety of on-chip
 	  devices such as HSNAND and GSWIP (Gigabit Switch IP).
+	

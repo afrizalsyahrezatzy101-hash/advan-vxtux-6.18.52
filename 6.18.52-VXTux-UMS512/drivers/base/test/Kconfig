@@ -6,9 +6,9 @@ config TEST_ASYNC_DRIVER_PROBE
 	  Enabling this option produces a kernel module that allows
 	  testing asynchronous driver probing by the device core.
 	  The module name will be test_async_driver_probe.ko
-
+	
 	  If unsure say N.
-
+	
 config DM_KUNIT_TEST
 	tristate "KUnit Tests for the device model" if !KUNIT_ALL_TESTS
 	depends on KUNIT

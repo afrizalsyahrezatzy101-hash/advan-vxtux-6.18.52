@@ -7,3 +7,4 @@ config SPRD_USBPINMUX
 	  Membuka mux USBMux bila JTAG tidak memegang pin: menaikkan VDD usbmux dan
 	  memilih state pinctrl uart_inf_sel0/sel1. Tanpa ini, jalur D+/D- bisa
 	  tertinggal di mode UART/JTAG dan OTG gagal.
+	

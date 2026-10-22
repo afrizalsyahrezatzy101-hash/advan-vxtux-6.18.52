@@ -9,3 +9,4 @@ menuconfig FSL_DPAA_ETH
 	  supporting the Freescale QorIQ chips.
 	  Depends on Freescale Buffer Manager and Queue Manager
 	  driver and Frame Manager Driver.
+	

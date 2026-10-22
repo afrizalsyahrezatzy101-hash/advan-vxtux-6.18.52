@@ -20,10 +20,9 @@
 #include <linux/device.h>
 #include <linux/types.h>
 
-typedef enum {
-	DVFS_WORK = 0,
-	DVFS_IDLE,
-} set_freq_type;
+#include "sprd_dvfs_soc.h"
+
+/* set_freq_type lives in sprd_dvfs_soc.h */
 
 struct dvfs_ops_entry {
 	const char *ver;
@@ -51,24 +50,8 @@ struct apsys_dvfs_coffe {
 	u32 sw_cgb_enable;
 };
 
-struct ip_dvfs_coffe {
-	u32 gfree_wait_delay;
-	u32 freq_upd_hdsk_en;
-	u32 freq_upd_delay_en;
-	u32 freq_upd_en_byp;
-	u32 sw_trig_en;
-	u32 hw_dfs_en;
-	u32 work_index_def;
-	u32 idle_index_def;
-};
 
-struct ip_dvfs_map_cfg {
-	u32 map_index;
-	u32 volt_level;
-	u32 clk_level;
-	u32 clk_rate;
-	char *volt_val;
-};
+/* struct ip_dvfs_map_cfg and set_freq_type live in sprd_dvfs_soc.h */
 
 struct ip_dvfs_status {
 	char *apsys_cur_volt;
@@ -90,30 +73,50 @@ struct ip_dvfs_status {
 
 struct apsys_dev {
 	struct device dev;
-	unsigned long base;
+	unsigned long base;		/* the apsys register block	*/
+	unsigned long top_base;		/* the top dcdc register block	*/
 	const char *version;
+
+	/* the per-SoC register descriptors */
+	const struct apsys_dvfs_regs *regs;
+	const struct top_dvfs_regs *top_regs;
 
 	struct apsys_dvfs_coffe dvfs_coffe;
 	struct apsys_dvfs_ops *dvfs_ops;
 };
 
+/*
+ * The apsys operation table, in the order the stock blob lays it out:
+ * nine slots.  Slot 3, apsys_force_en, is not implemented by the stock
+ * blob on any SoC, which is why the per-SoC initialisers leave it NULL.
+ */
 struct apsys_dvfs_ops {
 	/* apsys common ops */
 	int (*parse_dt)(struct apsys_dev *apsys, struct device_node *np);
 	void (*dvfs_init)(struct apsys_dev *apsys);
-	void (*apsys_hold_en)(u32 hold_en);
-	void (*apsys_force_en)(u32 force_en);
-	void (*apsys_auto_gate)(u32 gate_sel);
-	void (*apsys_wait_window)(u32 wait_window);
-	void (*apsys_min_volt)(u32 min_volt);
+	void (*apsys_hold_en)(struct apsys_dev *apsys, u32 hold_en);
+	void (*apsys_force_en)(struct apsys_dev *apsys, u32 force_en);
+	void (*apsys_auto_gate)(struct apsys_dev *apsys, u32 gate_sel);
+	void (*apsys_wait_window)(struct apsys_dev *apsys, u32 wait_window);
+	void (*apsys_min_volt)(struct apsys_dev *apsys, u32 min_volt);
 
 	/* top common ops */
-	void (*top_dvfs_init)(void);
-	int (*top_cur_volt)(void);
+	void (*top_dvfs_init)(struct apsys_dev *apsys);
+	int (*top_cur_volt)(struct apsys_dev *apsys);
 };
 
 void *dvfs_ops_attach(const char *str, struct list_head *head);
 int dvfs_ops_register(struct dvfs_ops_entry *entry, struct list_head *head);
+
+/* the shared apsys callback bodies, in sprd_dvfs_ops.c */
+int  apsys_dvfs_parse_dt(struct apsys_dev *apsys, struct device_node *np);
+void apsys_dvfs_init(struct apsys_dev *apsys);
+void apsys_dvfs_hold_en(struct apsys_dev *apsys, u32 hold_en);
+void apsys_dvfs_auto_gate(struct apsys_dev *apsys, int gate_sel);
+void apsys_dvfs_wait_window(struct apsys_dev *apsys, u32 wait_window);
+void apsys_dvfs_min_volt(struct apsys_dev *apsys, u32 min_volt);
+void apsys_top_dvfs_init(struct apsys_dev *apsys);
+int  dcdc_modem_cur_volt(struct apsys_dev *apsys);
 
 extern struct list_head apsys_dvfs_head;
 extern struct apsys_regmap regmap_ctx;
@@ -126,3 +129,6 @@ extern struct mutex apsys_glb_reg_lock;
 	dvfs_ops_attach(str, &apsys_dvfs_head)
 
 #endif /* __SPRD_DVFS_APSYS_H__ */
+
+/* defined in sprd_dvfs_apsys.c, registered by sprd_dvfs_ip.c */
+extern struct platform_driver apsys_dvfs_driver;

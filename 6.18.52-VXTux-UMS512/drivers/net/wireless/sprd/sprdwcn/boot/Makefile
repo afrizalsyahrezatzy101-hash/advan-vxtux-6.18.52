@@ -14,9 +14,9 @@ ccflags-y += -I$(srctree)/$(src)/../platform/rf
 
 # Penjaga tetap nama vendor: WCN_INTEG (chip integrated). Simbol ini
 # WAJIB =y di fragmen karena WCN_SIPC/WCN_PLATFORM bergantung padanya.
-obj-$(CONFIG_WCN_INTEG) += wcn_integrate_dev.o
-obj-$(CONFIG_WCN_INTEG) += wcn_integrate_boot.o
-obj-$(CONFIG_WCN_INTEG) += wcn_integrate.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_INTEG) += wcn_integrate_dev.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_INTEG) += wcn_integrate_boot.o
+obj-$(CONFIG_SPRD_LEGACY_WCN_INTEG) += wcn_integrate.o
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

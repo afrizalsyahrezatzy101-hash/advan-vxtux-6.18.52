@@ -29,5 +29,5 @@ menuconfig TOUCHSCREEN_HIMAX_CHIPSET
 	help
 	  Framework hxcommon Himax untuk panel HX83102E pada Advan T1030.
 	  Say M untuk module (hxchipset_83102e.ko — nama sama seperti stock).
-
+	
 source "drivers/vxtux/touch/hx83102e/hxchipset/Kconfig"

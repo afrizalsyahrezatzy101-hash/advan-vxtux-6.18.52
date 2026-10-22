@@ -5,6 +5,7 @@ config USB_STV06XX
 	help
 	  Say Y here if you want support for cameras based on
 	  the ST STV06XX chip.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called gspca_stv06xx.
+	

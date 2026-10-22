@@ -10,12 +10,12 @@ config WIL6210
 	  This module adds support for wireless adapter based on
 	  wil6210 chip by Wilocity. It supports operation on the
 	  60 GHz band, covered by the IEEE802.11ad standard.
-
+	
 	  https://wireless.wiki.kernel.org/en/users/Drivers/wil6210
-
+	
 	  If you choose to build it as a module, it will be called
 	  wil6210
-
+	
 config WIL6210_ISR_COR
 	bool "Use Clear-On-Read mode for ISR registers for wil6210"
 	depends on WIL6210
@@ -30,7 +30,7 @@ config WIL6210_ISR_COR
 	  self-clear when accessed for debug purposes, it makes
 	  such monitoring impossible.
 	  Say y unless you debug interrupts
-
+	
 config WIL6210_TRACING
 	bool "wil6210 tracing support"
 	depends on WIL6210
@@ -40,9 +40,9 @@ config WIL6210_TRACING
 	  Say Y here to enable tracepoints for the wil6210 driver
 	  using the kernel tracing infrastructure.  Select this
 	  option if you are interested in debugging the driver.
-
+	
 	  If unsure, say Y to make it easier to debug problems.
-
+	
 config WIL6210_DEBUGFS
 	bool "wil6210 debugfs support"
 	depends on WIL6210
@@ -52,5 +52,6 @@ config WIL6210_DEBUGFS
 	  Say Y here to enable wil6210 debugfs support, using the
 	  kernel debugfs infrastructure. Select this
 	  option if you are interested in debugging the driver.
-
+	
 	  If unsure, say Y to make it easier to debug problems.
+	

@@ -8,7 +8,7 @@ config DW_EDMA
 	help
 	  Support the Synopsys DesignWare eDMA controller, normally
 	  implemented on endpoints SoCs.
-
+	
 if DW_EDMA
 
 config DW_EDMA_PCIE
@@ -18,5 +18,5 @@ config DW_EDMA_PCIE
 	  Provides a glue-logic between the Synopsys DesignWare
 	  eDMA controller and an endpoint PCIe device. This also serves
 	  as a reference design to whom desires to use this IP.
-
+	
 endif # DW_EDMA

@@ -8,11 +8,11 @@ config WCN_BOOT
 	help
 	Choose Y here if you want to support boot function
         for unisoc wcn sc23xx series chip.
-
+	
 	In order to control your ext wcn chip, you will need enable it.
 	that include "boot, log, procfs, debugfs, at cmd, loopcheck, dumpmem,
 	reset, reboot,etc"
-
+	
 config WCN_UTILS
 	bool "wcn debug for read and write register"
 	# Vendor menaruh `depends on SPRD_DEBUG` di sini. Untuk port 6.18
@@ -26,19 +26,19 @@ config WCN_UTILS
 	help
 	Choose Y here if you need to read/write register of wcn chip,
 	this is used for RD debug.
-
+	
 	In order to control or debug your marlin chip, you will need to support
 	procfs command to read/write register of marlin chip on.
-
+	
 config WCN_RDCDBG
 	bool "wcn kernel_write log and mermory to file"
 	help
 	Choose Y here if you need to save log and memory not by native server,
 	this is used for RD debug.
-
+	
 	In order to control or debug your marlin chip, you will need to support
 	save log and mermory auto.
-
+	
 config WCN_CORE
 	tristate "WCN core (SDIO path): power + bus + GNSS control"
 	depends on WCN_BOOT
@@ -50,7 +50,7 @@ config WCN_CORE
 	  (lihat wcn_boot.c). Bukti bentuk komposit: 13 dari 20 simbol yang
 	  tadinya duplikat punya salinan identik di platform/ (versi blob SDIO
 	  wcn_bsp.ko); lapisan integrate (WCN_INTEG) dimatikan di papan ini.
-
+	
 config WCN_PLATFORM
 	tristate "Platform Support"
 	depends on WCN_INTEG
@@ -58,20 +58,20 @@ config WCN_PLATFORM
 	help
 	Enable this module for Spreadtrum WCN integration
 	chip debug and manage function.
-
+	
 	In order to control or debug your marlin chip, you will need to
 	support procfs command and memory dump,cp log and so on.
-
+	
 config WCN_SWD
 	bool "wcn swd support"
 	depends on UMW2653
 	help
 	Choose Y here if you need to support SWD driver to access arm registers,
 	this is used for RD debug.
-
+	
 	In order to control or debug your marlin chip, you will need to support
 	swd driver to access arm registers.
-
+	
 config WCN_SEC_VERIFY_STUB
 	bool "Lolos verifikasi citra TEE tanpa trusty (DEVIASI KEAMANAN)"
 	depends on WCN_BOOT
@@ -81,17 +81,17 @@ config WCN_SEC_VERIFY_STUB
 	  citra firmware BTWF/GNSS lewat signature sebelum ditulis ke TCM.
 	  Kernel 6.18 VXTux tidak memuat driver trusty, jadi jalur itu tidak
 	  tersedia; tanpa simbol ini modul gagal di-link sama sekali.
-
+	
 	  =y  -> wcn_sec_verify_618.c mengembalikan 0 (lolos) dan MENULIS
 	         pr_warn sekali per boot. Header/magic/ukuran citra tetap
 	         diperiksa pemanggil; yang dilewati hanya tanda tangan TEE.
 	  =n  -> fungsi mengembalikan -EOPNOTSUPP sehingga citra bertanda
 	         tangan TIDAK dimuat (perilaku aman bila trusty akhirnya
 	         di-port).
-
+	
 	  Ini deviasi keamanan yang disengaja dan bukan implisit: tidak
 	  diaktifkan diam-diam. Wajib dicatat di docs/status.
-
+	
 config WCN_SLEEP_INFO
 	bool "for get wcn sleep info"
 	help

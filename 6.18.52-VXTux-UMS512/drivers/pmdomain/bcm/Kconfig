@@ -12,7 +12,7 @@ config BCM2835_POWER
 	  controller.  Any usage of power domains by the Raspberry Pi
 	  firmware means that Linux usage of the same power domain
 	  must be accessed using the RASPBERRYPI_POWER driver
-
+	
 config RASPBERRYPI_POWER
 	bool "Raspberry Pi power domain driver"
 	depends on ARCH_BCM2835 || (COMPILE_TEST && OF)
@@ -21,7 +21,7 @@ config RASPBERRYPI_POWER
 	help
 	  This enables support for the RPi power domains which can be enabled
 	  or disabled via the RPi firmware.
-
+	
 config BCM_PMB
 	bool "Broadcom PMB (Power Management Bus) driver"
 	depends on ARCH_BCMBCA || (COMPILE_TEST && OF)
@@ -30,7 +30,7 @@ config BCM_PMB
 	help
 	  This enables support for the Broadcom's PMB (Power Management Bus) that
 	  is used for disabling and enabling SoC devices.
-
+	
 config BCM63XX_POWER
 	bool "BCM63xx power domain driver"
 	depends on BMIPS_GENERIC || (COMPILE_TEST && OF)
@@ -38,5 +38,5 @@ config BCM63XX_POWER
 	help
 	  This enables support for the BCM63xx power domains controller on
 	  BCM6318, BCM6328, BCM6362 and BCM63268 SoCs.
-
+	
 endmenu

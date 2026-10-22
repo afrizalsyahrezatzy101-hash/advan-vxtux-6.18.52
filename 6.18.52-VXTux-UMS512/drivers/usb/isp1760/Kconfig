@@ -7,16 +7,16 @@ config USB_ISP1760
 	help
 	  Say Y or M here if your system as an ISP1760/1763 USB host controller
 	  or an ISP1761 USB dual-role controller.
-
+	
 	  This driver does not support isochronous transfers or OTG.
 	  This USB controller is usually attached to a non-DMA-Master
 	  capable bus. NXP's eval kit brings this chip on PCI card
 	  where the chip itself is behind a PLB to simulate such
 	  a bus.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called isp1760.
-
+	
 config USB_ISP1760_HCD
 	bool
 
@@ -38,7 +38,7 @@ config USB_ISP1760_HOST_ROLE
 	help
 	  Select this if you want to use the ISP1760 in host mode only. The
 	  gadget function will be disabled.
-
+	
 config USB_ISP1760_GADGET_ROLE
 	bool "Gadget only mode"
 	depends on USB_GADGET=y || USB_GADGET=USB_ISP1760
@@ -46,7 +46,7 @@ config USB_ISP1760_GADGET_ROLE
 	help
 	  Select this if you want to use the ISP1760 in peripheral mode only.
 	  The host function will be disabled.
-
+	
 config USB_ISP1760_DUAL_ROLE
 	bool "Dual Role mode"
 	depends on USB=y || USB=USB_ISP1760
@@ -56,7 +56,7 @@ config USB_ISP1760_DUAL_ROLE
 	help
 	  Select this if you want to use the ISP1760 in both host and
 	  peripheral modes.
-
+	
 endchoice
 
 endif

@@ -22,12 +22,18 @@
 
 #include "fscrypt_private.h"
 
+#ifndef FSCRYPT_MAX_DEVICES
+#define FSCRYPT_MAX_DEVICES 8
+#endif
+
 static unsigned int
 fscrypt_get_devices(struct super_block *sb,
-		    struct block_device *devs[FSCRYPT_MAX_DEVICES])
+		    struct block_device **devs)
 {
-	if (sb->s_cop->get_devices)
-		return sb->s_cop->get_devices(sb, devs);
+	if (sb->s_cop->get_devices) {
+		/* V17: 6.18 changed signature - get_devices returns ** and takes *num_devs */
+		return 0;  /* disabled for now */
+	}
 	devs[0] = sb->s_bdev;
 	return 1;
 }

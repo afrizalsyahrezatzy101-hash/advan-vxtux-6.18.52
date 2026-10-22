@@ -638,12 +638,32 @@ static const struct of_device_id sprd_rtc_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, sprd_rtc_of_match);
 
+
+/*
+ * The stock blob's .remove callback: objdump of the blob shows
+ * device_init_wakeup(dev, false) followed by "return 0".  The port had no
+ * remove path at all, so the device was left awake after unplug.
+ */
+void sprd_rtc_remove(struct platform_device *pdev);
+void sprd_rtc_remove(struct platform_device *pdev)
+{
+	device_init_wakeup(&pdev->dev, false);
+}
+
+/*
+ * Debug flag the stock blob keeps in bss.  Nothing in the blob reads it, so
+ * it stays a plain zeroed flag here too.
+ */
+bool sprd_rtcdbg_log_force;
+module_param(sprd_rtcdbg_log_force, bool, 0644);
+
 static struct platform_driver sprd_rtc_driver = {
 	.driver = {
 		.name = "sprd-rtc",
 		.of_match_table = sprd_rtc_of_match,
 	},
 	.probe	= sprd_rtc_probe,
+	.remove	= sprd_rtc_remove,
 };
 module_platform_driver(sprd_rtc_driver);
 

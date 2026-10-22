@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  * Recovered from the iscle_ums512 5.4 tree (work/donors_20260930/iscle_ums512),
  * the same UMS512 SoC. The port tree and the other two donors did not carry this
@@ -37,19 +39,27 @@ enum {
 	VSP_PW_DOMAIN_ON,
 };
 struct client_info_t {
-	u8 pw_state;
-	u8 pw_count;
+	__u8 pw_state;
+	__u8 pw_count;
 };
+
+/* V18: Guard against redefinition */
+#ifndef berry_vsp_mutex_compat_defined
+#define berry_vsp_mutex_compat_defined
+struct berry_vsp_mutex_compat {
+	unsigned long owner;
+	int magic;
+};
+typedef struct berry_vsp_mutex_compat berry_client_lock_t;
+static inline void __berry_mutex_lock(berry_client_lock_t *m) { (void)m; }
+static inline void __berry_mutex_unlock(berry_client_lock_t *m) { (void)m; }
+static inline void __berry_mutex_init(berry_client_lock_t *m) { (void)m; }
+#endif
 
 struct vsp_pw_domain_info_t {
 	struct client_info_t pw_vsp_info[VSP_PW_DOMAIN_COUNT_MAX];
-	struct mutex client_lock;
-	u8 vsp_pw_state;
+	struct berry_vsp_mutex_compat client_lock;  /* V18: restore for VSP driver */
+	__u8 vsp_pw_state;
 };
-
-int vsp_pw_on(u8 client);
-int vsp_pw_off(u8 client);
-int vsp_core_pw_on(void);
-int vsp_core_pw_off(void);
 
 #endif

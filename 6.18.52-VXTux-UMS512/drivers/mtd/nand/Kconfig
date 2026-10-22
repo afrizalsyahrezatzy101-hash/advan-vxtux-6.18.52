@@ -26,7 +26,7 @@ config MTD_NAND_ECC_SW_HAMMING
 	  widely used with old parts, newer NAND chips usually require
 	  more strength correction and in this case BCH or RS will be
 	  preferred.
-
+	
 config MTD_NAND_ECC_SW_HAMMING_SMC
 	bool "NAND ECC Smart Media byte order"
 	depends on MTD_NAND_ECC_SW_HAMMING
@@ -34,7 +34,7 @@ config MTD_NAND_ECC_SW_HAMMING_SMC
 	help
 	  Software ECC according to the Smart Media Specification.
 	  The original Linux implementation had byte 0 and 1 swapped.
-
+	
 config MTD_NAND_ECC_SW_BCH
 	bool "Software BCH ECC engine"
 	select BCH
@@ -45,7 +45,7 @@ config MTD_NAND_ECC_SW_BCH
 	  codes are more powerful and cpu intensive than traditional Hamming
 	  ECC codes. They are used with NAND devices requiring more than 1 bit
 	  of error correction.
-
+	
 endmenu
 
 endmenu

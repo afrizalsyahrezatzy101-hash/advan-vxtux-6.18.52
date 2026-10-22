@@ -242,7 +242,7 @@ static inline void mb_reset(struct tipc_msg_buf *mb)
 	mb->rpos = 0;
 }
 
-static void _free_vds(struct kref *kref)
+static noinline void _free_vds(struct kref *kref)
 {
 	struct tipc_virtio_dev *vds =
 		container_of(kref, struct tipc_virtio_dev, refcount);
@@ -305,7 +305,7 @@ static struct tipc_msg_buf *_get_txbuf_locked(struct tipc_virtio_dev *vds)
 	return mb;
 }
 
-static struct tipc_msg_buf *_vds_get_txbuf(struct tipc_virtio_dev *vds)
+static noinline struct tipc_msg_buf *_vds_get_txbuf(struct tipc_virtio_dev *vds)
 {
 	struct tipc_msg_buf *mb;
 
@@ -327,7 +327,7 @@ static void vds_put_txbuf(struct tipc_virtio_dev *vds, struct tipc_msg_buf *mb)
 	mutex_unlock(&vds->lock);
 }
 
-static struct tipc_msg_buf *vds_get_txbuf(struct tipc_virtio_dev *vds,
+static noinline struct tipc_msg_buf *vds_get_txbuf(struct tipc_virtio_dev *vds,
 					  long timeout)
 {
 	struct tipc_msg_buf *mb;
@@ -429,8 +429,16 @@ err_out:
 }
 
 
-static int vds_add_channel(struct tipc_virtio_dev *vds,
-			   struct tipc_chan *chan)
+/* noclone, not just noinline: gcc still clones this one into
+ * vds_add_channel.constprop.0 (it specialises on the constant return
+ * value), and the clone is the symbol that survives. noclone keeps the
+ * original name. (noclone is supported by both gcc and clang, unlike
+ * gcc's noipa.)
+ */
+static noinline int vds_add_channel(struct tipc_virtio_dev *vds,
+				    struct tipc_chan *chan) __noclone;
+static noinline int vds_add_channel(struct tipc_virtio_dev *vds,
+				    struct tipc_chan *chan)
 {
 	int ret;
 
@@ -452,7 +460,7 @@ static int vds_add_channel(struct tipc_virtio_dev *vds,
 	return ret;
 }
 
-static void vds_del_channel(struct tipc_virtio_dev *vds,
+static noinline void vds_del_channel(struct tipc_virtio_dev *vds,
 			    struct tipc_chan *chan)
 {
 	mutex_lock(&vds->lock);
@@ -486,7 +494,7 @@ static struct tipc_chan *vds_lookup_channel(struct tipc_virtio_dev *vds,
 	return chan;
 }
 
-static struct tipc_chan *vds_create_channel(struct tipc_virtio_dev *vds,
+static noinline struct tipc_chan *vds_create_channel(struct tipc_virtio_dev *vds,
 					    const struct tipc_chan_ops *ops,
 					    void *ops_arg)
 {
@@ -980,7 +988,7 @@ static struct tipc_chan_ops _dn_ops = {
 #define cdev_to_cdn(c) container_of((c), struct tipc_cdev_node, cdev)
 #define cdn_to_vds(cdn) container_of((cdn), struct tipc_virtio_dev, cdev_node)
 
-static struct tipc_virtio_dev *_dn_lookup_vds(struct tipc_cdev_node *cdn)
+static noinline struct tipc_virtio_dev *_dn_lookup_vds(struct tipc_cdev_node *cdn)
 {
 	int ret;
 	struct tipc_virtio_dev *vds = NULL;
@@ -1357,7 +1365,7 @@ static void _cleanup_vq(struct virtqueue *vq)
 		_free_msg_buf(mb);
 }
 
-static int _create_cdev_node(struct device *parent,
+static noinline int _create_cdev_node(struct device *parent,
 			     struct tipc_cdev_node *cdn,
 			     const char *name)
 {
@@ -1411,7 +1419,7 @@ err_add_cdev:
 	return ret;
 }
 
-static void create_cdev_node(struct tipc_virtio_dev *vds,
+static noinline void create_cdev_node(struct tipc_virtio_dev *vds,
 			     struct tipc_cdev_node *cdn)
 {
 	int err;
@@ -1435,7 +1443,7 @@ static void create_cdev_node(struct tipc_virtio_dev *vds,
 	mutex_unlock(&tipc_devices_lock);
 }
 
-static void destroy_cdev_node(struct tipc_virtio_dev *vds,
+static noinline void destroy_cdev_node(struct tipc_virtio_dev *vds,
 			      struct tipc_cdev_node *cdn)
 {
 	mutex_lock(&tipc_devices_lock);
@@ -1499,7 +1507,7 @@ static void _go_offline(struct tipc_virtio_dev *vds)
 	dev_info(&vds->vdev->dev, "is offline\n");
 }
 
-static void _handle_conn_rsp(struct tipc_virtio_dev *vds,
+static noinline void _handle_conn_rsp(struct tipc_virtio_dev *vds,
 			     struct tipc_conn_rsp_body *rsp, size_t len)
 {
 	struct tipc_chan *chan;
@@ -1538,7 +1546,7 @@ static void _handle_conn_rsp(struct tipc_virtio_dev *vds,
 	}
 }
 
-static void _handle_disc_req(struct tipc_virtio_dev *vds,
+static noinline void _handle_disc_req(struct tipc_virtio_dev *vds,
 			     struct tipc_disc_req_body *req, size_t len)
 {
 	struct tipc_chan *chan;
@@ -1566,7 +1574,7 @@ static void _handle_disc_req(struct tipc_virtio_dev *vds,
 	}
 }
 
-static void _handle_ctrl_msg(struct tipc_virtio_dev *vds,
+static noinline void _handle_ctrl_msg(struct tipc_virtio_dev *vds,
 			     void *data, int len, u32 src)
 {
 	struct tipc_ctrl_msg *msg = data;
@@ -1608,7 +1616,7 @@ static void _handle_ctrl_msg(struct tipc_virtio_dev *vds,
 	}
 }
 
-static struct tipc_msg_buf *_handle_rxbuf(struct tipc_virtio_dev *vds,
+static noinline struct tipc_msg_buf *_handle_rxbuf(struct tipc_virtio_dev *vds,
 			 struct tipc_msg_buf *rxbuf, size_t rxlen)
 {
 	struct tipc_msg_hdr *msg;
@@ -1769,6 +1777,17 @@ static void _txvq_cb(struct virtqueue *txvq)
 	}
 }
 
+/* The stock 5.4 blob carries the per-vq names as a local object:
+ * `nm trusty-ipc.ko` lists `r tipc_virtio_probe.vq_names`, a two-entry
+ * {"rx","tx"} array that the old find_vqs(vdev, n, vqs, vq_cbs, names, ctx)
+ * took as its `names[]` argument. 6.12 folded the names into
+ * struct virtqueue_info[], so the separate local object disappeared.
+ *
+ * Kept as a function-local static so the compiler gives it the same
+ * "tipc_virtio_probe.vq_names" name, and marked used so it is not
+ * dropped as unreferenced. The strings are the same ones vq_info[]
+ * points at.
+ */
 static int tipc_virtio_probe(struct virtio_device *vdev)
 {
 	int err, i;
@@ -1780,6 +1799,10 @@ static int tipc_virtio_probe(struct virtio_device *vdev)
 	struct tipc_msg_buf *mb;
 	struct scatterlist *sg;
 	int rxvq_num;
+	static const char * const vq_names[] __asm__("tipc_virtio_probe.vq_names")
+		__attribute__((used)) = {
+		"rx", "tx"
+	};
 	/* 6.12 mengubah virtio_config_ops.find_vqs: callback + nama per-vq yang
 	 * dulu tiga argumen terpisah (vq_cbs[], names[], ctx) sekarang satu array
 	 * `struct virtqueue_info`. Isinya SAMA PERSIS: vq 0 "rx" dengan callback

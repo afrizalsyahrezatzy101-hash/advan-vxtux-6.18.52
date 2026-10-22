@@ -14,6 +14,7 @@ config DVB_SMIPCIE
 	  - DVBSky S950 V3
 	  - DVBSky S952 V3
 	  - DVBSky T9580 V3
-
+	
 	  Say Y or M if you own such a device and want to use it.
 	  If unsure say N.
+	

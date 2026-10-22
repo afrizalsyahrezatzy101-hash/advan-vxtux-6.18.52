@@ -1,0 +1,1385 @@
+
+stock_vendor_modules/trusty-irq.ko:     file format elf64-littleaarch64
+
+
+Disassembly of section .plt:
+
+0000000000000000 <.plt>:
+	...
+
+Disassembly of section .init.plt:
+
+0000000000000000 <.init.plt>:
+	...
+
+Disassembly of section .text.ftrace_trampoline:
+
+0000000000000000 <.text.ftrace_trampoline>:
+	...
+
+Disassembly of section .text:
+
+0000000000000000 <__cfi_check_fail>:
+       0:	str	x30, [x18], #8
+       4:	stp	x29, x30, [sp, #-16]!
+       8:	mov	x29, sp
+       c:	cbz	x0, 28 <__cfi_check_fail+0x28>
+      10:	ldrb	w8, [x0]
+      14:	cmp	w8, #0x5
+      18:	b.cc	28 <__cfi_check_fail+0x28>  // b.lo, b.ul, b.last
+      1c:	ldp	x29, x30, [sp], #16
+      20:	ldr	x30, [x18, #-8]!
+      24:	ret
+      28:	mov	w0, #0x2                   	// #2
+      2c:	bl	0 <__ubsan_handle_cfi_check_fail_abort>
+
+0000000000000030 <trusty_irq_cpu_up>:
+      30:	str	x30, [x18], #8
+      34:	stp	x29, x30, [sp, #-32]!
+      38:	str	x19, [sp, #16]
+      3c:	mov	x29, sp
+      40:	mov	w4, w0
+      44:	sub	x0, x1, #0x48
+      48:	nop
+      4c:	mrs	x19, daif
+      50:	and	w8, w19, #0x80
+      54:	cbnz	w8, 60 <trusty_irq_cpu_up+0x30>
+      58:	mov	w8, #0x60                  	// #96
+      5c:	msr	daifset, #0x2
+      60:	ldr	x8, [x0, #40]
+      64:	mrs	x9, tpidr_el1
+      68:	add	x1, x9, x8
+      6c:	bl	0 <__cfi_check_fail>
+      70:	msr	daif, x19
+      74:	nop
+      78:	ldr	x19, [sp, #16]
+      7c:	mov	w0, wzr
+      80:	ldp	x29, x30, [sp], #32
+      84:	ldr	x30, [x18, #-8]!
+      88:	ret
+      8c:	ldr	x1, [x0]
+      90:	adrp	x8, 0 <__cfi_check_fail>
+      94:	add	x8, x8, #0x0
+      98:	adrp	x2, 0 <__cfi_check_fail>
+      9c:	adrp	x3, 0 <__cfi_check_fail>
+      a0:	add	x2, x2, #0x0
+      a4:	add	x3, x3, #0x0
+      a8:	mov	x19, x0
+      ac:	mov	x0, x8
+      b0:	bl	0 <__dynamic_dev_dbg>
+      b4:	mov	x0, x19
+      b8:	b	4c <trusty_irq_cpu_up+0x1c>
+
+00000000000000bc <trusty_irq_cpu_down>:
+      bc:	str	x30, [x18], #8
+      c0:	stp	x29, x30, [sp, #-32]!
+      c4:	str	x19, [sp, #16]
+      c8:	mov	x29, sp
+      cc:	mov	w4, w0
+      d0:	sub	x0, x1, #0x48
+      d4:	nop
+      d8:	mrs	x19, daif
+      dc:	and	w8, w19, #0x80
+      e0:	cbnz	w8, ec <trusty_irq_cpu_down+0x30>
+      e4:	mov	w8, #0x60                  	// #96
+      e8:	msr	daifset, #0x2
+      ec:	ldr	x8, [x0, #40]
+      f0:	mrs	x9, tpidr_el1
+      f4:	add	x1, x9, x8
+      f8:	bl	0 <__cfi_check_fail>
+      fc:	msr	daif, x19
+     100:	nop
+     104:	ldr	x19, [sp, #16]
+     108:	mov	w0, wzr
+     10c:	ldp	x29, x30, [sp], #32
+     110:	ldr	x30, [x18, #-8]!
+     114:	ret
+     118:	ldr	x1, [x0]
+     11c:	adrp	x8, 0 <__cfi_check_fail>
+     120:	add	x8, x8, #0x0
+     124:	adrp	x2, 0 <__cfi_check_fail>
+     128:	adrp	x3, 0 <__cfi_check_fail>
+     12c:	add	x2, x2, #0x0
+     130:	add	x3, x3, #0x0
+     134:	mov	x19, x0
+     138:	mov	x0, x8
+     13c:	bl	0 <__dynamic_dev_dbg>
+     140:	mov	x0, x19
+     144:	b	d8 <trusty_irq_cpu_down+0x1c>
+
+0000000000000148 <trusty_irq_probe>:
+     148:	str	x30, [x18], #8
+     14c:	stp	x29, x30, [sp, #-64]!
+     150:	stp	x24, x23, [sp, #16]
+     154:	stp	x22, x21, [sp, #32]
+     158:	stp	x20, x19, [sp, #48]
+     15c:	mov	x29, sp
+     160:	mov	x22, x0
+     164:	nop
+     168:	adrp	x8, 0 <kmalloc_caches>
+     16c:	ldr	x0, [x8]
+     170:	mov	w1, #0xdc0                 	// #3520
+     174:	mov	w2, #0x60                  	// #96
+     178:	bl	0 <kmem_cache_alloc_trace>
+     17c:	cbz	x0, 1c0 <trusty_irq_probe+0x78>
+     180:	add	x21, x22, #0x10
+     184:	str	x21, [x0]
+     188:	ldr	x8, [x22, #112]
+     18c:	mov	x20, x0
+     190:	adrp	x2, 0 <__cfi_check_fail>
+     194:	mov	x19, x0
+     198:	str	wzr, [x20, #32]!
+     19c:	add	x2, x2, #0x0
+     1a0:	mov	x0, xzr
+     1a4:	mov	x1, xzr
+     1a8:	stur	x8, [x20, #-24]
+     1ac:	bl	0 <of_find_compatible_node>
+     1b0:	cbz	x0, 1c8 <trusty_irq_probe+0x80>
+     1b4:	mov	w8, #0x3                   	// #3
+     1b8:	str	w8, [x19, #88]
+     1bc:	b	1d4 <trusty_irq_probe+0x8c>
+     1c0:	mov	w23, #0xfffffff4            	// #-12
+     1c4:	b	318 <trusty_irq_probe+0x1d0>
+     1c8:	mov	w8, #0x2                   	// #2
+     1cc:	str	w8, [x19, #88]
+     1d0:	nop
+     1d4:	nop
+     1d8:	mov	w0, #0x10                  	// #16
+     1dc:	mov	w1, #0x8                   	// #8
+     1e0:	bl	0 <__alloc_percpu>
+     1e4:	str	x0, [x19, #40]
+     1e8:	cbz	x0, 30c <trusty_irq_probe+0x1c4>
+     1ec:	adrp	x8, 0 <__cfi_check_fail>
+     1f0:	str	x19, [x22, #168]
+     1f4:	add	x8, x8, #0x0
+     1f8:	mov	x22, x19
+     1fc:	str	x8, [x22, #48]!
+     200:	ldur	x0, [x22, #-40]
+     204:	mov	x1, x22
+     208:	bl	0 <trusty_call_notifier_register>
+     20c:	cbnz	w0, 334 <trusty_irq_probe+0x1ec>
+     210:	ldr	w8, [x19, #88]
+     214:	cmp	w8, #0x3
+     218:	b.ne	22c <trusty_irq_probe+0xe4>  // b.any
+     21c:	mov	w1, #0xd                   	// #13
+     220:	mov	x0, x19
+     224:	bl	0 <__cfi_check_fail>
+     228:	cbnz	w0, 3a8 <trusty_irq_probe+0x260>
+     22c:	adrp	x23, 0 <__cfi_check_fail>
+     230:	mov	w2, wzr
+     234:	add	x23, x23, #0x0
+     238:	ldr	x0, [x19, #8]
+     23c:	mov	w1, #0x3                   	// #3
+     240:	movk	w1, #0xbc00, lsl #16
+     244:	mov	w3, #0x1                   	// #1
+     248:	mov	w4, wzr
+     24c:	bl	0 <trusty_fast_call32>
+     250:	tbnz	w0, #31, 28c <trusty_irq_probe+0x144>
+     254:	mov	w24, w0
+     258:	mov	x0, x19
+     25c:	mov	w1, w24
+     260:	bl	0 <__cfi_check_fail>
+     264:	cbnz	w0, 274 <trusty_irq_probe+0x12c>
+     268:	adds	w2, w24, #0x1
+     26c:	b.pl	238 <trusty_irq_probe+0xf0>  // b.nfrst
+     270:	b	28c <trusty_irq_probe+0x144>
+     274:	ldr	x0, [x19]
+     278:	mov	x1, x23
+     27c:	mov	w2, w24
+     280:	bl	0 <_dev_warn>
+     284:	adds	w2, w24, #0x1
+     288:	b.pl	238 <trusty_irq_probe+0xf0>  // b.nfrst
+     28c:	adrp	x23, 0 <__cfi_check_fail>
+     290:	mov	w2, wzr
+     294:	add	x23, x23, #0x0
+     298:	ldr	x0, [x19, #8]
+     29c:	mov	w1, #0x3                   	// #3
+     2a0:	movk	w1, #0xbc00, lsl #16
+     2a4:	mov	w3, wzr
+     2a8:	mov	w4, wzr
+     2ac:	bl	0 <trusty_fast_call32>
+     2b0:	tbnz	w0, #31, 2ec <trusty_irq_probe+0x1a4>
+     2b4:	mov	w24, w0
+     2b8:	mov	x0, x19
+     2bc:	mov	w1, w24
+     2c0:	bl	0 <__cfi_check_fail>
+     2c4:	cbnz	w0, 2d4 <trusty_irq_probe+0x18c>
+     2c8:	adds	w2, w24, #0x1
+     2cc:	b.pl	298 <trusty_irq_probe+0x150>  // b.nfrst
+     2d0:	b	2ec <trusty_irq_probe+0x1a4>
+     2d4:	ldr	x0, [x19]
+     2d8:	mov	x1, x23
+     2dc:	mov	w2, w24
+     2e0:	bl	0 <_dev_warn>
+     2e4:	adds	w2, w24, #0x1
+     2e8:	b.pl	298 <trusty_irq_probe+0x150>  // b.nfrst
+     2ec:	adrp	x8, 0 <__cfi_check_fail>
+     2f0:	ldr	w0, [x8]
+     2f4:	add	x1, x19, #0x48
+     2f8:	mov	w2, #0x1                   	// #1
+     2fc:	bl	0 <__cpuhp_state_add_instance>
+     300:	tbnz	w0, #31, 34c <trusty_irq_probe+0x204>
+     304:	mov	w23, wzr
+     308:	b	318 <trusty_irq_probe+0x1d0>
+     30c:	mov	w23, #0xfffffff4            	// #-12
+     310:	mov	x0, x19
+     314:	bl	0 <kfree>
+     318:	mov	w0, w23
+     31c:	ldp	x20, x19, [sp, #48]
+     320:	ldp	x22, x21, [sp, #32]
+     324:	ldp	x24, x23, [sp, #16]
+     328:	ldp	x29, x30, [sp], #64
+     32c:	ldr	x30, [x18, #-8]!
+     330:	ret
+     334:	adrp	x1, 0 <__cfi_check_fail>
+     338:	mov	w23, w0
+     33c:	add	x1, x1, #0x0
+     340:	mov	x0, x21
+     344:	bl	0 <_dev_err>
+     348:	b	39c <trusty_irq_probe+0x254>
+     34c:	mov	w23, w0
+     350:	adrp	x1, 0 <__cfi_check_fail>
+     354:	add	x1, x1, #0x0
+     358:	mov	x0, x21
+     35c:	mov	w2, w23
+     360:	bl	0 <_dev_err>
+     364:	mov	x0, x20
+     368:	bl	0 <_raw_spin_lock_irqsave>
+     36c:	mov	x21, x0
+     370:	add	x1, x19, #0x10
+     374:	mov	x0, x19
+     378:	bl	0 <__cfi_check_fail>
+     37c:	mov	x0, x20
+     380:	mov	x1, x21
+     384:	bl	0 <_raw_spin_unlock_irqrestore>
+     388:	mov	x0, x19
+     38c:	bl	0 <__cfi_check_fail>
+     390:	ldr	x0, [x19, #8]
+     394:	mov	x1, x22
+     398:	bl	0 <trusty_call_notifier_unregister>
+     39c:	ldr	x0, [x19, #40]
+     3a0:	bl	0 <free_percpu>
+     3a4:	b	310 <trusty_irq_probe+0x1c8>
+     3a8:	ldr	x0, [x19]
+     3ac:	adrp	x1, 0 <__cfi_check_fail>
+     3b0:	add	x1, x1, #0x0
+     3b4:	mov	w2, #0xd                   	// #13
+     3b8:	bl	0 <_dev_warn>
+     3bc:	b	22c <trusty_irq_probe+0xe4>
+     3c0:	adrp	x0, 0 <__cfi_check_fail>
+     3c4:	adrp	x2, 0 <__cfi_check_fail>
+     3c8:	adrp	x3, 0 <__cfi_check_fail>
+     3cc:	add	x1, x22, #0x10
+     3d0:	add	x0, x0, #0x0
+     3d4:	add	x2, x2, #0x0
+     3d8:	add	x3, x3, #0x0
+     3dc:	bl	0 <__dynamic_dev_dbg>
+     3e0:	b	168 <trusty_irq_probe+0x20>
+     3e4:	ldr	w4, [x19, #88]
+     3e8:	adrp	x0, 0 <__cfi_check_fail>
+     3ec:	adrp	x2, 0 <__cfi_check_fail>
+     3f0:	adrp	x3, 0 <__cfi_check_fail>
+     3f4:	add	x0, x0, #0x0
+     3f8:	add	x2, x2, #0x0
+     3fc:	add	x3, x3, #0x0
+     400:	mov	x1, x21
+     404:	bl	0 <__dynamic_dev_dbg>
+     408:	b	1d8 <trusty_irq_probe+0x90>
+     40c:	adrp	x0, 0 <__cfi_check_fail>
+     410:	adrp	x2, 0 <__cfi_check_fail>
+     414:	add	x0, x0, #0x0
+     418:	add	x2, x2, #0x0
+     41c:	mov	x1, x21
+     420:	bl	0 <__dynamic_dev_dbg>
+     424:	b	1d4 <trusty_irq_probe+0x8c>
+
+0000000000000428 <trusty_irq_remove>:
+     428:	str	x30, [x18], #8
+     42c:	stp	x29, x30, [sp, #-48]!
+     430:	stp	x22, x21, [sp, #16]
+     434:	stp	x20, x19, [sp, #32]
+     438:	mov	x29, sp
+     43c:	ldr	x19, [x0, #168]
+     440:	nop
+     444:	adrp	x8, 0 <__cfi_check_fail>
+     448:	ldr	w0, [x8]
+     44c:	add	x1, x19, #0x48
+     450:	mov	w2, #0x1                   	// #1
+     454:	bl	0 <__cpuhp_state_remove_instance>
+     458:	mov	w20, w0
+     45c:	cbnz	w0, 4c4 <trusty_irq_remove+0x9c>
+     460:	add	x21, x19, #0x20
+     464:	mov	x0, x21
+     468:	bl	0 <_raw_spin_lock_irqsave>
+     46c:	mov	x22, x0
+     470:	add	x1, x19, #0x10
+     474:	mov	x0, x19
+     478:	bl	0 <__cfi_check_fail>
+     47c:	mov	x0, x21
+     480:	mov	x1, x22
+     484:	bl	0 <_raw_spin_unlock_irqrestore>
+     488:	mov	x0, x19
+     48c:	bl	0 <__cfi_check_fail>
+     490:	ldr	x0, [x19, #8]
+     494:	add	x1, x19, #0x30
+     498:	bl	0 <trusty_call_notifier_unregister>
+     49c:	ldr	x0, [x19, #40]
+     4a0:	bl	0 <free_percpu>
+     4a4:	mov	x0, x19
+     4a8:	bl	0 <kfree>
+     4ac:	mov	w0, w20
+     4b0:	ldp	x20, x19, [sp, #32]
+     4b4:	ldp	x22, x21, [sp, #16]
+     4b8:	ldp	x29, x30, [sp], #48
+     4bc:	ldr	x30, [x18, #-8]!
+     4c0:	ret
+     4c4:	brk	#0x800
+     4c8:	b	4ac <trusty_irq_remove+0x84>
+     4cc:	add	x1, x0, #0x10
+     4d0:	adrp	x0, 0 <__cfi_check_fail>
+     4d4:	adrp	x2, 0 <__cfi_check_fail>
+     4d8:	adrp	x3, 0 <__cfi_check_fail>
+     4dc:	add	x0, x0, #0x0
+     4e0:	add	x2, x2, #0x0
+     4e4:	add	x3, x3, #0x0
+     4e8:	bl	0 <__dynamic_dev_dbg>
+     4ec:	b	444 <trusty_irq_remove+0x1c>
+
+00000000000004f0 <trusty_irq_disable_irqset>:
+     4f0:	str	x30, [x18], #8
+     4f4:	stp	x29, x30, [sp, #-96]!
+     4f8:	stp	x28, x27, [sp, #16]
+     4fc:	stp	x26, x25, [sp, #32]
+     500:	stp	x24, x23, [sp, #48]
+     504:	stp	x22, x21, [sp, #64]
+     508:	stp	x20, x19, [sp, #80]
+     50c:	mov	x29, sp
+     510:	mov	x25, x1
+     514:	ldr	x8, [x25, #8]!
+     518:	adrp	x26, 0 <cpu_number>
+     51c:	mov	x20, x1
+     520:	mov	x19, x0
+     524:	add	x26, x26, #0x0
+     528:	cbz	x8, 5dc <trusty_irq_disable_irqset+0xec>
+     52c:	sub	x27, x8, #0x8
+     530:	cbz	x27, 5dc <trusty_irq_disable_irqset+0xec>
+     534:	adrp	x21, 0 <__cfi_check_fail>
+     538:	adrp	x22, 0 <__cfi_check_fail>
+     53c:	adrp	x23, 0 <__cfi_check_fail>
+     540:	adrp	x24, 0 <__cfi_check_fail>
+     544:	add	x21, x21, #0x0
+     548:	add	x22, x22, #0x0
+     54c:	add	x23, x23, #0x0
+     550:	add	x24, x24, #0x0
+     554:	b	570 <trusty_irq_disable_irqset+0x80>
+     558:	bl	0 <disable_irq_nosync>
+     55c:	ldr	x8, [x27, #8]
+     560:	sub	x9, x8, #0x8
+     564:	cmp	x8, #0x0
+     568:	csel	x27, xzr, x9, eq	// eq = none
+     56c:	cbz	x27, 5dc <trusty_irq_disable_irqset+0xec>
+     570:	ldrb	w8, [x27, #29]
+     574:	cbz	w8, 594 <trusty_irq_disable_irqset+0xa4>
+     578:	nop
+     57c:	ldrb	w8, [x27, #28]
+     580:	ldr	w0, [x27, #24]
+     584:	strb	wzr, [x27, #29]
+     588:	cbz	w8, 558 <trusty_irq_disable_irqset+0x68>
+     58c:	bl	0 <disable_percpu_irq>
+     590:	b	55c <trusty_irq_disable_irqset+0x6c>
+     594:	ldr	x0, [x19]
+     598:	ldr	w2, [x27, #24]
+     59c:	ldrb	w3, [x27, #28]
+     5a0:	mrs	x8, tpidr_el1
+     5a4:	ldr	w4, [x8, x26]
+     5a8:	mov	x1, x21
+     5ac:	bl	0 <_dev_warn>
+     5b0:	b	55c <trusty_irq_disable_irqset+0x6c>
+     5b4:	ldr	x1, [x19]
+     5b8:	ldr	w4, [x27, #24]
+     5bc:	ldrb	w5, [x27, #28]
+     5c0:	mrs	x8, tpidr_el1
+     5c4:	ldr	w6, [x8, x26]
+     5c8:	mov	x0, x22
+     5cc:	mov	x2, x23
+     5d0:	mov	x3, x24
+     5d4:	bl	0 <__dynamic_dev_dbg>
+     5d8:	b	57c <trusty_irq_disable_irqset+0x8c>
+     5dc:	ldr	x8, [x20]
+     5e0:	cbz	x8, 6b8 <trusty_irq_disable_irqset+0x1c8>
+     5e4:	sub	x24, x8, #0x8
+     5e8:	cbz	x24, 6b8 <trusty_irq_disable_irqset+0x1c8>
+     5ec:	mov	x27, #0x100                 	// #256
+     5f0:	adrp	x20, 0 <__cfi_check_fail>
+     5f4:	adrp	x22, 0 <__cfi_check_fail>
+     5f8:	adrp	x23, 0 <__cfi_check_fail>
+     5fc:	movk	x27, #0xdead, lsl #48
+     600:	add	x20, x20, #0x0
+     604:	add	x22, x22, #0x0
+     608:	add	x23, x23, #0x0
+     60c:	b	628 <trusty_irq_disable_irqset+0x138>
+     610:	sub	x8, x28, #0x8
+     614:	cmp	x28, #0x0
+     618:	str	x21, [x25]
+     61c:	str	x25, [x24, #16]
+     620:	csel	x24, xzr, x8, eq	// eq = none
+     624:	cbz	x24, 6b8 <trusty_irq_disable_irqset+0x1c8>
+     628:	mov	x21, x24
+     62c:	ldr	x28, [x21, #8]!
+     630:	ldrb	w8, [x21, #21]
+     634:	cbz	w8, 66c <trusty_irq_disable_irqset+0x17c>
+     638:	nop
+     63c:	ldp	x8, x9, [x24, #8]
+     640:	strb	wzr, [x24, #29]
+     644:	str	x8, [x9]
+     648:	cbz	x8, 650 <trusty_irq_disable_irqset+0x160>
+     64c:	str	x9, [x8, #8]
+     650:	add	x8, x27, #0x22
+     654:	stp	x27, x8, [x24, #8]
+     658:	ldr	x8, [x25]
+     65c:	str	x8, [x24, #8]
+     660:	cbz	x8, 610 <trusty_irq_disable_irqset+0x120>
+     664:	str	x21, [x8, #8]
+     668:	b	610 <trusty_irq_disable_irqset+0x120>
+     66c:	ldr	x0, [x19]
+     670:	ldr	w2, [x24, #24]
+     674:	ldrb	w3, [x24, #28]
+     678:	mrs	x8, tpidr_el1
+     67c:	ldr	w4, [x8, x26]
+     680:	mov	x1, x20
+     684:	bl	0 <_dev_warn>
+     688:	b	638 <trusty_irq_disable_irqset+0x148>
+     68c:	ldr	x1, [x19]
+     690:	ldr	w4, [x24, #24]
+     694:	ldrb	w5, [x24, #28]
+     698:	mrs	x8, tpidr_el1
+     69c:	ldr	w6, [x8, x26]
+     6a0:	adrp	x0, 0 <__cfi_check_fail>
+     6a4:	add	x0, x0, #0x0
+     6a8:	mov	x2, x22
+     6ac:	mov	x3, x23
+     6b0:	bl	0 <__dynamic_dev_dbg>
+     6b4:	b	63c <trusty_irq_disable_irqset+0x14c>
+     6b8:	ldp	x20, x19, [sp, #80]
+     6bc:	ldp	x22, x21, [sp, #64]
+     6c0:	ldp	x24, x23, [sp, #48]
+     6c4:	ldp	x26, x25, [sp, #32]
+     6c8:	ldp	x28, x27, [sp, #16]
+     6cc:	ldp	x29, x30, [sp], #96
+     6d0:	ldr	x30, [x18, #-8]!
+     6d4:	ret
+
+00000000000006d8 <trusty_irq_free_irqs>:
+     6d8:	str	x30, [x18], #8
+     6dc:	stp	x29, x30, [sp, #-96]!
+     6e0:	stp	x28, x27, [sp, #16]
+     6e4:	stp	x26, x25, [sp, #32]
+     6e8:	stp	x24, x23, [sp, #48]
+     6ec:	stp	x22, x21, [sp, #64]
+     6f0:	stp	x20, x19, [sp, #80]
+     6f4:	mov	x29, sp
+     6f8:	ldr	x8, [x0, #24]
+     6fc:	mov	x25, #0x100                 	// #256
+     700:	mov	x19, x0
+     704:	movk	x25, #0xdead, lsl #48
+     708:	cbz	x8, 794 <trusty_irq_free_irqs+0xbc>
+     70c:	sub	x22, x8, #0x8
+     710:	cbz	x22, 794 <trusty_irq_free_irqs+0xbc>
+     714:	adrp	x20, 0 <__cfi_check_fail>
+     718:	adrp	x21, 0 <__cfi_check_fail>
+     71c:	adrp	x23, 0 <__cfi_check_fail>
+     720:	add	x20, x20, #0x0
+     724:	add	x21, x21, #0x0
+     728:	add	x23, x23, #0x0
+     72c:	b	750 <trusty_irq_free_irqs+0x78>
+     730:	add	x8, x25, #0x22
+     734:	mov	x0, x22
+     738:	stp	x25, x8, [x22, #8]
+     73c:	bl	0 <kfree>
+     740:	sub	x8, x24, #0x8
+     744:	cmp	x24, #0x0
+     748:	csel	x22, xzr, x8, eq	// eq = none
+     74c:	cbz	x22, 794 <trusty_irq_free_irqs+0xbc>
+     750:	ldr	x24, [x22, #8]
+     754:	nop
+     758:	ldr	w0, [x22, #24]
+     75c:	mov	x1, x22
+     760:	bl	0 <free_irq>
+     764:	ldp	x8, x9, [x22, #8]
+     768:	str	x8, [x9]
+     76c:	cbz	x8, 730 <trusty_irq_free_irqs+0x58>
+     770:	str	x9, [x8, #8]
+     774:	b	730 <trusty_irq_free_irqs+0x58>
+     778:	ldr	x1, [x19]
+     77c:	ldr	w4, [x22, #24]
+     780:	mov	x0, x20
+     784:	mov	x2, x21
+     788:	mov	x3, x23
+     78c:	bl	0 <__dynamic_dev_dbg>
+     790:	b	758 <trusty_irq_free_irqs+0x80>
+     794:	ldr	x8, [x19, #40]
+     798:	mrs	x9, tpidr_el1
+     79c:	add	x8, x9, x8
+     7a0:	ldr	x8, [x8, #8]
+     7a4:	cbz	x8, 870 <trusty_irq_free_irqs+0x198>
+     7a8:	sub	x21, x8, #0x8
+     7ac:	cbz	x21, 870 <trusty_irq_free_irqs+0x198>
+     7b0:	adrp	x20, 0 <__cpu_possible_mask>
+     7b4:	adrp	x27, 0 <__per_cpu_offset>
+     7b8:	adrp	x22, 0 <__cfi_check_fail>
+     7bc:	adrp	x23, 0 <__cfi_check_fail>
+     7c0:	add	x20, x20, #0x0
+     7c4:	adrp	x26, 0 <nr_cpu_ids>
+     7c8:	add	x27, x27, #0x0
+     7cc:	add	x22, x22, #0x0
+     7d0:	add	x23, x23, #0x0
+     7d4:	b	7f0 <trusty_irq_free_irqs+0x118>
+     7d8:	mov	x0, x24
+     7dc:	bl	0 <free_percpu>
+     7e0:	sub	x8, x28, #0x8
+     7e4:	cmp	x28, #0x0
+     7e8:	csel	x21, xzr, x8, eq	// eq = none
+     7ec:	cbz	x21, 870 <trusty_irq_free_irqs+0x198>
+     7f0:	ldr	x28, [x21, #8]
+     7f4:	nop
+     7f8:	ldr	x24, [x21, #32]
+     7fc:	ldr	w0, [x21, #24]
+     800:	mov	x1, x24
+     804:	bl	0 <free_percpu_irq>
+     808:	mov	w0, #0xffffffff            	// #-1
+     80c:	b	818 <trusty_irq_free_irqs+0x140>
+     810:	add	x9, x25, #0x22
+     814:	stp	x25, x9, [x8, #8]
+     818:	mov	x1, x20
+     81c:	bl	0 <cpumask_next>
+     820:	ldr	w8, [x26]
+     824:	cmp	w0, w8
+     828:	b.cs	7d8 <trusty_irq_free_irqs+0x100>  // b.hs, b.nlast
+     82c:	cmp	w0, #0x20
+     830:	b.cs	890 <trusty_irq_free_irqs+0x1b8>  // b.hs, b.nlast
+     834:	ldr	x8, [x27, w0, uxtw #3]
+     838:	add	x8, x8, x24
+     83c:	ldp	x9, x10, [x8, #8]
+     840:	str	x9, [x10]
+     844:	cbz	x9, 810 <trusty_irq_free_irqs+0x138>
+     848:	str	x10, [x9, #8]
+     84c:	b	810 <trusty_irq_free_irqs+0x138>
+     850:	ldr	x1, [x19]
+     854:	ldr	w4, [x21, #24]
+     858:	adrp	x0, 0 <__cfi_check_fail>
+     85c:	add	x0, x0, #0x0
+     860:	mov	x2, x22
+     864:	mov	x3, x23
+     868:	bl	0 <__dynamic_dev_dbg>
+     86c:	b	7f8 <trusty_irq_free_irqs+0x120>
+     870:	ldp	x20, x19, [sp, #80]
+     874:	ldp	x22, x21, [sp, #64]
+     878:	ldp	x24, x23, [sp, #48]
+     87c:	ldp	x26, x25, [sp, #32]
+     880:	ldp	x28, x27, [sp, #16]
+     884:	ldp	x29, x30, [sp], #96
+     888:	ldr	x30, [x18, #-8]!
+     88c:	ret
+     890:	mov	w0, #0x12                  	// #18
+     894:	bl	0 <__ubsan_handle_cfi_check_fail_abort>
+
+0000000000000898 <trusty_irq_call_notify>:
+     898:	str	x30, [x18], #8
+     89c:	stp	x29, x30, [sp, #-48]!
+     8a0:	str	x21, [sp, #16]
+     8a4:	stp	x20, x19, [sp, #32]
+     8a8:	mov	x29, sp
+     8ac:	mrs	x8, daif
+     8b0:	and	w9, w8, #0x80
+     8b4:	cbz	w9, 924 <trusty_irq_call_notify+0x8c>
+     8b8:	cbz	x1, 8c4 <trusty_irq_call_notify+0x2c>
+     8bc:	mov	w19, wzr
+     8c0:	b	90c <trusty_irq_call_notify+0x74>
+     8c4:	sub	x21, x0, #0x10
+     8c8:	mov	x19, x0
+     8cc:	sub	x20, x0, #0x30
+     8d0:	mov	x0, x21
+     8d4:	bl	0 <_raw_spin_lock>
+     8d8:	sub	x1, x19, #0x20
+     8dc:	mov	x0, x20
+     8e0:	mov	w2, wzr
+     8e4:	bl	0 <__cfi_check_fail>
+     8e8:	mov	x0, x21
+     8ec:	bl	0 <_raw_spin_unlock>
+     8f0:	ldur	x8, [x19, #-8]
+     8f4:	mrs	x9, tpidr_el1
+     8f8:	mov	w2, #0x1                   	// #1
+     8fc:	mov	x0, x20
+     900:	add	x1, x9, x8
+     904:	mov	w19, #0x1                   	// #1
+     908:	bl	0 <__cfi_check_fail>
+     90c:	mov	w0, w19
+     910:	ldp	x20, x19, [sp, #32]
+     914:	ldr	x21, [sp, #16]
+     918:	ldp	x29, x30, [sp], #48
+     91c:	ldr	x30, [x18, #-8]!
+     920:	ret
+     924:	brk	#0x800
+
+0000000000000928 <trusty_irq_init_per_cpu_irq>:
+     928:	str	x30, [x18], #8
+     92c:	stp	x29, x30, [sp, #-80]!
+     930:	str	x25, [sp, #16]
+     934:	stp	x24, x23, [sp, #32]
+     938:	stp	x22, x21, [sp, #48]
+     93c:	stp	x20, x19, [sp, #64]
+     940:	mov	x29, sp
+     944:	mov	w19, w1
+     948:	mov	x21, x0
+     94c:	nop
+     950:	mov	x0, x21
+     954:	mov	w1, w19
+     958:	bl	0 <__cfi_check_fail>
+     95c:	mov	w19, w0
+     960:	cmp	w0, #0x0
+     964:	b.le	ae8 <trusty_irq_init_per_cpu_irq+0x1c0>
+     968:	mov	w0, #0x28                  	// #40
+     96c:	mov	w1, #0x8                   	// #8
+     970:	bl	0 <__alloc_percpu>
+     974:	cbz	x0, ac4 <trusty_irq_init_per_cpu_irq+0x19c>
+     978:	adrp	x1, 0 <__cpu_possible_mask>
+     97c:	mov	x20, x0
+     980:	add	x1, x1, #0x0
+     984:	mov	w0, #0xffffffff            	// #-1
+     988:	bl	0 <cpumask_next>
+     98c:	adrp	x23, 0 <nr_cpu_ids>
+     990:	ldr	w8, [x23]
+     994:	cmp	w0, w8
+     998:	b.cs	a10 <trusty_irq_init_per_cpu_irq+0xe8>  // b.hs, b.nlast
+     99c:	adrp	x24, 0 <__per_cpu_offset>
+     9a0:	adrp	x22, 0 <__cpu_possible_mask>
+     9a4:	add	x24, x24, #0x0
+     9a8:	mov	w25, #0x1                   	// #1
+     9ac:	add	x22, x22, #0x0
+     9b0:	b	9dc <trusty_irq_init_per_cpu_irq+0xb4>
+     9b4:	mov	x1, x22
+     9b8:	str	x10, [x9]
+     9bc:	str	x9, [x8, #16]
+     9c0:	str	w19, [x8, #24]
+     9c4:	strb	w25, [x8, #28]
+     9c8:	str	x20, [x8, #32]
+     9cc:	bl	0 <cpumask_next>
+     9d0:	ldr	w8, [x23]
+     9d4:	cmp	w0, w8
+     9d8:	b.cs	a10 <trusty_irq_init_per_cpu_irq+0xe8>  // b.hs, b.nlast
+     9dc:	cmp	w0, #0x20
+     9e0:	b.cs	b0c <trusty_irq_init_per_cpu_irq+0x1e4>  // b.hs, b.nlast
+     9e4:	ldr	x9, [x24, w0, uxtw #3]
+     9e8:	ldr	x10, [x21, #40]
+     9ec:	add	x8, x9, x20
+     9f0:	add	x9, x9, x10
+     9f4:	str	x21, [x8]
+     9f8:	ldr	x11, [x9, #8]!
+     9fc:	mov	x10, x8
+     a00:	str	x11, [x10, #8]!
+     a04:	cbz	x11, 9b4 <trusty_irq_init_per_cpu_irq+0x8c>
+     a08:	str	x10, [x11, #8]
+     a0c:	b	9b4 <trusty_irq_init_per_cpu_irq+0x8c>
+     a10:	adrp	x1, 0 <__cfi_check_fail>
+     a14:	adrp	x3, 0 <__cfi_check_fail>
+     a18:	add	x1, x1, #0x0
+     a1c:	add	x3, x3, #0x0
+     a20:	mov	w0, w19
+     a24:	mov	x2, xzr
+     a28:	mov	x4, x20
+     a2c:	bl	0 <__request_percpu_irq>
+     a30:	mov	w19, w0
+     a34:	cbz	w0, ac8 <trusty_irq_init_per_cpu_irq+0x1a0>
+     a38:	ldr	x0, [x21]
+     a3c:	adrp	x1, 0 <__cfi_check_fail>
+     a40:	add	x1, x1, #0x0
+     a44:	mov	w2, w19
+     a48:	bl	0 <_dev_err>
+     a4c:	adrp	x1, 0 <__cpu_possible_mask>
+     a50:	add	x1, x1, #0x0
+     a54:	mov	w0, #0xffffffff            	// #-1
+     a58:	bl	0 <cpumask_next>
+     a5c:	ldr	w8, [x23]
+     a60:	cmp	w0, w8
+     a64:	b.cs	b00 <trusty_irq_init_per_cpu_irq+0x1d8>  // b.hs, b.nlast
+     a68:	mov	x22, #0x100                 	// #256
+     a6c:	adrp	x24, 0 <__per_cpu_offset>
+     a70:	adrp	x21, 0 <__cpu_possible_mask>
+     a74:	movk	x22, #0xdead, lsl #48
+     a78:	add	x24, x24, #0x0
+     a7c:	add	x21, x21, #0x0
+     a80:	b	aa0 <trusty_irq_init_per_cpu_irq+0x178>
+     a84:	add	x9, x22, #0x22
+     a88:	mov	x1, x21
+     a8c:	stp	x22, x9, [x8, #8]
+     a90:	bl	0 <cpumask_next>
+     a94:	ldr	w8, [x23]
+     a98:	cmp	w0, w8
+     a9c:	b.cs	b00 <trusty_irq_init_per_cpu_irq+0x1d8>  // b.hs, b.nlast
+     aa0:	cmp	w0, #0x1f
+     aa4:	b.hi	b0c <trusty_irq_init_per_cpu_irq+0x1e4>  // b.pmore
+     aa8:	ldr	x8, [x24, w0, uxtw #3]
+     aac:	add	x8, x8, x20
+     ab0:	ldp	x9, x10, [x8, #8]
+     ab4:	str	x9, [x10]
+     ab8:	cbz	x9, a84 <trusty_irq_init_per_cpu_irq+0x15c>
+     abc:	str	x10, [x9, #8]
+     ac0:	b	a84 <trusty_irq_init_per_cpu_irq+0x15c>
+     ac4:	mov	w19, #0xfffffff4            	// #-12
+     ac8:	mov	w0, w19
+     acc:	ldp	x20, x19, [sp, #64]
+     ad0:	ldp	x22, x21, [sp, #48]
+     ad4:	ldp	x24, x23, [sp, #32]
+     ad8:	ldr	x25, [sp, #16]
+     adc:	ldp	x29, x30, [sp], #80
+     ae0:	ldr	x30, [x18, #-8]!
+     ae4:	ret
+     ae8:	ldr	x0, [x21]
+     aec:	adrp	x1, 0 <__cfi_check_fail>
+     af0:	add	x1, x1, #0x0
+     af4:	mov	w2, w19
+     af8:	bl	0 <_dev_err>
+     afc:	b	ac8 <trusty_irq_init_per_cpu_irq+0x1a0>
+     b00:	mov	x0, x20
+     b04:	bl	0 <free_percpu>
+     b08:	b	ac8 <trusty_irq_init_per_cpu_irq+0x1a0>
+     b0c:	mov	w0, #0x12                  	// #18
+     b10:	bl	0 <__ubsan_handle_cfi_check_fail_abort>
+     b14:	ldr	x1, [x21]
+     b18:	adrp	x0, 0 <__cfi_check_fail>
+     b1c:	adrp	x2, 0 <__cfi_check_fail>
+     b20:	adrp	x3, 0 <__cfi_check_fail>
+     b24:	add	x0, x0, #0x0
+     b28:	add	x2, x2, #0x0
+     b2c:	add	x3, x3, #0x0
+     b30:	mov	w4, w19
+     b34:	bl	0 <__dynamic_dev_dbg>
+     b38:	b	950 <trusty_irq_init_per_cpu_irq+0x28>
+
+0000000000000b3c <trusty_irq_init_normal_irq>:
+     b3c:	str	x30, [x18], #8
+     b40:	stp	x29, x30, [sp, #-48]!
+     b44:	stp	x22, x21, [sp, #16]
+     b48:	stp	x20, x19, [sp, #32]
+     b4c:	mov	x29, sp
+     b50:	mov	w19, w1
+     b54:	mov	x20, x0
+     b58:	nop
+     b5c:	mov	x0, x20
+     b60:	mov	w1, w19
+     b64:	bl	0 <__cfi_check_fail>
+     b68:	mov	w19, w0
+     b6c:	tbnz	w0, #31, c74 <trusty_irq_init_normal_irq+0x138>
+     b70:	adrp	x8, 0 <kmalloc_caches>
+     b74:	ldr	x0, [x8]
+     b78:	mov	w1, #0xdc0                 	// #3520
+     b7c:	mov	w2, #0x28                  	// #40
+     b80:	bl	0 <kmem_cache_alloc_trace>
+     b84:	cbz	x0, c58 <trusty_irq_init_normal_irq+0x11c>
+     b88:	mov	w8, #0x1                   	// #1
+     b8c:	add	x22, x20, #0x20
+     b90:	mov	x21, x0
+     b94:	str	x20, [x0]
+     b98:	str	w19, [x0, #24]
+     b9c:	strb	w8, [x0, #29]
+     ba0:	mov	x0, x22
+     ba4:	bl	0 <_raw_spin_lock_irqsave>
+     ba8:	mov	x8, x20
+     bac:	ldr	x10, [x8, #24]!
+     bb0:	mov	x9, x21
+     bb4:	mov	x1, x0
+     bb8:	str	x10, [x9, #8]!
+     bbc:	cbz	x10, bc4 <trusty_irq_init_normal_irq+0x88>
+     bc0:	str	x9, [x10, #8]
+     bc4:	mov	x0, x22
+     bc8:	str	x9, [x8]
+     bcc:	str	x8, [x21, #16]
+     bd0:	bl	0 <_raw_spin_unlock_irqrestore>
+     bd4:	adrp	x1, 0 <__cfi_check_fail>
+     bd8:	adrp	x4, 0 <__cfi_check_fail>
+     bdc:	add	x1, x1, #0x0
+     be0:	add	x4, x4, #0x0
+     be4:	mov	w3, #0x10000               	// #65536
+     be8:	mov	w0, w19
+     bec:	mov	x2, xzr
+     bf0:	mov	x5, x21
+     bf4:	bl	0 <request_threaded_irq>
+     bf8:	mov	w19, w0
+     bfc:	cbz	w0, c5c <trusty_irq_init_normal_irq+0x120>
+     c00:	ldr	x0, [x20]
+     c04:	adrp	x1, 0 <__cfi_check_fail>
+     c08:	add	x1, x1, #0x0
+     c0c:	mov	w2, w19
+     c10:	bl	0 <_dev_err>
+     c14:	mov	x0, x22
+     c18:	bl	0 <_raw_spin_lock_irqsave>
+     c1c:	ldp	x8, x9, [x21, #8]
+     c20:	mov	x1, x0
+     c24:	str	x8, [x9]
+     c28:	cbz	x8, c30 <trusty_irq_init_normal_irq+0xf4>
+     c2c:	str	x9, [x8, #8]
+     c30:	mov	x8, #0x100                 	// #256
+     c34:	movk	x8, #0xdead, lsl #48
+     c38:	mov	w9, #0x22                  	// #34
+     c3c:	orr	x9, x8, x9
+     c40:	mov	x0, x22
+     c44:	stp	x8, x9, [x21, #8]
+     c48:	bl	0 <_raw_spin_unlock_irqrestore>
+     c4c:	mov	x0, x21
+     c50:	bl	0 <kfree>
+     c54:	b	c5c <trusty_irq_init_normal_irq+0x120>
+     c58:	mov	w19, #0xfffffff4            	// #-12
+     c5c:	mov	w0, w19
+     c60:	ldp	x20, x19, [sp, #32]
+     c64:	ldp	x22, x21, [sp, #16]
+     c68:	ldp	x29, x30, [sp], #48
+     c6c:	ldr	x30, [x18, #-8]!
+     c70:	ret
+     c74:	ldr	x0, [x20]
+     c78:	adrp	x1, 0 <__cfi_check_fail>
+     c7c:	add	x1, x1, #0x0
+     c80:	mov	w2, w19
+     c84:	bl	0 <_dev_err>
+     c88:	b	c5c <trusty_irq_init_normal_irq+0x120>
+     c8c:	ldr	x1, [x20]
+     c90:	adrp	x0, 0 <__cfi_check_fail>
+     c94:	adrp	x2, 0 <__cfi_check_fail>
+     c98:	adrp	x3, 0 <__cfi_check_fail>
+     c9c:	add	x0, x0, #0x0
+     ca0:	add	x2, x2, #0x0
+     ca4:	add	x3, x3, #0x0
+     ca8:	mov	w4, w19
+     cac:	bl	0 <__dynamic_dev_dbg>
+     cb0:	b	b5c <trusty_irq_init_normal_irq+0x20>
+
+0000000000000cb4 <trusty_irq_create_irq_mapping>:
+     cb4:	sub	sp, sp, #0xa0
+     cb8:	str	x30, [x18], #8
+     cbc:	stp	x29, x30, [sp, #112]
+     cc0:	stp	x22, x21, [sp, #128]
+     cc4:	stp	x20, x19, [sp, #144]
+     cc8:	add	x29, sp, #0x70
+     ccc:	adrp	x8, 0 <__stack_chk_guard>
+     cd0:	ldr	x8, [x8]
+     cd4:	mov	x20, x0
+     cd8:	mov	w19, w1
+     cdc:	adrp	x1, 0 <__cfi_check_fail>
+     ce0:	stur	x8, [x29, #-8]
+     ce4:	stp	xzr, xzr, [sp, #16]
+     ce8:	str	wzr, [sp, #12]
+     cec:	stp	xzr, xzr, [sp, #88]
+     cf0:	stp	xzr, xzr, [sp, #72]
+     cf4:	stp	xzr, xzr, [sp, #56]
+     cf8:	stp	xzr, xzr, [sp, #40]
+     cfc:	str	xzr, [sp, #32]
+     d00:	ldr	x8, [x0]
+     d04:	add	x1, x1, #0x0
+     d08:	mov	x2, xzr
+     d0c:	ldr	x0, [x8, #768]
+     d10:	bl	0 <of_find_property>
+     d14:	cbz	x0, e48 <trusty_irq_create_irq_mapping+0x194>
+     d18:	ldr	x8, [x20]
+     d1c:	adrp	x1, 0 <__cfi_check_fail>
+     d20:	add	x1, x1, #0x0
+     d24:	add	x3, sp, #0x10
+     d28:	ldr	x0, [x8, #768]
+     d2c:	mov	w2, wzr
+     d30:	bl	0 <of_property_read_u32_index>
+     d34:	cbnz	w0, e4c <trusty_irq_create_irq_mapping+0x198>
+     d38:	adrp	x22, 0 <__cfi_check_fail>
+     d3c:	mov	w21, #0x3                   	// #3
+     d40:	add	x22, x22, #0x0
+     d44:	b	d68 <trusty_irq_create_irq_mapping+0xb4>
+     d48:	ldr	x8, [x20]
+     d4c:	add	x3, sp, #0x10
+     d50:	mov	x1, x22
+     d54:	mov	w2, w21
+     d58:	ldr	x0, [x8, #768]
+     d5c:	bl	0 <of_property_read_u32_index>
+     d60:	add	w21, w21, #0x3
+     d64:	cbnz	w0, e4c <trusty_irq_create_irq_mapping+0x198>
+     d68:	ldr	x8, [x20]
+     d6c:	sub	w2, w21, #0x2
+     d70:	add	x3, sp, #0xc
+     d74:	mov	x1, x22
+     d78:	ldr	x0, [x8, #768]
+     d7c:	bl	0 <of_property_read_u32_index>
+     d80:	cbnz	w0, e4c <trusty_irq_create_irq_mapping+0x198>
+     d84:	ldr	w8, [sp, #16]
+     d88:	cmp	w8, w19
+     d8c:	b.hi	d48 <trusty_irq_create_irq_mapping+0x94>  // b.pmore
+     d90:	ldr	w8, [sp, #12]
+     d94:	cmp	w8, w19
+     d98:	b.cc	d48 <trusty_irq_create_irq_mapping+0x94>  // b.lo, b.ul, b.last
+     d9c:	ldr	x8, [x20]
+     da0:	adrp	x1, 0 <__cfi_check_fail>
+     da4:	sub	w2, w21, #0x1
+     da8:	add	x1, x1, #0x0
+     dac:	ldr	x0, [x8, #768]
+     db0:	add	x3, sp, #0x14
+     db4:	bl	0 <of_property_read_u32_index>
+     db8:	cbnz	w0, e4c <trusty_irq_create_irq_mapping+0x198>
+     dbc:	ldr	x8, [x20]
+     dc0:	ldr	w3, [sp, #20]
+     dc4:	adrp	x1, 0 <__cfi_check_fail>
+     dc8:	adrp	x2, 0 <__cfi_check_fail>
+     dcc:	ldr	x0, [x8, #768]
+     dd0:	add	x1, x1, #0x0
+     dd4:	add	x2, x2, #0x0
+     dd8:	add	x4, sp, #0x18
+     ddc:	bl	0 <of_parse_phandle_with_args>
+     de0:	cbnz	w0, e4c <trusty_irq_create_irq_mapping+0x198>
+     de4:	ldr	x8, [sp, #24]
+     de8:	cbz	x8, e90 <trusty_irq_create_irq_mapping+0x1dc>
+     dec:	ldr	w8, [sp, #32]
+     df0:	cbz	w8, e9c <trusty_irq_create_irq_mapping+0x1e8>
+     df4:	ldr	w8, [sp, #20]
+     df8:	cbz	w8, ea8 <trusty_irq_create_irq_mapping+0x1f4>
+     dfc:	ldp	w8, w2, [sp, #32]
+     e00:	cmp	w2, w8
+     e04:	b.cs	e78 <trusty_irq_create_irq_mapping+0x1c4>  // b.hs, b.nlast
+     e08:	cbz	w2, eb4 <trusty_irq_create_irq_mapping+0x200>
+     e0c:	mov	x8, xzr
+     e10:	lsl	x9, x2, #2
+     e14:	add	x10, sp, #0x18
+     e18:	cmp	x8, #0x3c
+     e1c:	b.eq	e40 <trusty_irq_create_irq_mapping+0x18c>  // b.none
+     e20:	add	x11, x10, x8
+     e24:	ldr	w12, [x11, #16]
+     e28:	add	x8, x8, #0x4
+     e2c:	cmp	x9, x8
+     e30:	str	w12, [x11, #12]
+     e34:	b.ne	e18 <trusty_irq_create_irq_mapping+0x164>  // b.any
+     e38:	cmp	w2, #0xf
+     e3c:	b.ls	eb4 <trusty_irq_create_irq_mapping+0x200>  // b.plast
+     e40:	mov	w0, #0x12                  	// #18
+     e44:	bl	0 <__ubsan_handle_cfi_check_fail_abort>
+     e48:	mov	w0, w19
+     e4c:	adrp	x9, 0 <__stack_chk_guard>
+     e50:	ldur	x8, [x29, #-8]
+     e54:	ldr	x9, [x9]
+     e58:	cmp	x9, x8
+     e5c:	b.ne	ee0 <trusty_irq_create_irq_mapping+0x22c>  // b.any
+     e60:	ldp	x29, x30, [sp, #112]
+     e64:	ldp	x20, x19, [sp, #144]
+     e68:	ldp	x22, x21, [sp, #128]
+     e6c:	ldr	x30, [x18, #-8]!
+     e70:	add	sp, sp, #0xa0
+     e74:	ret
+     e78:	ldr	x0, [x20]
+     e7c:	adrp	x1, 0 <__cfi_check_fail>
+     e80:	add	x1, x1, #0x0
+     e84:	bl	0 <_dev_err>
+     e88:	mov	w0, #0xffffffea            	// #-22
+     e8c:	b	e4c <trusty_irq_create_irq_mapping+0x198>
+     e90:	brk	#0x800
+     e94:	ldr	w8, [sp, #32]
+     e98:	cbnz	w8, df4 <trusty_irq_create_irq_mapping+0x140>
+     e9c:	brk	#0x800
+     ea0:	ldr	w8, [sp, #20]
+     ea4:	cbnz	w8, dfc <trusty_irq_create_irq_mapping+0x148>
+     ea8:	mov	w8, #0x1                   	// #1
+     eac:	mov	w2, wzr
+     eb0:	str	x8, [sp, #32]
+     eb4:	ldr	w8, [sp, #16]
+     eb8:	add	x9, sp, #0x18
+     ebc:	add	x9, x9, w2, uxtw #2
+     ec0:	add	x0, sp, #0x18
+     ec4:	sub	w8, w19, w8
+     ec8:	str	w8, [x9, #12]
+     ecc:	bl	0 <irq_create_of_mapping>
+     ed0:	cmp	w0, #0x0
+     ed4:	mov	w8, #0xffffffea            	// #-22
+     ed8:	csel	w0, w8, w0, eq	// eq = none
+     edc:	b	e4c <trusty_irq_create_irq_mapping+0x198>
+     ee0:	bl	0 <__stack_chk_fail>
+
+0000000000000ee4 <trusty_irq_handler>:
+     ee4:	str	x30, [x18], #8
+     ee8:	stp	x29, x30, [sp, #-64]!
+     eec:	str	x23, [sp, #16]
+     ef0:	stp	x22, x21, [sp, #32]
+     ef4:	stp	x20, x19, [sp, #48]
+     ef8:	mov	x29, sp
+     efc:	ldr	x22, [x1]
+     f00:	mov	x20, x1
+     f04:	mov	w19, w0
+     f08:	bl	0 <irq_get_irq_data>
+     f0c:	mov	x21, x0
+     f10:	nop
+     f14:	ldr	w2, [x22, #88]
+     f18:	cmp	w2, #0x2
+     f1c:	b.eq	f58 <trusty_irq_handler+0x74>  // b.none
+     f20:	cmp	w2, #0x3
+     f24:	b.ne	1010 <trusty_irq_handler+0x12c>  // b.any
+     f28:	ldr	x2, [x21, #8]
+     f2c:	cmp	x2, #0xd
+     f30:	b.ne	1028 <trusty_irq_handler+0x144>  // b.any
+     f34:	nop
+     f38:	b	fe4 <trusty_irq_handler+0x100>
+     f3c:	ldr	x1, [x22]
+     f40:	adrp	x0, 0 <__cfi_check_fail>
+     f44:	adrp	x2, 0 <__cfi_check_fail>
+     f48:	add	x0, x0, #0x0
+     f4c:	add	x2, x2, #0x0
+     f50:	bl	0 <__dynamic_dev_dbg>
+     f54:	b	fe4 <trusty_irq_handler+0x100>
+     f58:	ldrb	w8, [x20, #28]
+     f5c:	cbz	w8, f78 <trusty_irq_handler+0x94>
+     f60:	mov	w0, w19
+     f64:	bl	0 <disable_percpu_irq>
+     f68:	ldr	x8, [x22, #40]
+     f6c:	mrs	x9, tpidr_el1
+     f70:	add	x23, x9, x8
+     f74:	b	f84 <trusty_irq_handler+0xa0>
+     f78:	mov	w0, w19
+     f7c:	bl	0 <disable_irq_nosync>
+     f80:	add	x23, x22, #0x10
+     f84:	add	x21, x22, #0x20
+     f88:	mov	x0, x21
+     f8c:	bl	0 <_raw_spin_lock>
+     f90:	ldrb	w8, [x20, #29]
+     f94:	cbz	w8, fdc <trusty_irq_handler+0xf8>
+     f98:	mov	x8, x20
+     f9c:	ldr	x9, [x8, #8]!
+     fa0:	ldr	x10, [x8, #8]
+     fa4:	str	x9, [x10]
+     fa8:	cbz	x9, fb0 <trusty_irq_handler+0xcc>
+     fac:	str	x10, [x9, #8]
+     fb0:	mov	x9, #0x100                 	// #256
+     fb4:	movk	x9, #0xdead, lsl #48
+     fb8:	mov	w10, #0x22                  	// #34
+     fbc:	orr	x10, x9, x10
+     fc0:	stp	x9, x10, [x20, #8]
+     fc4:	ldr	x9, [x23]
+     fc8:	str	x9, [x20, #8]
+     fcc:	cbz	x9, fd4 <trusty_irq_handler+0xf0>
+     fd0:	str	x8, [x9, #8]
+     fd4:	str	x8, [x23]
+     fd8:	str	x23, [x20, #16]
+     fdc:	mov	x0, x21
+     fe0:	bl	0 <_raw_spin_unlock>
+     fe4:	ldr	x0, [x22, #8]
+     fe8:	mov	x1, xzr
+     fec:	bl	0 <trusty_enqueue_nop>
+     ff0:	nop
+     ff4:	mov	w0, #0x1                   	// #1
+     ff8:	ldp	x20, x19, [sp, #48]
+     ffc:	ldp	x22, x21, [sp, #32]
+    1000:	ldr	x23, [sp, #16]
+    1004:	ldp	x29, x30, [sp], #64
+    1008:	ldr	x30, [x18, #-8]!
+    100c:	ret
+    1010:	ldr	x0, [x22]
+    1014:	adrp	x1, 0 <__cfi_check_fail>
+    1018:	add	x1, x1, #0x0
+    101c:	bl	0 <_dev_err>
+    1020:	mov	w0, wzr
+    1024:	b	ff8 <trusty_irq_handler+0x114>
+    1028:	ldr	x0, [x22]
+    102c:	adrp	x1, 0 <__cfi_check_fail>
+    1030:	add	x1, x1, #0x0
+    1034:	bl	0 <_dev_err>
+    1038:	mov	w0, wzr
+    103c:	b	ff8 <trusty_irq_handler+0x114>
+    1040:	adrp	x9, 0 <cpu_number>
+    1044:	add	x9, x9, #0x0
+    1048:	ldr	x1, [x22]
+    104c:	ldr	w5, [x20, #24]
+    1050:	mrs	x8, tpidr_el1
+    1054:	ldr	w6, [x8, x9]
+    1058:	ldrb	w7, [x20, #29]
+    105c:	adrp	x0, 0 <__cfi_check_fail>
+    1060:	adrp	x2, 0 <__cfi_check_fail>
+    1064:	adrp	x3, 0 <__cfi_check_fail>
+    1068:	add	x0, x0, #0x0
+    106c:	add	x2, x2, #0x0
+    1070:	add	x3, x3, #0x0
+    1074:	mov	w4, w19
+    1078:	bl	0 <__dynamic_dev_dbg>
+    107c:	b	f14 <trusty_irq_handler+0x30>
+    1080:	ldr	x1, [x22]
+    1084:	adrp	x0, 0 <__cfi_check_fail>
+    1088:	adrp	x2, 0 <__cfi_check_fail>
+    108c:	adrp	x3, 0 <__cfi_check_fail>
+    1090:	add	x0, x0, #0x0
+    1094:	add	x2, x2, #0x0
+    1098:	add	x3, x3, #0x0
+    109c:	mov	w4, w19
+    10a0:	bl	0 <__dynamic_dev_dbg>
+    10a4:	b	ff4 <trusty_irq_handler+0x110>
+
+00000000000010a8 <trusty_irq_enable_pending_irqs>:
+    10a8:	str	x30, [x18], #8
+    10ac:	stp	x29, x30, [sp, #-96]!
+    10b0:	stp	x28, x27, [sp, #16]
+    10b4:	stp	x26, x25, [sp, #32]
+    10b8:	stp	x24, x23, [sp, #48]
+    10bc:	stp	x22, x21, [sp, #64]
+    10c0:	stp	x20, x19, [sp, #80]
+    10c4:	mov	x29, sp
+    10c8:	ldr	x8, [x1]
+    10cc:	cbz	x8, 11a4 <trusty_irq_enable_pending_irqs+0xfc>
+    10d0:	sub	x25, x8, #0x8
+    10d4:	cbz	x25, 11a4 <trusty_irq_enable_pending_irqs+0xfc>
+    10d8:	mov	x26, #0x100                 	// #256
+    10dc:	adrp	x23, 0 <__cfi_check_fail>
+    10e0:	adrp	x24, 0 <__cfi_check_fail>
+    10e4:	mov	w19, w2
+    10e8:	mov	x20, x0
+    10ec:	movk	x26, #0xdead, lsl #48
+    10f0:	and	w21, w2, #0x1
+    10f4:	add	x27, x1, #0x8
+    10f8:	add	x23, x23, #0x0
+    10fc:	add	x24, x24, #0x0
+    1100:	b	111c <trusty_irq_enable_pending_irqs+0x74>
+    1104:	sub	x8, x28, #0x8
+    1108:	cmp	x28, #0x0
+    110c:	str	x22, [x27]
+    1110:	str	x27, [x25, #16]
+    1114:	csel	x25, xzr, x8, eq	// eq = none
+    1118:	cbz	x25, 11a4 <trusty_irq_enable_pending_irqs+0xfc>
+    111c:	mov	x22, x25
+    1120:	ldr	x28, [x22, #8]!
+    1124:	nop
+    1128:	ldr	w0, [x25, #24]
+    112c:	tbz	w19, #0, 1174 <trusty_irq_enable_pending_irqs+0xcc>
+    1130:	mov	w1, wzr
+    1134:	bl	0 <enable_percpu_irq>
+    1138:	b	1178 <trusty_irq_enable_pending_irqs+0xd0>
+    113c:	adrp	x9, 0 <cpu_number>
+    1140:	add	x9, x9, #0x0
+    1144:	ldr	x1, [x20]
+    1148:	ldr	w4, [x25, #24]
+    114c:	mrs	x8, tpidr_el1
+    1150:	ldr	w6, [x8, x9]
+    1154:	adrp	x0, 0 <__cfi_check_fail>
+    1158:	add	x0, x0, #0x0
+    115c:	mov	x2, x23
+    1160:	mov	x3, x24
+    1164:	mov	w5, w21
+    1168:	bl	0 <__dynamic_dev_dbg>
+    116c:	ldr	w0, [x25, #24]
+    1170:	tbnz	w19, #0, 1130 <trusty_irq_enable_pending_irqs+0x88>
+    1174:	bl	0 <enable_irq>
+    1178:	ldp	x8, x9, [x25, #8]
+    117c:	str	x8, [x9]
+    1180:	cbz	x8, 1188 <trusty_irq_enable_pending_irqs+0xe0>
+    1184:	str	x9, [x8, #8]
+    1188:	add	x8, x26, #0x22
+    118c:	stp	x26, x8, [x25, #8]
+    1190:	ldr	x8, [x27]
+    1194:	str	x8, [x25, #8]
+    1198:	cbz	x8, 1104 <trusty_irq_enable_pending_irqs+0x5c>
+    119c:	str	x22, [x8, #8]
+    11a0:	b	1104 <trusty_irq_enable_pending_irqs+0x5c>
+    11a4:	ldp	x20, x19, [sp, #80]
+    11a8:	ldp	x22, x21, [sp, #64]
+    11ac:	ldp	x24, x23, [sp, #48]
+    11b0:	ldp	x26, x25, [sp, #32]
+    11b4:	ldp	x28, x27, [sp, #16]
+    11b8:	ldp	x29, x30, [sp], #96
+    11bc:	ldr	x30, [x18, #-8]!
+    11c0:	ret
+
+00000000000011c4 <trusty_irq_enable_irqset>:
+    11c4:	str	x30, [x18], #8
+    11c8:	stp	x29, x30, [sp, #-80]!
+    11cc:	stp	x26, x25, [sp, #16]
+    11d0:	stp	x24, x23, [sp, #32]
+    11d4:	stp	x22, x21, [sp, #48]
+    11d8:	stp	x20, x19, [sp, #64]
+    11dc:	mov	x29, sp
+    11e0:	ldr	x8, [x1, #8]
+    11e4:	cbz	x8, 1298 <trusty_irq_enable_irqset+0xd4>
+    11e8:	sub	x24, x8, #0x8
+    11ec:	cbz	x24, 1298 <trusty_irq_enable_irqset+0xd4>
+    11f0:	adrp	x26, 0 <cpu_number>
+    11f4:	adrp	x20, 0 <__cfi_check_fail>
+    11f8:	adrp	x21, 0 <__cfi_check_fail>
+    11fc:	adrp	x22, 0 <__cfi_check_fail>
+    1200:	adrp	x23, 0 <__cfi_check_fail>
+    1204:	mov	x19, x0
+    1208:	mov	w25, #0x1                   	// #1
+    120c:	add	x26, x26, #0x0
+    1210:	add	x20, x20, #0x0
+    1214:	add	x21, x21, #0x0
+    1218:	add	x22, x22, #0x0
+    121c:	add	x23, x23, #0x0
+    1220:	ldrb	w8, [x24, #29]
+    1224:	cbnz	w8, 1254 <trusty_irq_enable_irqset+0x90>
+    1228:	nop
+    122c:	ldr	w0, [x24, #24]
+    1230:	mov	w1, wzr
+    1234:	bl	0 <enable_percpu_irq>
+    1238:	strb	w25, [x24, #29]
+    123c:	ldr	x8, [x24, #8]
+    1240:	sub	x9, x8, #0x8
+    1244:	cmp	x8, #0x0
+    1248:	csel	x24, xzr, x9, eq	// eq = none
+    124c:	cbnz	x24, 1220 <trusty_irq_enable_irqset+0x5c>
+    1250:	b	1298 <trusty_irq_enable_irqset+0xd4>
+    1254:	ldr	x0, [x19]
+    1258:	ldr	w3, [x24, #24]
+    125c:	mrs	x8, tpidr_el1
+    1260:	ldr	w4, [x8, x26]
+    1264:	mov	x1, x23
+    1268:	mov	x2, x22
+    126c:	bl	0 <_dev_warn>
+    1270:	b	123c <trusty_irq_enable_irqset+0x78>
+    1274:	ldr	x1, [x19]
+    1278:	ldr	w4, [x24, #24]
+    127c:	mrs	x8, tpidr_el1
+    1280:	ldr	w5, [x8, x26]
+    1284:	mov	x0, x20
+    1288:	mov	x2, x21
+    128c:	mov	x3, x22
+    1290:	bl	0 <__dynamic_dev_dbg>
+    1294:	b	122c <trusty_irq_enable_irqset+0x68>
+    1298:	ldp	x20, x19, [sp, #64]
+    129c:	ldp	x22, x21, [sp, #48]
+    12a0:	ldp	x24, x23, [sp, #32]
+    12a4:	ldp	x26, x25, [sp, #16]
+    12a8:	ldp	x29, x30, [sp], #80
+    12ac:	ldr	x30, [x18, #-8]!
+    12b0:	ret
+	...
+
+0000000000002000 <__cfi_check>:
+    2000:	mov	x8, #0x2444                	// #9284
+    2004:	movk	x8, #0x2924, lsl #16
+    2008:	movk	x8, #0xa43e, lsl #32
+    200c:	movk	x8, #0x2b3, lsl #48
+    2010:	cmp	x0, x8
+    2014:	b.gt	206c <__cfi_check+0x6c>
+    2018:	mov	x8, #0x26ad                	// #9901
+    201c:	movk	x8, #0x515d, lsl #16
+    2020:	movk	x8, #0xab01, lsl #32
+    2024:	movk	x8, #0x9185, lsl #48
+    2028:	cmp	x0, x8
+    202c:	b.eq	20c0 <__cfi_check+0xc0>  // b.none
+    2030:	mov	x8, #0x68d7                	// #26839
+    2034:	movk	x8, #0x911d, lsl #16
+    2038:	movk	x8, #0x3f1d, lsl #32
+    203c:	movk	x8, #0xc678, lsl #48
+    2040:	cmp	x0, x8
+    2044:	b.eq	20ec <__cfi_check+0xec>  // b.none
+    2048:	mov	x8, #0x848f                	// #33935
+    204c:	movk	x8, #0x472f, lsl #16
+    2050:	movk	x8, #0xce70, lsl #32
+    2054:	movk	x8, #0xcaa8, lsl #48
+    2058:	cmp	x0, x8
+    205c:	b.ne	20d8 <__cfi_check+0xd8>  // b.any
+    2060:	adrp	x8, 0 <__cfi_check_fail>
+    2064:	add	x8, x8, #0x0
+    2068:	b	20c8 <__cfi_check+0xc8>
+    206c:	mov	x8, #0x2445                	// #9285
+    2070:	movk	x8, #0x2924, lsl #16
+    2074:	movk	x8, #0xa43e, lsl #32
+    2078:	movk	x8, #0x2b3, lsl #48
+    207c:	cmp	x0, x8
+    2080:	b.eq	20f8 <__cfi_check+0xf8>  // b.none
+    2084:	mov	x8, #0x4fb1                	// #20401
+    2088:	movk	x8, #0xd391, lsl #16
+    208c:	movk	x8, #0x972c, lsl #32
+    2090:	movk	x8, #0x7d57, lsl #48
+    2094:	cmp	x0, x8
+    2098:	b.eq	2104 <__cfi_check+0x104>  // b.none
+    209c:	mov	x8, #0xbcd5                	// #48341
+    20a0:	movk	x8, #0x7ad8, lsl #16
+    20a4:	movk	x8, #0xa0fb, lsl #32
+    20a8:	movk	x8, #0x7e04, lsl #48
+    20ac:	cmp	x0, x8
+    20b0:	b.ne	20d8 <__cfi_check+0xd8>  // b.any
+    20b4:	adrp	x8, 0 <__cfi_check_fail>
+    20b8:	add	x8, x8, #0x0
+    20bc:	b	210c <__cfi_check+0x10c>
+    20c0:	adrp	x8, 0 <__cfi_check_fail>
+    20c4:	add	x8, x8, #0x0
+    20c8:	sub	x8, x1, x8
+    20cc:	ror	x8, x8, #2
+    20d0:	cmp	x8, #0x2
+    20d4:	b.cc	2114 <__cfi_check+0x114>  // b.lo, b.ul, b.last
+    20d8:	str	x30, [sp, #-16]!
+    20dc:	mov	x0, x2
+    20e0:	bl	0 <__cfi_check_fail>
+    20e4:	ldr	x30, [sp], #16
+    20e8:	b	2114 <__cfi_check+0x114>
+    20ec:	adrp	x8, 0 <__cfi_check_fail>
+    20f0:	add	x8, x8, #0x0
+    20f4:	b	210c <__cfi_check+0x10c>
+    20f8:	adrp	x8, 0 <__cfi_check_fail>
+    20fc:	add	x8, x8, #0x0
+    2100:	b	210c <__cfi_check+0x10c>
+    2104:	adrp	x8, 0 <__cfi_check_fail>
+    2108:	add	x8, x8, #0x0
+    210c:	cmp	x1, x8
+    2110:	b.ne	20d8 <__cfi_check+0xd8>  // b.any
+    2114:	ret
+    2118:	b	0 <__cfi_check_fail>
+    211c:	b	0 <__cfi_check_fail>
+    2120:	b	0 <__cfi_check_fail>
+    2124:	b	0 <__cfi_check_fail>
+    2128:	b	0 <__cfi_check_fail>
+    212c:	b	0 <__cfi_check_fail>
+    2130:	b	0 <__cfi_check_fail>
+    2134:	b	0 <__cfi_check_fail>
+
+Disassembly of section .init.text:
+
+0000000000000000 <init_module>:
+   0:	str	x30, [x18], #8
+   4:	stp	x29, x30, [sp, #-32]!
+   8:	stp	x20, x19, [sp, #16]
+   c:	mov	x29, sp
+  10:	adrp	x3, 0 <init_module>
+  14:	add	x3, x3, #0x0
+  18:	adrp	x1, 0 <init_module>
+  1c:	add	x1, x1, #0x0
+  20:	add	x4, x3, #0x4
+  24:	mov	w0, #0xac                  	// #172
+  28:	mov	w5, #0x1                   	// #1
+  2c:	mov	w2, wzr
+  30:	bl	0 <__cpuhp_setup_state>
+  34:	mov	w19, w0
+  38:	tbnz	w0, #31, 74 <init_module+0x74>
+  3c:	adrp	x0, 0 <init_module>
+  40:	adrp	x1, 0 <init_module>
+  44:	adrp	x20, 0 <init_module>
+  48:	add	x0, x0, #0x0
+  4c:	add	x1, x1, #0x0
+  50:	str	w19, [x20]
+  54:	bl	0 <__platform_driver_register>
+  58:	mov	w19, w0
+  5c:	tbz	w0, #31, 74 <init_module+0x74>
+  60:	ldr	w0, [x20]
+  64:	mov	w1, wzr
+  68:	bl	0 <__cpuhp_remove_state>
+  6c:	mov	w8, #0xffffffff            	// #-1
+  70:	str	w8, [x20]
+  74:	mov	w0, w19
+  78:	ldp	x20, x19, [sp, #16]
+  7c:	ldp	x29, x30, [sp], #32
+  80:	ldr	x30, [x18, #-8]!
+  84:	ret
+
+Disassembly of section .exit.text:
+
+0000000000000000 <cleanup_module>:
+   0:	str	x30, [x18], #8
+   4:	stp	x29, x30, [sp, #-32]!
+   8:	str	x19, [sp, #16]
+   c:	mov	x29, sp
+  10:	adrp	x0, 0 <cleanup_module>
+  14:	add	x0, x0, #0x0
+  18:	bl	0 <platform_driver_unregister>
+  1c:	adrp	x19, 0 <cleanup_module>
+  20:	ldr	w0, [x19]
+  24:	mov	w1, wzr
+  28:	bl	0 <__cpuhp_remove_state>
+  2c:	mov	w8, #0xffffffff            	// #-1
+  30:	str	w8, [x19]
+  34:	ldr	x19, [sp, #16]
+  38:	ldp	x29, x30, [sp], #32
+  3c:	ldr	x30, [x18, #-8]!
+  40:	ret

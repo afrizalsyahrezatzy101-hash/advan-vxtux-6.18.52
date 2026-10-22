@@ -9,7 +9,7 @@ config DRM_SPRD
 	help
 	  Choose this option if you have a Unisoc chipset.
 	  If M is selected the module will be called sprd_drm.
-
+	
 config DRM_SPRD_DPU
 	tristate "Unisoc DPU display controller"
 	# "depends on DRM_SPRD" already implies DRM_SPRD. Adding "select DRM_SPRD"
@@ -20,5 +20,5 @@ config DRM_SPRD_DPU
 	  Unisoc DPU (Display Processing Unit): CRTC/plane composition on top of
 	  the sprd DSI controller. Separate symbol from DRM_SPRD so a display-less
 	  build is possible; the object is sprd_dpu.o inside sprd-drm.o.
-
+	
 source "drivers/gpu/drm/sprd/gsp/Kconfig"

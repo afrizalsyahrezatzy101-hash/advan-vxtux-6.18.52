@@ -13,5 +13,6 @@ config DRM_ADP
 	select DRM_MIPI_DSI
 	help
 	  Chose this option if you have an Apple Arm laptop with a touchbar.
-
+	
 	  If M is selected, this module will be called adpdrm.
+	

@@ -221,7 +221,8 @@ static bool is_next_msg_fin(struct sk_psock *psock)
 static int tcp_bpf_recvmsg_parser(struct sock *sk,
 				  struct msghdr *msg,
 				  size_t len,
-				  int flags)
+				  int flags,
+				  int *addr_len)
 {
 	int peek = flags & MSG_PEEK;
 	struct sk_psock *psock;
@@ -231,14 +232,14 @@ static int tcp_bpf_recvmsg_parser(struct sock *sk,
 	u32 seq;
 
 	if (unlikely(flags & MSG_ERRQUEUE))
-		return inet_recv_error(sk, msg, len);
+		return inet_recv_error(sk, msg, len, addr_len);
 
-	if (!len)
-		return 0;
+		if (!len)
+			return 0;
 
-	psock = sk_psock_get(sk);
-	if (unlikely(!psock))
-		return tcp_recvmsg(sk, msg, len, flags);
+		psock = sk_psock_get(sk);
+		if (unlikely(!psock))
+			return tcp_recvmsg(sk, msg, len, flags, addr_len);
 
 	lock_sock(sk);
 	tcp = tcp_sk(sk);
@@ -344,31 +345,31 @@ static int tcp_bpf_ioctl(struct sock *sk, int cmd, int *karg)
 		return -EINVAL;
 
 	slow = lock_sock_fast(sk);
-	*karg = sk_psock_msg_inq(sk);
+	*karg = tcp_inq(sk);
 	unlock_sock_fast(sk, slow);
 
 	return 0;
 }
 
 static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-			   int flags)
+			   int flags, int *addr_len)
 {
 	struct sk_psock *psock;
 	int copied, ret;
 
 	if (unlikely(flags & MSG_ERRQUEUE))
-		return inet_recv_error(sk, msg, len);
+		return inet_recv_error(sk, msg, len, addr_len);
 
-	if (!len)
-		return 0;
+		if (!len)
+			return 0;
 
-	psock = sk_psock_get(sk);
-	if (unlikely(!psock))
-		return tcp_recvmsg(sk, msg, len, flags);
+		psock = sk_psock_get(sk);
+		if (unlikely(!psock))
+			return tcp_recvmsg(sk, msg, len, flags, addr_len);
 	if (!skb_queue_empty(&sk->sk_receive_queue) &&
 	    sk_psock_queue_empty(psock)) {
 		sk_psock_put(sk, psock);
-		return tcp_recvmsg(sk, msg, len, flags);
+		return tcp_recvmsg(sk, msg, len, flags, addr_len);
 	}
 	lock_sock(sk);
 msg_bytes_ready:
@@ -388,7 +389,7 @@ msg_bytes_ready:
 				goto msg_bytes_ready;
 			release_sock(sk);
 			sk_psock_put(sk, psock);
-			return tcp_recvmsg(sk, msg, len, flags);
+			return tcp_recvmsg(sk, msg, len, flags, addr_len);
 		}
 		copied = -EAGAIN;
 	}

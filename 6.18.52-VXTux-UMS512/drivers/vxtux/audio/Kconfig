@@ -21,28 +21,28 @@ menuconfig SPRD_AUDIO_INFRA
 	  DSP, pipe, DSP dump, boot & DVFS AudioCP. Wajib untuk jalur audio VBC
 	  (sound/soc/sprd) — tanpa ini, driver codec/card hanya bisa dibangun
 	  tetapi tidak bisa mengakses DSP.
-
+	
 if SPRD_AUDIO_INFRA
 
 config SPRD_AUDIO_MEMORY_MANAGER
-	bool "Unisoc audio memory manager (audio_mem)"
+	tristate "Unisoc audio memory manager (audio_mem)"
 	select GENERIC_ALLOCATOR
 	default n
 
 config SPRD_AUDIO_AGDSP_ACCESS
-	bool "Unisoc AGDSP access driver"
+	tristate "Unisoc AGDSP access driver"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
 	default n
 
 config SPRD_AUDIO_SIPC
-	bool "Unisoc audio SIPC (audiosipc)"
+	tristate "Unisoc audio SIPC (audiosipc)"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
 	default n
 	help
 	  Port fork GPL drivers/misc/sprd_audio/audiosipc: kanal SIPC ke AGDSP
 	  (aud_smsg_*, aud_send_cmd*, aud_ipc_ch_open/close). Menyediakan simbol
 	  yang di modul vendor diekspor blob audio_sipc.ko.
-
+	
 config SPRD_AUDIO_DSP_DUMP
 	tristate "Unisoc audio DSP dump + sblock"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
@@ -50,27 +50,33 @@ config SPRD_AUDIO_DSP_DUMP
 	  Modular (dengan audio_sblock.o jadi komposit dua-objek) agar bisa
 	  di-insmod/diuji satu per satu di QEMU.
 	default n
-
+	
 config SPRD_AUDIO_SAUDIO
 	tristate "Unisoc saudio (audio control node)"
 	depends on SPRD_AUDIO_SIPC
 	default n
 
 config SPRD_AUDIO_CPBOOT
-	bool "Unisoc AGCP boot driver"
+	tristate "Unisoc AGCP boot driver"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
 	default n
 
 config SPRD_AUDIO_PIPE
-	bool "Unisoc audio pipe"
+	tristate "Unisoc audio pipe"
 	depends on SPRD_AUDIO_SIPC
 	default n
 	help
 	  Port fork GPL drivers/misc/sprd_audio/audio_pipe: channel chardev
 	  voice/effect/recordproc/bthal di atas audio SIPC.
-
+	
+	  Tristate, not bool: the stock ROM ships audio-pipe.ko as a
+	  loadable module, and the replacement has to be one too, or
+	  insmod cannot work and the blob is not really replaced. The
+	  SIPC core above stays built-in; this one is a module that
+	  takes aud_smsg_* from it.
+	
 config SPRD_HW_DEVICE_DVFS_AGCP
-	bool "Unisoc AGCP DVFS driver"
+	tristate "Unisoc AGCP DVFS driver"
 	depends on SPRD_AUDIO_MEMORY_MANAGER
 	default n
 
@@ -80,7 +86,7 @@ config SPRD_AUDIO_MCDT
 	default n
 
 config SPRD_AUDIO_VOICE_TRIGGER
-	bool "Unisoc voice trigger node"
+	tristate "Unisoc voice trigger node"
 	depends on SPRD_AUDIO_SIPC
 	default n
 
@@ -89,3 +95,7 @@ config SPRD_AUDIO_VOICE_TRIGGER
 source "drivers/vxtux/audio/mcdt/Kconfig"
 
 endif # SPRD_AUDIO_INFRA
+
+# The apipe character device, the replacement for the vendor
+# sprd_apipe.ko.
+source "drivers/vxtux/audio/audio_pipe/Kconfig"

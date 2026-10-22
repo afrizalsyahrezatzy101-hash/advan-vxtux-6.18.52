@@ -14,5 +14,5 @@ config PXA1908_PM_DOMAINS
 	select PM_GENERIC_DOMAINS_OF
 	help
 	  Say Y here to enable support for Marvell PXA1908's power domanis.
-
+	
 endmenu

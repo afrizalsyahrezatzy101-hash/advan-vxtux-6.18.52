@@ -8,7 +8,7 @@ config NET_VENDOR_ASIX
 	help
 	  If you have a network (Ethernet, non-USB, not NE2000 compatible)
 	  interface based on a chip from ASIX, say Y.
-
+	
 if NET_VENDOR_ASIX
 
 config SPI_AX88796C
@@ -18,7 +18,7 @@ config SPI_AX88796C
 	depends on GPIOLIB
 	help
 	  Say Y here if you intend to use ASIX AX88796C attached in SPI mode.
-
+	
 config SPI_AX88796C_COMPRESSION
 	bool "SPI transfer compression"
 	default n
@@ -29,7 +29,7 @@ config SPI_AX88796C_COMPRESSION
 	  speed up short transfers. This sets the default value that is
 	  inherited by network interfaces during probe. It can be
 	  changed at run time via spi-compression ethtool tunable.
-
+	
 	  If unsure say N.
-
+	
 endif # NET_VENDOR_ASIX

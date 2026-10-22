@@ -1,0 +1,5317 @@
+
+/*==== dpu_dvfs_enable_show ====*/
+// dpu_dvfs_enable_show @ 00108664
+// signature: undefined dpu_dvfs_enable_show(void)
+// calling convention: unknown
+
+
+long dpu_dvfs_enable_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = sprintf(param_3,"%d\n",(ulong)**(uint **)(*(long *)(param_1 + 0x60) + 0x98));
+  return (long)iVar1;
+}
+
+
+
+/*==== dpu_dvfs_enable_store ====*/
+// dpu_dvfs_enable_store @ 001086a0
+// signature: undefined dpu_dvfs_enable_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 dpu_dvfs_enable_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  code *pcVar3;
+  undefined8 *in_x18;
+  int *piVar4;
+  undefined8 unaff_x30;
+  int local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  piVar4 = *(int **)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%d\n",&local_3c);
+    if (iVar1 != 0) {
+      *piVar4 = local_3c;
+      if ((*(long *)(piVar4 + 0x120) == 0) ||
+         (pcVar3 = *(code **)(*(long *)(piVar4 + 0x120) + 0x10), pcVar3 == (code *)0x0)) {
+        printk(&DAT_0010230e,"dpu_dvfs_enable_store");
+      }
+      else {
+        if (0x18 < ((ulong)(pcVar3 + -0x117cc0) >> 2 | (long)pcVar3 << 0x3e)) {
+          __cfi_slowpath(0xef1f25b0f2a55e94,pcVar3);
+        }
+        (*pcVar3)(piVar4,local_3c != 0);
+        piVar4[0x100] = local_3c;
+      }
+      goto LAB_00108770;
+    }
+  }
+  param_4 = 0xffffffffffffffea;
+LAB_00108770:
+  if (___stack_chk_guard == local_38) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== dpu_dvfs_get_cur_freq ====*/
+// dpu_dvfs_get_cur_freq @ 00108dd8
+// signature: undefined dpu_dvfs_get_cur_freq(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_get_cur_freq(long param_1,ulong *param_2)
+
+{
+  long lVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = 0x3e0;
+  if (*(int *)(*(long *)(param_1 + 0x98) + 1000) != 0) {
+    lVar1 = 0x3e4;
+  }
+  *param_2 = (ulong)*(uint *)(*(long *)(param_1 + 0x98) + lVar1);
+  return 0;
+}
+
+
+
+/*==== dpu_dvfs_get_dev_status ====*/
+// dpu_dvfs_get_dev_status @ 00108dd0
+// signature: undefined dpu_dvfs_get_dev_status(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_get_dev_status(void)
+
+{
+  return 0;
+}
+
+
+
+/*==== dpu_dvfs_init ====*/
+// dpu_dvfs_init @ 0010b618
+// signature: undefined dpu_dvfs_init(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 dpu_dvfs_init(long param_1)
+
+{
+  int iVar1;
+  uint uVar2;
+  long lVar3;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  uint local_7c;
+  undefined8 local_78;
+  undefined8 uStack_70;
+  undefined8 local_68;
+  undefined8 uStack_60;
+  undefined8 local_58;
+  undefined8 uStack_50;
+  undefined8 local_48;
+  undefined8 uStack_40;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  local_48 = 0;
+  uStack_40 = 0;
+  local_58 = 0;
+  uStack_50 = 0;
+  local_68 = 0;
+  uStack_60 = 0;
+  local_78 = 0;
+  uStack_70 = 0;
+  printk(&DAT_001034f0,"dpu_dvfs_init");
+  local_7c = 0;
+  regmap_read(regmap_aon_base,0,&local_7c);
+  if ((local_7c >> 0x15 & 1) == 0) {
+    printk(&DAT_00103627,"dpu_dvfs_init");
+  }
+  else {
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    *(uint *)(lVar3 + 500) = DAT_001013b0 | DAT_001013ac << 3;
+    *(uint *)(lVar3 + 0x1f8) = DAT_001013c8 | DAT_001013c4 << 3;
+    *(uint *)(lVar3 + 0x1fc) = DAT_001013e0 | DAT_001013dc << 3;
+    *(uint *)(lVar3 + 0x200) = DAT_001013f8 | DAT_001013f4 << 3;
+    *(uint *)(lVar3 + 0x204) = DAT_00101410 | DAT_0010140c << 3;
+    uVar2 = DAT_00101428 | DAT_00101424 << 3;
+    *(uint *)(lVar3 + 0x208) = uVar2;
+    *(uint *)(lVar3 + 0x20c) = uVar2;
+    *(uint *)(lVar3 + 0x210) = uVar2;
+    iVar1 = *(int *)(param_1 + 0x3ec);
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(uint *)(lVar3 + 0x944) = *(uint *)(lVar3 + 0x944) & 0x3ff | iVar1 << 10;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar1 = *(int *)(param_1 + 0x3f0);
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar2 = *(uint *)(lVar3 + 0x9ac);
+    *(uint *)(lVar3 + 0x9ac) = uVar2 & 0xffffffe0 | uVar2 & 0xf | (uint)(iVar1 != 0) << 4;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar1 = *(int *)(param_1 + 0x3f4);
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar2 = *(uint *)(lVar3 + 0x9ac);
+    *(uint *)(lVar3 + 0x9ac) = uVar2 & 0xffffffc0 | uVar2 & 0x1f | (uint)(iVar1 != 0) << 5;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar1 = *(int *)(param_1 + 0x3f8);
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(uint *)(lVar3 + 0x48) = *(uint *)(lVar3 + 0x48) & 0xfffffffe | (uint)(iVar1 != 0);
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc) =
+         *(undefined4 *)(param_1 + 0x404);
+    *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0) =
+         *(undefined4 *)(param_1 + 0x408);
+    strlcpy(&local_78,&DAT_00102c75,0x40);
+    *(undefined4 *)(param_1 + 0x400) = 1;
+    lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(uint *)(lVar3 + 0x14) = *(uint *)(lVar3 + 0x14) | 1;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  }
+  if (___stack_chk_guard == local_38) {
+    return 0;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== dpu_dvfs_notifier_call_chain ====*/
+// dpu_dvfs_notifier_call_chain @ 001079a8
+// signature: undefined dpu_dvfs_notifier_call_chain(void)
+// calling convention: unknown
+
+
+void dpu_dvfs_notifier_call_chain(undefined8 param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  atomic_notifier_call_chain(&dpu_dvfs_chain,0,param_1);
+  return;
+}
+
+
+
+/*==== dpu_dvfs_notify_callback ====*/
+// dpu_dvfs_notify_callback @ 00108b60
+// signature: undefined dpu_dvfs_notify_callback(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_notify_callback(long param_1,undefined8 param_2,uint *param_3)
+
+{
+  uint uVar1;
+  long lVar2;
+  undefined8 uVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  ulong uVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (*(int *)(param_1 + -0x3c8) == 0) {
+    uVar3 = 0;
+  }
+  else {
+    uVar1 = *param_3;
+    uVar5 = (ulong)uVar1;
+    if ((*(long *)(param_1 + 0xb8) != 0) &&
+       (pcVar4 = *(code **)(*(long *)(param_1 + 0xb8) + 0x38), pcVar4 != (code *)0x0)) {
+      if (0xe < ((ulong)(pcVar4 + -0x117c84) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0x8e0c05c20dd39ba0,pcVar4);
+      }
+      (*pcVar4)((int *)(param_1 + -0x3c8),uVar5);
+    }
+    lVar2 = *(long *)(param_1 + -0x18);
+    if (*(long *)(*(long *)(lVar2 + 0x3d8) + 0x30) != 0) {
+      devfreq_update_status(lVar2,uVar5);
+      lVar2 = *(long *)(param_1 + -0x18);
+    }
+    *(uint *)(param_1 + 0x18) = uVar1;
+    *(undefined4 *)(param_1 + 0x20) = 0;
+    *(ulong *)(lVar2 + 0x498) = uVar5;
+    uVar3 = 1;
+  }
+  return uVar3;
+}
+
+
+
+/*==== dpu_dvfs_parse_dt ====*/
+// dpu_dvfs_parse_dt @ 0010b4fc
+// signature: undefined dpu_dvfs_parse_dt(void)
+// calling convention: unknown
+
+
+uint dpu_dvfs_parse_dt(long param_1,undefined8 param_2)
+
+{
+  int iVar1;
+  uint uVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"dpu_dvfs_parse_dt");
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,gfree-wait-delay",(undefined4 *)(param_1 + 0x3ec),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3ec) = 0x100;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-hdsk-en",(undefined4 *)(param_1 + 0x3f0),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f0) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-delay-en",(undefined4 *)(param_1 + 0x3f4),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f4) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-en-byp",(undefined4 *)(param_1 + 0x3f8),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f8) = 0;
+  }
+  uVar2 = of_property_read_variable_u32_array
+                    (param_2,"sprd,sw-trig-en",(undefined4 *)(param_1 + 0x3fc),1,0);
+  if ((int)uVar2 < 0) {
+    *(undefined4 *)(param_1 + 0x3fc) = 0;
+  }
+  return uVar2 & (int)uVar2 >> 0x1f;
+}
+
+
+
+/*==== dpu_dvfs_probe ====*/
+// dpu_dvfs_probe @ 001087c8
+// signature: undefined dpu_dvfs_probe(void)
+// calling convention: unknown
+
+
+uint dpu_dvfs_probe(long param_1)
+
+{
+  long lVar1;
+  uint uVar2;
+  uint uVar3;
+  uint uVar4;
+  undefined4 *puVar5;
+  long lVar6;
+  undefined8 *puVar7;
+  ulong uVar8;
+  undefined8 *in_x18;
+  undefined8 uVar9;
+  code *pcVar10;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar9 = *(undefined8 *)(param_1 + 0x310);
+  lVar1 = param_1 + 0x10;
+  puVar5 = (undefined4 *)devm_kmalloc(lVar1,0x490,0xdc0);
+  if ((puVar5 == (undefined4 *)0x0) || (lVar6 = find_apsys_device_by_name("apsys-dvfs"), lVar6 == 0)
+     ) {
+    return 0xfffffff4;
+  }
+  *(long *)(puVar5 + 0x122) = lVar6;
+  puVar7 = (undefined8 *)of_device_get_match_data(lVar1);
+  if (puVar7 == (undefined8 *)0x0) {
+    _dev_err(lVar1,"No matching driver data found\n");
+    return 0xffffffea;
+  }
+  *(undefined8 *)(puVar5 + 0x120) = *puVar7;
+  printk(&DAT_001034f0,"dpu_dvfs_parse_dt");
+  uVar2 = of_property_read_variable_u32_array(uVar9,"sprd,hw-dfs-en",puVar5 + 0x100,1,0);
+  uVar3 = of_property_read_variable_u32_array(uVar9,"sprd,work-index-def",puVar5 + 0x101,1,0);
+  uVar4 = of_property_read_variable_u32_array(uVar9,"sprd,idle-index-def",puVar5 + 0x102,1,0);
+  uVar2 = uVar3 & (int)uVar3 >> 0x1f | uVar2 & (int)uVar2 >> 0x1f | uVar4 & (int)uVar4 >> 0x1f;
+  if (uVar2 != 0) {
+    printk(&DAT_0010318a);
+    return uVar2;
+  }
+  uVar2 = dev_pm_opp_of_add_table(lVar1);
+  if (uVar2 != 0) {
+    _dev_err(lVar1,"invalid operating-points in device tree.\n");
+    return uVar2;
+  }
+  *(undefined1 **)(puVar5 + 0xf2) = &LAB_0011816c;
+  uVar2 = atomic_notifier_chain_register(&dpu_dvfs_chain,puVar5 + 0xf2);
+  if (uVar2 == 0) {
+    *(undefined4 **)(param_1 + 0xa8) = puVar5;
+    uVar8 = devm_devfreq_add_device(lVar1,&dpu_dvfs_profile,"dpu_dvfs",0);
+    *(ulong *)(puVar5 + 0xec) = uVar8;
+    if (uVar8 < 0xfffffffffffff001) {
+      device_rename(uVar8 + 0x30,&DAT_00102b3b);
+      puVar7 = *(undefined8 **)(puVar5 + 0x120);
+      *puVar5 = 1;
+      if (puVar7 != (undefined8 *)0x0) {
+        pcVar10 = (code *)*puVar7;
+        if (pcVar10 != (code *)0x0) {
+          if (4 < ((ulong)(pcVar10 + -0x117bd0) >> 2 | (long)pcVar10 << 0x3e)) {
+            __cfi_slowpath(0x2f1ee97a97d8253,pcVar10);
+          }
+          (*pcVar10)(puVar5,uVar9);
+          puVar7 = *(undefined8 **)(puVar5 + 0x120);
+          if (puVar7 == (undefined8 *)0x0) goto LAB_00108a2c;
+        }
+        pcVar10 = (code *)puVar7[1];
+        if (pcVar10 != (code *)0x0) {
+          if (0xe < ((ulong)(pcVar10 + -0x117c0c) >> 2 | (long)pcVar10 << 0x3e)) {
+            __cfi_slowpath(0xd66bd0a1c4b6e932,pcVar10);
+          }
+          (*pcVar10)(puVar5);
+        }
+      }
+LAB_00108a2c:
+      printk(&DAT_001036f1);
+      return 0;
+    }
+    _dev_err(lVar1,"failed to add devfreq dev with dpu-dvfs governor\n");
+    uVar2 = puVar5[0xec];
+  }
+  else {
+    _dev_err(lVar1,"failed to register dpu layer change notifier\n");
+  }
+  dev_pm_opp_of_remove_table(lVar1);
+  atomic_notifier_chain_unregister(&dpu_dvfs_chain,puVar5 + 0xf2);
+  return uVar2;
+}
+
+
+
+/*==== dpu_dvfs_remove ====*/
+// dpu_dvfs_remove @ 00108a78
+// signature: undefined dpu_dvfs_remove(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_remove(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_00101e6b);
+  return 0;
+}
+
+
+
+/*==== dpu_dvfs_resume ====*/
+// dpu_dvfs_resume @ 00108ad0
+// signature: undefined dpu_dvfs_resume(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_resume(long param_1)
+
+{
+  long lVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(param_1 + 0x98);
+  printk(&DAT_001034f0,"dpu_dvfs_resume");
+  lVar1 = *(long *)(lVar3 + 0x480);
+  if ((lVar1 != 0) && (pcVar2 = *(code **)(lVar1 + 8), pcVar2 != (code *)0x0)) {
+    if (0xe < ((ulong)(pcVar2 + -0x117c0c) >> 2 | (long)pcVar2 << 0x3e)) {
+      __cfi_slowpath(0xd66bd0a1c4b6e932,pcVar2);
+    }
+    (*pcVar2)(lVar3);
+  }
+  return 0;
+}
+
+
+
+/*==== dpu_dvfs_suspend ====*/
+// dpu_dvfs_suspend @ 00108aa0
+// signature: undefined dpu_dvfs_suspend(void)
+// calling convention: unknown
+
+
+undefined8 dpu_dvfs_suspend(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"dpu_dvfs_suspend");
+  return 0;
+}
+
+
+
+/*==== dpu_dvfs_target ====*/
+// dpu_dvfs_target @ 00108c44
+// signature: undefined dpu_dvfs_target(void)
+// calling convention: unknown
+
+
+ulong dpu_dvfs_target(long param_1,ulong *param_2,undefined4 param_3)
+
+{
+  uint uVar1;
+  ulong uVar2;
+  long lVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  code *pcVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(param_1 + 0x98);
+  uVar2 = devfreq_recommended_opp(param_1,param_2,param_3);
+  if (uVar2 < 0xfffffffffffff001) {
+    uVar1 = dev_pm_opp_get_freq(uVar2);
+    dev_pm_opp_put(uVar2);
+    lVar3 = *(long *)(lVar4 + 0x480);
+    if (*(int *)(lVar4 + 1000) == 0) {
+      if ((lVar3 != 0) && (pcVar5 = *(code **)(lVar3 + 0x38), pcVar5 != (code *)0x0)) {
+        if (0xe < ((ulong)(pcVar5 + -0x117c84) >> 2 | (long)pcVar5 << 0x3e)) {
+          __cfi_slowpath(0x8e0c05c20dd39ba0,pcVar5);
+        }
+        (*pcVar5)(lVar4,uVar1);
+      }
+    }
+    else if ((lVar3 != 0) && (pcVar5 = *(code **)(lVar3 + 0x48), pcVar5 != (code *)0x0)) {
+      if (0xe < ((ulong)(pcVar5 + -0x117c84) >> 2 | (long)pcVar5 << 0x3e)) {
+        __cfi_slowpath(0x8e0c05c20dd39ba0,pcVar5);
+      }
+      (*pcVar5)(lVar4,uVar1);
+    }
+    uVar2 = 0;
+    *param_2 = (ulong)uVar1;
+  }
+  else {
+    _dev_err(param_1,"failed to find opp for %lu KHz\n",*param_2);
+  }
+  return uVar2 & 0xffffffff;
+}
+
+
+
+/*==== dpu_gov_event_handler ====*/
+// dpu_gov_event_handler @ 00107a70
+// signature: undefined dpu_gov_event_handler(void)
+// calling convention: unknown
+
+
+undefined8 dpu_gov_event_handler(long param_1,int param_2)
+
+{
+  undefined8 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (param_2 == 2) {
+    if (*(long *)(param_1 + 0x60) != 0) {
+      sysfs_remove_group(param_1 + 0x30,&dev_attr_group);
+    }
+  }
+  else if (param_2 == 1) {
+    uVar1 = sysfs_create_group(param_1 + 0x30,&dev_attr_group);
+    return uVar1;
+  }
+  return 0;
+}
+
+
+
+/*==== dpu_gov_get_target ====*/
+// dpu_gov_get_target @ 001079d4
+// signature: undefined dpu_gov_get_target(void)
+// calling convention: unknown
+
+
+undefined8 dpu_gov_get_target(long param_1,ulong *param_2)
+
+{
+  uint uVar1;
+  long lVar2;
+  uint uVar3;
+  long lVar4;
+  ulong uVar5;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x90) + 0x98);
+  lVar2 = 0x3e0;
+  if (*(int *)(lVar4 + 1000) != 0) {
+    lVar2 = 0x3e4;
+  }
+  uVar5 = *(ulong *)(param_1 + 0x4d0);
+  uVar3 = *(uint *)(lVar4 + lVar2);
+  if ((uVar5 == 0) || (uVar3 <= uVar5)) {
+    uVar1 = (uint)*(ulong *)(param_1 + 0x4c8);
+    if (*(ulong *)(param_1 + 0x4c8) <= (ulong)uVar3) {
+      uVar1 = uVar3;
+    }
+    uVar5 = (ulong)uVar1;
+  }
+  *param_2 = uVar5 & 0xffffffff;
+  return 0;
+}
+
+
+
+/*==== dpu_hw_dfs_en ====*/
+// dpu_hw_dfs_en @ 0010b860
+// signature: undefined dpu_hw_dfs_en(void)
+// calling convention: unknown
+
+
+void dpu_hw_dfs_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x14) = *(uint *)(lVar1 + 0x14) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== dpu_vsp_dvfs_check_clkeb ====*/
+// dpu_vsp_dvfs_check_clkeb @ 0010eea8
+// signature: undefined dpu_vsp_dvfs_check_clkeb(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+int dpu_vsp_dvfs_check_clkeb(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  uint local_1c;
+  long local_18;
+  
+  *in_x18 = unaff_x30;
+  local_18 = ___stack_chk_guard;
+  local_1c = 0;
+  regmap_read(regmap_aon_base,0,&local_1c);
+  if (___stack_chk_guard == local_18) {
+    return (local_1c >> 0x15 & 1) - 1;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== find_apsys_device_by_name ====*/
+// find_apsys_device_by_name @ 00106180
+// signature: undefined find_apsys_device_by_name(void)
+// calling convention: unknown
+
+
+long find_apsys_device_by_name(undefined8 param_1)
+
+{
+  long lVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = of_find_node_by_name(0,param_1);
+  if (lVar1 == 0) {
+    printk(&DAT_0010240e,param_1);
+  }
+  else {
+    lVar1 = of_find_device_by_node();
+    if (lVar1 == 0) {
+      printk(&DAT_00102ffb,param_1);
+    }
+    else {
+      lVar1 = *(long *)(lVar1 + 0xa8);
+      if (lVar1 != 0) {
+        printk(&DAT_00103651,param_1,*(undefined8 *)(lVar1 + 0x3d8));
+        return lVar1;
+      }
+    }
+    printk(&DAT_00102d61);
+    dump_stack();
+  }
+  return 0;
+}
+
+
+
+/*==== get_display_power_status ====*/
+// get_display_power_status @ 00106030
+// signature: undefined get_display_power_status(void)
+// calling convention: unknown
+
+
+undefined8 get_display_power_status(void)
+
+{
+  long lVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = of_find_node_by_name(0,&DAT_00102b3b);
+  if (lVar1 == 0) {
+    puVar2 = &DAT_00102624;
+  }
+  else {
+    lVar1 = of_find_device_by_node();
+    if (lVar1 != 0) {
+      if (*(char *)(*(long *)(*(long *)(*(long *)(lVar1 + 0xa8) + 0x3a8) + 0x670) + 9) != '\0') {
+        platform_device_put(lVar1);
+        return 1;
+      }
+      printk(&DAT_0010244c);
+      platform_device_put(lVar1);
+      return 0;
+    }
+    puVar2 = &DAT_00101c96;
+  }
+  printk(puVar2);
+  return 0;
+}
+
+
+
+/*==== get_dpu_dvfs_status ====*/
+// get_dpu_dvfs_status @ 0010bd90
+// signature: undefined get_dpu_dvfs_status(void)
+// calling convention: unknown
+
+
+void get_dpu_dvfs_status(long param_1,undefined8 *param_2)
+
+{
+  ulong uVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 0xc) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  *param_2 = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 6) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[4] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x54) >> 3) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[1] = puVar2;
+  param_2[6] = &DAT_001023b6;
+  param_2[10] = &DAT_001023b6;
+  uVar1 = (ulong)*(uint *)(lVar3 + 0x7c) & 7;
+  if ((uint)uVar1 < 6) {
+    puVar2 = (&PTR_DAT_00105d00)[uVar1];
+  }
+  else {
+    printk(&DAT_001035ed);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[7] = puVar2;
+  param_2[0xc] = &DAT_001023b6;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== get_dpu_dvfs_table ====*/
+// get_dpu_dvfs_table @ 0010bc60
+// signature: undefined get_dpu_dvfs_table(void)
+// calling convention: unknown
+
+
+undefined8 get_dpu_dvfs_table(undefined4 *param_1)
+
+{
+  *param_1 = map_table;
+  param_1[1] = DAT_001013ac;
+  param_1[2] = DAT_001013b0;
+  param_1[3] = DAT_001013b4;
+  param_1[6] = DAT_001013c0;
+  param_1[7] = DAT_001013c4;
+  param_1[8] = DAT_001013c8;
+  param_1[9] = DAT_001013cc;
+  param_1[0xc] = DAT_001013d8;
+  param_1[0xd] = DAT_001013dc;
+  param_1[0xe] = DAT_001013e0;
+  param_1[0xf] = DAT_001013e4;
+  param_1[0x12] = DAT_001013f0;
+  param_1[0x13] = DAT_001013f4;
+  param_1[0x14] = DAT_001013f8;
+  param_1[0x15] = DAT_001013fc;
+  param_1[0x18] = DAT_00101408;
+  param_1[0x19] = DAT_0010140c;
+  param_1[0x1a] = DAT_00101410;
+  param_1[0x1b] = DAT_00101414;
+  param_1[0x1e] = DAT_00101420;
+  param_1[0x1f] = DAT_00101424;
+  param_1[0x20] = DAT_00101428;
+  param_1[0x21] = DAT_0010142c;
+  param_1[0x24] = DAT_00101438;
+  param_1[0x25] = DAT_0010143c;
+  param_1[0x26] = DAT_00101440;
+  param_1[0x27] = DAT_00101444;
+  param_1[0x2a] = DAT_00101450;
+  param_1[0x2b] = DAT_00101454;
+  param_1[0x2c] = DAT_00101458;
+  param_1[0x2d] = DAT_0010145c;
+  return 8;
+}
+
+
+
+/*==== get_dpu_idle_freq ====*/
+// get_dpu_idle_freq @ 0010bb78
+// signature: undefined get_dpu_idle_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_idle_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0);
+  if (map_table == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_001013c0 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_001013d8 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_001013f0 == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_00101408 == iVar1) {
+    lVar2 = 4;
+  }
+  else if (DAT_00101420 == iVar1) {
+    lVar2 = 5;
+  }
+  else if (DAT_00101438 == iVar1) {
+    lVar2 = 6;
+  }
+  else {
+    if (DAT_00101450 != iVar1) {
+      return 0;
+    }
+    lVar2 = 7;
+  }
+  return (&DAT_001013b4)[lVar2 * 6];
+}
+
+
+
+/*==== get_dpu_idle_index ====*/
+// get_dpu_idle_index @ 0010b8e8
+// signature: undefined get_dpu_idle_index(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_idle_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0);
+}
+
+
+
+/*==== get_dpu_work_freq ====*/
+// get_dpu_work_freq @ 0010b9c4
+// signature: undefined get_dpu_work_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_work_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc);
+  if (map_table == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_001013c0 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_001013d8 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_001013f0 == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_00101408 == iVar1) {
+    lVar2 = 4;
+  }
+  else if (DAT_00101420 == iVar1) {
+    lVar2 = 5;
+  }
+  else if (DAT_00101438 == iVar1) {
+    lVar2 = 6;
+  }
+  else {
+    if (DAT_00101450 != iVar1) {
+      return 0;
+    }
+    lVar2 = 7;
+  }
+  return (&DAT_001013b4)[lVar2 * 6];
+}
+
+
+
+/*==== get_dpu_work_index ====*/
+// get_dpu_work_index @ 0010b8c8
+// signature: undefined get_dpu_work_index(void)
+// calling convention: unknown
+
+
+undefined4 get_dpu_work_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc);
+}
+
+
+
+/*==== get_dvfs_enable_show ====*/
+// get_dvfs_enable_show @ 00109a6c
+// signature: undefined get_dvfs_enable_show(void)
+// calling convention: unknown
+
+
+long get_dvfs_enable_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010291a);
+    lVar3 = -0x16;
+  }
+  else {
+    iVar1 = sprintf(param_3,"%d\n",(ulong)*(uint *)(lVar3 + 0x474));
+    lVar3 = (long)iVar1;
+  }
+  return lVar3;
+}
+
+
+
+/*==== get_dvfs_status_show ====*/
+// get_dvfs_status_show @ 00107c44
+// signature: undefined get_dvfs_status_show(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void get_dvfs_status_show(long param_1,undefined8 param_2,void *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  undefined8 local_98;
+  undefined8 uStack_90;
+  undefined8 local_78;
+  undefined8 local_68;
+  undefined8 local_60;
+  undefined8 local_48;
+  undefined8 local_38;
+  long local_28;
+  
+  *in_x18 = unaff_x30;
+  local_28 = ___stack_chk_guard;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  memset(&local_98,0,0x70);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+    lVar5 = -0x16;
+  }
+  else {
+    lVar3 = *(long *)(lVar5 + 0x480);
+    if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x78), pcVar4 == (code *)0x0)) {
+      memcpy(param_3,"undefined\n",0xb);
+      lVar5 = 10;
+    }
+    else {
+      if (4 < ((ulong)(pcVar4 + -0x117c70) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0x5e5090924bba0c5,pcVar4);
+      }
+      (*pcVar4)(lVar5,&local_98);
+      memcpy(param_3,"apsys_cur_volt\tvsp_vote_volt\tdpu_vote_volt\tvdsp_vote_volt\n",0x3b);
+      iVar1 = sprintf((char *)((long)param_3 + 0x3a),"%s\t\t%s\t\t%s\t\t%s\n",local_98,local_78,
+                      uStack_90,local_68);
+      memcpy((void *)((long)param_3 + (long)iVar1 + 0x3a),
+             "\t\tvsp_cur_freq\tdpu_cur_freq\tvdsp_cur_freq\n",0x2b);
+      lVar5 = (long)iVar1 + 100;
+      iVar1 = sprintf((char *)((long)param_3 + lVar5),"\t\t%s\t\t%s\t\t%s\n",local_48,local_60,
+                      local_38);
+      lVar5 = lVar5 + iVar1;
+    }
+  }
+  if (___stack_chk_guard == local_28) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(lVar5);
+}
+
+
+
+/*==== get_dvfs_table_info_show ====*/
+// get_dvfs_table_info_show @ 00109000
+// signature: undefined get_dvfs_table_info_show(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+long get_dvfs_table_info_show(long param_1,undefined8 param_2,void *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  undefined8 *in_x18;
+  code *pcVar3;
+  long lVar4;
+  long lVar5;
+  uint *puVar6;
+  undefined8 unaff_x30;
+  undefined1 local_118 [8];
+  uint auStack_110 [46];
+  long local_58;
+  
+  *in_x18 = unaff_x30;
+  local_58 = ___stack_chk_guard;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  memset(local_118,0,0xc0);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010291a);
+    lVar4 = -0x16;
+  }
+  else if ((*(long *)(lVar5 + 1000) == 0) ||
+          (pcVar3 = *(code **)(*(long *)(lVar5 + 1000) + 0x38), pcVar3 == (code *)0x0)) {
+    printk(&DAT_0010230e,"get_dvfs_table_info_show");
+    lVar4 = 0;
+  }
+  else {
+    if (0xd < ((ulong)(pcVar3 + -0x1181ec) >> 2 | (long)pcVar3 << 0x3e)) {
+      __cfi_slowpath(0x3dd94311f7d88ad,pcVar3);
+    }
+    (*pcVar3)(local_118);
+    memcpy(param_3,"map_index\tvolt_level\tclk_level\tclk_rate\n",0x29);
+    if (*(int *)(lVar5 + 0x4a0) == 0) {
+      lVar4 = 0x28;
+    }
+    else {
+      uVar2 = 0;
+      lVar4 = 0x28;
+      puVar6 = auStack_110;
+      do {
+        if (uVar2 == 8) {
+          __ubsan_handle_cfi_check_fail_abort(0x12);
+          goto LAB_00109160;
+        }
+        iVar1 = sprintf((char *)((long)param_3 + lVar4),"%d\t\t%d (%s)\t%d\t\t%d\t\t\n",
+                        (ulong)puVar6[-2],(ulong)puVar6[-1],*(undefined8 *)(puVar6 + 2),
+                        (ulong)*puVar6,(ulong)puVar6[1]);
+        uVar2 = uVar2 + 1;
+        lVar4 = lVar4 + iVar1;
+        puVar6 = puVar6 + 6;
+      } while (uVar2 < *(uint *)(lVar5 + 0x4a0));
+    }
+  }
+  if (___stack_chk_guard == local_58) {
+    return lVar4;
+  }
+LAB_00109160:
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== get_dvfs_table_show ====*/
+// get_dvfs_table_show @ 00107ac8
+// signature: undefined get_dvfs_table_show(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+long get_dvfs_table_show(long param_1,undefined8 param_2,void *param_3)
+
+{
+  uint uVar1;
+  int iVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  code *pcVar4;
+  long lVar5;
+  undefined8 unaff_x30;
+  uint local_118 [48];
+  long local_58;
+  
+  *in_x18 = unaff_x30;
+  local_58 = ___stack_chk_guard;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  memset(local_118,0,0xc0);
+  lVar3 = *(long *)(lVar3 + 0x480);
+  if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x58), pcVar4 == (code *)0x0)) {
+    printk(&DAT_0010230e,"get_dvfs_table_show");
+    memcpy(param_3,"map_index\tvolt_level\tclk_level\tclk_rate\n",0x29);
+  }
+  else {
+    if (7 < ((ulong)(pcVar4 + -0x1181cc) >> 2 | (long)pcVar4 << 0x3e)) {
+      __cfi_slowpath(0xb914d9c1747a0c1d,pcVar4);
+    }
+    uVar1 = (*pcVar4)(local_118);
+    memcpy(param_3,"map_index\tvolt_level\tclk_level\tclk_rate\n",0x29);
+    if (0 < (int)uVar1) {
+      lVar5 = 0;
+      lVar3 = 0x28;
+      do {
+        if (lVar5 == 0xc0) {
+          __ubsan_handle_cfi_check_fail_abort(0x12);
+          goto LAB_00107c24;
+        }
+        iVar2 = sprintf((char *)((long)param_3 + lVar3),"%d\t\t%d\t\t%d\t\t%d\t\t\n",
+                        (ulong)*(uint *)((long)local_118 + lVar5),
+                        (ulong)*(uint *)((long)local_118 + lVar5 + 4),
+                        (ulong)*(uint *)((long)local_118 + lVar5 + 8),
+                        (ulong)*(uint *)((long)local_118 + lVar5 + 0xc));
+        lVar5 = lVar5 + 0x18;
+        lVar3 = lVar3 + iVar2;
+      } while ((ulong)uVar1 * 0x18 - lVar5 != 0);
+      goto LAB_00107be4;
+    }
+  }
+  lVar3 = 0x28;
+LAB_00107be4:
+  if (___stack_chk_guard == local_58) {
+    return lVar3;
+  }
+LAB_00107c24:
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== get_gsp_dvfs_status ====*/
+// get_gsp_dvfs_status @ 0011793c
+// signature: undefined get_gsp_dvfs_status(void)
+// calling convention: unknown
+
+
+void get_gsp_dvfs_status(long param_1,long param_2)
+
+{
+  ulong uVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = (ulong)*(ushort *)(lVar3 + 0x56) & 7;
+  if ((uint)uVar1 < 5) {
+    puVar2 = (&PTR_s_0_55v_00105d30)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  *(undefined **)(param_2 + 0x10) = puVar2;
+  *(undefined **)(param_2 + 0x40) = (&PTR_DAT_00105e68)[(ulong)*(uint *)(lVar3 + 0x74) & 3];
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== get_gsp_dvfs_table ====*/
+// get_gsp_dvfs_table @ 0011788c
+// signature: undefined get_gsp_dvfs_table(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 get_gsp_dvfs_table(undefined4 *param_1)
+
+{
+  *param_1 = map_table_930;
+  param_1[1] = DAT_00101a54;
+  param_1[2] = DAT_00101a58;
+  param_1[3] = _DAT_00101a5c;
+  param_1[6] = DAT_00101a68;
+  param_1[7] = DAT_00101a6c;
+  param_1[8] = DAT_00101a70;
+  param_1[9] = DAT_00101a74;
+  param_1[0xc] = DAT_00101a80;
+  param_1[0xd] = DAT_00101a84;
+  param_1[0xe] = DAT_00101a88;
+  param_1[0xf] = DAT_00101a8c;
+  param_1[0x12] = DAT_00101a98;
+  param_1[0x13] = DAT_00101a9c;
+  param_1[0x14] = DAT_00101aa0;
+  param_1[0x15] = DAT_00101aa4;
+  return 4;
+}
+
+
+
+/*==== get_gsp_idle_freq ====*/
+// get_gsp_idle_freq @ 00117804
+// signature: undefined get_gsp_idle_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_gsp_idle_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7b0);
+  if (map_table_930 == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_00101a68 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_00101a80 == iVar1) {
+    lVar2 = 2;
+  }
+  else {
+    if (DAT_00101a98 != iVar1) {
+      return 0;
+    }
+    lVar2 = 3;
+  }
+  return *(undefined4 *)(&DAT_00101a5c + lVar2 * 0x18);
+}
+
+
+
+/*==== get_gsp_idle_index ====*/
+// get_gsp_idle_index @ 00117694
+// signature: undefined get_gsp_idle_index(void)
+// calling convention: unknown
+
+
+undefined4 get_gsp_idle_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7b0);
+}
+
+
+
+/*==== get_gsp_work_freq ====*/
+// get_gsp_work_freq @ 00117710
+// signature: undefined get_gsp_work_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_gsp_work_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7ac);
+  if (map_table_930 == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_00101a68 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_00101a80 == iVar1) {
+    lVar2 = 2;
+  }
+  else {
+    if (DAT_00101a98 != iVar1) {
+      return 0;
+    }
+    lVar2 = 3;
+  }
+  return *(undefined4 *)(&DAT_00101a5c + lVar2 * 0x18);
+}
+
+
+
+/*==== get_gsp_work_index ====*/
+// get_gsp_work_index @ 00117674
+// signature: undefined get_gsp_work_index(void)
+// calling convention: unknown
+
+
+undefined4 get_gsp_work_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7ac);
+}
+
+
+
+/*==== get_hw_dfs_show ====*/
+// get_hw_dfs_show @ 00108508
+// signature: undefined get_hw_dfs_show(void)
+// calling convention: unknown
+
+
+long get_hw_dfs_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = sprintf(param_3,"%d\n",
+                  (ulong)*(uint *)(*(long *)(*(long *)(param_1 + 0x60) + 0x98) + 0x400));
+  return (long)iVar1;
+}
+
+
+
+/*==== get_idle_freq_show ====*/
+// get_idle_freq_show @ 0010817c
+// signature: undefined get_idle_freq_show(void)
+// calling convention: unknown
+
+
+long get_idle_freq_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+    lVar5 = -0x16;
+  }
+  else {
+    lVar3 = *(long *)(lVar5 + 0x480);
+    if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x50), pcVar4 == (code *)0x0)) {
+      memcpy(param_3,"undefined\n",0xb);
+      lVar5 = 10;
+    }
+    else {
+      if (9 < ((ulong)(pcVar4 + -0x117c48) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0x56436511754e9839,pcVar4);
+      }
+      uVar2 = (*pcVar4)(lVar5);
+      iVar1 = sprintf(param_3,"%d\n",uVar2 & 0xffffffff);
+      lVar5 = (long)iVar1;
+    }
+  }
+  return lVar5;
+}
+
+
+
+/*==== get_idle_index_show ====*/
+// get_idle_index_show @ 00107dac
+// signature: undefined get_idle_index_show(void)
+// calling convention: unknown
+
+
+long get_idle_index_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+    lVar5 = -0x16;
+  }
+  else {
+    lVar3 = *(long *)(lVar5 + 0x480);
+    if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x30), pcVar4 == (code *)0x0)) {
+      memcpy(param_3,"undefined\n",0xb);
+      lVar5 = 10;
+    }
+    else {
+      if (0xe < ((ulong)(pcVar4 + -0x117c0c) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0xd66bd0a1c4b6e932,pcVar4);
+      }
+      uVar2 = (*pcVar4)(lVar5);
+      iVar1 = sprintf(param_3,"%d\n",uVar2 & 0xffffffff);
+      lVar5 = (long)iVar1;
+    }
+  }
+  return lVar5;
+}
+
+
+
+/*==== get_vdsp_dvfs_status ====*/
+// get_vdsp_dvfs_status @ 00114ee8
+// signature: undefined get_vdsp_dvfs_status(void)
+// calling convention: unknown
+
+
+void get_vdsp_dvfs_status(long param_1,undefined8 *param_2)
+
+{
+  ulong uVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 0xc) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  *param_2 = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 6) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[4] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 3) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[1] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 9) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[6] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x4c) >> 3) & 3;
+  if ((int)uVar1 == 3) {
+    printk(&DAT_001035ed,3);
+    puVar2 = &DAT_001023b6;
+  }
+  else {
+    puVar2 = (&PTR_DAT_00105da8)[uVar1];
+  }
+  param_2[10] = puVar2;
+  uVar1 = (ulong)*(uint *)(lVar3 + 0x4c) & 7;
+  if ((uint)uVar1 < 5) {
+    puVar2 = (&PTR_s_153_6M_00105d80)[uVar1];
+  }
+  else {
+    printk(&DAT_001035ed);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[7] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x4c) >> 5) & 7;
+  if ((uint)uVar1 < 6) {
+    puVar2 = (&PTR_DAT_00105dc0)[uVar1];
+  }
+  else {
+    printk(&DAT_001035ed);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[0xc] = puVar2;
+  *(uint *)(param_2 + 0xd) = *(uint *)(lVar3 + 0x4c) >> 8 & 3;
+  *(uint *)((long)param_2 + 0x6c) = *(uint *)(lVar3 + 0x4c) >> 10 & 3;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== get_vdsp_dvfs_table ====*/
+// get_vdsp_dvfs_table @ 00114dd0
+// signature: undefined get_vdsp_dvfs_table(void)
+// calling convention: unknown
+
+
+undefined8 get_vdsp_dvfs_table(undefined4 *param_1)
+
+{
+  undefined4 uVar1;
+  
+  *param_1 = map_table_801;
+  param_1[1] = DAT_00101664;
+  param_1[2] = DAT_00101668;
+  uVar1 = DAT_0010166c;
+  *(undefined8 *)(param_1 + 4) = 0;
+  param_1[3] = uVar1;
+  param_1[6] = DAT_00101674;
+  param_1[7] = DAT_00101678;
+  param_1[8] = DAT_0010167c;
+  uVar1 = DAT_00101680;
+  *(undefined8 *)(param_1 + 10) = 0;
+  param_1[9] = uVar1;
+  param_1[0xc] = DAT_00101688;
+  param_1[0xd] = DAT_0010168c;
+  param_1[0xe] = DAT_00101690;
+  uVar1 = DAT_00101694;
+  *(undefined8 *)(param_1 + 0x10) = 0;
+  param_1[0xf] = uVar1;
+  param_1[0x12] = DAT_0010169c;
+  param_1[0x13] = DAT_001016a0;
+  param_1[0x14] = DAT_001016a4;
+  uVar1 = DAT_001016a8;
+  *(undefined8 *)(param_1 + 0x16) = 0;
+  param_1[0x15] = uVar1;
+  param_1[0x18] = DAT_001016b0;
+  param_1[0x19] = DAT_001016b4;
+  param_1[0x1a] = DAT_001016b8;
+  uVar1 = DAT_001016bc;
+  *(undefined8 *)(param_1 + 0x1c) = 0;
+  param_1[0x1b] = uVar1;
+  param_1[0x1e] = DAT_001016c4;
+  param_1[0x1f] = DAT_001016c8;
+  param_1[0x20] = DAT_001016cc;
+  param_1[0x21] = DAT_001016d0;
+  *(undefined8 *)(param_1 + 0x22) = 0;
+  return 6;
+}
+
+
+
+/*==== get_vdsp_idle_freq ====*/
+// get_vdsp_idle_freq @ 00114d18
+// signature: undefined get_vdsp_idle_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_vdsp_idle_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x118);
+  if (map_table_801 == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_00101674 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_00101688 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_0010169c == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_001016b0 == iVar1) {
+    lVar2 = 4;
+  }
+  else {
+    if (DAT_001016c4 != iVar1) {
+      return 0;
+    }
+    lVar2 = 5;
+  }
+  return (&DAT_0010166c)[lVar2 * 5];
+}
+
+
+
+/*==== get_vdsp_idle_index ====*/
+// get_vdsp_idle_index @ 00114a60
+// signature: undefined get_vdsp_idle_index(void)
+// calling convention: unknown
+
+
+undefined4 get_vdsp_idle_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x118);
+}
+
+
+
+/*==== get_vdsp_work_freq ====*/
+// get_vdsp_work_freq @ 00114bc4
+// signature: undefined get_vdsp_work_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_vdsp_work_freq(long param_1)
+
+{
+  int iVar1;
+  long lVar2;
+  
+  iVar1 = *(int *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x114);
+  if (map_table_801 == iVar1) {
+    lVar2 = 0;
+  }
+  else if (DAT_00101674 == iVar1) {
+    lVar2 = 1;
+  }
+  else if (DAT_00101688 == iVar1) {
+    lVar2 = 2;
+  }
+  else if (DAT_0010169c == iVar1) {
+    lVar2 = 3;
+  }
+  else if (DAT_001016b0 == iVar1) {
+    lVar2 = 4;
+  }
+  else {
+    if (DAT_001016c4 != iVar1) {
+      return 0;
+    }
+    lVar2 = 5;
+  }
+  return (&DAT_0010166c)[lVar2 * 5];
+}
+
+
+
+/*==== get_vdsp_work_index ====*/
+// get_vdsp_work_index @ 00114a40
+// signature: undefined get_vdsp_work_index(void)
+// calling convention: unknown
+
+
+undefined4 get_vdsp_work_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x114);
+}
+
+
+
+/*==== get_vsp_dvfs_status ====*/
+// get_vsp_dvfs_status @ 001105a8
+// signature: undefined get_vsp_dvfs_status(void)
+// calling convention: unknown
+
+
+void get_vsp_dvfs_status(long param_1,undefined8 *param_2)
+
+{
+  ulong uVar1;
+  undefined *puVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 0xc) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  *param_2 = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 6) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[4] = puVar2;
+  uVar1 = (ulong)(*(uint *)(lVar3 + 0x40) >> 3) & 7;
+  if ((uint)uVar1 < 3) {
+    puVar2 = (&PTR_DAT_00105df0)[uVar1];
+  }
+  else {
+    printk(&DAT_0010238e);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[1] = puVar2;
+  param_2[6] = &DAT_001023b6;
+  param_2[10] = (&PTR_DAT_00105e68)[(ulong)(*(uint *)(lVar3 + 0x4c) >> 3) & 3];
+  uVar1 = (ulong)*(uint *)(lVar3 + 0x4c) & 7;
+  if ((uint)uVar1 < 6) {
+    puVar2 = (&PTR_s_153_6M_00105e08)[uVar1];
+  }
+  else {
+    printk(&DAT_001035ed);
+    puVar2 = &DAT_001023b6;
+  }
+  param_2[7] = puVar2;
+  param_2[0xc] = &DAT_001023b6;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== get_vsp_dvfs_table ====*/
+// get_vsp_dvfs_table @ 0011053c
+// signature: undefined get_vsp_dvfs_table(void)
+// calling convention: unknown
+
+
+void get_vsp_dvfs_table(undefined8 *param_1)
+
+{
+  *param_1 = 0;
+  param_1[1] = 0xf42400000000000;
+  param_1[2] = "0.7v ";
+  param_1[3] = 1;
+  param_1[4] = 0x124f800000000001;
+  param_1[5] = "0.7v ";
+  param_1[6] = 0x100000002;
+  param_1[7] = 0x16e3600000000002;
+  param_1[8] = "0.75v";
+  param_1[9] = 0x200000003;
+  param_1[10] = 0x1e84800000000003;
+  param_1[0xb] = &DAT_001028d2;
+  return;
+}
+
+
+
+/*==== get_vsp_idle_freq ====*/
+// get_vsp_idle_freq @ 00110508
+// signature: undefined get_vsp_idle_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_vsp_idle_freq(long param_1)
+
+{
+  uint uVar1;
+  
+  uVar1 = *(uint *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x120);
+  if (uVar1 < 4) {
+    return *(undefined4 *)(&DAT_00105434 + (ulong)uVar1 * 0x18);
+  }
+  return 0;
+}
+
+
+
+/*==== get_vsp_idle_index ====*/
+// get_vsp_idle_index @ 001108f0
+// signature: undefined get_vsp_idle_index(void)
+// calling convention: unknown
+
+
+undefined4 get_vsp_idle_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x120);
+}
+
+
+
+/*==== get_vsp_work_freq ====*/
+// get_vsp_work_freq @ 001103bc
+// signature: undefined get_vsp_work_freq(void)
+// calling convention: unknown
+
+
+undefined4 get_vsp_work_freq(long param_1)
+
+{
+  uint uVar1;
+  
+  uVar1 = *(uint *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x11c);
+  if (uVar1 < 4) {
+    return *(undefined4 *)(&DAT_00105434 + (ulong)uVar1 * 0x18);
+  }
+  return 0;
+}
+
+
+
+/*==== get_vsp_work_index ====*/
+// get_vsp_work_index @ 001108d0
+// signature: undefined get_vsp_work_index(void)
+// calling convention: unknown
+
+
+undefined4 get_vsp_work_index(long param_1)
+
+{
+  return *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x11c);
+}
+
+
+
+/*==== get_work_freq_show ====*/
+// get_work_freq_show @ 00108344
+// signature: undefined get_work_freq_show(void)
+// calling convention: unknown
+
+
+long get_work_freq_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+    lVar5 = -0x16;
+  }
+  else {
+    lVar3 = *(long *)(lVar5 + 0x480);
+    if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x40), pcVar4 == (code *)0x0)) {
+      memcpy(param_3,"undefined\n",0xb);
+      lVar5 = 10;
+    }
+    else {
+      if (9 < ((ulong)(pcVar4 + -0x117c48) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0x56436511754e9839,pcVar4);
+      }
+      uVar2 = (*pcVar4)(lVar5);
+      iVar1 = sprintf(param_3,"%d\n",uVar2 & 0xffffffff);
+      lVar5 = (long)iVar1;
+    }
+  }
+  return lVar5;
+}
+
+
+
+/*==== get_work_index_show ====*/
+// get_work_index_show @ 00107f94
+// signature: undefined get_work_index_show(void)
+// calling convention: unknown
+
+
+long get_work_index_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+    lVar5 = -0x16;
+  }
+  else {
+    lVar3 = *(long *)(lVar5 + 0x480);
+    if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x20), pcVar4 == (code *)0x0)) {
+      memcpy(param_3,"undefined\n",0xb);
+      lVar5 = 10;
+    }
+    else {
+      if (0xe < ((ulong)(pcVar4 + -0x117c0c) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0xd66bd0a1c4b6e932,pcVar4);
+      }
+      uVar2 = (*pcVar4)(lVar5);
+      iVar1 = sprintf(param_3,"%d\n",uVar2 & 0xffffffff);
+      lVar5 = (long)iVar1;
+    }
+  }
+  return lVar5;
+}
+
+
+
+/*==== gsp_dvfs_enable_show ====*/
+// gsp_dvfs_enable_show @ 00116a68
+// signature: undefined gsp_dvfs_enable_show(void)
+// calling convention: unknown
+
+
+long gsp_dvfs_enable_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = sprintf(param_3,"%d\n",(ulong)**(uint **)(*(long *)(param_1 + 0x60) + 0x98));
+  return (long)iVar1;
+}
+
+
+
+/*==== gsp_dvfs_enable_store ====*/
+// gsp_dvfs_enable_store @ 00116aa4
+// signature: undefined gsp_dvfs_enable_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 gsp_dvfs_enable_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  code *pcVar3;
+  undefined8 *in_x18;
+  int *piVar4;
+  undefined8 unaff_x30;
+  int local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  piVar4 = *(int **)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_001027d0);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%d\n",&local_3c);
+    if (iVar1 != 0) {
+      *piVar4 = local_3c;
+      if ((*(long *)(piVar4 + 0x120) == 0) ||
+         (pcVar3 = *(code **)(*(long *)(piVar4 + 0x120) + 0x10), pcVar3 == (code *)0x0)) {
+        printk(&DAT_0010230e,"gsp_dvfs_enable_store");
+      }
+      else {
+        if (4 < ((ulong)(pcVar3 + -0x118234) >> 2 | (long)pcVar3 << 0x3e)) {
+          __cfi_slowpath(0x488f92cb4d3438f1,pcVar3);
+        }
+        (*pcVar3)(piVar4,local_3c != 0);
+        piVar4[0x100] = local_3c;
+      }
+      goto LAB_00116b74;
+    }
+  }
+  param_4 = 0xffffffffffffffea;
+LAB_00116b74:
+  if (___stack_chk_guard == local_38) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== gsp_dvfs_get_cur_freq ====*/
+// gsp_dvfs_get_cur_freq @ 00117230
+// signature: undefined gsp_dvfs_get_cur_freq(void)
+// calling convention: unknown
+
+
+undefined8 gsp_dvfs_get_cur_freq(long param_1,ulong *param_2)
+
+{
+  long lVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = 0x3e0;
+  if (*(int *)(*(long *)(param_1 + 0x98) + 1000) != 0) {
+    lVar1 = 0x3e4;
+  }
+  *param_2 = (ulong)*(uint *)(*(long *)(param_1 + 0x98) + lVar1);
+  return 0;
+}
+
+
+
+/*==== gsp_dvfs_get_dev_status ====*/
+// gsp_dvfs_get_dev_status @ 00117228
+// signature: undefined gsp_dvfs_get_dev_status(void)
+// calling convention: unknown
+
+
+undefined8 gsp_dvfs_get_dev_status(void)
+
+{
+  return 0;
+}
+
+
+
+/*==== gsp_dvfs_init ====*/
+// gsp_dvfs_init @ 001173b8
+// signature: undefined gsp_dvfs_init(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void gsp_dvfs_init(long param_1)
+
+{
+  uint uVar1;
+  int iVar2;
+  undefined8 uVar3;
+  long lVar4;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  uint local_7c;
+  undefined8 local_78;
+  undefined8 uStack_70;
+  undefined8 local_68;
+  undefined8 uStack_60;
+  undefined8 local_58;
+  undefined8 uStack_50;
+  undefined8 local_48;
+  undefined8 uStack_40;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  local_48 = 0;
+  uStack_40 = 0;
+  local_58 = 0;
+  uStack_50 = 0;
+  local_68 = 0;
+  uStack_60 = 0;
+  local_78 = 0;
+  uStack_70 = 0;
+  printk(&DAT_001034f0,"gsp_dvfs_init");
+  local_7c = 0;
+  regmap_read(regmap_aon_base,0,&local_7c);
+  if ((local_7c >> 0x15 & 1) == 0) {
+    printk(&DAT_00103627,"gsp_dvfs_init");
+    uVar3 = 0xffffffff;
+  }
+  else {
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    *(uint *)(lVar4 + 0x1b4) = DAT_00101a58 | DAT_00101a54 << 2;
+    *(uint *)(lVar4 + 0x1b8) = DAT_00101a70 | DAT_00101a6c << 2;
+    *(uint *)(lVar4 + 0x1bc) = DAT_00101a88 | DAT_00101a84 << 2;
+    *(uint *)(lVar4 + 0x1c0) = DAT_00101aa0 | DAT_00101a9c << 2;
+    uVar1 = *(uint *)(param_1 + 0x3ec);
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(uint *)(lVar4 + 0x944) = *(uint *)(lVar4 + 0x944) & 0x3ff | uVar1;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar2 = *(int *)(param_1 + 0x3f0);
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar1 = *(uint *)(lVar4 + 0x9ac);
+    *(uint *)(lVar4 + 0x9ac) = uVar1 & 0xffffff80 | uVar1 & 0x3f | (uint)(iVar2 != 0) << 6;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar2 = *(int *)(param_1 + 0x3f4);
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar1 = *(uint *)(lVar4 + 0x9ac);
+    *(uint *)(lVar4 + 0x9ac) = uVar1 & 0xffffff00 | uVar1 & 0x7f | (uint)(iVar2 != 0) << 7;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    iVar2 = *(int *)(param_1 + 0x3f8);
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar1 = *(uint *)(lVar4 + 0x48);
+    *(uint *)(lVar4 + 0x48) = uVar1 & 0xfffffff0 | uVar1 & 7 | (uint)(iVar2 != 0) << 3;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7ac) =
+         *(undefined4 *)(param_1 + 0x404);
+    *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7b0) =
+         *(undefined4 *)(param_1 + 0x408);
+    strlcpy(&local_78,&DAT_00102c75,0x40);
+    iVar2 = bcmp(&local_78,"UMS512-AB",9);
+    *(uint *)(param_1 + 0x400) = (uint)(iVar2 == 0);
+    lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+    mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar1 = *(uint *)(lVar4 + 0x14);
+    *(uint *)(lVar4 + 0x14) = uVar1 & 0xfffffff8 | uVar1 & 3 | (uint)(iVar2 == 0) << 2;
+    mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+    uVar3 = 0;
+  }
+  if (___stack_chk_guard == local_38) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(uVar3);
+}
+
+
+
+/*==== gsp_dvfs_notifier_call_chain ====*/
+// gsp_dvfs_notifier_call_chain @ 00115db0
+// signature: undefined gsp_dvfs_notifier_call_chain(void)
+// calling convention: unknown
+
+
+void gsp_dvfs_notifier_call_chain(undefined8 param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  atomic_notifier_call_chain(&gsp_dvfs_chain,0,param_1);
+  return;
+}
+
+
+
+/*==== gsp_dvfs_notify_callback ====*/
+// gsp_dvfs_notify_callback @ 00116f5c
+// signature: undefined gsp_dvfs_notify_callback(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void gsp_dvfs_notify_callback(long param_1,undefined8 param_2,uint *param_3)
+
+{
+  uint uVar1;
+  long lVar2;
+  undefined8 uVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  ulong uVar5;
+  undefined8 unaff_x30;
+  uint local_2c;
+  long local_28;
+  
+  *in_x18 = unaff_x30;
+  local_28 = ___stack_chk_guard;
+  uVar1 = *param_3;
+  uVar5 = (ulong)uVar1;
+  local_2c = 0;
+  regmap_read(regmap_aon_base,0,&local_2c);
+  if ((local_2c >> 0x15 & 1) == 0) {
+    printk(&DAT_00103627,"gsp_dvfs_notify_callback");
+  }
+  else if (*(int *)(param_1 + -0x3c8) != 0) {
+    if ((*(long *)(param_1 + 0xb8) != 0) &&
+       (pcVar4 = *(code **)(*(long *)(param_1 + 0xb8) + 0x38), pcVar4 != (code *)0x0)) {
+      if (2 < ((ulong)(pcVar4 + -0x118228) >> 2 | (long)pcVar4 << 0x3e)) {
+        __cfi_slowpath(0xccb9aad54a2c9f6d,pcVar4);
+      }
+      (*pcVar4)((int *)(param_1 + -0x3c8),uVar5);
+    }
+    lVar2 = *(long *)(param_1 + -0x18);
+    if (*(long *)(*(long *)(lVar2 + 0x3d8) + 0x30) != 0) {
+      devfreq_update_status(lVar2,uVar5);
+      lVar2 = *(long *)(param_1 + -0x18);
+    }
+    *(uint *)(param_1 + 0x18) = uVar1;
+    *(undefined4 *)(param_1 + 0x20) = 0;
+    *(ulong *)(lVar2 + 0x498) = uVar5;
+    uVar3 = 1;
+    goto LAB_00117030;
+  }
+  uVar3 = 0;
+LAB_00117030:
+  if (___stack_chk_guard == local_28) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(uVar3);
+}
+
+
+
+/*==== gsp_dvfs_parse_dt ====*/
+// gsp_dvfs_parse_dt @ 0011729c
+// signature: undefined gsp_dvfs_parse_dt(void)
+// calling convention: unknown
+
+
+uint gsp_dvfs_parse_dt(long param_1,undefined8 param_2)
+
+{
+  int iVar1;
+  uint uVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"gsp_dvfs_parse_dt");
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,gfree-wait-delay",(undefined4 *)(param_1 + 0x3ec),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3ec) = 0x100;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-hdsk-en",(undefined4 *)(param_1 + 0x3f0),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f0) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-delay-en",(undefined4 *)(param_1 + 0x3f4),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f4) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-en-byp",(undefined4 *)(param_1 + 0x3f8),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f8) = 0;
+  }
+  uVar2 = of_property_read_variable_u32_array
+                    (param_2,"sprd,sw-trig-en",(undefined4 *)(param_1 + 0x3fc),1,0);
+  if ((int)uVar2 < 0) {
+    *(undefined4 *)(param_1 + 0x3fc) = 0;
+  }
+  return uVar2 & (int)uVar2 >> 0x1f;
+}
+
+
+
+/*==== gsp_dvfs_probe ====*/
+// gsp_dvfs_probe @ 00116bcc
+// signature: undefined gsp_dvfs_probe(void)
+// calling convention: unknown
+
+
+uint gsp_dvfs_probe(long param_1)
+
+{
+  long lVar1;
+  uint uVar2;
+  uint uVar3;
+  uint uVar4;
+  undefined4 *puVar5;
+  long lVar6;
+  undefined8 *puVar7;
+  ulong uVar8;
+  undefined8 *in_x18;
+  undefined8 uVar9;
+  code *pcVar10;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar9 = *(undefined8 *)(param_1 + 0x310);
+  lVar1 = param_1 + 0x10;
+  puVar5 = (undefined4 *)devm_kmalloc(lVar1,0x490,0xdc0);
+  if ((puVar5 == (undefined4 *)0x0) || (lVar6 = find_apsys_device_by_name("apsys-dvfs"), lVar6 == 0)
+     ) {
+    return 0xfffffff4;
+  }
+  *(long *)(puVar5 + 0x122) = lVar6;
+  puVar7 = (undefined8 *)of_device_get_match_data(lVar1);
+  if (puVar7 == (undefined8 *)0x0) {
+    printk(&DAT_00101ed7);
+    return 0xffffffea;
+  }
+  *(undefined8 *)(puVar5 + 0x120) = *puVar7;
+  printk(&DAT_001034f0,"gsp_dvfs_parse_dt");
+  uVar2 = of_property_read_variable_u32_array(uVar9,"sprd,hw-dfs-en",puVar5 + 0x100,1,0);
+  uVar3 = of_property_read_variable_u32_array(uVar9,"sprd,work-index-def",puVar5 + 0x101,1,0);
+  uVar4 = of_property_read_variable_u32_array(uVar9,"sprd,idle-index-def",puVar5 + 0x102,1,0);
+  uVar2 = uVar3 & (int)uVar3 >> 0x1f | uVar2 & (int)uVar2 >> 0x1f | uVar4 & (int)uVar4 >> 0x1f;
+  if (uVar2 != 0) {
+    printk(&DAT_00102a56);
+    return uVar2;
+  }
+  uVar2 = dev_pm_opp_of_add_table(lVar1);
+  if (uVar2 != 0) {
+    _dev_err(lVar1,"invalid operating-points in device tree.\n");
+    return uVar2;
+  }
+  *(undefined1 **)(puVar5 + 0xf2) = &LAB_00118178;
+  uVar2 = atomic_notifier_chain_register(&gsp_dvfs_chain,puVar5 + 0xf2);
+  if (uVar2 == 0) {
+    *(undefined4 **)(param_1 + 0xa8) = puVar5;
+    uVar8 = devm_devfreq_add_device(lVar1,&gsp_dvfs_profile,"gsp_dvfs",0);
+    *(ulong *)(puVar5 + 0xec) = uVar8;
+    if (uVar8 < 0xfffffffffffff001) {
+      device_rename(uVar8 + 0x30,&DAT_00102509);
+      puVar7 = *(undefined8 **)(puVar5 + 0x120);
+      *puVar5 = 1;
+      if (puVar7 != (undefined8 *)0x0) {
+        pcVar10 = (code *)*puVar7;
+        if (pcVar10 != (code *)0x0) {
+          if (pcVar10 != __typeid__ZTSFiP8gsp_dvfsP11device_nodeE_global_addr) {
+            __cfi_slowpath(0xa1b1a2041740c430,pcVar10);
+          }
+          (*pcVar10)(puVar5,uVar9);
+          puVar7 = *(undefined8 **)(puVar5 + 0x120);
+          if (puVar7 == (undefined8 *)0x0) goto LAB_00116e28;
+        }
+        pcVar10 = (code *)puVar7[1];
+        if (pcVar10 != (code *)0x0) {
+          if (2 < ((ulong)(pcVar10 + -0x1181b8) >> 2 | (long)pcVar10 << 0x3e)) {
+            __cfi_slowpath(0x56267983479e1e0a,pcVar10);
+          }
+          (*pcVar10)(puVar5);
+        }
+      }
+LAB_00116e28:
+      printk(&DAT_00101c6c);
+      return 0;
+    }
+    _dev_err(lVar1,"failed to add devfreq dev with gsp-dvfs governor\n");
+    uVar2 = puVar5[0xec];
+  }
+  else {
+    _dev_err(lVar1,"failed to register gsp layer change notifier\n");
+  }
+  dev_pm_opp_of_remove_table(lVar1);
+  atomic_notifier_chain_unregister(&gsp_dvfs_chain,puVar5 + 0xf2);
+  return uVar2;
+}
+
+
+
+/*==== gsp_dvfs_remove ====*/
+// gsp_dvfs_remove @ 00116e74
+// signature: undefined gsp_dvfs_remove(void)
+// calling convention: unknown
+
+
+undefined8 gsp_dvfs_remove(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_00101eb8);
+  return 0;
+}
+
+
+
+/*==== gsp_dvfs_resume ====*/
+// gsp_dvfs_resume @ 00116ecc
+// signature: undefined gsp_dvfs_resume(void)
+// calling convention: unknown
+
+
+undefined8 gsp_dvfs_resume(long param_1)
+
+{
+  long lVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(param_1 + 0x98);
+  printk(&DAT_001034f0,"gsp_dvfs_resume");
+  lVar1 = *(long *)(lVar3 + 0x480);
+  if ((lVar1 != 0) && (pcVar2 = *(code **)(lVar1 + 8), pcVar2 != (code *)0x0)) {
+    if (2 < ((ulong)(pcVar2 + -0x1181b8) >> 2 | (long)pcVar2 << 0x3e)) {
+      __cfi_slowpath(0x56267983479e1e0a,pcVar2);
+    }
+    (*pcVar2)(lVar3);
+  }
+  return 0;
+}
+
+
+
+/*==== gsp_dvfs_suspend ====*/
+// gsp_dvfs_suspend @ 00116e9c
+// signature: undefined gsp_dvfs_suspend(void)
+// calling convention: unknown
+
+
+undefined8 gsp_dvfs_suspend(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"gsp_dvfs_suspend");
+  return 0;
+}
+
+
+
+/*==== gsp_dvfs_target ====*/
+// gsp_dvfs_target @ 0011709c
+// signature: undefined gsp_dvfs_target(void)
+// calling convention: unknown
+
+
+ulong gsp_dvfs_target(long param_1,ulong *param_2,undefined4 param_3)
+
+{
+  uint uVar1;
+  ulong uVar2;
+  long lVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  code *pcVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(param_1 + 0x98);
+  uVar2 = devfreq_recommended_opp(param_1,param_2,param_3);
+  if (uVar2 < 0xfffffffffffff001) {
+    uVar1 = dev_pm_opp_get_freq(uVar2);
+    dev_pm_opp_put(uVar2);
+    lVar3 = *(long *)(lVar4 + 0x480);
+    if (*(int *)(lVar4 + 1000) == 0) {
+      if ((lVar3 != 0) && (pcVar5 = *(code **)(lVar3 + 0x38), pcVar5 != (code *)0x0)) {
+        if (2 < ((ulong)(pcVar5 + -0x118228) >> 2 | (long)pcVar5 << 0x3e)) {
+          __cfi_slowpath(0xccb9aad54a2c9f6d,pcVar5);
+        }
+        (*pcVar5)(lVar4,uVar1);
+      }
+    }
+    else if ((lVar3 != 0) && (pcVar5 = *(code **)(lVar3 + 0x48), pcVar5 != (code *)0x0)) {
+      if (2 < ((ulong)(pcVar5 + -0x118228) >> 2 | (long)pcVar5 << 0x3e)) {
+        __cfi_slowpath(0xccb9aad54a2c9f6d,pcVar5);
+      }
+      (*pcVar5)(lVar4,uVar1);
+    }
+    uVar2 = 0;
+    *param_2 = (ulong)uVar1;
+  }
+  else {
+    _dev_err(param_1,"failed to find opp for %lu KHz\n",*param_2);
+  }
+  return uVar2 & 0xffffffff;
+}
+
+
+
+/*==== gsp_gov_event_handler ====*/
+// gsp_gov_event_handler @ 00115e78
+// signature: undefined gsp_gov_event_handler(void)
+// calling convention: unknown
+
+
+undefined8 gsp_gov_event_handler(long param_1,int param_2)
+
+{
+  undefined8 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (param_2 == 2) {
+    if (*(long *)(param_1 + 0x60) != 0) {
+      sysfs_remove_group(param_1 + 0x30,&dev_attr_group_848);
+    }
+  }
+  else if (param_2 == 1) {
+    uVar1 = sysfs_create_group(param_1 + 0x30,&dev_attr_group_848);
+    return uVar1;
+  }
+  return 0;
+}
+
+
+
+/*==== gsp_gov_get_target ====*/
+// gsp_gov_get_target @ 00115ddc
+// signature: undefined gsp_gov_get_target(void)
+// calling convention: unknown
+
+
+undefined8 gsp_gov_get_target(long param_1,ulong *param_2)
+
+{
+  uint uVar1;
+  long lVar2;
+  uint uVar3;
+  long lVar4;
+  ulong uVar5;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x90) + 0x98);
+  lVar2 = 0x3e0;
+  if (*(int *)(lVar4 + 1000) != 0) {
+    lVar2 = 0x3e4;
+  }
+  uVar5 = *(ulong *)(param_1 + 0x4d0);
+  uVar3 = *(uint *)(lVar4 + lVar2);
+  if ((uVar5 == 0) || (uVar3 <= uVar5)) {
+    uVar1 = (uint)*(ulong *)(param_1 + 0x4c8);
+    if (*(ulong *)(param_1 + 0x4c8) <= (ulong)uVar3) {
+      uVar1 = uVar3;
+    }
+    uVar5 = (ulong)uVar1;
+  }
+  *param_2 = uVar5 & 0xffffffff;
+  return 0;
+}
+
+
+
+/*==== gsp_hw_dfs_en ====*/
+// gsp_hw_dfs_en @ 001175fc
+// signature: undefined gsp_hw_dfs_en(void)
+// calling convention: unknown
+
+
+void gsp_hw_dfs_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 4;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x14) = *(uint *)(lVar2 + 0x14) & 0xfffffffb | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== n6pro_soc_ver_id_check ====*/
+// n6pro_soc_ver_id_check @ 001060cc
+// signature: undefined n6pro_soc_ver_id_check(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void n6pro_soc_ver_id_check(void)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  int local_1c;
+  long local_18;
+  
+  *in_x18 = unaff_x30;
+  local_18 = ___stack_chk_guard;
+  local_1c = 0;
+  iVar1 = sprd_get_soc_id(4,&local_1c,1);
+  if (iVar1 == 0) {
+    if (local_1c == 1) {
+      printk(&DAT_00102a7e);
+      iVar1 = local_1c;
+    }
+    else if (local_1c == 0) {
+      printk(&DAT_001023ef);
+      iVar1 = local_1c;
+    }
+    else {
+      printk(&DAT_00102820);
+      local_1c = 0;
+      iVar1 = local_1c;
+    }
+  }
+  else {
+    printk(&DAT_00102af4);
+    iVar1 = 0;
+  }
+  if (___stack_chk_guard != local_18) {
+                    /* WARNING: Subroutine does not return */
+    __stack_chk_fail(iVar1);
+  }
+  return;
+}
+
+
+
+/*==== set_dpu_dvfs_swtrig_en ====*/
+// set_dpu_dvfs_swtrig_en @ 0010c048
+// signature: undefined set_dpu_dvfs_swtrig_en(void)
+// calling convention: unknown
+
+
+void set_dpu_dvfs_swtrig_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x1c) = *(uint *)(lVar1 + 0x1c) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_dpu_dvfs_table ====*/
+// set_dpu_dvfs_table @ 0010bd74
+// signature: undefined set_dpu_dvfs_table(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_dpu_dvfs_table(undefined8 *param_1)
+
+{
+  _DAT_001013b0 = param_1[1];
+  DAT_001013b8 = param_1[2];
+  _map_table = *param_1;
+  return;
+}
+
+
+
+/*==== set_dpu_freq_upd_delay_en ====*/
+// set_dpu_freq_upd_delay_en @ 0010bf78
+// signature: undefined set_dpu_freq_upd_delay_en(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_delay_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x20;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffffdf | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_dpu_freq_upd_en_byp ====*/
+// set_dpu_freq_upd_en_byp @ 0010bf20
+// signature: undefined set_dpu_freq_upd_en_byp(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_en_byp(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x48) = *(uint *)(lVar1 + 0x48) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_dpu_freq_upd_hdsk_en ====*/
+// set_dpu_freq_upd_hdsk_en @ 0010bfe0
+// signature: undefined set_dpu_freq_upd_hdsk_en(void)
+// calling convention: unknown
+
+
+void set_dpu_freq_upd_hdsk_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x10;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffffef | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_dpu_gfree_wait_delay ====*/
+// set_dpu_gfree_wait_delay @ 0010bec8
+// signature: undefined set_dpu_gfree_wait_delay(void)
+// calling convention: unknown
+
+
+void set_dpu_gfree_wait_delay(long param_1,int param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x944) = *(uint *)(lVar1 + 0x944) & 0x3ff | param_2 << 10;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_dpu_idle_freq ====*/
+// set_dpu_idle_freq @ 0010baac
+// signature: undefined set_dpu_idle_freq(void)
+// calling convention: unknown
+
+
+void set_dpu_idle_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (DAT_001013b4 == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_001013cc == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_001013e4 == param_2) {
+    uVar1 = 2;
+  }
+  else if (DAT_001013fc == param_2) {
+    uVar1 = 3;
+  }
+  else if (DAT_00101414 == param_2) {
+    uVar1 = 4;
+  }
+  else if (DAT_0010142c == param_2) {
+    uVar1 = 5;
+  }
+  else if (DAT_00101444 == param_2) {
+    uVar1 = 6;
+  }
+  else {
+    if (DAT_0010145c != param_2) {
+      return;
+    }
+    uVar1 = 7;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0) = uVar1;
+  return;
+}
+
+
+
+/*==== set_dpu_idle_index ====*/
+// set_dpu_idle_index @ 0010b8d8
+// signature: undefined set_dpu_idle_index(void)
+// calling convention: unknown
+
+
+void set_dpu_idle_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7c0) = param_2;
+  return;
+}
+
+
+
+/*==== set_dpu_work_freq ====*/
+// set_dpu_work_freq @ 0010b8f8
+// signature: undefined set_dpu_work_freq(void)
+// calling convention: unknown
+
+
+void set_dpu_work_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (DAT_001013b4 == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_001013cc == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_001013e4 == param_2) {
+    uVar1 = 2;
+  }
+  else if (DAT_001013fc == param_2) {
+    uVar1 = 3;
+  }
+  else if (DAT_00101414 == param_2) {
+    uVar1 = 4;
+  }
+  else if (DAT_0010142c == param_2) {
+    uVar1 = 5;
+  }
+  else if (DAT_00101444 == param_2) {
+    uVar1 = 6;
+  }
+  else {
+    if (DAT_0010145c != param_2) {
+      return;
+    }
+    uVar1 = 7;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc) = uVar1;
+  return;
+}
+
+
+
+/*==== set_dpu_work_index ====*/
+// set_dpu_work_index @ 0010b8b8
+// signature: undefined set_dpu_work_index(void)
+// calling convention: unknown
+
+
+void set_dpu_work_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7bc) = param_2;
+  return;
+}
+
+
+
+/*==== set_dvfs_enable_store ====*/
+// set_dvfs_enable_store @ 00109acc
+// signature: undefined set_dvfs_enable_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_dvfs_enable_store(long param_1,undefined8 param_2,char *param_3,int param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  code *pcVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  undefined8 unaff_x30;
+  undefined4 local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_00102e1a);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%u\n",&local_3c);
+    if (iVar1 == 1) {
+      if ((*(long *)(lVar4 + 1000) == 0) ||
+         (pcVar3 = *(code **)(*(long *)(lVar4 + 1000) + 0x10), pcVar3 == (code *)0x0)) {
+        printk(&DAT_0010230e,"set_dvfs_enable_store");
+      }
+      else {
+        if (0x3b < ((ulong)(pcVar3 + -0x117e0c) >> 2 | (long)pcVar3 << 0x3e)) {
+          __cfi_slowpath(0x32d5576efc9df576,pcVar3);
+        }
+        (*pcVar3)(lVar4,local_3c);
+        *(undefined4 *)(lVar4 + 0x474) = local_3c;
+      }
+      lVar4 = (long)param_4;
+      goto LAB_00109b7c;
+    }
+  }
+  lVar4 = -0x16;
+LAB_00109b7c:
+  if (___stack_chk_guard == local_38) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(lVar4);
+}
+
+
+
+/*==== set_gsp_dvfs_swtrig_en ====*/
+// set_gsp_dvfs_swtrig_en @ 00117b6c
+// signature: undefined set_gsp_dvfs_swtrig_en(void)
+// calling convention: unknown
+
+
+void set_gsp_dvfs_swtrig_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x1c) = *(uint *)(lVar1 + 0x1c) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_gsp_dvfs_table ====*/
+// set_gsp_dvfs_table @ 00117920
+// signature: undefined set_gsp_dvfs_table(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_gsp_dvfs_table(undefined8 *param_1)
+
+{
+  _DAT_00101a58 = param_1[1];
+  DAT_00101a60 = param_1[2];
+  _map_table_930 = *param_1;
+  return;
+}
+
+
+
+/*==== set_gsp_freq_upd_delay_en ====*/
+// set_gsp_freq_upd_delay_en @ 00117a9c
+// signature: undefined set_gsp_freq_upd_delay_en(void)
+// calling convention: unknown
+
+
+void set_gsp_freq_upd_delay_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x80;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffff7f | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_gsp_freq_upd_en_byp ====*/
+// set_gsp_freq_upd_en_byp @ 00117a34
+// signature: undefined set_gsp_freq_upd_en_byp(void)
+// calling convention: unknown
+
+
+void set_gsp_freq_upd_en_byp(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 8;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x48) = *(uint *)(lVar2 + 0x48) & 0xfffffff7 | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_gsp_freq_upd_hdsk_en ====*/
+// set_gsp_freq_upd_hdsk_en @ 00117b04
+// signature: undefined set_gsp_freq_upd_hdsk_en(void)
+// calling convention: unknown
+
+
+void set_gsp_freq_upd_hdsk_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 0x40;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x9ac) = *(uint *)(lVar2 + 0x9ac) & 0xffffffbf | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_gsp_gfree_wait_delay ====*/
+// set_gsp_gfree_wait_delay @ 001179d8
+// signature: undefined set_gsp_gfree_wait_delay(void)
+// calling convention: unknown
+
+
+void set_gsp_gfree_wait_delay(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x944) = *(uint *)(lVar1 + 0x944) & 0x3ff | param_2;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_gsp_idle_freq ====*/
+// set_gsp_idle_freq @ 00117798
+// signature: undefined set_gsp_idle_freq(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_gsp_idle_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (_DAT_00101a5c == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_00101a74 == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_00101a8c == param_2) {
+    uVar1 = 2;
+  }
+  else {
+    if (DAT_00101aa4 != param_2) {
+      return;
+    }
+    uVar1 = 3;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7b0) = uVar1;
+  return;
+}
+
+
+
+/*==== set_gsp_idle_index ====*/
+// set_gsp_idle_index @ 00117684
+// signature: undefined set_gsp_idle_index(void)
+// calling convention: unknown
+
+
+void set_gsp_idle_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7b0) = param_2;
+  return;
+}
+
+
+
+/*==== set_gsp_work_freq ====*/
+// set_gsp_work_freq @ 001176a4
+// signature: undefined set_gsp_work_freq(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_gsp_work_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (_DAT_00101a5c == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_00101a74 == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_00101a8c == param_2) {
+    uVar1 = 2;
+  }
+  else {
+    if (DAT_00101aa4 != param_2) {
+      return;
+    }
+    uVar1 = 3;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7ac) = uVar1;
+  return;
+}
+
+
+
+/*==== set_gsp_work_index ====*/
+// set_gsp_work_index @ 00117664
+// signature: undefined set_gsp_work_index(void)
+// calling convention: unknown
+
+
+void set_gsp_work_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x7ac) = param_2;
+  return;
+}
+
+
+
+/*==== set_hw_dfs_store ====*/
+// set_hw_dfs_store @ 00108544
+// signature: undefined set_hw_dfs_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 set_hw_dfs_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  code *pcVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  undefined8 unaff_x30;
+  int local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%d\n",&local_3c);
+    if (iVar1 != 0) {
+      if ((*(long *)(lVar4 + 0x480) == 0) ||
+         (pcVar3 = *(code **)(*(long *)(lVar4 + 0x480) + 0x10), pcVar3 == (code *)0x0)) {
+        printk(&DAT_0010230e,"set_hw_dfs_store");
+      }
+      else {
+        if (0x18 < ((ulong)(pcVar3 + -0x117cc0) >> 2 | (long)pcVar3 << 0x3e)) {
+          __cfi_slowpath(0xef1f25b0f2a55e94,pcVar3);
+        }
+        (*pcVar3)(lVar4,local_3c != 0);
+        *(int *)(lVar4 + 0x400) = local_3c;
+      }
+      goto LAB_0010860c;
+    }
+  }
+  param_4 = 0xffffffffffffffea;
+LAB_0010860c:
+  if (___stack_chk_guard == local_38) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== set_idle_freq_store ====*/
+// set_idle_freq_store @ 00108254
+// signature: undefined set_idle_freq_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_idle_freq_store(long param_1,undefined8 param_2,char *param_3,int param_4)
+
+{
+  long lVar1;
+  int iVar2;
+  ulong uVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  undefined8 unaff_x30;
+  undefined4 local_4c;
+  long local_48;
+  
+  *in_x18 = unaff_x30;
+  local_48 = ___stack_chk_guard;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_4c = 0;
+  uVar3 = get_display_power_status();
+  if ((uVar3 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    lVar1 = param_1 + -0x20;
+    mutex_lock(lVar1);
+    iVar2 = sscanf(param_3,"%d\n",&local_4c);
+    if (iVar2 != 0) {
+      *(undefined4 *)(lVar4 + 1000) = 1;
+      *(undefined4 *)(lVar4 + 0x3e4) = local_4c;
+      iVar2 = update_devfreq(param_1 + -0x30);
+      if (iVar2 != 0) {
+        param_4 = iVar2;
+      }
+      mutex_unlock(lVar1);
+      lVar4 = (long)param_4;
+      goto LAB_00108300;
+    }
+    mutex_unlock(lVar1);
+  }
+  lVar4 = -0x16;
+LAB_00108300:
+  if (___stack_chk_guard == local_48) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(lVar4);
+}
+
+
+
+/*==== set_idle_index_store ====*/
+// set_idle_index_store @ 00107e84
+// signature: undefined set_idle_index_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 set_idle_index_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  undefined4 local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%d\n",&local_3c);
+    if (iVar1 != 0) {
+      lVar3 = *(long *)(lVar5 + 0x480);
+      if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x28), pcVar4 == (code *)0x0)) {
+        printk(&DAT_0010230e,"set_idle_index_store");
+      }
+      else {
+        if (9 < ((ulong)(pcVar4 + -0x117be4) >> 2 | (long)pcVar4 << 0x3e)) {
+          __cfi_slowpath(0x7c35d74b5c9637e3,pcVar4);
+        }
+        (*pcVar4)(lVar5,local_3c);
+      }
+      goto LAB_00107f3c;
+    }
+  }
+  param_4 = 0xffffffffffffffea;
+LAB_00107f3c:
+  if (___stack_chk_guard == local_38) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== set_vdsp_dvfs_swtrig_en ====*/
+// set_vdsp_dvfs_swtrig_en @ 00115240
+// signature: undefined set_vdsp_dvfs_swtrig_en(void)
+// calling convention: unknown
+
+
+void set_vdsp_dvfs_swtrig_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0xc) = *(uint *)(lVar1 + 0xc) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vdsp_dvfs_table ====*/
+// set_vdsp_dvfs_table @ 00114ebc
+// signature: undefined set_vdsp_dvfs_table(void)
+// calling convention: unknown
+
+
+void set_vdsp_dvfs_table(void *param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  memcpy(&map_table_801,param_1,0x18);
+  return;
+}
+
+
+
+/*==== set_vdsp_freq_upd_delay_en ====*/
+// set_vdsp_freq_upd_delay_en @ 00115180
+// signature: undefined set_vdsp_freq_upd_delay_en(void)
+// calling convention: unknown
+
+
+void set_vdsp_freq_upd_delay_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 2;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x134) = *(uint *)(lVar2 + 0x134) & 0xfffffffd | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vdsp_freq_upd_en_byp ====*/
+// set_vdsp_freq_upd_en_byp @ 00115118
+// signature: undefined set_vdsp_freq_upd_en_byp(void)
+// calling convention: unknown
+
+
+void set_vdsp_freq_upd_en_byp(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 4;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 0x38) = *(uint *)(lVar2 + 0x38) & 0xfffffffb | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vdsp_freq_upd_hdsk_en ====*/
+// set_vdsp_freq_upd_hdsk_en @ 001151e8
+// signature: undefined set_vdsp_freq_upd_hdsk_en(void)
+// calling convention: unknown
+
+
+void set_vdsp_freq_upd_hdsk_en(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x134) = *(uint *)(lVar1 + 0x134) & 0xfffffffe | param_2 & 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vdsp_gfree_wait_delay ====*/
+// set_vdsp_gfree_wait_delay @ 001150c0
+// signature: undefined set_vdsp_gfree_wait_delay(void)
+// calling convention: unknown
+
+
+void set_vdsp_gfree_wait_delay(long param_1,int param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar1 + 0x130) = *(uint *)(lVar1 + 0x130) & 0xfffff | param_2 << 0x14;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vdsp_idle_freq ====*/
+// set_vdsp_idle_freq @ 00114c7c
+// signature: undefined set_vdsp_idle_freq(void)
+// calling convention: unknown
+
+
+void set_vdsp_idle_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  
+  if (DAT_0010166c == param_2) {
+    uVar1 = 0;
+  }
+  else if (DAT_00101680 == param_2) {
+    uVar1 = 1;
+  }
+  else if (DAT_00101694 == param_2) {
+    uVar1 = 2;
+  }
+  else if (DAT_001016a8 == param_2) {
+    uVar1 = 3;
+  }
+  else if (DAT_001016bc == param_2) {
+    uVar1 = 4;
+  }
+  else {
+    if (DAT_001016d0 != param_2) {
+      return;
+    }
+    uVar1 = 5;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x118) = uVar1;
+  return;
+}
+
+
+
+/*==== set_vdsp_idle_index ====*/
+// set_vdsp_idle_index @ 00114a50
+// signature: undefined set_vdsp_idle_index(void)
+// calling convention: unknown
+
+
+void set_vdsp_idle_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x118) = param_2;
+  return;
+}
+
+
+
+/*==== set_vdsp_work_freq ====*/
+// set_vdsp_work_freq @ 00114a70
+// signature: undefined set_vdsp_work_freq(void)
+// calling convention: unknown
+
+
+int set_vdsp_work_freq(long param_1,int param_2)
+
+{
+  int iVar1;
+  undefined4 uVar2;
+  uint uVar3;
+  undefined8 *in_x18;
+  undefined8 uVar4;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar3 = 2;
+  if (param_2 != 936000000) {
+    uVar3 = (uint)(param_2 == 0x249f0000);
+  }
+  uVar4 = (&clk_pll)[uVar3];
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  iVar1 = clk_prepare(uVar4);
+  if (iVar1 == 0) {
+    iVar1 = clk_enable(uVar4);
+    if (iVar1 == 0) {
+      if (DAT_0010166c == param_2) {
+        uVar2 = 0;
+      }
+      else if (DAT_00101680 == param_2) {
+        uVar2 = 1;
+      }
+      else if (DAT_00101694 == param_2) {
+        uVar2 = 2;
+      }
+      else if (DAT_001016a8 == param_2) {
+        uVar2 = 3;
+      }
+      else if (DAT_001016bc == param_2) {
+        uVar2 = 4;
+      }
+      else {
+        if (DAT_001016d0 != param_2) {
+          return 0;
+        }
+        uVar2 = 5;
+      }
+      *(undefined4 *)(lVar5 + 0x114) = uVar2;
+      return 0;
+    }
+    clk_unprepare(uVar4);
+  }
+  printk(&DAT_001024c3,"set_vdsp_work_freq",iVar1,uVar3);
+  return iVar1;
+}
+
+
+
+/*==== set_vdsp_work_index ====*/
+// set_vdsp_work_index @ 00114990
+// signature: undefined set_vdsp_work_index(void)
+// calling convention: unknown
+
+
+int set_vdsp_work_index(long param_1,int param_2)
+
+{
+  int iVar1;
+  uint uVar2;
+  undefined8 *in_x18;
+  undefined8 uVar3;
+  long lVar4;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar2 = 2;
+  if (param_2 != 5) {
+    uVar2 = (uint)(param_2 == 4);
+  }
+  uVar3 = (&clk_pll)[uVar2];
+  lVar4 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  iVar1 = clk_prepare(uVar3);
+  if (iVar1 == 0) {
+    iVar1 = clk_enable(uVar3);
+    if (iVar1 == 0) {
+      *(int *)(lVar4 + 0x114) = param_2;
+      return 0;
+    }
+    clk_unprepare(uVar3);
+  }
+  printk(&DAT_001024c3,"set_vdsp_work_index",iVar1,uVar2);
+  return iVar1;
+}
+
+
+
+/*==== set_vsp_dvfs_swtrig_en ====*/
+// set_vsp_dvfs_swtrig_en @ 00110864
+// signature: undefined set_vsp_dvfs_swtrig_en(void)
+// calling convention: unknown
+
+
+void set_vsp_dvfs_swtrig_en(long param_1,int param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar2 + 0xc);
+  *(uint *)(lVar2 + 0xc) = uVar1 & 0xfffffffc | uVar1 & 1 | (uint)(param_2 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vsp_freq_upd_delay_en ====*/
+// set_vsp_freq_upd_delay_en @ 001107ac
+// signature: undefined set_vsp_freq_upd_delay_en(void)
+// calling convention: unknown
+
+
+void set_vsp_freq_upd_delay_en(long param_1,int param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar2 + 0x134);
+  *(uint *)(lVar2 + 0x134) = uVar1 & 0xfffffff0 | uVar1 & 7 | (uint)(param_2 != 0) << 3;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vsp_freq_upd_en_byp ====*/
+// set_vsp_freq_upd_en_byp @ 00110750
+// signature: undefined set_vsp_freq_upd_en_byp(void)
+// calling convention: unknown
+
+
+void set_vsp_freq_upd_en_byp(long param_1,int param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar2 + 0x38);
+  *(uint *)(lVar2 + 0x38) = uVar1 & 0xfffffffc | uVar1 & 1 | (uint)(param_2 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vsp_freq_upd_hdsk_en ====*/
+// set_vsp_freq_upd_hdsk_en @ 00110808
+// signature: undefined set_vsp_freq_upd_hdsk_en(void)
+// calling convention: unknown
+
+
+void set_vsp_freq_upd_hdsk_en(long param_1,int param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar2 + 0x134);
+  *(uint *)(lVar2 + 0x134) = uVar1 & 0xfffffff8 | uVar1 & 3 | (uint)(param_2 != 0) << 2;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vsp_gfree_wait_delay ====*/
+// set_vsp_gfree_wait_delay @ 001106f4
+// signature: undefined set_vsp_gfree_wait_delay(void)
+// calling convention: unknown
+
+
+void set_vsp_gfree_wait_delay(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  *(uint *)(lVar1 + 0x130) = *(uint *)(lVar1 + 0x130) | param_2 & 0x3ff;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+
+
+/*==== set_vsp_idle_freq ====*/
+// set_vsp_idle_freq @ 001103f0
+// signature: undefined set_vsp_idle_freq(void)
+// calling convention: unknown
+
+
+void set_vsp_idle_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (param_2 == 512000000) {
+    uVar1 = 3;
+  }
+  else if (param_2 == 384000000) {
+    uVar1 = 2;
+  }
+  else if (param_2 == 0x124f8000) {
+    uVar1 = 1;
+  }
+  else {
+    uVar1 = 0;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x120) = uVar1;
+  return;
+}
+
+
+
+/*==== set_vsp_idle_index ====*/
+// set_vsp_idle_index @ 001108e0
+// signature: undefined set_vsp_idle_index(void)
+// calling convention: unknown
+
+
+void set_vsp_idle_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x120) = param_2;
+  return;
+}
+
+
+
+/*==== set_vsp_work_freq ====*/
+// set_vsp_work_freq @ 001102a4
+// signature: undefined set_vsp_work_freq(void)
+// calling convention: unknown
+
+
+void set_vsp_work_freq(long param_1,int param_2)
+
+{
+  undefined4 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if (param_2 == 512000000) {
+    uVar1 = 3;
+  }
+  else if (param_2 == 384000000) {
+    uVar1 = 2;
+  }
+  else if (param_2 == 0x124f8000) {
+    uVar1 = 1;
+  }
+  else {
+    uVar1 = 0;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x11c) = uVar1;
+  return;
+}
+
+
+
+/*==== set_vsp_work_index ====*/
+// set_vsp_work_index @ 001108c0
+// signature: undefined set_vsp_work_index(void)
+// calling convention: unknown
+
+
+void set_vsp_work_index(long param_1,undefined4 param_2)
+
+{
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x11c) = param_2;
+  return;
+}
+
+
+
+/*==== set_work_freq_store ====*/
+// set_work_freq_store @ 0010841c
+// signature: undefined set_work_freq_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void set_work_freq_store(long param_1,undefined8 param_2,char *param_3,int param_4)
+
+{
+  long lVar1;
+  int iVar2;
+  ulong uVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  undefined8 unaff_x30;
+  undefined4 local_4c;
+  long local_48;
+  
+  *in_x18 = unaff_x30;
+  local_48 = ___stack_chk_guard;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_4c = 0;
+  uVar3 = get_display_power_status();
+  if ((uVar3 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    lVar1 = param_1 + -0x20;
+    mutex_lock(lVar1);
+    iVar2 = sscanf(param_3,"%d\n",&local_4c);
+    if (iVar2 != 0) {
+      *(undefined4 *)(lVar4 + 1000) = 0;
+      *(undefined4 *)(lVar4 + 0x3e0) = local_4c;
+      iVar2 = update_devfreq(param_1 + -0x30);
+      if (iVar2 != 0) {
+        param_4 = iVar2;
+      }
+      mutex_unlock(lVar1);
+      lVar4 = (long)param_4;
+      goto LAB_001084c4;
+    }
+    mutex_unlock(lVar1);
+  }
+  lVar4 = -0x16;
+LAB_001084c4:
+  if (___stack_chk_guard == local_48) {
+    return;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail(lVar4);
+}
+
+
+
+/*==== set_work_index_store ====*/
+// set_work_index_store @ 0010806c
+// signature: undefined set_work_index_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 set_work_index_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  ulong uVar2;
+  long lVar3;
+  code *pcVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  undefined4 local_3c;
+  long local_38;
+  
+  *in_x18 = unaff_x30;
+  local_38 = ___stack_chk_guard;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x60) + 0x98);
+  local_3c = 0;
+  uVar2 = get_display_power_status();
+  if ((uVar2 & 1) == 0) {
+    printk(&DAT_0010244c);
+  }
+  else {
+    iVar1 = sscanf(param_3,"%d\n",&local_3c);
+    if (iVar1 != 0) {
+      lVar3 = *(long *)(lVar5 + 0x480);
+      if ((lVar3 == 0) || (pcVar4 = *(code **)(lVar3 + 0x18), pcVar4 == (code *)0x0)) {
+        printk(&DAT_0010230e,"set_work_index_store");
+      }
+      else {
+        if (9 < ((ulong)(pcVar4 + -0x117be4) >> 2 | (long)pcVar4 << 0x3e)) {
+          __cfi_slowpath(0x7c35d74b5c9637e3,pcVar4);
+        }
+        (*pcVar4)(lVar5,local_3c);
+      }
+      goto LAB_00108124;
+    }
+  }
+  param_4 = 0xffffffffffffffea;
+LAB_00108124:
+  if (___stack_chk_guard == local_38) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== updata_vsp_target_freq ====*/
+// updata_vsp_target_freq @ 00110900
+// signature: undefined updata_vsp_target_freq(void)
+// calling convention: unknown
+
+
+void updata_vsp_target_freq(long param_1,int param_2,int param_3)
+
+{
+  undefined4 uVar1;
+  long lVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  if (param_3 == 0) {
+    if (param_2 == 512000000) {
+      uVar1 = 3;
+    }
+    else if (param_2 == 384000000) {
+      uVar1 = 2;
+    }
+    else if (param_2 == 0x124f8000) {
+      uVar1 = 1;
+    }
+    else {
+      uVar1 = 0;
+    }
+    *(undefined4 *)(lVar2 + 0x11c) = uVar1;
+  }
+  else {
+    if (param_2 == 512000000) {
+      uVar1 = 3;
+    }
+    else if (param_2 == 384000000) {
+      uVar1 = 2;
+    }
+    else if (param_2 == 0x124f8000) {
+      uVar1 = 1;
+    }
+    else {
+      uVar1 = 0;
+    }
+    *(undefined4 *)(lVar2 + 0x120) = uVar1;
+  }
+  return;
+}
+
+
+
+/*==== vdsp_dvfs_enable_show ====*/
+// vdsp_dvfs_enable_show @ 0010adc8
+// signature: undefined vdsp_dvfs_enable_show(void)
+// calling convention: unknown
+
+
+long vdsp_dvfs_enable_show(long param_1,undefined8 param_2,char *param_3)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = sprintf(param_3,"%d\n",(ulong)**(uint **)(*(long *)(param_1 + 0x60) + 0x98));
+  return (long)iVar1;
+}
+
+
+
+/*==== vdsp_dvfs_enable_store ====*/
+// vdsp_dvfs_enable_store @ 0010ae04
+// signature: undefined vdsp_dvfs_enable_store(void)
+// calling convention: unknown
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined8 vdsp_dvfs_enable_store(long param_1,undefined8 param_2,char *param_3,undefined8 param_4)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined4 *puVar2;
+  undefined8 unaff_x30;
+  undefined4 local_2c;
+  long local_28;
+  
+  *in_x18 = unaff_x30;
+  local_28 = ___stack_chk_guard;
+  puVar2 = *(undefined4 **)(*(long *)(param_1 + 0x60) + 0x98);
+  local_2c = 0;
+  iVar1 = sscanf(param_3,"%d\n",&local_2c);
+  if (iVar1 == 0) {
+    param_4 = 0xffffffffffffffea;
+  }
+  else {
+    *puVar2 = local_2c;
+  }
+  if (___stack_chk_guard == local_28) {
+    return param_4;
+  }
+                    /* WARNING: Subroutine does not return */
+  __stack_chk_fail();
+}
+
+
+
+/*==== vdsp_dvfs_get_cur_freq ====*/
+// vdsp_dvfs_get_cur_freq @ 0010b4a8
+// signature: undefined vdsp_dvfs_get_cur_freq(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_get_cur_freq(long param_1,ulong *param_2)
+
+{
+  long lVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(param_1 + 0x98);
+  printk(&DAT_00101afd);
+  lVar1 = 0x3e0;
+  if (*(int *)(lVar2 + 1000) != 0) {
+    lVar1 = 0x3e4;
+  }
+  *param_2 = (ulong)*(uint *)(lVar2 + lVar1);
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_get_dev_status ====*/
+// vdsp_dvfs_get_dev_status @ 0010b4a0
+// signature: undefined vdsp_dvfs_get_dev_status(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_get_dev_status(void)
+
+{
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_init ====*/
+// vdsp_dvfs_init @ 00114598
+// signature: undefined vdsp_dvfs_init(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_init(long param_1)
+
+{
+  int iVar1;
+  uint uVar2;
+  int iVar3;
+  uint uVar4;
+  long lVar5;
+  undefined4 uVar6;
+  undefined8 *in_x18;
+  undefined8 uVar7;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  uVar2 = DAT_0010167c | DAT_00101684 << 3;
+  uVar4 = DAT_00101678 << 5;
+  *(uint *)(lVar5 + 0x54) = DAT_00101668 | DAT_00101670 << 3 | DAT_00101664 << 5;
+  *(uint *)(lVar5 + 0x58) = uVar2 | uVar4;
+  uVar2 = DAT_001016a4 | DAT_001016ac << 3;
+  uVar4 = DAT_001016a0 << 5;
+  *(uint *)(lVar5 + 0x5c) = DAT_00101690 | DAT_00101698 << 3 | DAT_0010168c << 5;
+  *(uint *)(lVar5 + 0x60) = uVar2 | uVar4;
+  *(uint *)(lVar5 + 100) = DAT_001016b8 | DAT_001016c0 << 3 | DAT_001016b4 << 5;
+  *(uint *)(lVar5 + 0x68) = DAT_001016cc | DAT_001016d4 << 3 | DAT_001016c8 << 5;
+  iVar1 = *(int *)(param_1 + 0x3ec);
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar5 + 0x130) = *(uint *)(lVar5 + 0x130) & 0xfffff | iVar1 << 0x14;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  iVar1 = *(int *)(param_1 + 0x3f0);
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  *(uint *)(lVar5 + 0x134) = *(uint *)(lVar5 + 0x134) & 0xfffffffe | (uint)(iVar1 != 0);
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  iVar1 = *(int *)(param_1 + 0x3f4);
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar4 = *(uint *)(lVar5 + 0x134);
+  *(uint *)(lVar5 + 0x134) = uVar4 & 0xfffffffc | uVar4 & 1 | (uint)(iVar1 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  iVar1 = *(int *)(param_1 + 0x3f8);
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar4 = *(uint *)(lVar5 + 0x38);
+  *(uint *)(lVar5 + 0x38) = uVar4 & 0xfffffff8 | uVar4 & 3 | (uint)(iVar1 != 0) << 2;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  iVar1 = *(int *)(param_1 + 0x404);
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  uVar4 = 2;
+  if (iVar1 != 5) {
+    uVar4 = (uint)(iVar1 == 4);
+  }
+  uVar7 = (&clk_pll)[uVar4];
+  iVar3 = clk_prepare(uVar7);
+  if (iVar3 == 0) {
+    iVar3 = clk_enable(uVar7);
+    if (iVar3 != 0) {
+      clk_unprepare(uVar7);
+      goto LAB_001147e0;
+    }
+    *(int *)(lVar5 + 0x114) = iVar1;
+  }
+  else {
+LAB_001147e0:
+    printk(&DAT_001024c3,"set_vdsp_work_index",iVar3,uVar4);
+  }
+  iVar3 = map_table_801;
+  iVar1 = *(int *)(param_1 + 0x404);
+  if (map_table_801 == iVar1) {
+    lVar5 = 0;
+LAB_00114814:
+    uVar6 = (&DAT_0010166c)[lVar5 * 5];
+  }
+  else {
+    if (DAT_00101674 == iVar1) {
+      lVar5 = 1;
+      goto LAB_00114814;
+    }
+    if (DAT_00101688 == iVar1) {
+      lVar5 = 2;
+      goto LAB_00114814;
+    }
+    if (DAT_0010169c == iVar1) {
+      lVar5 = 3;
+      goto LAB_00114814;
+    }
+    if (DAT_001016b0 == iVar1) {
+      lVar5 = 4;
+      goto LAB_00114814;
+    }
+    if (DAT_001016c4 == iVar1) {
+      lVar5 = 5;
+      goto LAB_00114814;
+    }
+    uVar6 = 0;
+  }
+  *(undefined4 *)(param_1 + 0x3e0) = uVar6;
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x488) + 0x3d8) + 0x118) =
+       *(undefined4 *)(param_1 + 0x408);
+  iVar1 = *(int *)(param_1 + 0x408);
+  if (iVar3 == iVar1) {
+    lVar5 = 0;
+  }
+  else if (DAT_00101674 == iVar1) {
+    lVar5 = 1;
+  }
+  else if (DAT_00101688 == iVar1) {
+    lVar5 = 2;
+  }
+  else if (DAT_0010169c == iVar1) {
+    lVar5 = 3;
+  }
+  else if (DAT_001016b0 == iVar1) {
+    lVar5 = 4;
+  }
+  else {
+    if (DAT_001016c4 != iVar1) {
+      uVar6 = 0;
+      goto LAB_001148c4;
+    }
+    lVar5 = 5;
+  }
+  uVar6 = (&DAT_0010166c)[lVar5 * 5];
+LAB_001148c4:
+  iVar1 = *(int *)(param_1 + 0x400);
+  *(undefined4 *)(param_1 + 0x3e4) = uVar6;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar4 = *(uint *)(lVar5 + 8);
+  *(uint *)(lVar5 + 8) = uVar4 & 0xfffffff8 | uVar4 & 3 | (uint)(iVar1 != 0) << 2;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_notifier_call_chain ====*/
+// vdsp_dvfs_notifier_call_chain @ 0010a1ec
+// signature: undefined vdsp_dvfs_notifier_call_chain(void)
+// calling convention: unknown
+
+
+void vdsp_dvfs_notifier_call_chain(undefined8 param_1)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  blocking_notifier_call_chain(&vdsp_dvfs_chain,0,param_1);
+  return;
+}
+
+
+
+/*==== vdsp_dvfs_notify_callback ====*/
+// vdsp_dvfs_notify_callback @ 0010b270
+// signature: undefined vdsp_dvfs_notify_callback(void)
+// calling convention: unknown
+
+
+undefined4 vdsp_dvfs_notify_callback(long param_1,undefined8 param_2,undefined4 *param_3)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined4 uVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar2 = *param_3;
+  mutex_lock(*(long *)(param_1 + -0x18) + 0x10);
+  printk(&DAT_001027a5,"vdsp_dvfs_notify_callback");
+  if (*(int *)(param_1 + -0x3c8) == 0) {
+    printk(&DAT_001022b0);
+    uVar2 = 0;
+  }
+  else {
+    *(undefined4 *)(param_1 + 0x18) = uVar2;
+    *(undefined4 *)(param_1 + 0x20) = 0;
+    iVar1 = update_devfreq(*(undefined8 *)(param_1 + -0x18));
+    if (iVar1 < 0) {
+      printk(&DAT_00101c10);
+    }
+    printk(&DAT_00102c06,"vdsp_dvfs_notify_callback");
+    uVar2 = 1;
+  }
+  mutex_unlock(*(long *)(param_1 + -0x18) + 0x10);
+  return uVar2;
+}
+
+
+
+/*==== vdsp_dvfs_parse_dt ====*/
+// vdsp_dvfs_parse_dt @ 001143d0
+// signature: undefined vdsp_dvfs_parse_dt(void)
+// calling convention: unknown
+
+
+uint vdsp_dvfs_parse_dt(long param_1,undefined8 param_2)
+
+{
+  int iVar1;
+  uint uVar2;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,gfree-wait-delay",(undefined4 *)(param_1 + 0x3ec),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3ec) = 0x100;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-hdsk-en",(undefined4 *)(param_1 + 0x3f0),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f0) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-delay-en",(undefined4 *)(param_1 + 0x3f4),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f4) = 0;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-en-byp",(undefined4 *)(param_1 + 0x3f8),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x3f8) = 0;
+  }
+  uVar2 = of_property_read_variable_u32_array
+                    (param_2,"sprd,sw-trig-en",(undefined4 *)(param_1 + 0x3fc),1,0);
+  if ((int)uVar2 < 0) {
+    *(undefined4 *)(param_1 + 0x3fc) = 0;
+  }
+  return uVar2 & (int)uVar2 >> 0x1f;
+}
+
+
+
+/*==== vdsp_dvfs_parse_pll ====*/
+// vdsp_dvfs_parse_pll @ 001144d4
+// signature: undefined vdsp_dvfs_parse_pll(void)
+// calling convention: unknown
+
+
+undefined4 vdsp_dvfs_parse_pll(undefined8 param_1,undefined8 param_2)
+
+{
+  undefined8 *in_x18;
+  char *pcVar1;
+  undefined8 *puVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  pcVar1 = "vdsp_twpll";
+  clk_pll = devm_clk_get(param_2,"vdsp_twpll");
+  puVar2 = &clk_pll;
+  if (clk_pll < 0xfffffffffffff001) {
+    pcVar1 = "vdsp_lpll";
+    DAT_00100858 = devm_clk_get(param_2,"vdsp_lpll");
+    puVar2 = &DAT_00100858;
+    if (DAT_00100858 < 0xfffffffffffff001) {
+      pcVar1 = "vdsp_isppll";
+      DAT_00100860 = devm_clk_get(param_2,"vdsp_isppll");
+      puVar2 = &DAT_00100860;
+      if (DAT_00100860 < 0xfffffffffffff001) {
+        return 0;
+      }
+    }
+  }
+  _dev_err(param_2,"get clock %s failed\n",pcVar1);
+  return *(undefined4 *)puVar2;
+}
+
+
+
+/*==== vdsp_dvfs_probe ====*/
+// vdsp_dvfs_probe @ 0010ae90
+// signature: undefined vdsp_dvfs_probe(void)
+// calling convention: unknown
+
+
+uint vdsp_dvfs_probe(long param_1)
+
+{
+  long lVar1;
+  uint uVar2;
+  uint uVar3;
+  uint uVar4;
+  undefined4 *puVar5;
+  long lVar6;
+  undefined8 *puVar7;
+  ulong uVar8;
+  undefined8 *in_x18;
+  undefined8 uVar9;
+  code *pcVar10;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar9 = *(undefined8 *)(param_1 + 0x310);
+  lVar1 = param_1 + 0x10;
+  puVar5 = (undefined4 *)devm_kmalloc(lVar1,0x490,0xdc0);
+  if ((puVar5 == (undefined4 *)0x0) || (lVar6 = find_apsys_device_by_name("apsys-dvfs"), lVar6 == 0)
+     ) {
+    return 0xfffffff4;
+  }
+  *(long *)(puVar5 + 0x122) = lVar6;
+  puVar7 = (undefined8 *)of_device_get_match_data(lVar1);
+  if (puVar7 == (undefined8 *)0x0) {
+    printk(&DAT_00101ed7);
+    return 0xffffffea;
+  }
+  *(undefined8 *)(puVar5 + 0x120) = *puVar7;
+  printk(&DAT_001034f0,"vdsp_dvfs_parse_dt");
+  uVar2 = of_property_read_variable_u32_array(uVar9,"sprd,hw-dfs-en",puVar5 + 0x100,1,0);
+  uVar3 = of_property_read_variable_u32_array(uVar9,"sprd,work-index-def",puVar5 + 0x101,1,0);
+  uVar4 = of_property_read_variable_u32_array(uVar9,"sprd,idle-index-def",puVar5 + 0x102,1,0);
+  uVar2 = uVar3 & (int)uVar3 >> 0x1f | uVar2 & (int)uVar2 >> 0x1f | uVar4 & (int)uVar4 >> 0x1f;
+  if (uVar2 != 0) {
+    printk(&DAT_00102b96);
+    return uVar2;
+  }
+  uVar2 = dev_pm_opp_of_add_table(lVar1);
+  if (uVar2 != 0) {
+    _dev_err(lVar1,"invalid operating-points in device tree.\n");
+    return uVar2;
+  }
+  *(undefined1 **)(puVar5 + 0xf2) = &LAB_00118174;
+  uVar2 = blocking_notifier_chain_register(&vdsp_dvfs_chain,puVar5 + 0xf2);
+  if (uVar2 == 0) {
+    *(undefined4 **)(param_1 + 0xa8) = puVar5;
+    uVar8 = devm_devfreq_add_device(lVar1,&vdsp_dvfs_profile,"vdsp_dvfs",0);
+    *(ulong *)(puVar5 + 0xec) = uVar8;
+    if (uVar8 < 0xfffffffffffff001) {
+      device_rename(uVar8 + 0x30,&DAT_00101e97);
+      puVar7 = *(undefined8 **)(puVar5 + 0x120);
+      *puVar5 = 1;
+      if (puVar7 != (undefined8 *)0x0) {
+        pcVar10 = (code *)*puVar7;
+        if (pcVar10 != (code *)0x0) {
+          if (1 < ((ulong)(pcVar10 + -0x117f78) >> 2 | (long)pcVar10 << 0x3e)) {
+            __cfi_slowpath(0x3c4797a62497b400,pcVar10);
+          }
+          (*pcVar10)(puVar5,uVar9);
+          puVar7 = *(undefined8 **)(puVar5 + 0x120);
+          if (puVar7 == (undefined8 *)0x0) goto LAB_0010b120;
+        }
+        pcVar10 = (code *)puVar7[1];
+        if (pcVar10 != (code *)0x0) {
+          if (pcVar10 != __typeid__ZTSFiP9vdsp_dvfsP6deviceE_global_addr) {
+            __cfi_slowpath(0xfbecd39c1944443a,pcVar10);
+          }
+          (*pcVar10)(puVar5,lVar1);
+          puVar7 = *(undefined8 **)(puVar5 + 0x120);
+          if (puVar7 == (undefined8 *)0x0) goto LAB_0010b120;
+        }
+        pcVar10 = (code *)puVar7[2];
+        if (pcVar10 != (code *)0x0) {
+          if (5 < ((ulong)(pcVar10 + -0x117f90) >> 2 | (long)pcVar10 << 0x3e)) {
+            __cfi_slowpath(0x9974caa7c4cff8b7,pcVar10);
+          }
+          (*pcVar10)(puVar5);
+        }
+      }
+LAB_0010b120:
+      printk(&DAT_00102015);
+      return 0;
+    }
+    _dev_err(lVar1,"failed to add devfreq dev with vdsp-dvfs governor\n");
+    uVar2 = puVar5[0xec];
+  }
+  else {
+    _dev_err(lVar1,"failed to register vdsp layer change notifier\n");
+  }
+  dev_pm_opp_of_remove_table(lVar1);
+  blocking_notifier_chain_unregister(&vdsp_dvfs_chain,puVar5 + 0xf2);
+  return uVar2;
+}
+
+
+
+/*==== vdsp_dvfs_remove ====*/
+// vdsp_dvfs_remove @ 0010b188
+// signature: undefined vdsp_dvfs_remove(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_remove(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001030ba);
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_resume ====*/
+// vdsp_dvfs_resume @ 0010b1e0
+// signature: undefined vdsp_dvfs_resume(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_resume(long param_1)
+
+{
+  long lVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(param_1 + 0x98);
+  printk(&DAT_001034f0,"vdsp_dvfs_resume");
+  lVar1 = *(long *)(lVar3 + 0x480);
+  if ((lVar1 != 0) && (pcVar2 = *(code **)(lVar1 + 0x10), pcVar2 != (code *)0x0)) {
+    if (5 < ((ulong)(pcVar2 + -0x117f90) >> 2 | (long)pcVar2 << 0x3e)) {
+      __cfi_slowpath(0x9974caa7c4cff8b7,pcVar2);
+    }
+    (*pcVar2)(lVar3);
+  }
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_suspend ====*/
+// vdsp_dvfs_suspend @ 0010b1b0
+// signature: undefined vdsp_dvfs_suspend(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_dvfs_suspend(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"vdsp_dvfs_suspend");
+  return 0;
+}
+
+
+
+/*==== vdsp_dvfs_target ====*/
+// vdsp_dvfs_target @ 0010b31c
+// signature: undefined vdsp_dvfs_target(void)
+// calling convention: unknown
+
+
+ulong vdsp_dvfs_target(long param_1,ulong *param_2,undefined4 param_3)
+
+{
+  uint uVar1;
+  ulong uVar2;
+  ulong uVar3;
+  long lVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  code *pcVar6;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(param_1 + 0x98);
+  printk(&DAT_00102284);
+  uVar2 = devfreq_recommended_opp(param_1,param_2,param_3);
+  if (uVar2 < 0xfffffffffffff001) {
+    uVar1 = dev_pm_opp_get_freq(uVar2);
+    dev_pm_opp_put(uVar2);
+    lVar4 = *(long *)(lVar5 + 0x480);
+    if (*(int *)(lVar5 + 1000) == 0) {
+      if ((lVar4 != 0) && (*(long *)(lVar4 + 0x40) != 0)) {
+        *(uint *)(lVar5 + 0x3e0) = uVar1;
+        pcVar6 = *(code **)(lVar4 + 0x40);
+        if (1 < ((ulong)(pcVar6 + -0x117fa8) >> 2 | (long)pcVar6 << 0x3e)) {
+          __cfi_slowpath(0x5b28ba0bd9034e37,pcVar6);
+        }
+        uVar3 = (*pcVar6)(lVar5,uVar1);
+        uVar2 = uVar3 & 0xffffffff;
+        printk(&DAT_0010220b,uVar1,uVar2);
+        if ((int)uVar3 != 0) goto LAB_0010b3ec;
+      }
+    }
+    else if ((lVar4 != 0) && (*(long *)(lVar4 + 0x50) != 0)) {
+      *(uint *)(lVar5 + 0x3e4) = uVar1;
+      pcVar6 = *(code **)(lVar4 + 0x50);
+      if (3 < ((ulong)(pcVar6 + -0x117fc8) >> 2 | (long)pcVar6 << 0x3e)) {
+        __cfi_slowpath(0x4f4b54674264424e,pcVar6);
+      }
+      (*pcVar6)(lVar5,uVar1);
+      printk(&DAT_001029d6,uVar1);
+    }
+    uVar2 = 0;
+    *param_2 = (ulong)uVar1;
+  }
+  else {
+    _dev_err(param_1,"failed to find opp for %lu KHz\n",*param_2);
+  }
+LAB_0010b3ec:
+  return uVar2 & 0xffffffff;
+}
+
+
+
+/*==== vdsp_gov_event_handler ====*/
+// vdsp_gov_event_handler @ 0010a29c
+// signature: undefined vdsp_gov_event_handler(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_gov_event_handler(long param_1,int param_2)
+
+{
+  undefined8 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001031ec);
+  if (param_2 == 2) {
+    if (*(long *)(param_1 + 0x60) != 0) {
+      sysfs_remove_group(param_1 + 0x30,&dev_attr_group_147);
+    }
+  }
+  else if (param_2 == 1) {
+    uVar1 = sysfs_create_group(param_1 + 0x30,&dev_attr_group_147);
+    return uVar1;
+  }
+  return 0;
+}
+
+
+
+/*==== vdsp_gov_get_target ====*/
+// vdsp_gov_get_target @ 0010a218
+// signature: undefined vdsp_gov_get_target(void)
+// calling convention: unknown
+
+
+undefined8 vdsp_gov_get_target(long param_1,ulong *param_2)
+
+{
+  uint uVar1;
+  long lVar2;
+  uint uVar3;
+  ulong uVar4;
+  undefined8 *in_x18;
+  long lVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar5 = *(long *)(*(long *)(param_1 + 0x90) + 0x98);
+  printk(&DAT_00102587);
+  lVar2 = 0x3e0;
+  if (*(int *)(lVar5 + 1000) != 0) {
+    lVar2 = 0x3e4;
+  }
+  uVar4 = *(ulong *)(param_1 + 0x4d0);
+  uVar3 = *(uint *)(lVar5 + lVar2);
+  if ((uVar4 == 0) || (uVar3 <= uVar4)) {
+    uVar1 = (uint)*(ulong *)(param_1 + 0x4c8);
+    if (*(ulong *)(param_1 + 0x4c8) <= (ulong)uVar3) {
+      uVar1 = uVar3;
+    }
+    uVar4 = (ulong)uVar1;
+  }
+  *param_2 = uVar4 & 0xffffffff;
+  return 0;
+}
+
+
+
+/*==== vdsp_hw_dfs_en ====*/
+// vdsp_hw_dfs_en @ 00114928
+// signature: undefined vdsp_hw_dfs_en(void)
+// calling convention: unknown
+
+
+void vdsp_hw_dfs_en(long param_1,uint param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x488) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x488) + 0x3f0);
+  uVar1 = 4;
+  if ((param_2 & 1) == 0) {
+    uVar1 = 0;
+  }
+  *(uint *)(lVar2 + 8) = *(uint *)(lVar2 + 8) & 0xfffffffb | uVar1;
+  mutex_unlock(*(long *)(param_1 + 0x488) + 0x3f0);
+  return;
+}
+
+
+
+/*==== vsp_dvfs_get_cur_freq ====*/
+// vsp_dvfs_get_cur_freq @ 0010a194
+// signature: undefined vsp_dvfs_get_cur_freq(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_get_cur_freq(long param_1,ulong *param_2)
+
+{
+  long lVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = 0x3d0;
+  if (*(int *)(*(long *)(param_1 + 0x98) + 0x480) != 0) {
+    lVar1 = 0x3d4;
+  }
+  *param_2 = (ulong)*(uint *)(*(long *)(param_1 + 0x98) + lVar1);
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_get_dev_status ====*/
+// vsp_dvfs_get_dev_status @ 00108ed0
+// signature: undefined vsp_dvfs_get_dev_status(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_get_dev_status(void)
+
+{
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_gov_event_handler ====*/
+// vsp_dvfs_gov_event_handler @ 00108f8c
+// signature: undefined vsp_dvfs_gov_event_handler(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_gov_event_handler(long param_1,int param_2)
+
+{
+  undefined8 uVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001031ec);
+  if (param_2 == 2) {
+    if (*(long *)(param_1 + 0x60) != 0) {
+      sysfs_remove_group(param_1 + 0x30,&dev_attr_group_77);
+    }
+  }
+  else if (param_2 == 1) {
+    uVar1 = sysfs_create_group(param_1 + 0x30,&dev_attr_group_77);
+    return uVar1;
+  }
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_gov_get_target ====*/
+// vsp_dvfs_gov_get_target @ 00108ed8
+// signature: undefined vsp_dvfs_gov_get_target(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_gov_get_target(long param_1,ulong *param_2)
+
+{
+  long lVar1;
+  long lVar2;
+  ulong uVar3;
+  ulong uVar4;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x90) + 0x98);
+  lVar1 = 0x3d0;
+  if (*(int *)(lVar2 + 0x480) != 0) {
+    lVar1 = 0x3d4;
+  }
+  uVar3 = (ulong)*(uint *)(lVar2 + lVar1);
+  uVar4 = *(ulong *)(param_1 + 0x4d0);
+  if (uVar3 <= uVar4 || uVar4 == 0) {
+    uVar4 = uVar3;
+  }
+  uVar3 = *(ulong *)(param_1 + 0x4c8);
+  if (*(ulong *)(param_1 + 0x4c8) <= uVar4) {
+    uVar3 = uVar4;
+  }
+  *param_2 = uVar3;
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_init ====*/
+// vsp_dvfs_init @ 0010ff18
+// signature: undefined vsp_dvfs_init(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_init(long param_1)
+
+{
+  uint uVar1;
+  int iVar2;
+  undefined4 uVar3;
+  long lVar4;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  *(undefined4 *)(lVar4 + 0x74) = 0;
+  *(undefined4 *)(lVar4 + 0x78) = 1;
+  *(undefined4 *)(lVar4 + 0x7c) = 6;
+  uVar1 = *(uint *)(param_1 + 0x460);
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  *(uint *)(lVar4 + 0x130) = *(uint *)(lVar4 + 0x130) | uVar1 & 0x3ff;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  iVar2 = *(int *)(param_1 + 0x464);
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar4 + 0x134);
+  *(uint *)(lVar4 + 0x134) = uVar1 & 0xfffffff8 | uVar1 & 3 | (uint)(iVar2 != 0) << 2;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  iVar2 = *(int *)(param_1 + 0x468);
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar4 + 0x134);
+  *(uint *)(lVar4 + 0x134) = uVar1 & 0xfffffff0 | uVar1 & 7 | (uint)(iVar2 != 0) << 3;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  iVar2 = *(int *)(param_1 + 0x46c);
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar4 + 0x38);
+  *(uint *)(lVar4 + 0x38) = uVar1 & 0xfffffffc | uVar1 & 1 | (uint)(iVar2 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  iVar2 = *(int *)(param_1 + 0x3d0);
+  if (iVar2 == 512000000) {
+    uVar3 = 3;
+  }
+  else if (iVar2 == 384000000) {
+    uVar3 = 2;
+  }
+  else if (iVar2 == 0x124f8000) {
+    uVar3 = 1;
+  }
+  else {
+    uVar3 = 0;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x11c) = uVar3;
+  iVar2 = *(int *)(param_1 + 0x3d4);
+  if (iVar2 == 512000000) {
+    uVar3 = 3;
+  }
+  else if (iVar2 == 384000000) {
+    uVar3 = 2;
+  }
+  else if (iVar2 == 0x124f8000) {
+    uVar3 = 1;
+  }
+  else {
+    uVar3 = 0;
+  }
+  *(undefined4 *)(*(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8) + 0x120) = uVar3;
+  iVar2 = *(int *)(param_1 + 0x474);
+  lVar4 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar4 + 8);
+  *(uint *)(lVar4 + 8) = uVar1 & 0xfffffffc | uVar1 & 1 | (uint)(iVar2 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_notifier_call_chain ====*/
+// vsp_dvfs_notifier_call_chain @ 00108e44
+// signature: undefined vsp_dvfs_notifier_call_chain(void)
+// calling convention: unknown
+
+
+void vsp_dvfs_notifier_call_chain(undefined8 param_1,ulong param_2)
+
+{
+  undefined1 *puVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  if ((param_2 & 1) == 0) {
+    puVar1 = &vsp_dvfs_chain;
+  }
+  else {
+    puVar1 = &vpuenc_dvfs_chain;
+  }
+  blocking_notifier_call_chain(puVar1,0,param_1);
+  return;
+}
+
+
+
+/*==== vsp_dvfs_notify_callback ====*/
+// vsp_dvfs_notify_callback @ 00109fe8
+// signature: undefined vsp_dvfs_notify_callback(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_notify_callback(long param_1,undefined8 param_2,undefined4 *param_3)
+
+{
+  undefined4 uVar1;
+  int iVar2;
+  undefined *puVar3;
+  undefined8 *in_x18;
+  undefined8 uVar4;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar1 = *param_3;
+  mutex_lock(*(long *)(param_1 + -0xb0) + 0x10);
+  if (*(int *)(param_1 + -0x14) == 0) {
+    puVar3 = &DAT_00102252;
+  }
+  else {
+    *(undefined4 *)(param_1 + -0xb8) = uVar1;
+    *(undefined4 *)(param_1 + -8) = 0;
+    iVar2 = update_devfreq(*(undefined8 *)(param_1 + -0xb0));
+    if (iVar2 == 0) {
+      uVar4 = 1;
+      goto LAB_0010a02c;
+    }
+    puVar3 = &DAT_00103307;
+  }
+  printk(puVar3);
+  uVar4 = 0;
+LAB_0010a02c:
+  mutex_unlock(*(long *)(param_1 + -0xb0) + 0x10);
+  return uVar4;
+}
+
+
+
+/*==== vsp_dvfs_parse_dt ====*/
+// vsp_dvfs_parse_dt @ 0010fe14
+// signature: undefined vsp_dvfs_parse_dt(void)
+// calling convention: unknown
+
+
+void vsp_dvfs_parse_dt(long param_1,undefined8 param_2)
+
+{
+  int iVar1;
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,gfree-wait-delay",(undefined4 *)(param_1 + 0x460),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x460) = 0x100;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-hdsk-en",(undefined4 *)(param_1 + 0x464),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x464) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-delay-en",(undefined4 *)(param_1 + 0x468),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x468) = 1;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,freq-upd-en-byp",(undefined4 *)(param_1 + 0x46c),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x46c) = 0;
+  }
+  iVar1 = of_property_read_variable_u32_array
+                    (param_2,"sprd,sw-trig-en",(undefined4 *)(param_1 + 0x470),1,0);
+  if (iVar1 < 0) {
+    *(undefined4 *)(param_1 + 0x470) = 0;
+  }
+  return;
+}
+
+
+
+/*==== vsp_dvfs_probe ====*/
+// vsp_dvfs_probe @ 00109be8
+// signature: undefined vsp_dvfs_probe(void)
+// calling convention: unknown
+
+
+undefined4 vsp_dvfs_probe(long param_1)
+
+{
+  long lVar1;
+  undefined4 uVar2;
+  uint uVar3;
+  uint uVar4;
+  uint uVar5;
+  int iVar6;
+  long lVar7;
+  long lVar8;
+  undefined8 *puVar9;
+  undefined *puVar10;
+  ulong uVar11;
+  undefined1 *puVar12;
+  undefined8 *in_x18;
+  undefined8 uVar13;
+  code *pcVar14;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  uVar13 = *(undefined8 *)(param_1 + 0x310);
+  lVar1 = param_1 + 0x10;
+  lVar7 = devm_kmalloc(lVar1,0x4b0,0xdc0);
+  if ((lVar7 == 0) || (lVar8 = find_apsys_device_by_name("apsys-dvfs"), lVar8 == 0)) {
+    return 0xfffffff4;
+  }
+  *(long *)(lVar7 + 0x4a8) = lVar8;
+  puVar9 = (undefined8 *)of_device_get_match_data(lVar1);
+  if (puVar9 == (undefined8 *)0x0) {
+    puVar10 = &DAT_00101ed7;
+  }
+  else {
+    lVar8 = puVar9[2];
+    *(long *)(lVar7 + 1000) = lVar8;
+    *(undefined4 *)(lVar7 + 0x4a0) = *(undefined4 *)(puVar9 + 1);
+    if (lVar8 == 0) {
+      printk(&DAT_00101d7e,*puVar9);
+      return 0xffffffea;
+    }
+    uVar3 = of_property_read_variable_u32_array
+                      (uVar13,"sprd,dvfs-work-freq",(undefined4 *)(lVar7 + 0x3d0),1,0);
+    uVar4 = of_property_read_variable_u32_array
+                      (uVar13,"sprd,dvfs-idle-freq",(undefined4 *)(lVar7 + 0x3d4),1,0);
+    uVar5 = of_property_read_variable_u32_array
+                      (uVar13,"sprd,dvfs-enable-flag",(undefined4 *)(lVar7 + 0x474),1,0);
+    if (((uVar4 & (int)uVar4 >> 0x1f) == 0 && (uVar3 & (int)uVar3 >> 0x1f) == 0) &&
+        (uVar5 & (int)uVar5 >> 0x1f) == 0) {
+      printk(&DAT_001031b2,*(undefined4 *)(lVar7 + 0x3d0),*(undefined4 *)(lVar7 + 0x3d4),
+             *(undefined4 *)(lVar7 + 0x474));
+      iVar6 = dev_pm_opp_of_add_table(lVar1);
+      if (iVar6 != 0) {
+        _dev_err(lVar1,"Invalid operating-points in device tree.\n");
+        return 0xffffffea;
+      }
+      *(undefined1 **)(lVar7 + 0x488) = &LAB_00118170;
+      iVar6 = strcmp("qogirn6pro-vpuenc",(char *)*puVar9);
+      if (iVar6 == 0) {
+        puVar12 = &vpuenc_dvfs_chain;
+      }
+      else {
+        puVar12 = &vsp_dvfs_chain;
+      }
+      blocking_notifier_chain_register(puVar12,lVar7 + 0x488);
+      *(long *)(param_1 + 0xa8) = lVar7;
+      uVar11 = devm_devfreq_add_device(lVar1,&vsp_dvfs_profile,"vsp_dvfs",0);
+      *(ulong *)(lVar7 + 0x3d8) = uVar11;
+      if (0xfffffffffffff000 < uVar11) {
+        _dev_err(lVar1,"failed to add devfreq dev with vsp-dvfs governor\n");
+        uVar2 = *(undefined4 *)(lVar7 + 0x3d8);
+        dev_pm_opp_of_remove_table(lVar1);
+        iVar6 = strcmp("qogirn6pro-vpuenc",(char *)*puVar9);
+        if (iVar6 == 0) {
+          puVar12 = &vpuenc_dvfs_chain;
+        }
+        else {
+          puVar12 = &vsp_dvfs_chain;
+        }
+        blocking_notifier_chain_unregister(puVar12,lVar7 + 0x488);
+        return uVar2;
+      }
+      puVar9 = *(undefined8 **)(lVar7 + 1000);
+      if (puVar9 != (undefined8 *)0x0) {
+        pcVar14 = (code *)*puVar9;
+        if (pcVar14 != (code *)0x0) {
+          if (5 < ((ulong)(pcVar14 + -0x117dc4) >> 2 | (long)pcVar14 << 0x3e)) {
+            __cfi_slowpath(0x81617324bfd2d865,pcVar14);
+          }
+          (*pcVar14)(lVar7,uVar13);
+          puVar9 = *(undefined8 **)(lVar7 + 1000);
+          if (puVar9 == (undefined8 *)0x0) goto LAB_00109e90;
+        }
+        pcVar14 = (code *)puVar9[1];
+        if (pcVar14 != (code *)0x0) {
+          if (5 < ((ulong)(pcVar14 + -0x117ddc) >> 2 | (long)pcVar14 << 0x3e)) {
+            __cfi_slowpath(0x9fd2f8a3e5e47234,pcVar14);
+          }
+          (*pcVar14)(lVar7);
+        }
+      }
+LAB_00109e90:
+      printk(&DAT_00102c81);
+      return 0;
+    }
+    puVar10 = &DAT_001029a8;
+  }
+  printk(puVar10);
+  return 0xffffffea;
+}
+
+
+
+/*==== vsp_dvfs_remove ====*/
+// vsp_dvfs_remove @ 00109f20
+// signature: undefined vsp_dvfs_remove(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_remove(void)
+
+{
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_resume ====*/
+// vsp_dvfs_resume @ 00109f58
+// signature: undefined vsp_dvfs_resume(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_resume(long param_1)
+
+{
+  long lVar1;
+  code *pcVar2;
+  undefined8 *in_x18;
+  long lVar3;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar3 = *(long *)(param_1 + 0x98);
+  printk(&DAT_001034f0,"vsp_dvfs_resume");
+  lVar1 = *(long *)(lVar3 + 1000);
+  if ((lVar1 != 0) && (pcVar2 = *(code **)(lVar1 + 8), pcVar2 != (code *)0x0)) {
+    if (5 < ((ulong)(pcVar2 + -0x117ddc) >> 2 | (long)pcVar2 << 0x3e)) {
+      __cfi_slowpath(0x9fd2f8a3e5e47234,pcVar2);
+    }
+    (*pcVar2)(lVar3);
+  }
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_suspend ====*/
+// vsp_dvfs_suspend @ 00109f28
+// signature: undefined vsp_dvfs_suspend(void)
+// calling convention: unknown
+
+
+undefined8 vsp_dvfs_suspend(void)
+
+{
+  undefined8 *in_x18;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  printk(&DAT_001034f0,"vsp_dvfs_suspend");
+  return 0;
+}
+
+
+
+/*==== vsp_dvfs_target ====*/
+// vsp_dvfs_target @ 0010a06c
+// signature: undefined vsp_dvfs_target(void)
+// calling convention: unknown
+
+
+ulong vsp_dvfs_target(long param_1,undefined8 *param_2,undefined4 param_3)
+
+{
+  undefined4 uVar1;
+  ulong uVar2;
+  int iVar3;
+  undefined8 *in_x18;
+  long lVar4;
+  code *pcVar5;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar4 = *(long *)(param_1 + 0x98);
+  uVar2 = devfreq_recommended_opp(param_1,param_2,param_3);
+  if (uVar2 < 0xfffffffffffff001) {
+    uVar1 = dev_pm_opp_get_freq(uVar2);
+    dev_pm_opp_put(uVar2);
+    iVar3 = *(int *)(lVar4 + 0x480);
+    if (iVar3 == 0) {
+      *(undefined4 *)(lVar4 + 0x3d0) = uVar1;
+    }
+    else {
+      *(undefined4 *)(lVar4 + 0x3d4) = uVar1;
+    }
+    pcVar5 = *(code **)(*(long *)(lVar4 + 1000) + 0x90);
+    if (5 < ((ulong)(pcVar5 + -0x117f5c) >> 2 | (long)pcVar5 << 0x3e)) {
+      __cfi_slowpath(0x43374dcd9e82cff8,pcVar5);
+      iVar3 = *(int *)(lVar4 + 0x480);
+    }
+    (*pcVar5)(lVar4,uVar1,iVar3);
+    uVar2 = 0;
+  }
+  else {
+    _dev_err(param_1,"Failed to find opp for %lu KHz\n",*param_2);
+  }
+  return uVar2 & 0xffffffff;
+}
+
+
+
+/*==== vsp_hw_dvfs_en ====*/
+// vsp_hw_dvfs_en @ 00110248
+// signature: undefined vsp_hw_dvfs_en(void)
+// calling convention: unknown
+
+
+void vsp_hw_dvfs_en(long param_1,int param_2)
+
+{
+  uint uVar1;
+  undefined8 *in_x18;
+  long lVar2;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar2 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  uVar1 = *(uint *)(lVar2 + 8);
+  *(uint *)(lVar2 + 8) = uVar1 & 0xfffffffc | uVar1 & 1 | (uint)(param_2 != 0) << 1;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+

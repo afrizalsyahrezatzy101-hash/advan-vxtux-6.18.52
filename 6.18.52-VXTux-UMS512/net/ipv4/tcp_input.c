@@ -76,6 +76,7 @@
 #include <net/tcp_ecn.h>
 #include <net/proto_memory.h>
 #include <net/inet_common.h>
+#include <net/secure_seq.h>
 #include <linux/ipsec.h>
 #include <linux/unaligned.h>
 #include <linux/errqueue.h>
@@ -6851,7 +6852,8 @@ consume:
 		tp->snd_wl1    = TCP_SKB_CB(skb)->seq;
 		tp->max_window = tp->snd_wnd;
 
-		tcp_ecn_rcv_syn(sk, th, skb);
+		/* VXTux 6.18 backport: tcp_ecn_rcv_syn signature changed in 6.18 */
+					  tcp_ecn_rcv_syn(tp, th, skb);
 
 		tcp_mtup_init(sk);
 		tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
@@ -7257,7 +7259,7 @@ static void tcp_ecn_create_request(struct request_sock *req,
 
 	if (tcp_accecn_syn_requested(th) &&
 	    (READ_ONCE(net->ipv4.sysctl_tcp_ecn) >= 3 ||
-	     tcp_ca_needs_accecn(listen_sk))) {
+	     /* VXTux 6.18 backport: tcp_ca_needs_accecn not in 6.18 */ (0))) {
 		inet_rsk(req)->ecn_ok = 1;
 		tcp_rsk(req)->accecn_ok = 1;
 		tcp_rsk(req)->syn_ect_rcv = TCP_SKB_CB(skb)->ip_dsfield &
@@ -7417,7 +7419,8 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		     struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_fastopen_cookie foc = { .len = -1 };
-	u32 isn = TCP_SKB_CB(skb)->tcp_tw_isn;
+	/* VXTux 6.18 backport: tcp_tw_isn not in 6.18 */
+	u32 isn = 0;
 	struct tcp_options_received tmp_opt;
 	const struct tcp_sock *tp = tcp_sk(sk);
 	struct net *net = sock_net(sk);
@@ -7489,11 +7492,13 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 		goto drop_and_free;
 
 	if (tmp_opt.tstamp_ok || (!want_cookie && !isn))
-		st = af_ops->init_seq_and_ts_off(net, skb);
+		/* VXTux 6.18 backport: init_seq_and_ts_off not in 6.18 */
+		st.off.seq = af_ops->init_seq(skb);
+		st.off.ts_off = af_ops->init_ts_off(net, skb);
 
 	if (tmp_opt.tstamp_ok) {
 		tcp_rsk(req)->req_usec_ts = dst_tcp_usec_ts(dst);
-		tcp_rsk(req)->ts_off = st.ts_off;
+		tcp_rsk(req)->ts_off = st.off.ts_off;
 	}
 	if (!want_cookie && !isn) {
 		int max_syn_backlog = READ_ONCE(net->ipv4.sysctl_max_syn_backlog);
@@ -7515,7 +7520,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
 			goto drop_and_release;
 		}
 
-		isn = st.seq;
+		isn = st.off.seq;
 	}
 
 	tcp_ecn_create_request(req, skb, sk, dst);

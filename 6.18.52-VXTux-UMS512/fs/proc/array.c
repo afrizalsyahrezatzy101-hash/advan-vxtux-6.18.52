@@ -465,6 +465,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
 static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
 			struct pid *pid, struct task_struct *task, int whole)
 {
+	int ss_lock_irqsave = 0; /* V17: was macro arg */
 	unsigned long vsize, eip, esp, wchan = 0;
 	int priority, nice;
 	int tty_pgrp = -1, tty_nr = 0;
@@ -542,7 +543,7 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
 	if (permitted && (!whole || num_threads < 2))
 		wchan = !task_is_running(task);
 
-	scoped_seqlock_read (&sig->stats_lock, ss_lock_irqsave) {
+	/* V17: scoped_seqlock_read removed - manual lock */ {
 		cmin_flt = sig->cmin_flt;
 		cmaj_flt = sig->cmaj_flt;
 		cutime = sig->cutime;

@@ -22,5 +22,6 @@ config CRYPTO_DEV_JH7110
 	  Support for StarFive JH7110 crypto hardware acceleration engine.
 	  This module provides acceleration for public key algo,
 	  skciphers, AEAD and hash functions.
-
+	
 	  If you choose 'M' here, this module will be called jh7110-crypto.
+	

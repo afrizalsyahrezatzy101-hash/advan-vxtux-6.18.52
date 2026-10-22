@@ -48,20 +48,20 @@ config USB_ZERO
 	  it can work on top of most device-side usb controllers.  It's
 	  useful for testing, and is also a working example showing how
 	  USB "gadget drivers" can be written.
-
+	
 	  Make this be the first driver you try using on top of any new
 	  USB peripheral controller driver.  Then you can use host-side
 	  test software, like the "usbtest" driver, to put your hardware
 	  and its driver through a basic set of functional tests.
-
+	
 	  Gadget Zero also works with the host-side "usb-skeleton" driver,
 	  and with many kinds of host-side test software.  You may need
 	  to tweak product and vendor IDs before host software knows about
 	  this device, and arrange to select an appropriate configuration.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_zero".
-
+	
 config USB_ZERO_HNPTEST
 	bool "HNP Test Device"
 	depends on USB_ZERO && USB_OTG
@@ -71,7 +71,7 @@ config USB_ZERO_HNPTEST
 	  this gadget connects to another OTG device, with this one using
 	  the "B-Peripheral" role, that device will use HNP to let this
 	  one serve as the USB host instead (in the "B-Host" role).
-
+	
 config USB_AUDIO
 	tristate "Audio Gadget"
 	depends on SND
@@ -93,17 +93,17 @@ config USB_AUDIO
 	  application may choose to do whatever it wants with the data
 	  received from the USB Host and choose to provide whatever it
 	  wants as audio data to the USB Host.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_audio".
-
+	
 config GADGET_UAC1
 	bool "UAC 1.0"
 	depends on USB_AUDIO
 	help
 	  If you instead want older USB Audio Class specification 1.0 support
 	  with similar driver capabilities.
-
+	
 config GADGET_UAC1_LEGACY
 	bool "UAC 1.0 (Legacy)"
 	depends on GADGET_UAC1
@@ -111,7 +111,7 @@ config GADGET_UAC1_LEGACY
 	  If you instead want legacy UAC Spec-1.0 driver that also has audio
 	  paths hardwired to the Audio codec chip on-board and doesn't work
 	  without one.
-
+	
 config USB_ETH
 	tristate "Ethernet Gadget (with CDC Ethernet support)"
 	depends on NET
@@ -123,33 +123,33 @@ config USB_ETH
 	help
 	  This driver implements Ethernet style communication, in one of
 	  several ways:
-
+	
 	   - The "Communication Device Class" (CDC) Ethernet Control Model.
 	     That protocol is often avoided with pure Ethernet adapters, in
 	     favor of simpler vendor-specific hardware, but is widely
 	     supported by firmware for smart network devices.
-
+	
 	   - On hardware can't implement that protocol, a simple CDC subset
 	     is used, placing fewer demands on USB.
-
+	
 	   - CDC Ethernet Emulation Model (EEM) is a newer standard that has
 	     a simpler interface that can be used by more USB hardware.
-
+	
 	  RNDIS support is an additional option, more demanding than subset.
-
+	
 	  Within the USB device, this gadget driver exposes a network device
 	  "usbX", where X depends on what other networking devices you have.
 	  Treat it like a two-node Ethernet link:  host, and gadget.
-
+	
 	  The Linux-USB host-side "usbnet" driver interoperates with this
 	  driver, so that deep I/O queues can be supported.  On 2.4 kernels,
 	  use "CDCEther" instead, if you're using the CDC option. That CDC
 	  mode should also interoperate with standard CDC Ethernet class
 	  drivers on other host operating systems.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_ether".
-
+	
 config USB_ETH_RNDIS
 	bool "RNDIS support"
 	depends on USB_ETH
@@ -160,16 +160,16 @@ config USB_ETH_RNDIS
 	   Microsoft Windows XP bundles the "Remote NDIS" (RNDIS) protocol,
 	   and Microsoft provides redistributable binary RNDIS drivers for
 	   older versions of Windows.
-
+	
 	   If you say "y" here, the Ethernet gadget driver will try to provide
 	   a second device configuration, supporting RNDIS to talk to such
 	   Microsoft USB hosts.
-
+	
 	   To make MS-Windows work with this, use Documentation/usb/linux.inf
 	   as the "driver info file".  For versions of MS-Windows older than
 	   XP, you'll need to download drivers from Microsoft's website; a URL
 	   is given in comments found in that info file.
-
+	
 config USB_ETH_EEM
 	bool "Ethernet Emulation Model (EEM) support"
 	depends on USB_ETH
@@ -183,10 +183,10 @@ config USB_ETH_EEM
 	  EEM model is for mobile devices to communicate with hosts using
 	  ethernet over USB.  For Linux gadgets, however, the interface with
 	  the host is the same (a usbX device), so the differences are minimal.
-
+	
 	  If you say "y" here, the Ethernet gadget driver will use the EEM
 	  protocol rather than ECM.  If unsure, say "n".
-
+	
 config USB_G_NCM
 	tristate "Network Control Model (NCM) support"
 	depends on NET
@@ -199,10 +199,10 @@ config USB_G_NCM
 	  an advanced protocol for Ethernet encapsulation, allows grouping
 	  of several ethernet frames into one USB transfer and different
 	  alignment possibilities.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_ncm".
-
+	
 config USB_GADGETFS
 	tristate "Gadget Filesystem"
 	help
@@ -211,10 +211,10 @@ config USB_GADGETFS
 	  endpoint I/O and control requests that don't relate to enumeration.
 	  All endpoints, transfer speeds, and transfer types supported by
 	  the hardware are available, through read() and write() calls.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "gadgetfs".
-
+	
 config USB_FUNCTIONFS
 	tristate "Function Filesystem"
 	select USB_LIBCOMPOSITE
@@ -227,13 +227,13 @@ config USB_FUNCTIONFS
 	  of composite gadgets such that some of the functions are
 	  implemented in kernel space (for instance Ethernet, serial or
 	  mass storage) and other are implemented in user space.
-
+	
 	  If you say "y" or "m" here you will be able what kind of
 	  configurations the gadget will provide.
-
+	
 	  Say "y" to link the driver statically, or "m" to build
 	  a dynamically linked module called "g_ffs".
-
+	
 config USB_FUNCTIONFS_ETH
 	bool "Include configuration with CDC ECM (Ethernet)"
 	depends on USB_FUNCTIONFS && NET
@@ -243,7 +243,7 @@ config USB_FUNCTIONFS_ETH
 	help
 	  Include a configuration with CDC ECM function (Ethernet) and the
 	  Function Filesystem.
-
+	
 config USB_FUNCTIONFS_RNDIS
 	bool "Include configuration with RNDIS (Ethernet)"
 	depends on USB_FUNCTIONFS && NET
@@ -251,14 +251,14 @@ config USB_FUNCTIONFS_RNDIS
 	select USB_F_RNDIS
 	help
 	  Include a configuration with RNDIS function (Ethernet) and the Filesystem.
-
+	
 config USB_FUNCTIONFS_GENERIC
 	bool "Include 'pure' configuration"
 	depends on USB_FUNCTIONFS
 	help
 	  Include a configuration with the Function Filesystem alone with
 	  no Ethernet interface.
-
+	
 config USB_MASS_STORAGE
 	tristate "Mass Storage Gadget"
 	depends on BLOCK
@@ -269,13 +269,13 @@ config USB_MASS_STORAGE
 	  As its storage repository it can use a regular file or a block
 	  device (in much the same way as the "loop" device driver),
 	  specified as a module parameter or sysfs option.
-
+	
 	  This driver is a replacement for now removed File-backed
 	  Storage Gadget (g_file_storage).
-
+	
 	  Say "y" to link the driver statically, or "m" to build
 	  a dynamically linked module called "g_mass_storage".
-
+	
 config USB_GADGET_TARGET
 	tristate "USB Gadget Target Fabric Module"
 	depends on TARGET_CORE
@@ -287,7 +287,7 @@ config USB_GADGET_TARGET
 	  advertised on alternative interface 0 (primary) and UAS is on
 	  alternative interface 1. Both protocols can work on USB2.0 and USB3.0.
 	  UAS utilizes the USB 3.0 feature called streams support.
-
+	
 config USB_G_SERIAL
 	tristate "Serial Gadget (with CDC ACM and CDC OBEX support)"
 	depends on TTY
@@ -301,18 +301,18 @@ config USB_G_SERIAL
 	  This driver supports a CDC-ACM module option, which can be used
 	  to interoperate with MS-Windows hosts or with the Linux-USB
 	  "cdc-acm" driver.
-
+	
 	  This driver also supports a CDC-OBEX option.  You will need a
 	  user space OBEX server talking to /dev/ttyGS*, since the kernel
 	  itself doesn't implement the OBEX protocol.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_serial".
-
+	
 	  For more information, see Documentation/usb/gadget_serial.rst
 	  which includes instructions and a "driver info file" needed to
 	  make MS-Windows work with CDC ACM.
-
+	
 config USB_MIDI_GADGET
 	tristate "MIDI Gadget"
 	depends on SND
@@ -325,10 +325,10 @@ config USB_MIDI_GADGET
 	  a sound "card" in the ALSA sound system. Other MIDI
 	  connections can then be made on the gadget system, using
 	  ALSA's aconnect utility etc.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_midi".
-
+	
 config USB_G_PRINTER
 	tristate "Printer Gadget"
 	select USB_LIBCOMPOSITE
@@ -339,13 +339,13 @@ config USB_G_PRINTER
 	  program reads and writes the device file /dev/g_printer to
 	  receive or send printer data. It can use ioctl calls to
 	  the device file to get or set printer status.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_printer".
-
+	
 	  For more information, see Documentation/usb/gadget_printer.rst
 	  which includes sample code for accessing the device file.
-
+	
 if TTY
 
 config USB_CDC_COMPOSITE
@@ -359,14 +359,14 @@ config USB_CDC_COMPOSITE
 	help
 	  This driver provides two functions in one configuration:
 	  a CDC Ethernet (ECM) link, and a CDC ACM (serial port) link.
-
+	
 	  This driver requires four bulk and two interrupt endpoints,
 	  plus the ability to handle altsettings.  Not all peripheral
 	  controllers are that capable.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module.
-
+	
 config USB_G_NOKIA
 	tristate "Nokia composite gadget"
 	depends on PHONET
@@ -382,10 +382,10 @@ config USB_G_NOKIA
 	help
 	  The Nokia composite gadget provides support for acm, obex
 	  and phonet in only one composite gadget driver.
-
+	
 	  It's only really useful for N900 hardware. If you're building
 	  a kernel for N900, say Y or M here. If unsure, say N.
-
+	
 config USB_G_ACM_MS
 	tristate "CDC Composite Device (ACM and mass storage)"
 	depends on BLOCK
@@ -396,10 +396,10 @@ config USB_G_ACM_MS
 	help
 	  This driver provides two functions in one configuration:
 	  a mass storage, and a CDC ACM (serial port) link.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_acm_ms".
-
+	
 config USB_G_MULTI
 	tristate "Multifunction Composite Gadget"
 	depends on BLOCK && NET
@@ -413,17 +413,17 @@ config USB_G_MULTI
 	  The Multifunction Composite Gadget provides Ethernet (RNDIS
 	  and/or CDC Ethernet), mass storage and ACM serial link
 	  interfaces.
-
+	
 	  You will be asked to choose which of the two configurations is
 	  to be available in the gadget.  At least one configuration must
 	  be chosen to make the gadget usable.  Selecting more than one
 	  configuration will prevent Windows from automatically detecting
 	  the gadget as a composite gadget, so an INF file will be needed to
 	  use the gadget.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_multi".
-
+	
 config USB_G_MULTI_RNDIS
 	bool "RNDIS + CDC Serial + Storage configuration"
 	depends on USB_G_MULTI
@@ -434,9 +434,9 @@ config USB_G_MULTI_RNDIS
 	  Mass Storage functions available in the Multifunction Composite
 	  Gadget.  This is the configuration dedicated for Windows since RNDIS
 	  is Microsoft's protocol.
-
+	
 	  If unsure, say "y".
-
+	
 config USB_G_MULTI_CDC
 	bool "CDC Ethernet + CDC Serial + Storage configuration"
 	depends on USB_G_MULTI
@@ -445,9 +445,9 @@ config USB_G_MULTI_CDC
 	  This option enables a configuration with CDC Ethernet (ECM), CDC
 	  Serial and Mass Storage functions available in the Multifunction
 	  Composite Gadget.
-
+	
 	  If unsure, say "y".
-
+	
 endif # TTY
 
 config USB_G_HID
@@ -457,13 +457,13 @@ config USB_G_HID
 	help
 	  The HID gadget driver provides generic emulation of USB
 	  Human Interface Devices (HID).
-
+	
 	  For more information, see Documentation/usb/gadget_hid.rst which
 	  includes sample code for accessing the device files.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_hid".
-
+	
 # Standalone / single function gadgets
 config USB_G_DBGP
 	tristate "EHCI Debug Device Gadget"
@@ -472,10 +472,10 @@ config USB_G_DBGP
 	help
 	  This gadget emulates an EHCI Debug device. This is useful when you want
 	  to interact with an EHCI Debug Port.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_dbgp".
-
+	
 if USB_G_DBGP
 choice
 	prompt "EHCI Debug Device mode"
@@ -486,7 +486,7 @@ config USB_G_DBGP_PRINTK
 	bool "printk"
 	help
 	  Directly printk() received data. No interaction.
-
+	
 config USB_G_DBGP_SERIAL
 	depends on USB_G_DBGP
 	select USB_U_SERIAL
@@ -509,24 +509,24 @@ config USB_G_WEBCAM
 	  The Webcam Gadget acts as a composite USB Audio and Video Class
 	  device. It provides a userspace API to process UVC control requests
 	  and stream video data to the host.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "g_webcam".
-
+	
 config USB_RAW_GADGET
 	tristate "USB Raw Gadget"
 	help
 	  USB Raw Gadget is a gadget driver that gives userspace low-level
 	  control over the gadget's communication process.
-
+	
 	  Like any other gadget driver, Raw Gadget implements USB devices via
 	  the USB gadget API. Unlike most gadget drivers, Raw Gadget does not
 	  implement any concrete USB functions itself but requires userspace
 	  to do that.
-
+	
 	  See Documentation/usb/raw-gadget.rst for details.
-
+	
 	  Say "y" to link the driver statically, or "m" to build a
 	  dynamically linked module called "raw_gadget".
-
+	
 endmenu

@@ -4,6 +4,7 @@ config VIDEO_CX25840
 	depends on VIDEO_DEV && I2C
 	help
 	  Support for the Conexant CX2584x audio/video decoders.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called cx25840
+	

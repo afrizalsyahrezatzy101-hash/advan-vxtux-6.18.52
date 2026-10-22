@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  * Copyright (C) 2020-2025 Intel Corporation
  */

@@ -8,7 +8,7 @@ menuconfig BCM_VIDEOCORE
 		Support for Broadcom VideoCore services including
 		the BCM2835 family of products which is used
 		by the Raspberry PI.
-
+	
 if BCM_VIDEOCORE
 
 config BCM2835_VCHIQ
@@ -24,10 +24,10 @@ config BCM2835_VCHIQ
 		audio/video and camera drivers as well as for implementing MMAL
 		API, which is in turn used by several multimedia services on the
 		BCM2835 family of SoCs.
-
+	
 		Defaults to Y when the Broadcom Videocore services are included
 		in the build, N otherwise.
-
+	
 if BCM2835_VCHIQ
 
 config VCHIQ_CDEV
@@ -37,13 +37,13 @@ config VCHIQ_CDEV
 		ioctls used by userspace libraries and testing tools to interact
 		with VideoCore, via the VCHIQ core driver (Check BCM2835_VCHIQ
 		for more info).
-
+	
 		This can be set to 'N' if the VideoCore communication is not
 		needed by userspace but only by other kernel modules
 		(like bcm2835-audio).
-
+	
 		If not sure, set this to 'Y'.
-
+	
 endif
 
 source "drivers/staging/vc04_services/bcm2835-audio/Kconfig"

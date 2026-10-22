@@ -8,12 +8,12 @@ config NET_VENDOR_ARC
 	default y
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about ARC cards. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_ARC
 
 config ARC_EMAC_CORE
@@ -33,5 +33,5 @@ config EMAC_ROCKCHIP
 	  This selects Rockchip SoC glue layer support for the
 	  emac device driver. This driver is used for RK3036/RK3066/RK3188
 	  EMAC ethernet controller.
-
+	
 endif # NET_VENDOR_ARC

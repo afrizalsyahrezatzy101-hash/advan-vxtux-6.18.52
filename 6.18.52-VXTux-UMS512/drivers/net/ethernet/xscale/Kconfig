@@ -10,12 +10,12 @@ config NET_VENDOR_XSCALE
 		   IXP4XX_NPE && IXP4XX_QMGR)
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question does not directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about XScale IXP devices. If you say Y, you will be
 	  asked for your specific card in the following questions.
-
+	
 if NET_VENDOR_XSCALE
 
 config IXP4XX_ETH
@@ -27,7 +27,7 @@ config IXP4XX_ETH
 	help
 	  Say Y here if you want to use built-in Ethernet ports
 	  on IXP4xx processor.
-
+	
 config PTP_1588_CLOCK_IXP46X
 	bool "Intel IXP46x as PTP clock"
 	depends on IXP4XX_ETH
@@ -38,8 +38,8 @@ config PTP_1588_CLOCK_IXP46X
 	  clock. This clock is only useful if your PTP programs are
 	  getting hardware time stamps on the PTP Ethernet packets
 	  using the SO_TIMESTAMPING API.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called ptp_ixp46x.
-
+	
 endif # NET_VENDOR_XSCALE

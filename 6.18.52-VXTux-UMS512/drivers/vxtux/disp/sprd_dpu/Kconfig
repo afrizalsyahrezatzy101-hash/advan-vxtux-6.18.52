@@ -19,3 +19,4 @@ config VXTUX_SPRD_DPU
 	  Konsolidasi patch proven build v4: XR24/XB24 -> RB/UV switch,
 	  primary-only plane guard, FBC enabled=0 sweep, fbdev generic setup.
 	  Target: patch fork 5.4 dipindah ke struktur resmi + siap port 6.18.
+	

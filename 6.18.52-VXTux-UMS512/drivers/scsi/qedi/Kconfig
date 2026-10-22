@@ -11,3 +11,4 @@ config QEDI
 	help
 	This driver supports iSCSI offload for the QLogic FastLinQ
 	41000 Series Converged Network Adapters.
+	

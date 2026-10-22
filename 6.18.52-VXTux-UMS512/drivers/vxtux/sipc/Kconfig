@@ -17,12 +17,12 @@ config SPRD_MAILBOX
 	  mbox_just_sent, mbox_register_irq_handle, mbox_unregister_irq_handle,
 	  mbox_core_fifo_full) di atas kerangka mailbox generic mainline
 	  (drivers/mailbox/sprd-mailbox.c).
-
+	
 	  Kenapa perlu: database RE 103 blob (blob_audit_syms.csv) membuktikan
 	  fungsi-fungsi ini tidak diekspor blob vendor mana pun — asalnya adalah
 	  vmlinux stok 5.4 (built-in). Tanpa shim ini semua konsumen SIPC/audio
 	  tidak bisa dibangun (dan kalau dipaksa, panggilan mailbox jadi no-op).
-
+	
 config SPRD_SIPC
 	bool "Spreadtrum SIPC (AP <-> CP/DSP shared memory IPC)"
 	depends on SPRD_MAILBOX
@@ -32,7 +32,7 @@ config SPRD_SIPC
 	  debugfs. Port 5.4 -> 6.18 (access_ok tanpa tipe, timer_setup).
 	  Menyediakan smsg_ch_open/smsg_send/smsg_recv, smem_alloc,
 	  sbuf_* dan sblock_* yang dipakai audio AGDSP, WCN, dan modem.
-
+	
 # ---------------------------------------------------------------- ZOMBIE
 # SPRD_SIPC_SPIPE/SPOOL/SETH = transport MODEM (pipe & pool di atas sbuf/
 # sblock; SETH = ethernet-over-shared-memory). Deklarasi ini DIPERTAHANKAN
@@ -65,7 +65,7 @@ config SPRD_SIPC_ZERO_COPY_SIPX
 	  Jangan dinyalakan sampai sipx.c diport: sipc_debugfs.c memanggil
 	  sipx_init_debugfs() di dalam #ifdef simbol ini, dan fungsi itu hanya
 	  ada di sipx.c (sumber fork: gpl-source/fork_t618/.../modem/sipc/sipx.c).
-
+	
 config SPRD_SIPC_SWCNBLK
 	tristate "WCN block transport on SIPC"
 	depends on SPRD_SIPC
@@ -74,3 +74,33 @@ config SPRD_SIPC_SWCNBLK
 	  Transport SBLK khusus WCN (swcnblk.o, komposit sendiri: hanya memanggil
 	  simbol ekspor inti SIPC yang built-in). Modular agar bisa di-insmod
 	  dan diuji satu per satu (mis. boot QEMU + insmod chain).
+	
+config SPRD_SIPC_SLOG_BRIDGE
+	tristate "SPRD slog bridge (USB VSER <-> SIPC sblock)"
+	depends on SPRD_SIPC && USB_GADGET
+	default n
+	help
+	  Bridge antara modem/CP dan kanal USB VSER (usb_f_vserial.ko).
+	
+	  slog_bridge.o memanggil kernel_vser_register_callback() dan
+	  kernel_vser_set_pass_mode() yang diekspor usb_f_vserial.ko - sebuah
+	  MODUL. Objek built-in tidak boleh mengimpor simbol modul, jadi
+	  slog_bridge harus berupa modul sendiri: ia mengimpor inti SIPC
+	  built-in (sblock_*) dan modul usb_f_vserial.
+	
+config SPRD_SIPC_VIRT_BUS
+	tristate "Unisoc virtual SIPC bus (sprd-sipc-virt-bus)"
+	depends on OF
+	default n
+	help
+	  Bus virtual SIPC: driver platform yang memiliki node DT
+	  "unisoc,sipc-virt-bus" dan mem-populate device platform di
+	  bawahnya (mis. time_sync pada board UMS512).
+	
+	  Menggantikan blob vendor sprd-sipc-virt-bus.ko. Modulnya
+	  dibangun sebagai MODUL (=m) supaya nama filenya persis
+	  sprd-sipc-virt-bus.ko, sama seperti blob asalnya, dan
+	  KBUILD_MODNAME-nya sprd_sipc_virt_bus.
+	
+	  Pilih M di sini: modulnya.
+	

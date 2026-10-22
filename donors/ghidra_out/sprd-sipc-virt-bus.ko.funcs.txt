@@ -1,0 +1,11 @@
+00101000 __cfi_check_fail Function
+00101030 sprd_sipc_virt_bus_probe Function
+00102000 __cfi_check Function
+00102094 init_module Function
+001020c0 cleanup_module Function
+00103000 __platform_driver_register Function
+00103008 devm_of_platform_populate Function
+00103010 _dev_err Function
+00103018 _dev_info Function
+00103020 platform_driver_unregister Function
+00103028 __ubsan_handle_cfi_check_fail_abort Function

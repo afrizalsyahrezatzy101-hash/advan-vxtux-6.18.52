@@ -7,10 +7,11 @@ config SPRD_MODEM_LOADER
 	  Verified 2026-10-04 against l_modem_a on this device: the partition
 	  carries an SCI1 container wrapping a MECPV1.0 directory whose entries
 	  include cp-modem, modem, gdsp, ldsp, cdsp, deltanv, fixnv and runnv.
-
+	
 config SPRD_EXT_MODEM
 	tristate "SPRD External Modem support"
 	default n
 	depends on SPRD_MODEM_LOADER
 	help
 	  This feature is used to decide whether the modem type is external.
+	

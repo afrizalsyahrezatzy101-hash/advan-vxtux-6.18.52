@@ -12,10 +12,10 @@ config USB_MDC800
 	  and higher (look at <http://www.gphoto.org/>).
 	  To use it create a device node with "mknod /dev/mustek c 180 32" and
 	  configure it in your software.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called mdc800.
-
+	
 config USB_MICROTEK
 	tristate "Microtek X6USB scanner support"
 	depends on SCSI
@@ -27,3 +27,4 @@ config USB_MICROTEK
 	  The scanner will appear as a scsi generic device to the rest
 	  of the system. Scsi support is required.
 	  This driver can be compiled as a module, called microtek.
+	

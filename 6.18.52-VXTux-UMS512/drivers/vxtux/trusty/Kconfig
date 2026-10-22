@@ -13,3 +13,4 @@ config VXTUX_TRUSTY_DISP
 	  Helper disp_ca_* untuk jalur Trusty TEE display (proven stub build v4;
 	  provider asli = disp_trusty.c saat TRUSTY_VIRTIO_IPC=y). Port resmi
 	  ini menggantikan stub — fail-gracefully tanpa TEE.
+	

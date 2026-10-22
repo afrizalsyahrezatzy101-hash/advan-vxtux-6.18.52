@@ -20,7 +20,7 @@ config WCN_PCIE
 	help
 	  Enable this module for Spreadtrum SC2355 chip pcie interface bus
 	  support.  Please insmod this module before any other WCN subsystems.
-
+	
 	  Catatan port 6.18: berkas sumbernya sudah ada di pohon
 	  (pcie/pcie.c, edma_engine.c, pcie_dbg.c, ioctl.c, mchn.c,
 	  edma_test.c, pcie_attach_bus.c, pcie_pm.c) dan headernya
@@ -31,3 +31,4 @@ config WCN_PCIE
 	  sprd_pcie_dump_rc_regs() -- TIDAK punya definisi di pohon ini
 	  maupun di gpl-source/. Jadi cabang ini tidak akan link sampai
 	  driver PCIe root-complex Unisoc diport.
+	

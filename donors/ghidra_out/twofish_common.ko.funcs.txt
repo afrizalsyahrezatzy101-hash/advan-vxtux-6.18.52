@@ -1,0 +1,5 @@
+00102000 __cfi_check_fail Function
+00102030 twofish_setkey Function
+00102054 __twofish_setkey Function
+00104000 __cfi_check Function
+00105000 __ubsan_handle_cfi_check_fail_abort Function

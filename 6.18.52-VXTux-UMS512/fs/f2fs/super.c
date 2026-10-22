@@ -40,6 +40,11 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/f2fs.h>
 
+#ifndef FSCRYPT_MAX_DEVICES
+#define FSCRYPT_MAX_DEVICES 8
+#endif
+
+
 static struct kmem_cache *f2fs_inode_cachep;
 
 #ifdef CONFIG_F2FS_FAULT_INJECTION
@@ -3659,27 +3664,36 @@ static bool f2fs_has_stable_inodes(struct super_block *sb)
 	return true;
 }
 
-static unsigned int
-f2fs_get_devices(struct super_block *sb,
-		 struct block_device *devs[FSCRYPT_MAX_DEVICES])
+struct block_device **f2fs_get_devices(struct super_block *sb,
+		 unsigned int *num_devs)
 {
 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-	int ndevs;
+	int ndevs = 0;
 	int i;
+	struct block_device **devs;
 
 	static_assert(MAX_DEVICES <= FSCRYPT_MAX_DEVICES);
 
 	if (!f2fs_is_multi_device(sbi)) {
-		devs[0] = sb->s_bdev;
-		return 1;
+		*num_devs = 1;
+		devs = kzalloc(sizeof(struct block_device *), GFP_KERNEL);
+		if (devs)
+			devs[0] = sb->s_bdev;
+		return devs;
 	}
 	ndevs = sbi->s_ndevs;
 	if (WARN_ON_ONCE(ndevs > FSCRYPT_MAX_DEVICES))
 		ndevs = FSCRYPT_MAX_DEVICES;
 
+	*num_devs = ndevs;
+	devs = kzalloc(sizeof(struct block_device *) * ndevs, GFP_KERNEL);
+	if (!devs) {
+		*num_devs = 0;
+		return NULL;
+	}
 	for (i = 0; i < ndevs; i++)
 		devs[i] = FDEV(i).bdev;
-	return ndevs;
+	return devs;
 }
 
 static const struct fscrypt_operations f2fs_cryptops = {

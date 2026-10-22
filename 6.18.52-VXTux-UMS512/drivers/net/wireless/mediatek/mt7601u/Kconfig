@@ -5,3 +5,4 @@ config MT7601U
 	depends on USB
 	help
 	  This adds support for MT7601U-based USB wireless dongles.
+	

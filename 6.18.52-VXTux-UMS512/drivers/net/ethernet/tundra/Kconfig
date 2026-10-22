@@ -9,12 +9,12 @@ config NET_VENDOR_TUNDRA
 	depends on TSI108_BRIDGE
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Tundra cards. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_TUNDRA
 
 config TSI108_ETH
@@ -24,5 +24,5 @@ config TSI108_ETH
 	  This driver supports Tundra TSI108 gigabit Ethernet ports.
 	  To compile this driver as a module, choose M here: the module
 	  will be called tsi108_eth.
-
+	
 endif # NET_VENDOR_TUNDRA

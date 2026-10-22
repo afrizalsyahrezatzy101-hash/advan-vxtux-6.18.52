@@ -11,3 +11,4 @@ config RTL8723BS
 	the wifi found on the 1st gen Intel Compute Stick, the CHIP
 	and many other Intel Atom and ARM based devices.
 	If built as a module, it will be called r8723bs.
+	

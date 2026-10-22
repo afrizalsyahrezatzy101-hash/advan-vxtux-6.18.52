@@ -11,7 +11,7 @@
 # sebagai `RADIO_MARLIN3`; berkas itu TIDAK disalin ke sini supaya hanya ada
 # satu simbol untuk driver ini.
 
-obj-$(CONFIG_WCN_FM) += driver/
+obj-$(CONFIG_SPRD_LEGACY_WCN_FM) += driver/
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

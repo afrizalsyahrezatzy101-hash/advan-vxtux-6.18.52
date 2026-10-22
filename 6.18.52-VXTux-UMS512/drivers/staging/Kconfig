@@ -9,19 +9,19 @@ menuconfig STAGING
 	  development, may or may not work, and may contain userspace
 	  interfaces that most likely will be changed in the near
 	  future.
-
+	
 	  Using any of these drivers will taint your kernel which might
 	  affect support options from both the community, and various
 	  commercial support organizations.
-
+	
 	  If you wish to work on these drivers, to help improve them, or
 	  to report problems you have with them, please see the
 	  drivers/staging/<driver_name>/TODO file to see what needs to be
 	  worked on, and who to contact.
-
+	
 	  If in doubt, say N here.
-
-
+	
+	
 if STAGING
 
 source "drivers/staging/rtl8723bs/Kconfig"

@@ -1,10 +1,19 @@
 # SPDX-License-Identifier: GPL-2.0
 #
+# ONE composite module, named after the vendor blob it replaces
+# (unisoc-mailbox.ko).
+# The mailbox shim is the first module in the insmod order (unisoc-mailbox -> sipc-core -> sipx -> seth/spool/spipe).
+# Listing the objects one by one would make kbuild emit a module
+# per object, and the stock file name would not be reproduced.
+
+# SPDX-License-Identifier: GPL-2.0
+#
 # drivers/vxtux/sipc/Makefile — kerangka SIPC Unisoc (port fork GPL 5.4 -> 6.18)
 #
 # Shim API mailbox vendor: wajib ada sebelum apa pun yang memakai SIPC.
 # (SPRD_MAILBOX = bool, default y; penyedia mainline sprd-mailbox = y.)
-obj-$(CONFIG_SPRD_MAILBOX)	+= sprd_mbox_vendor.o
+obj-$(CONFIG_SPRD_MAILBOX) += unisoc-mailbox.o
+unisoc-mailbox-y := sprd_mbox_vendor.o
 
 # Inti SIPC: SENGAJA built-in saja. Bukti call-graph (2026-09-23):
 # agdsp_access (=y) -> smsg_* (smsg.c), dan sound ASoC (=y) -> agdsp_*;

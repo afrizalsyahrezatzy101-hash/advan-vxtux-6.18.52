@@ -44,7 +44,9 @@ static struct workqueue_struct *nvt_esd_check_wq;
 static unsigned long irq_timer = 0;
 
 uint8_t esd_check = false;
+EXPORT_SYMBOL_GPL(esd_check);
 uint8_t esd_retry = 0;
+EXPORT_SYMBOL_GPL(esd_retry);
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
 static unsigned long nvt_tp_usb_state = 0;
@@ -64,6 +66,7 @@ extern int32_t nvt_mp_proc_init(void);
 #endif
 
 struct nvt_ts_data *ts;
+EXPORT_SYMBOL_GPL(ts);
 
 int gloal_reset_flag;
 //static struct workqueue_struct *nvt_wq;
@@ -75,7 +78,28 @@ extern void Boot_Update_Firmware(struct work_struct *work);
 
 
 uint32_t ENG_RST_ADDR  = 0x7FFF80;
+EXPORT_SYMBOL_GPL(ENG_RST_ADDR);
 uint32_t SWRST_N8_ADDR = 0; //read from dtsi
+EXPORT_SYMBOL_GPL(SWRST_N8_ADDR);
+
+/*
+ * sprd_dpu_nt36xxx_touchscreen_callback - DPU -> touch hook.
+ *
+ * The stock blob exports this as a 4-byte global function whose entire
+ * body is a single "ret" (readelf: GLOBAL FUNC size 4, objdump: 0x30
+ * "ret"). It is a no-op stub: the DPU side of the stock kernel never
+ * called it, and nothing in the blob references it. It exists so the
+ * DPU driver can look the symbol up by name and get a valid (empty)
+ * implementation.
+ *
+ * The 6.18 tree has no DPU->touchscreen hook (drivers/gpu/drm/sprd/sprd_dpu
+ * contains only the format helpers), so there is nothing to call it from.
+ * Export it with the same empty body the stock has.
+ */
+void sprd_dpu_nt36xxx_touchscreen_callback(void)
+{
+}
+EXPORT_SYMBOL_GPL(sprd_dpu_nt36xxx_touchscreen_callback);
 
 #if TOUCH_KEY_NUM > 0
 const uint16_t touch_key_array[TOUCH_KEY_NUM] = {
@@ -157,6 +181,7 @@ int32_t CTP_SPI_READ(struct spi_device *client, uint8_t *buf, uint16_t len)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(CTP_SPI_READ);
 
 /*******************************************************
 Description:
@@ -189,6 +214,7 @@ int32_t CTP_SPI_WRITE(struct spi_device *client, uint8_t *buf, uint16_t len)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(CTP_SPI_WRITE);
 
 /*******************************************************
 Description:
@@ -224,6 +250,7 @@ int32_t nvt_set_page(uint32_t addr)
 
 	return CTP_SPI_WRITE(ts->client, buf, 3);
 }
+EXPORT_SYMBOL_GPL(nvt_set_page);
 
 /*******************************************************
 Description:
@@ -258,6 +285,7 @@ int32_t nvt_write_addr(uint32_t addr, uint8_t data)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(nvt_write_addr);
 
 /*******************************************************
 Description:
@@ -283,6 +311,7 @@ void nvt_bld_crc_enable(void)
 	buf[1] = buf[1] | (0x01 << 7);
 	CTP_SPI_WRITE(ts->client, buf, 2);
 }
+EXPORT_SYMBOL_GPL(nvt_bld_crc_enable);
 
 /*******************************************************
 Description:
@@ -308,6 +337,7 @@ void nvt_fw_crc_enable(void)
 	buf[1] = 0xAE;	//enable fw crc command
 	CTP_SPI_WRITE(ts->client, buf, 2);
 }
+EXPORT_SYMBOL_GPL(nvt_fw_crc_enable);
 
 /*******************************************************
 Description:
@@ -331,6 +361,7 @@ void nvt_boot_ready(void)
 		nvt_write_addr(ts->mmap->POR_CD_ADDR, 0xA0);
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_boot_ready);
 
 /*******************************************************
 Description:
@@ -563,6 +594,7 @@ int32_t nvt_read_pid(void)
 
 	return ret;
 }
+EXPORT_SYMBOL_GPL(nvt_read_pid);
 
 /*******************************************************
 Description:
@@ -628,7 +660,9 @@ info_retry:
   Create Device Node (Proc Entry)
 *******************************************************/
 #if NVT_TOUCH_PROC
-static struct proc_dir_entry *NVT_proc_entry;
+extern const struct proc_ops nvt_flash_fops_proc_ops;
+
+struct proc_dir_entry *NVT_proc_entry;
 #define DEVICE_NAME	"NVTSPI"
 
 /*******************************************************
@@ -638,7 +672,7 @@ Description:
 return:
 	Executive outcomes. 2---succeed. -5,-14---failed.
 *******************************************************/
-static ssize_t nvt_flash_read(struct file *file, char __user *buff, size_t count, loff_t *offp)
+ssize_t nvt_flash_read(struct file *file, char __user *buff, size_t count, loff_t *offp)
 {
 	uint8_t *str = NULL;
 	int32_t ret = 0;
@@ -747,7 +781,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed. -12---failed.
 *******************************************************/
-static int32_t nvt_flash_open(struct inode *inode, struct file *file)
+int32_t nvt_flash_open(struct inode *inode, struct file *file)
 {
 	struct nvt_flash_data *dev;
 
@@ -770,7 +804,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
-static int32_t nvt_flash_close(struct inode *inode, struct file *file)
+int32_t nvt_flash_close(struct inode *inode, struct file *file)
 {
 	struct nvt_flash_data *dev = file->private_data;
 
@@ -795,7 +829,8 @@ return:
 *******************************************************/
 static int32_t nvt_flash_proc_init(void)
 {
-	NVT_proc_entry = proc_create(DEVICE_NAME, 0444, NULL,&nvt_flash_pops);
+	NVT_proc_entry = proc_create(DEVICE_NAME, 0444, NULL,
+				     &nvt_flash_fops_proc_ops);
 	if (NVT_proc_entry == NULL) {
 		NVT_ERR("Failed!\n");
 		return -ENOMEM;
@@ -1067,6 +1102,25 @@ static int32_t nvt_parse_dt(struct device *dev)
 		return ret;
 	} else {
 		NVT_LOG("SWRST_N8_ADDR=0x%06X\n", SWRST_N8_ADDR);
+	}
+
+	/*
+	 * The stock blob's lcd_name buffer: 100 bytes holding the panel's
+	 * name. The blob fills it from the device tree's compatible string;
+	 * do the same so anything reading lcd_name sees the panel name.
+	 */
+	{
+		const char *compat = NULL;
+
+		ret = of_property_read_string(np, "compatible", &compat);
+		if (ret) {
+			NVT_ERR("error reading compatible. ret=%d\n", ret);
+			lcd_name[0] = '\0';
+		} else {
+			/* lcd_name is the blob's 100-byte buffer, so bound it */
+			strscpy(lcd_name, compat, sizeof(lcd_name));
+			NVT_LOG("lcd_name=%s\n", lcd_name);
+		}
 	}
 
 	return ret;
@@ -1466,7 +1520,7 @@ return:
 *******************************************************/
 uint32_t input_p_bak = 0;
 int32_t frame = 60;
-static void nvt_ts_work_func(void)
+void nvt_ts_work_func(void)
 {
 	int32_t ret = -1;
 	uint8_t point_data[POINT_DATA_LEN + 1 + DUMMY_BYTES] = {0};//spi_read_write,t.len    = (len + DUMMY_BYTES);
@@ -1716,7 +1770,7 @@ Description:
 return:
 	Executive outcomes. 0---NVT IC. -1---not NVT IC.
 *******************************************************/
-static int8_t nvt_ts_check_chip_ver_trim(void)
+int8_t nvt_ts_check_chip_ver_trim(void)
 {
 	uint8_t buf[8] = {0};
 	int32_t retry = 0;
@@ -1965,7 +2019,6 @@ return:
 static int32_t nvt_ts_probe(struct spi_device *client)
 {
 
-	char *oppo_ftmmode_start;
 	int32_t ret = 0;
 #if (TOUCH_KEY_NUM > 0)
 	int32_t retry = 0;
@@ -2132,6 +2185,19 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 		goto err_input_register_device_failed;
 	}
 
+	/*
+	 * The stock blob's sysfs surface: novatek_attr_group holds the
+	 * ts_suspend attribute (dev_attr_ts_suspend), and the blob also
+	 * keeps the panel's name in a 100-byte lcd_name buffer that the
+	 * SPI read path fills in. Register the group on the input device
+	 * and seed lcd_name from the device tree's panel name.
+	 */
+	ret = sysfs_create_group(&ts->input_dev->dev, &novatek_attr_group);
+	if (ret) {
+		NVT_ERR("create sysfs group failed. ret=%d\n", ret);
+		goto err_input_register_device_failed;
+	}
+
 #if WAKEUP_GESTURE
 	device_init_wakeup(&ts->input_dev->dev, 1);
 #endif
@@ -2192,6 +2258,18 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 		NVT_ERR("nvt extra proc init failed. ret=%d\n", ret);
 		goto err_init_NVT_ts;
 	}
+
+	/*
+	 * The stock creates /proc/nvt_pen_diff as the last node of
+	 * nvt_extra_proc_init(), guarded by the oppo baseline-test flag
+	 * (nvt_extra_proc_deinit() removes it under the same guard). The
+	 * tree splits the pen node into its own file, so init it here.
+	 */
+	ret = nvt_pen_proc_init();
+	if (ret != 0) {
+		NVT_ERR("nvt pen proc init failed. ret=%d\n", ret);
+		goto err_init_NVT_ts;
+	}
 #endif
 
 #if NVT_TOUCH_MP
@@ -2206,19 +2284,21 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 	ts->is_suspended = 0;
 	NVT_LOG("end\n");
 	
-	oppo_ftmmode_start = strstr(saved_command_line,"oppo_ftm_mode=");
-	if ( oppo_ftmmode_start != NULL ) {
-		oppo_ftmmode_start += strlen("oppo_ftm_mode=");
-		if (strncmp(oppo_ftmmode_start, "factory2", strlen("factory2")) == 0) {
-			ts->boot_mode = 3;
-			NVT_LOG("boot_mode is FACTORY,RF and WLAN not need to enable irq\n");
-		} else {
-			nvt_irq_enable(1);
-		}
-	} else {
-		NVT_LOG("boot_mode is failed\n");
-		nvt_irq_enable(1);
-	}
+	/*
+	 * The stock novatek_ts_spi.ko does not import saved_command_line
+	 * (verified with nm -u on the blob pulled from the device), so it
+	 * has no Oppo factory-mode check either. The code that did look
+	 * for "oppo_ftm_mode=" in the kernel command line needed
+	 * saved_command_line, which this kernel does not export:
+	 *
+	 *   ERROR: modpost: "saved_command_line"
+	 *   [drivers/input/touchscreen/novatek_nvt_ts_spi/novatek_ts_spi.ko]
+	 *   undefined!
+	 *
+	 * On this board the check never fired anyway - its only effect
+	 * was to enable the IRQ, which is what happens below.
+	 */
+	nvt_irq_enable(1);
 	return 0;
 
 #if (NVT_TOUCH_PROC || NVT_TOUCH_EXT_PROC || NVT_TOUCH_MP)
@@ -2260,6 +2340,16 @@ static void nvt_ts_remove(struct spi_device *client)
 
 	free_irq(client->irq, ts);
 	input_unregister_device(ts->input_dev);
+
+#if NVT_TOUCH_EXT_PROC
+	/*
+	 * The stock calls nvt_extra_proc_deinit() from three places -
+	 * probe's error path, nvt_ts_remove() and nvt_ts_shutdown() - so
+	 * the five /proc nodes never outlive the driver.
+	 */
+	nvt_extra_proc_deinit();
+#endif
+
 	spi_set_drvdata(client, NULL);
 	kfree(ts);
 
@@ -2395,6 +2485,36 @@ static int32_t nvt_ts_resume(struct device *dev)
 	return 0;
 }
 
+/*
+ * The stock blob's ts_suspend sysfs attribute (dev_attr_ts_suspend,
+ * show/store = nova_light_suspend_show/_store) drove the touch down and
+ * up from userspace: the store kstrtouint()s the value, then either
+ * suspends or resumes. Both halves are this file's nvt_ts_suspend() and
+ * nvt_ts_resume(); expose them together so the attribute can reach them.
+ */
+ssize_t nvt_sys_suspend_store(const char *buf, size_t count)
+{
+	unsigned int state;
+	int ret;
+
+	ret = kstrtouint(buf, 0, &state);
+	if (ret)
+		return ret;
+
+	if (state)
+		ret = nvt_ts_suspend(NULL);
+	else
+		ret = nvt_ts_resume(NULL);
+
+	if (ret)
+		return ret;
+
+	nvt_suspend_state = state;
+	return count;
+}
+
+int32_t nvt_suspend_state;
+
 
 
 static const struct spi_device_id nvt_ts_id[] = {
@@ -2480,3 +2600,20 @@ module_exit(nvt_driver_exit);
 MODULE_DESCRIPTION("Novatek Touchscreen Driver");
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(spi, nvt_ts_id);
+
+EXPORT_SYMBOL(nvt_bootloader_reset);
+EXPORT_SYMBOL(nvt_check_fw_reset_state);
+EXPORT_SYMBOL(nvt_check_fw_status);
+EXPORT_SYMBOL(nvt_clear_fw_status);
+EXPORT_SYMBOL(nvt_eng_reset);
+EXPORT_SYMBOL(nvt_esd_check_enable);
+/*
+ * nvt_extra_proc_init() and nvt_mp_proc_init() are defined in
+ * nt36xxx_ext_proc.c / nt36xxx_mp_ctrlram.c, which are part of this same
+ * composite module. Exporting them a second time here makes modpost fail
+ * with "exported twice"; the single EXPORT_SYMBOL_GPL next to each
+ * definition is enough.
+ */
+EXPORT_SYMBOL(nvt_get_fw_info);
+EXPORT_SYMBOL(nvt_sw_reset);
+EXPORT_SYMBOL(nvt_sw_reset_idle);

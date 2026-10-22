@@ -9,12 +9,12 @@ config NET_VENDOR_DLINK
 	depends on PCI
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about D-Link devices. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_DLINK
 
 config DL2K
@@ -28,10 +28,10 @@ config DL2K
 	  D-Link DL2000-based Gigabit Ethernet Adapter.
 	  Sundance/Tamarack TC902x Gigabit Ethernet Adapter.
 	  ICPlus IP1000A-based cards
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called dl2k.
-
+	
 config SUNDANCE
 	tristate "Sundance Alta support"
 	depends on PCI
@@ -41,7 +41,7 @@ config SUNDANCE
 	  This driver is for the Sundance "Alta" chip.
 	  More specific information and updates are available from
 	  <http://www.scyld.com/network/sundance.html>.
-
+	
 config SUNDANCE_MMIO
 	bool "Use MMIO instead of PIO"
 	depends on SUNDANCE
@@ -49,7 +49,7 @@ config SUNDANCE_MMIO
 	  Enable memory-mapped I/O for interaction with Sundance NIC registers.
 	  Do NOT enable this by default, PIO (enabled when MMIO is disabled)
 	  is known to solve bugs on certain chips.
-
+	
 	  If unsure, say N.
-
+	
 endif # NET_VENDOR_DLINK

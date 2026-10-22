@@ -14,14 +14,14 @@ config VIDEO_VIVID
 	  TV, S-Video and HDMI capture hardware, including VBI support for
 	  the SDTV inputs. Also video output, VBI output, radio receivers,
 	  transmitters and software defined radio capture is emulated.
-
+	
 	  It is highly configurable and is ideal for testing applications.
 	  Error injection is supported to test rare errors that are hard
 	  to reproduce in real hardware.
-
+	
 	  Say Y here if you want to test video apps or debug V4L devices.
 	  When in doubt, say N.
-
+	
 config VIDEO_VIVID_CEC
 	bool "Enable CEC emulation support"
 	depends on VIDEO_VIVID
@@ -29,7 +29,7 @@ config VIDEO_VIVID_CEC
 	help
 	  When selected the vivid module will emulate the optional
 	  HDMI CEC feature.
-
+	
 config VIDEO_VIVID_OSD
 	bool "Enable Framebuffer for testing Output Overlay"
 	depends on VIDEO_VIVID && FB_CORE
@@ -39,7 +39,7 @@ config VIDEO_VIVID_OSD
 	help
 	  When selected the vivid module will emulate a Framebuffer for
 	  testing Output Overlay.
-
+	
 config VIDEO_VIVID_MAX_DEVS
 	int "Maximum number of devices"
 	depends on VIDEO_VIVID
@@ -47,3 +47,4 @@ config VIDEO_VIVID_MAX_DEVS
 	help
 	  This allows you to specify the maximum number of devices supported
 	  by the vivid driver.
+	

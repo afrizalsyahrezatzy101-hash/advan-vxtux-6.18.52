@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: MIT */
+
+#include <linux/types.h>
 /*
  * Copyright © 2024 Tomeu Vizoso
  */

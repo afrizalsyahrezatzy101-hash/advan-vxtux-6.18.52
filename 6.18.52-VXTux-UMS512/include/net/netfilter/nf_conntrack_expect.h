@@ -58,6 +58,7 @@ struct nf_conntrack_expect {
 #endif
 
 	struct rcu_head rcu;
+
 };
 
 static inline struct net *nf_ct_exp_net(struct nf_conntrack_expect *exp)

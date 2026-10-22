@@ -945,4 +945,21 @@
 	status = "disabled";
 	};
 
+	/*
+	 * The two free running counters of the always-on domain.
+	 * The addresses come from the stock device tree of the UMS512
+	 * board: /soc/aon/timer@322e0000 and /soc/aon/timer@32040000.
+	 */
+	systimer: timer@322e0000 {
+		compatible = "sprd,syst-timer";
+		reg = <0x322e0000 0x10>;
+		status = "okay";
+	};
+
+	sysfrt_timer: timer@32040000 {
+		compatible = "sprd,sysfrt-timer";
+		reg = <0x32040000 0x10>;
+		status = "okay";
+	};
+
 };

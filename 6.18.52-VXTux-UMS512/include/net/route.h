@@ -250,6 +250,11 @@ void ipv4_redirect(struct sk_buff *skb, struct net *net, int oif, u8 protocol);
 void ipv4_sk_redirect(struct sk_buff *skb, struct sock *sk);
 void ip_rt_send_redirect(struct sk_buff *skb);
 
+/* VXTux 6.18 backport: fnhe_update_pmtu became a non-static helper that
+ * fib_semantics.c calls during NHC MTU updates. Declared here so callers
+ * outside route.c don't see an implicit declaration. */
+void fnhe_update_pmtu(struct fib_nh_exception *fnhe, u32 new, u32 orig);
+
 unsigned int inet_addr_type(struct net *net, __be32 addr);
 unsigned int inet_addr_type_table(struct net *net, __be32 addr, u32 tb_id);
 unsigned int inet_dev_addr_type(struct net *net, const struct net_device *dev,

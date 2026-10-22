@@ -139,8 +139,8 @@ int sk_msg_zerocopy_from_iter(struct sock *sk, struct iov_iter *from,
 			      struct sk_msg *msg, u32 bytes);
 int sk_msg_memcopy_from_iter(struct sock *sk, struct iov_iter *from,
 			     struct sk_msg *msg, u32 bytes);
-int sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
-		   int len, int flags);
+int __sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
+		   int len, int flags, int *copied_from_self);
 bool sk_msg_is_readable(struct sock *sk);
 
 static inline void sk_msg_check_to_free(struct sk_msg *msg, u32 i, u32 bytes)
@@ -573,3 +573,6 @@ static inline void skb_bpf_redirect_clear(struct sk_buff *skb)
 }
 #endif /* CONFIG_NET_SOCK_MSG */
 #endif /* _LINUX_SKMSG_H */
+
+/* Berry compat */
+static inline void sk_psock_msg_len_add(struct sk_psock *psock, int val) { (void)psock; (void)val; }

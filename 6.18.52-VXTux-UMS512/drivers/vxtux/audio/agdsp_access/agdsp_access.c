@@ -840,6 +840,8 @@ int force_on_xtl(bool on_off)
 int force_on_xtl(bool on_off);
 int force_on_xtl(bool on_off) { return 0; }
 #endif
+/* The vbc-v4 sound module imports this. */
+EXPORT_SYMBOL(force_on_xtl);
 
 #if defined(CONFIG_DEBUG_FS)
 static int agdsp_access_debug_info_show(struct seq_file *m, void *private)
@@ -896,7 +898,6 @@ static int __init agdsp_access_init_debugfs_info(void)
 	return 0;
 }
 
-device_initcall(agdsp_access_init_debugfs_info);
 #endif /* CONFIG_DEBUG_FS */
 
 static int agdsp_access_probe(struct platform_device *pdev)
@@ -977,6 +978,10 @@ static struct platform_driver agdsp_access_driver = {
 static int __init agdsp_access_init(void)
 {
 	int ret;
+
+#ifdef CONFIG_DEBUG_FS
+	agdsp_access_init_debugfs_info();
+#endif
 
 	ret = platform_driver_register(&agdsp_access_driver);
 

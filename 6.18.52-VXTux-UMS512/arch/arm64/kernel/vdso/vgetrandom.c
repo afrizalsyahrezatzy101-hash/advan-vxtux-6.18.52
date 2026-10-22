@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 
+#include <linux/types.h>
 #include <uapi/asm-generic/errno.h>
+#include <asm/alternative.h>
 
 typeof(__cvdso_getrandom) __kernel_getrandom;
 

@@ -1,3 +1,4 @@
+#include <linux/berry_compat.h>
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * INET		An implementation of the TCP/IP protocol suite for the LINUX
@@ -14,6 +15,7 @@
  *		Marc Boucher	:	routing by fwmark
  */
 
+#include <linux/berry_compat.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/netdevice.h>
@@ -48,6 +50,7 @@ struct fib4_rule {
 	u32			tclassid;
 #endif
 };
+
 
 static bool fib4_rule_matchall(const struct fib_rule *rule)
 {

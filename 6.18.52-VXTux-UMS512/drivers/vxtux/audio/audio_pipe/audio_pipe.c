@@ -258,6 +258,33 @@ static unsigned int apipe_poll(struct file *filp, poll_table *wait)
 	return mask;
 }
 
+/*
+ * The stock blob's _copy_to_user()/_copy_from_user().  The blob was built
+ * against 4.14/5.4, where arm64's copy_to_user() was a macro over a local
+ * _copy_to_user() that toggled the access window around the access; 6.18
+ * moved that into __arch_copy_to_user() and made copy_to_user() a plain
+ * function, and arm64 defines INLINE_COPY_TO_USER, so lib/usercopy.c does
+ * not build the extern _copy_to_user() any more.  The symbol vanished from
+ * the port.
+ *
+ * The blob's apipe_ioctl() calls it, and this port's does the same, so the
+ * port calls it too.  The body is the kernel's own copy_to_user(), which is
+ * the same access with the same semantics.
+ */
+noinline unsigned long _copy_to_user(void __user *to,
+					    const void *from,
+					    unsigned long n)
+{
+	return copy_to_user(to, from, n);
+}
+
+noinline unsigned long _copy_from_user(void *to,
+					      const void __user *from,
+					      unsigned long n)
+{
+	return copy_from_user(to, from, n);
+}
+
 static long apipe_ioctl(struct file *filp,
 	unsigned int cmd, unsigned long arg)
 {
@@ -357,7 +384,7 @@ static long apipe_ioctl(struct file *filp,
 		dev_info(apipe_dev->dev, "POINT_ALLOC count:%d", count);
 		break;
 	case AUDIO_PIPE_POINTINFO_SET:
-		if (copy_from_user(&point_info, argp, sizeof(point_info)))
+		if (_copy_from_user(&point_info, argp, sizeof(point_info)))
 			return -EINVAL;
 		mutex_lock(&apipe_dev->mutex);
 		if (!apipe_dev->point_k) {
@@ -376,7 +403,7 @@ static long apipe_ioctl(struct file *filp,
 		mutex_unlock(&apipe_dev->mutex);
 		break;
 	case AUDIO_PIPE_POINTINFO_GET:
-		if (copy_from_user(&point_info, argp, sizeof(point_info)))
+		if (_copy_from_user(&point_info, argp, sizeof(point_info)))
 			return -EINVAL;
 		mutex_lock(&apipe_dev->mutex);
 		if (!apipe_dev->point_k) {
@@ -389,9 +416,9 @@ static long apipe_ioctl(struct file *filp,
 				point_info.point_index);
 			return -EINVAL;
 		}
-		if (copy_to_user(argp, apipe_dev->point_k +
-			point_info.point_index,
-			sizeof(point_info))) {
+		if (_copy_to_user(argp, apipe_dev->point_k +
+				point_info.point_index,
+				sizeof(point_info))) {
 			mutex_unlock(&apipe_dev->mutex);
 			return -EINVAL;
 		}

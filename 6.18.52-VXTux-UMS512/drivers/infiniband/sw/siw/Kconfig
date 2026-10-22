@@ -10,7 +10,7 @@ config RDMA_SIW
 	standard Ethernet adapter to interoperate with a iWARP
 	adapter or with another system running the SIW driver.
 	(See also RXE which is a similar software driver for RoCE.)
-
+	
 	The driver interfaces with the Linux RDMA stack and
 	implements both a kernel and user space RDMA verbs API.
 	The user space verbs API requires a support
@@ -18,3 +18,4 @@ config RDMA_SIW
 	space verbs API, libibverbs. To implement RDMA over
 	TCP/IP, the driver further interfaces with the Linux
 	in-kernel TCP socket layer.
+	

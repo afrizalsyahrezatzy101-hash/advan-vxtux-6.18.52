@@ -51,7 +51,7 @@ struct gsp_core;
 struct gsp_buf {
 	unsigned long size;
 	struct dma_buf *dmabuf;
-	bool is_iova;
+	_Bool is_iova;
 };
 
 struct gsp_buf_map {

@@ -10,3 +10,4 @@ config QEDF
 	help
 	This driver supports FCoE offload for the QLogic FastLinQ
 	41000 Series Converged Network Adapters.
+	

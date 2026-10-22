@@ -7,6 +7,7 @@
 
 #include <linux/types.h>
 #include <linux/kernel.h>
+#include <linux/berry_compat.h>
 #include <linux/skbuff.h>
 #include <linux/netdevice.h>
 #include <linux/in.h>

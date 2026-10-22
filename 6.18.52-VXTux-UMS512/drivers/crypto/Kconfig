@@ -6,9 +6,9 @@ menuconfig CRYPTO_HW
 	help
 	  Say Y here to get to see options for hardware crypto devices and
 	  processors. This option alone does not add any kernel code.
-
+	
 	  If you say N, all options in this submenu will be skipped and disabled.
-
+	
 if CRYPTO_HW
 
 source "drivers/crypto/allwinner/Kconfig"
@@ -21,10 +21,10 @@ config CRYPTO_DEV_PADLOCK
 	  (so called VIA PadLock ACE, Advanced Cryptography Engine)
 	  that provides instructions for very fast cryptographic
 	  operations with supported algorithms.
-
+	
 	  The instructions are used only when the CPU supports them.
 	  Otherwise software encryption is used.
-
+	
 config CRYPTO_DEV_PADLOCK_AES
 	tristate "PadLock driver for AES algorithm"
 	depends on CRYPTO_DEV_PADLOCK
@@ -32,12 +32,12 @@ config CRYPTO_DEV_PADLOCK_AES
 	select CRYPTO_LIB_AES
 	help
 	  Use VIA PadLock for AES algorithm.
-
+	
 	  Available in VIA C3 and newer CPUs.
-
+	
 	  If unsure say M. The compiled module will be
 	  called padlock-aes.
-
+	
 config CRYPTO_DEV_PADLOCK_SHA
 	tristate "PadLock driver for SHA1 and SHA256 algorithms"
 	depends on CRYPTO_DEV_PADLOCK
@@ -46,12 +46,12 @@ config CRYPTO_DEV_PADLOCK_SHA
 	select CRYPTO_SHA256
 	help
 	  Use VIA PadLock for SHA1/SHA256 algorithms.
-
+	
 	  Available in VIA C7 and newer processors.
-
+	
 	  If unsure say M. The compiled module will be
 	  called padlock-sha.
-
+	
 config CRYPTO_DEV_GEODE
 	tristate "Support for the Geode LX AES engine"
 	depends on X86_32 && PCI
@@ -60,10 +60,10 @@ config CRYPTO_DEV_GEODE
 	help
 	  Say 'Y' here to use the AMD Geode LX processor on-board AES
 	  engine for the CryptoAPI AES algorithm.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called geode-aes.
-
+	
 config ZCRYPT
 	tristate "Support for s390 cryptographic adapters"
 	depends on S390
@@ -74,7 +74,7 @@ config ZCRYPT
 	  s390 cryptographic adapters like Crypto Express 4 up
 	  to 8 in Coprocessor (CEXxC), EP11 Coprocessor (CEXxP)
 	  or Accelerator (CEXxA) mode.
-
+	
 config PKEY
 	tristate "Kernel API for protected key handling"
 	depends on S390
@@ -82,7 +82,7 @@ config PKEY
 	  With this option enabled the pkey kernel modules provide an API
 	  for creation and handling of protected keys. Other parts of the
 	  kernel or userspace applications may use these functions.
-
+	
 	  The protected key support is distributed into:
 	  - A pkey base and API kernel module (pkey.ko) which offers the
 	    infrastructure for the pkey handler kernel modules, the ioctl
@@ -98,10 +98,10 @@ config PKEY
 	  - A pkey UV kernel module (pkey-uv.ko) which is automatically
 	    loaded when the Ultravisor feature is available within a
 	    protected execution environment.
-
+	
 	  Select this option if you want to enable the kernel and userspace
 	  API for protected key handling.
-
+	
 config PKEY_CCA
 	tristate "PKEY CCA support handler"
 	depends on PKEY
@@ -110,14 +110,14 @@ config PKEY_CCA
 	  This is the CCA support handler for deriving protected keys
 	  from CCA (secure) keys. Also this handler provides an alternate
 	  way to make protected keys from clear key values.
-
+	
 	  The PKEY CCA support handler needs a Crypto Express card (CEX)
 	  in CCA mode.
-
+	
 	  If you have selected the PKEY option then you should also enable
 	  this option unless you are sure you never need to derive protected
 	  keys from CCA key material.
-
+	
 config PKEY_EP11
 	tristate "PKEY EP11 support handler"
 	depends on PKEY
@@ -126,35 +126,35 @@ config PKEY_EP11
 	  This is the EP11 support handler for deriving protected keys
 	  from EP11 (secure) keys. Also this handler provides an alternate
 	  way to make protected keys from clear key values.
-
+	
 	  The PKEY EP11 support handler needs a Crypto Express card (CEX)
 	  in EP11 mode.
-
+	
 	  If you have selected the PKEY option then you should also enable
 	  this option unless you are sure you never need to derive protected
 	  keys from EP11 key material.
-
+	
 config PKEY_PCKMO
 	tristate "PKEY PCKMO support handler"
 	depends on PKEY
 	help
 	  This is the PCKMO support handler for deriving protected keys
 	  from clear key values via invoking the PCKMO instruction.
-
+	
 	  The PCKMO instruction can be enabled and disabled in the crypto
 	  settings at the LPAR profile. This handler checks for availability
 	  during initialization and if build as a kernel module unloads
 	  itself if PCKMO is disabled.
-
+	
 	  The PCKMO way of deriving protected keys from clear key material
 	  is especially used during self test of protected key ciphers like
 	  PAES but the CCA and EP11 handler provide alternate ways to
 	  generate protected keys from clear key values.
-
+	
 	  If you have selected the PKEY option then you should also enable
 	  this option unless you are sure you never need to derive protected
 	  keys from clear key values directly via PCKMO.
-
+	
 config PKEY_UV
 	tristate "PKEY UV support handler"
 	depends on PKEY
@@ -162,17 +162,17 @@ config PKEY_UV
 	help
 	  This is the PKEY Ultravisor support handler for deriving protected
 	  keys from secrets stored within the Ultravisor (UV).
-
+	
 	  This module works together with the UV device and supports the
 	  retrieval of protected keys from secrets stored within the
 	  UV firmware layer. This service is only available within
 	  a protected execution guest and thus this module will fail upon
 	  modprobe if no protected execution environment is detected.
-
+	
 	  Enable this option if you intend to run this kernel with an KVM
 	  guest with protected execution and you want to use UV retrievable
 	  secrets via PKEY API.
-
+	
 config CRYPTO_PAES_S390
 	tristate "PAES cipher algorithms"
 	depends on S390
@@ -184,10 +184,10 @@ config CRYPTO_PAES_S390
 	help
 	  This is the s390 hardware accelerated implementation of the
 	  AES cipher algorithms for use with protected key.
-
+	
 	  Select this option if you want to use the paes cipher
 	  for example to use protected key encrypted devices.
-
+	
 config CRYPTO_PHMAC_S390
 	tristate "PHMAC cipher algorithms"
 	depends on S390
@@ -197,10 +197,10 @@ config CRYPTO_PHMAC_S390
 	help
 	  This is the s390 hardware accelerated implementation of the
 	  protected key HMAC support for SHA224, SHA256, SHA384 and SHA512.
-
+	
 	  Select this option if you want to use the phmac digests
 	  for example to use dm-integrity with secure/protected keys.
-
+	
 config S390_PRNG
 	tristate "Pseudo random number generator device driver"
 	depends on S390
@@ -211,9 +211,9 @@ config S390_PRNG
 	  and uses triple-DES to generate secure random numbers like the
 	  ANSI X9.17 standard. User-space programs access the
 	  pseudo-random-number device through the char device /dev/prandom.
-
+	
 	  It is available as of z9.
-
+	
 config CRYPTO_DEV_SL3516
 	tristate "Storlink SL3516 crypto offloader"
 	depends on ARCH_GEMINI || COMPILE_TEST
@@ -225,7 +225,7 @@ config CRYPTO_DEV_SL3516
 	select HW_RANDOM
 	help
 	  This option allows you to have support for SL3516 crypto offloader.
-
+	
 config CRYPTO_DEV_SL3516_DEBUG
 	bool "Enable SL3516 stats"
 	depends on CRYPTO_DEV_SL3516
@@ -234,7 +234,7 @@ config CRYPTO_DEV_SL3516_DEBUG
 	  Say y to enable SL3516 debug stats.
 	  This will create /sys/kernel/debug/sl3516/stats for displaying
 	  the number of requests per algorithm and other internal stats.
-
+	
 config CRYPTO_DEV_HIFN_795X
 	tristate "Driver HIFN 795x crypto accelerator chips"
 	select CRYPTO_LIB_DES
@@ -244,14 +244,14 @@ config CRYPTO_DEV_HIFN_795X
 	depends on !ARCH_DMA_ADDR_T_64BIT
 	help
 	  This option allows you to have support for HIFN 795x crypto adapters.
-
+	
 config CRYPTO_DEV_HIFN_795X_RNG
 	bool "HIFN 795x random number generator"
 	depends on CRYPTO_DEV_HIFN_795X
 	help
 	  Select this option if you want to enable the random number generator
 	  on the HIFN 795x crypto adapters.
-
+	
 source "drivers/crypto/caam/Kconfig"
 
 config CRYPTO_DEV_TALITOS
@@ -266,13 +266,13 @@ config CRYPTO_DEV_TALITOS
 	help
 	  Say 'Y' here to use the Freescale Security Engine (SEC)
 	  to offload cryptographic algorithm computation.
-
+	
 	  The Freescale SEC is present on PowerQUICC 'E' processors, such
 	  as the MPC8349E and MPC8548E.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called talitos.
-
+	
 config CRYPTO_DEV_TALITOS1
 	bool "SEC1 (SEC 1.0 and SEC Lite 1.2)"
 	depends on CRYPTO_DEV_TALITOS
@@ -282,7 +282,7 @@ config CRYPTO_DEV_TALITOS1
 	  Say 'Y' here to use the Freescale Security Engine (SEC) version 1.0
 	  found on MPC82xx or the Freescale Security Engine (SEC Lite)
 	  version 1.2 found on MPC8xx
-
+	
 config CRYPTO_DEV_TALITOS2
 	bool "SEC2+ (SEC version 2.0 or upper)"
 	depends on CRYPTO_DEV_TALITOS
@@ -290,7 +290,7 @@ config CRYPTO_DEV_TALITOS2
 	help
 	  Say 'Y' here to use the Freescale Security Engine (SEC)
 	  version 2 and following as found on MPC83xx, MPC85xx, etc ...
-
+	
 config CRYPTO_DEV_PPC4XX
 	tristate "Driver AMCC PPC4xx crypto accelerator"
 	depends on PPC && 4xx
@@ -304,7 +304,7 @@ config CRYPTO_DEV_PPC4XX
 	select CRYPTO_SKCIPHER
 	help
 	  This option allows you to have support for AMCC crypto acceleration.
-
+	
 config HW_RANDOM_PPC4XX
 	bool "PowerPC 4xx generic true random number generator support"
 	depends on CRYPTO_DEV_PPC4XX && HW_RANDOM=y
@@ -312,14 +312,14 @@ config HW_RANDOM_PPC4XX
 	help
 	 This option provides the kernel-side support for the TRNG hardware
 	 found in the security function of some PowerPC 4xx SoCs.
-
+	
 config CRYPTO_DEV_OMAP
 	tristate "Support for OMAP crypto HW accelerators"
 	depends on ARCH_OMAP2PLUS
 	help
 	  OMAP processors have various crypto HW accelerators. Select this if
 	  you want to use the OMAP modules for any of the crypto algorithms.
-
+	
 if CRYPTO_DEV_OMAP
 
 config CRYPTO_DEV_OMAP_SHAM
@@ -334,7 +334,7 @@ config CRYPTO_DEV_OMAP_SHAM
 	help
 	  OMAP processors have MD5/SHA1/SHA2 hw accelerator. Select this if you
 	  want to use the OMAP module for MD5/SHA1/SHA2 algorithms.
-
+	
 config CRYPTO_DEV_OMAP_AES
 	tristate "Support for OMAP AES hw engine"
 	depends on ARCH_OMAP2 || ARCH_OMAP3 || ARCH_OMAP2PLUS
@@ -348,7 +348,7 @@ config CRYPTO_DEV_OMAP_AES
 	help
 	  OMAP processors have AES module accelerator. Select this if you
 	  want to use the OMAP module for AES algorithms.
-
+	
 config CRYPTO_DEV_OMAP_DES
 	tristate "Support for OMAP DES/3DES hw engine"
 	depends on ARCH_OMAP2PLUS
@@ -360,7 +360,7 @@ config CRYPTO_DEV_OMAP_DES
 	  want to use the OMAP module for DES and 3DES algorithms. Currently
 	  the ECB and CBC modes of operation are supported by the driver. Also
 	  accesses made on unaligned boundaries are supported.
-
+	
 endif # CRYPTO_DEV_OMAP
 
 config CRYPTO_DEV_SAHARA
@@ -373,7 +373,7 @@ config CRYPTO_DEV_SAHARA
 	help
 	  This option enables support for the SAHARA HW crypto accelerator
 	  found in some Freescale i.MX chips.
-
+	
 config CRYPTO_DEV_EXYNOS_RNG
 	tristate "Exynos HW pseudo random number generator support"
 	depends on ARCH_EXYNOS || COMPILE_TEST
@@ -383,12 +383,12 @@ config CRYPTO_DEV_EXYNOS_RNG
 	  This driver provides kernel-side support through the
 	  cryptographic API for the pseudo random number generator hardware
 	  found on Exynos SoCs.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called exynos-rng.
-
+	
 	  If unsure, say Y.
-
+	
 config CRYPTO_DEV_S5P
 	tristate "Support for Samsung S5PV210/Exynos crypto accelerator"
 	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
@@ -399,7 +399,7 @@ config CRYPTO_DEV_S5P
 	  This option allows you to have support for S5P crypto acceleration.
 	  Select this to offload Samsung S5PV210 or S5PC110, Exynos from AES
 	  algorithms execution.
-
+	
 config CRYPTO_DEV_EXYNOS_HASH
 	bool "Support for Samsung Exynos HASH accelerator"
 	depends on CRYPTO_DEV_S5P
@@ -413,7 +413,7 @@ config CRYPTO_DEV_EXYNOS_HASH
 	  needed for small and zero-size messages.
 	  HASH algorithms will be disabled if EXYNOS_RNG
 	  is enabled due to hw conflict.
-
+	
 config CRYPTO_DEV_NX
 	bool "Support for IBM PowerPC Nest (NX) cryptographic acceleration"
 	depends on PPC64
@@ -422,7 +422,7 @@ config CRYPTO_DEV_NX
 	  coprocessor that is in IBM PowerPC P7+ or later processors.  This
 	  does not actually enable any drivers, it only allows you to select
 	  which acceleration type (encryption and/or compression) to enable.
-
+	
 if CRYPTO_DEV_NX
 	source "drivers/crypto/nx/Kconfig"
 endif
@@ -436,7 +436,7 @@ config CRYPTO_DEV_ATMEL_AUTHENC
 	  to enhance support of IPSEC/SSL.
 	  Select this if you want to use the Atmel modules for
 	  authenc(hmac(shaX),Y(cbc)) algorithms.
-
+	
 config CRYPTO_DEV_ATMEL_AES
 	tristate "Support for Atmel AES hw accelerator"
 	depends on ARCH_MICROCHIP || COMPILE_TEST
@@ -449,10 +449,10 @@ config CRYPTO_DEV_ATMEL_AES
 	  Some Atmel processors have AES hw accelerator.
 	  Select this if you want to use the Atmel module for
 	  AES algorithms.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atmel-aes.
-
+	
 config CRYPTO_DEV_ATMEL_TDES
 	tristate "Support for Atmel DES/TDES hw accelerator"
 	depends on ARCH_AT91 || COMPILE_TEST
@@ -462,10 +462,10 @@ config CRYPTO_DEV_ATMEL_TDES
 	  Some Atmel processors have DES/TDES hw accelerator.
 	  Select this if you want to use the Atmel module for
 	  DES/TDES algorithms.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atmel-tdes.
-
+	
 config CRYPTO_DEV_ATMEL_SHA
 	tristate "Support for Atmel SHA hw accelerator"
 	depends on ARCH_AT91 || COMPILE_TEST
@@ -475,10 +475,10 @@ config CRYPTO_DEV_ATMEL_SHA
 	  hw accelerator.
 	  Select this if you want to use the Atmel module for
 	  SHA1/SHA224/SHA256/SHA384/SHA512 algorithms.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atmel-sha.
-
+	
 config CRYPTO_DEV_ATMEL_I2C
 	tristate
 	select BITREVERSE
@@ -493,10 +493,10 @@ config CRYPTO_DEV_ATMEL_ECC
 	  Microhip / Atmel ECC hw accelerator.
 	  Select this if you want to use the Microchip / Atmel module for
 	  ECDH algorithm.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atmel-ecc.
-
+	
 config CRYPTO_DEV_ATMEL_SHA204A
 	tristate "Support for Microchip / Atmel SHA accelerator and RNG"
 	depends on I2C
@@ -508,17 +508,17 @@ config CRYPTO_DEV_ATMEL_SHA204A
 	  Select this if you want to use the Microchip / Atmel SHA204A
 	  module as a random number generator. (Other functions of the
 	  chip are currently not exposed by this driver)
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atmel-sha204a.
-
+	
 config CRYPTO_DEV_CCP
 	bool "Support for AMD Secure Processor"
 	depends on ((X86 && PCI) || (ARM64 && (OF_ADDRESS || ACPI))) && HAS_IOMEM
 	help
 	  The AMD Secure Processor provides support for the Cryptographic Coprocessor
 	  (CCP) and the Platform Security Processor (PSP) devices.
-
+	
 if CRYPTO_DEV_CCP
 	source "drivers/crypto/ccp/Kconfig"
 endif
@@ -535,10 +535,10 @@ config CRYPTO_DEV_MXS_DCP
 	help
 	  The Freescale i.MX23/i.MX28 has SHA1/SHA256 and AES128 CBC/ECB
 	  co-processor on the die.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called mxs-dcp.
-
+	
 source "drivers/crypto/cavium/cpt/Kconfig"
 source "drivers/crypto/cavium/nitrox/Kconfig"
 source "drivers/crypto/marvell/Kconfig"
@@ -552,7 +552,7 @@ config CRYPTO_DEV_QCE
 	  This driver supports Qualcomm crypto engine accelerator
 	  hardware. To compile this driver as a module, choose M here. The
 	  module will be called qcrypto.
-
+	
 config CRYPTO_DEV_QCE_SKCIPHER
 	bool
 	depends on CRYPTO_DEV_QCE
@@ -583,15 +583,15 @@ choice
 	help
 	  This option allows to choose whether to build support for all algorithms
 	  (default), hashes-only, or skciphers-only.
-
+	
 	  The QCE engine does not appear to scale as well as the CPU to handle
 	  multiple crypto requests.  While the ipq40xx chips have 4-core CPUs, the
 	  QCE handles only 2 requests in parallel.
-
+	
 	  Ipsec throughput seems to improve when disabling either family of
 	  algorithms, sharing the load with the CPU.  Enabling skciphers-only
 	  appears to work best.
-
+	
 	config CRYPTO_DEV_QCE_ENABLE_ALL
 		bool "All supported algorithms"
 		select CRYPTO_DEV_QCE_SKCIPHER
@@ -604,7 +604,7 @@ choice
 			- DES (CBC, ECB)
 			- SHA1, HMAC-SHA1
 			- SHA256, HMAC-SHA256
-
+	
 	config CRYPTO_DEV_QCE_ENABLE_SKCIPHER
 		bool "Symmetric-key ciphers only"
 		select CRYPTO_DEV_QCE_SKCIPHER
@@ -613,7 +613,7 @@ choice
 			- AES (CBC, CTR, ECB, XTS)
 			- 3DES (ECB, CBC)
 			- DES (ECB, CBC)
-
+	
 	config CRYPTO_DEV_QCE_ENABLE_SHA
 		bool "Hash/HMAC only"
 		select CRYPTO_DEV_QCE_SHA
@@ -621,7 +621,7 @@ choice
 		  Enable hashes/HMAC algorithms only:
 			- SHA1, HMAC-SHA1
 			- SHA256, HMAC-SHA256
-
+	
 	config CRYPTO_DEV_QCE_ENABLE_AEAD
 		bool "AEAD algorithms only"
 		select CRYPTO_DEV_QCE_AEAD
@@ -640,21 +640,21 @@ config CRYPTO_DEV_QCE_SW_MAX_LEN
 	  This sets the default maximum request size to perform AES requests
 	  using software instead of the crypto engine.  It can be changed by
 	  setting the aes_sw_max_len parameter.
-
+	
 	  Small blocks are processed faster in software than hardware.
 	  Considering the 256-bit ciphers, software is 2-3 times faster than
 	  qce at 256-bytes, 30% faster at 512, and about even at 768-bytes.
 	  With 128-bit keys, the break-even point would be around 1024-bytes.
-
+	
 	  The default is set a little lower, to 512 bytes, to balance the
 	  cost in CPU usage.  The minimum recommended setting is 16-bytes
 	  (1 AES block), since AES-GCM will fail if you set it lower.
 	  Setting this to zero will send all requests to the hardware.
-
+	
 	  Note that 192-bit keys are not supported by the hardware and are
 	  always processed by the software fallback, and all DES requests
 	  are done by the hardware.
-
+	
 config CRYPTO_DEV_QCOM_RNG
 	tristate "Qualcomm Random Number Generator Driver"
 	depends on ARCH_QCOM || COMPILE_TEST
@@ -662,10 +662,10 @@ config CRYPTO_DEV_QCOM_RNG
 	help
 	  This driver provides support for the Random Number
 	  Generator hardware found on Qualcomm SoCs.
-
+	
 	  To compile this driver as a module, choose M here. The
 	  module will be called qcom-rng. If unsure, say N.
-
+	
 #config CRYPTO_DEV_VMX
 #	bool "Support for VMX cryptographic acceleration instructions"
 #	depends on PPC64 && VSX
@@ -685,7 +685,7 @@ config CRYPTO_DEV_IMGTEC_HASH
 	  This driver interfaces with the Imagination Technologies
 	  hardware hash accelerator. Supporting MD5/SHA1/SHA224/SHA256
 	  hashing algorithms.
-
+	
 config CRYPTO_DEV_ROCKCHIP
 	tristate "Rockchip's Cryptographic Engine driver"
 	depends on OF && ARCH_ROCKCHIP
@@ -705,7 +705,7 @@ config CRYPTO_DEV_ROCKCHIP
 	help
 	  This driver interfaces with the hardware crypto accelerator.
 	  Supporting cbc/ecb chainmode, and aes/des/des3_ede cipher mode.
-
+	
 config CRYPTO_DEV_ROCKCHIP_DEBUG
 	bool "Enable Rockchip crypto stats"
 	depends on CRYPTO_DEV_ROCKCHIP
@@ -714,7 +714,7 @@ config CRYPTO_DEV_ROCKCHIP_DEBUG
 	  Say y to enable Rockchip crypto debug stats.
 	  This will create /sys/kernel/debug/rk3288_crypto/stats for displaying
 	  the number of requests per algorithm and other internal stats.
-
+	
 config CRYPTO_DEV_TEGRA
 	tristate "Enable Tegra Security Engine"
 	depends on TEGRA_HOST1X
@@ -723,7 +723,7 @@ config CRYPTO_DEV_TEGRA
 	help
 	  Select this to enable Tegra Security Engine which accelerates various
 	  AES encryption/decryption and HASH algorithms.
-
+	
 config CRYPTO_DEV_XILINX_TRNG
 	tristate "Support for Xilinx True Random Generator"
 	depends on ZYNQMP_FIRMWARE || COMPILE_TEST
@@ -731,10 +731,10 @@ config CRYPTO_DEV_XILINX_TRNG
 	help
 	  Xilinx Versal SoC driver provides kernel-side support for True Random Number
 	  Generator and Pseudo random Number in CTR_DRBG mode as defined in NIST SP800-90A.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called xilinx-trng.
-
+	
 config CRYPTO_DEV_ZYNQMP_AES
 	tristate "Support for Xilinx ZynqMP AES hw accelerator"
 	depends on ZYNQMP_FIRMWARE || COMPILE_TEST
@@ -746,7 +746,7 @@ config CRYPTO_DEV_ZYNQMP_AES
 	  encryption and decryption. This driver interfaces with AES hw
 	  accelerator. Select this if you want to use the ZynqMP module
 	  for AES algorithms.
-
+	
 config CRYPTO_DEV_ZYNQMP_SHA3
 	tristate "Support for Xilinx ZynqMP SHA3 hardware accelerator"
 	depends on ZYNQMP_FIRMWARE || COMPILE_TEST
@@ -756,7 +756,7 @@ config CRYPTO_DEV_ZYNQMP_SHA3
 	  This driver interfaces with SHA3 hardware engine.
 	  Select this if you want to use the ZynqMP module
 	  for SHA3 hash computation.
-
+	
 source "drivers/crypto/chelsio/Kconfig"
 
 source "drivers/crypto/virtio/Kconfig"
@@ -776,7 +776,7 @@ config CRYPTO_DEV_BCM_SPU
 	  This driver provides support for Broadcom crypto acceleration using the
 	  Secure Processing Unit (SPU). The SPU driver registers skcipher,
 	  ahash, and aead algorithms with the kernel cryptographic API.
-
+	
 source "drivers/crypto/stm32/Kconfig"
 
 config CRYPTO_DEV_SAFEXCEL
@@ -800,7 +800,7 @@ config CRYPTO_DEV_SAFEXCEL
 	  AES block ciphers in ECB and CBC mode, as well as SHA1, SHA224, SHA256,
 	  SHA384 and SHA512 hash algorithms for both basic hash and HMAC.
 	  Additionally, it accelerates combined AES-CBC/HMAC-SHA AEAD operations.
-
+	
 config CRYPTO_DEV_ARTPEC6
 	tristate "Support for Axis ARTPEC-6/7 hardware crypto acceleration."
 	depends on ARM && (ARCH_ARTPEC || COMPILE_TEST)
@@ -817,9 +817,9 @@ config CRYPTO_DEV_ARTPEC6
 	help
 	  Enables the driver for the on-chip crypto accelerator
 	  of Axis ARTPEC SoCs.
-
+	
 	  To compile this driver as a module, choose M here.
-
+	
 config CRYPTO_DEV_CCREE
 	tristate "Support for ARM TrustZone CryptoCell family of security processors"
 	depends on CRYPTO && CRYPTO_HW && OF && HAS_DMA
@@ -848,7 +848,7 @@ config CRYPTO_DEV_CCREE
 	  Choose this if you wish to use hardware acceleration of
 	  cryptographic operations on the system REE.
 	  If unsure say Y.
-
+	
 source "drivers/crypto/hisilicon/Kconfig"
 
 source "drivers/crypto/amlogic/Kconfig"
@@ -869,7 +869,7 @@ config CRYPTO_DEV_SA2UL
 	  K3 devices include a security accelerator engine that may be
 	  used for crypto offload.  Select this if you want to use hardware
 	  acceleration for cryptographic algorithms on these devices.
-
+	
 source "drivers/crypto/aspeed/Kconfig"
 source "drivers/crypto/starfive/Kconfig"
 source "drivers/crypto/inside-secure/eip93/Kconfig"

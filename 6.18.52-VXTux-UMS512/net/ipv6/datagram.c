@@ -451,7 +451,7 @@ static bool ip6_datagram_support_cmsg(struct sk_buff *skb,
 /*
  *	Handle MSG_ERRQUEUE
  */
-int ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len)
+int ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 {
 	struct ipv6_pinfo *np = inet6_sk(sk);
 	struct sock_exterr_skb *serr;
@@ -534,6 +534,8 @@ int ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len)
 
 	msg->msg_flags |= MSG_ERRQUEUE;
 	err = copied;
+	if (addr_len)
+		*addr_len = msg->msg_namelen;
 
 	consume_skb(skb);
 out:
@@ -544,7 +546,7 @@ EXPORT_SYMBOL_GPL(ipv6_recv_error);
 /*
  *	Handle IPV6_RECVPATHMTU
  */
-int ipv6_recv_rxpmtu(struct sock *sk, struct msghdr *msg, int len)
+int ipv6_recv_rxpmtu(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 {
 	struct ipv6_pinfo *np = inet6_sk(sk);
 	struct sk_buff *skb;

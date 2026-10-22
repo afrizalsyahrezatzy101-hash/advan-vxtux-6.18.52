@@ -12,7 +12,7 @@ config IIO_CROS_EC_SENSORS_CORE
 	  Contains core functions used by other IIO CrosEC sensor
 	  drivers.
 	  Define common attributes and sysfs interrupt handler.
-
+	
 config IIO_CROS_EC_SENSORS
 	tristate "ChromeOS EC Contiguous Sensors"
 	depends on IIO_CROS_EC_SENSORS_CORE
@@ -21,7 +21,7 @@ config IIO_CROS_EC_SENSORS
 	  Accelerometers, Gyroscope and Magnetometer that are
 	  presented by the ChromeOS EC Sensor hub.
 	  Creates an IIO device for each functions.
-
+	
 config IIO_CROS_EC_SENSORS_LID_ANGLE
 	tristate "ChromeOS EC Sensor for lid angle"
 	depends on IIO_CROS_EC_SENSORS_CORE
@@ -30,7 +30,7 @@ config IIO_CROS_EC_SENSORS_LID_ANGLE
 	  convertible devices.
 	  This module is loaded when the EC can calculate the angle between the base
 	  and the lid.
-
+	
 config IIO_CROS_EC_ACTIVITY
 	tristate "ChromeOS EC Activity Sensors"
 	depends on IIO_CROS_EC_SENSORS_CORE
@@ -39,3 +39,4 @@ config IIO_CROS_EC_ACTIVITY
 	  Activities can be a proximity detector (on body/off body detection)
 	  or a significant motion detector.
 	  Creates an IIO device to manage all activities.
+	

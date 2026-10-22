@@ -11,18 +11,18 @@ menuconfig SPI
 	  up to several tens of Mbit/sec.  Chips are addressed with a
 	  controller and a chipselect.  Most SPI slaves don't support
 	  dynamic device discovery; some are even write-only or read-only.
-
+	
 	  SPI is widely used by microcontrollers to talk with sensors,
 	  eeprom and flash memory, codecs and various other controller
 	  chips, analog to digital (and d-to-a) converters, and more.
 	  MMC and SD cards can be accessed using SPI protocol; and for
 	  DataFlash cards used in MMC sockets, SPI must always be used.
-
+	
 	  SPI is one of a family of similar protocols using a four wire
 	  interface (select, clock, data in, data out) including Microwire
 	  (half duplex), SSP, SSI, and PSP.  This driver framework should
 	  work with most such devices and controllers.
-
+	
 if SPI
 
 config SPI_DEBUG
@@ -31,7 +31,7 @@ config SPI_DEBUG
 	help
 	  Say "yes" to enable debug messaging (like dev_dbg and pr_debug),
 	  sysfs, and debugfs support in SPI controller and protocol drivers.
-
+	
 #
 # MASTER side ... talking to discrete SPI slave chips including microcontrollers
 #
@@ -45,7 +45,7 @@ config SPI_MASTER
 	  provides the clock and chipselect), you can enable that
 	  controller and the protocol drivers for the SPI slave chips
 	  that are connected.
-
+	
 if SPI_MASTER
 
 config SPI_MEM
@@ -54,7 +54,7 @@ config SPI_MEM
 	  Enable this option if you want to enable the SPI memory extension.
 	  This extension is meant to simplify interaction with SPI memories
 	  by providing a high-level interface to send memory-like commands.
-
+	
 config SPI_OFFLOAD
 	bool
 
@@ -65,7 +65,7 @@ config SPI_DESIGNWARE
 	imply SPI_MEM
 	help
 	  general driver for SPI controller core from DesignWare
-
+	
 if SPI_DESIGNWARE
 
 config SPI_DW_DMA
@@ -92,7 +92,7 @@ config SPI_DW_BT1
 	  chip-select and Tx/Rx FIFO with just 8 words depth available.
 	  The later one is normally connected to an external SPI-nor flash
 	  of 128Mb (in general can be of bigger size).
-
+	
 config SPI_DW_BT1_DIRMAP
 	bool "Directly mapped Baikal-T1 Boot SPI flash support"
 	depends on SPI_DW_BT1
@@ -105,7 +105,7 @@ config SPI_DW_BT1_DIRMAP
 	  operation is finished. So try not to use it concurrently with
 	  time-critical tasks (like the SPI memory operations implemented
 	  in this driver).
-
+	
 endif
 
 config SPI_BITBANG
@@ -116,11 +116,11 @@ config SPI_BITBANG
 	  port, etc).  Or, some systems' SPI host controller drivers use
 	  this code to manage the per-word or per-transfer accesses to the
 	  hardware shift registers.
-
+	
 	  This is library code, and is automatically selected by drivers that
 	  need it.  You only need to select this explicitly to support driver
 	  modules that aren't part of this kernel tree.
-
+	
 config SPI_GPIO
 	tristate "GPIO-based bitbanging SPI Master"
 	depends on GPIOLIB || COMPILE_TEST
@@ -131,19 +131,19 @@ config SPI_GPIO
 	  slaves connected to a bus using this driver are configured as usual,
 	  except that the spi_board_info.controller_data holds the GPIO number
 	  for the chipselect used by this controller driver.
-
+	
 	  Note that this driver often won't achieve even 1 Mbit/sec speeds,
 	  making it unusually slow for SPI.  If your platform can inline
 	  GPIO operations, you should be able to leverage that for better
 	  speed with a custom version of this driver; see the source code.
-
+	
 config SPI_FSI
 	tristate "FSI SPI driver"
 	depends on FSI
 	help
 	  This enables support for the driver for FSI bus attached SPI
 	  controllers.
-
+	
 config SPI_PL022
 	tristate "ARM AMBA PL022 SSP controller"
 	depends on ARM_AMBA
@@ -154,7 +154,7 @@ config SPI_PL022
 	  This selects the ARM(R) AMBA(R) PrimeCell PL022 SSP
 	  controller. If you have an embedded system with an AMBA(R)
 	  bus and a PL022 controller, say Y or M here.
-
+	
 config SPI_VIRTIO
 	tristate "Virtio SPI Controller"
 	depends on SPI_MASTER && VIRTIO
@@ -162,23 +162,23 @@ config SPI_VIRTIO
 	  If you say yes to this option, support will be included for the virtio
 	  SPI controller driver. The hardware can be emulated by any device model
 	  software according to the virtio protocol.
-
+	
 	  This driver can also be built as a module. If so, the module
 	  will be called spi-virtio.
-
+	
 config SPI_SPRD
 	tristate "Spreadtrum SPI controller"
 	depends on ARCH_SPRD || COMPILE_TEST
 	help
 	  SPI driver for Spreadtrum SoCs.
-
+	
 config SPI_SPRD_ADI
 	tristate "Spreadtrum ADI controller"
 	depends on ARCH_SPRD || COMPILE_TEST
 	depends on HWSPINLOCK || (COMPILE_TEST && !HWSPINLOCK)
 	help
 	  ADI driver based on SPI for Spreadtrum SoCs.
-
+	
 #
 # Add new SPI master controllers in alphabetical order above this line
 #
@@ -193,7 +193,7 @@ config SPI_MUX
 	  accessible as a SPI controller, the devices behind the mux will appear
 	  to be chip selects on this controller. It is still necessary to
 	  select one or more specific mux-controller drivers.
-
+	
 #
 # There are lots of SPI device types, with sensors and memory
 # being probably the most widely used ones.
@@ -204,16 +204,16 @@ config SPI_SPIDEV
 	tristate "User mode SPI device driver support"
 	help
 	  This supports user mode SPI protocol drivers.
-
+	
 config SPI_LOOPBACK_TEST
 	tristate "spi loopback test framework support"
 	depends on m
 	help
 	  This enables the SPI loopback testing framework driver
-
+	
 	  primarily used for development of spi_master drivers
 	  and to detect regressions
-
+	
 config SPI_TLE62X0
 	tristate "Infineon TLE62X0 (for power switching)"
 	depends on SYSFS
@@ -222,7 +222,7 @@ config SPI_TLE62X0
 	  such as the TLE6220, TLE6230 and TLE6240.  This provides a
 	  sysfs interface, with each line presented as a kind of GPIO
 	  exposing both switch control and diagnostic feedback.
-
+	
 #
 # Add new SPI protocol masters in alphabetical order above this line
 #
@@ -238,7 +238,7 @@ config SPI_SLAVE
 	help
 	  If your system has a slave-capable SPI controller, you can enable
 	  slave protocol handlers.
-
+	
 if SPI_SLAVE
 
 config SPI_SLAVE_TIME
@@ -246,13 +246,13 @@ config SPI_SLAVE_TIME
 	help
 	  SPI slave handler responding with the time of reception of the last
 	  SPI message.
-
+	
 config SPI_SLAVE_SYSTEM_CONTROL
 	tristate "SPI slave handler controlling system state"
 	help
 	  SPI slave handler to allow remote control of system reboot, power
 	  off, halt, and suspend.
-
+	
 endif   # SPI_SLAVE
 
 endif   # SPI

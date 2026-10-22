@@ -18,4 +18,5 @@ config DVB_NGENE
 	select DVB_CXD2099 if MEDIA_SUBDRV_AUTOSELECT
 	help
 	  Support for Micronas PCI express cards with nGene bridge.
-
+	
+	

@@ -37,6 +37,14 @@
  */
 static struct sprd_mpm *g_mpm_reg[SPRD_MPM_RESOURCE_NUM];
 
+/*
+ * The stock blob's global is g_sprd_mpm: a single struct sprd_mpm *, the
+ * "current" mpm.  The port kept the per-id registry in g_mpm_reg and had no
+ * name for the current one, so the stock symbol was missing.
+ */
+struct sprd_mpm *g_sprd_mpm;
+EXPORT_SYMBOL_GPL(g_sprd_mpm);
+
 /* Timer callbacks defined below; mpm_create wires them at init. */
 static void sprd_mpm_deactive_timer_fn(struct timer_list *t);
 static void sprd_mpm_print_timer_fn(struct timer_list *t);
@@ -84,6 +92,8 @@ struct sprd_mpm *sprd_mpm_create(u8 id, const char *name,
 	timer_setup(&mpm->deactive_timer, sprd_mpm_deactive_timer_fn, 0);
 	timer_setup(&mpm->print_timer, sprd_mpm_print_timer_fn, 0);
 	g_mpm_reg[id] = mpm;
+	if (id == 0)
+		g_sprd_mpm = mpm;
 	return mpm;
 }
 
@@ -97,6 +107,8 @@ void sprd_mpm_destroy(struct sprd_mpm *mpm)
 	for (i = 0; i < SPRD_MPM_RESOURCE_NUM; i++) {
 		if (g_mpm_reg[i] == mpm)
 			g_mpm_reg[i] = NULL;
+		if (g_sprd_mpm == mpm)
+			g_sprd_mpm = NULL;
 	}
 	timer_delete_sync(&mpm->deactive_timer);
 	timer_delete_sync(&mpm->print_timer);
@@ -107,7 +119,7 @@ void sprd_mpm_destroy(struct sprd_mpm *mpm)
 struct sprd_mpm *sprd_mpm_get(void)
 {
 	/* Blob: load .bss slot 0, ret if non-NULL (TBC: single-instance read). */
-	return g_mpm_reg[0];
+	return g_sprd_mpm;
 }
 
 /* ---- mpm up/down: the CFI-dispatched ops layer -------------------------- */
@@ -744,7 +756,7 @@ static int sprd_mpm_pm_event(struct notifier_block *nb, unsigned long event,
 	return NOTIFY_DONE;
 }
 
-static struct notifier_block sprd_mpm_pm_nb = {
+struct notifier_block sprd_mpm_notifier_block = {
 	.notifier_call = sprd_mpm_pm_event,
 };
 
@@ -754,7 +766,7 @@ static int __init sprd_power_manager_init(void)
 {
 	struct dentry *dir;
 
-	register_pm_notifier(&sprd_mpm_pm_nb);
+	register_pm_notifier(&sprd_mpm_notifier_block);
 
 	dir = debugfs_create_dir("mpm", NULL);
 	if (!IS_ERR(dir))
@@ -766,7 +778,7 @@ static int __init sprd_power_manager_init(void)
 
 static void __exit sprd_power_manager_exit(void)
 {
-	unregister_pm_notifier(&sprd_mpm_pm_nb);
+	unregister_pm_notifier(&sprd_mpm_notifier_block);
 }
 
 module_init(sprd_power_manager_init);

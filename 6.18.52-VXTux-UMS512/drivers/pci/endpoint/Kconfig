@@ -12,13 +12,13 @@ config PCI_ENDPOINT
 	   Enable this configuration option to support configurable PCI
 	   endpoint. This should be enabled if the platform has a PCI
 	   controller that can operate in endpoint mode.
-
+	
 	   Enabling this option will build the endpoint library, which
 	   includes endpoint controller library and endpoint function
 	   library.
-
+	
 	   If in doubt, say "N" to disable Endpoint support.
-
+	
 config PCI_ENDPOINT_CONFIGFS
 	bool "PCI Endpoint Configfs Support"
 	depends on PCI_ENDPOINT
@@ -27,7 +27,7 @@ config PCI_ENDPOINT_CONFIGFS
 	   This will enable the configfs entry that can be used to
 	   configure the endpoint function and used to bind the
 	   function with an endpoint controller.
-
+	
 config PCI_ENDPOINT_MSI_DOORBELL
 	bool "PCI Endpoint MSI Doorbell Support"
 	depends on PCI_ENDPOINT && GENERIC_MSI_IRQ
@@ -35,7 +35,7 @@ config PCI_ENDPOINT_MSI_DOORBELL
 	  This enables the EP's MSI interrupt controller to function as a
 	  doorbell. The RC can trigger doorbell in EP by writing data to a
 	  dedicated BAR, which the EP maps to the controller's message address.
-
+	
 source "drivers/pci/endpoint/functions/Kconfig"
 
 endmenu

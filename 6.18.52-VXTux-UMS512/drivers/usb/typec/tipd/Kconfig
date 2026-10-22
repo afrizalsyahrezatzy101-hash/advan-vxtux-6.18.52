@@ -7,6 +7,7 @@ config TYPEC_TPS6598X
 	help
 	  Say Y or M here if your system has TI TPS65982 or TPS65983 USB Power
 	  Delivery controller.
-
+	
 	  If you choose to build this driver as a dynamically linked module, the
 	  module will be called tps6598x.ko.
+	

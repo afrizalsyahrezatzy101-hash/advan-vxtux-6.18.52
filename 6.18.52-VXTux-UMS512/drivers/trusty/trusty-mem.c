@@ -123,3 +123,5 @@ int trusty_call32_mem_buf(struct device *dev, u32 smcnr,
 	}
 }
 EXPORT_SYMBOL(trusty_call32_mem_buf);
+
+EXPORT_SYMBOL(trusty_encode_page_info);

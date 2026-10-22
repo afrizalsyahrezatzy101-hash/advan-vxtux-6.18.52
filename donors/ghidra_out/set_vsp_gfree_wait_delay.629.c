@@ -1,0 +1,21 @@
+// set_vsp_gfree_wait_delay.629 @ 00111c70
+// signature: undefined set_vsp_gfree_wait_delay.629(void)
+// calling convention: unknown
+
+
+void set_vsp_gfree_wait_delay_629(long param_1,uint param_2)
+
+{
+  undefined8 *in_x18;
+  long lVar1;
+  undefined8 unaff_x30;
+  
+  *in_x18 = unaff_x30;
+  lVar1 = *(long *)(*(long *)(param_1 + 0x4a8) + 0x3d8);
+  mutex_lock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  *(uint *)(lVar1 + 0x130) = *(uint *)(lVar1 + 0x130) | param_2 & 0x3ff;
+  mutex_unlock(*(long *)(param_1 + 0x4a8) + 0x3f0);
+  return;
+}
+
+

@@ -32,7 +32,9 @@ struct pwm_bl_data {
 	int			(*notify)(struct device *,
 					  int brightness);
 	void			(*notify_after)(struct device *,
-					int brightness);
+						int brightness);
+	int			(*check_fb)(struct device *,
+						struct device *display_dev);
 	void			(*exit)(struct device *);
 };
 
@@ -127,8 +129,26 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
 	return 0;
 }
 
+static noinline int pwm_backlight_check_fb(struct backlight_device *bl,
+					   struct device *display_dev) __noclone;
+
+static int pwm_backlight_check_fb(struct backlight_device *bl,
+				  struct device *display_dev)
+{
+	struct pwm_bl_data *pb = bl_get_data(bl);
+
+	return !pb->check_fb || pb->check_fb(pb->dev, display_dev);
+}
+
+static bool pwm_backlight_controls_device(struct backlight_device *bl,
+					  struct device *display_dev)
+{
+	return pwm_backlight_check_fb(bl, display_dev);
+}
+
 static const struct backlight_ops pwm_backlight_ops = {
 	.update_status	= pwm_backlight_update_status,
+	.controls_device = pwm_backlight_controls_device,
 };
 
 #ifdef CONFIG_OF
@@ -214,6 +234,9 @@ int pwm_backlight_brightness_default(struct device *dev,
 
 	return 0;
 }
+
+static noinline int pwm_backlight_parse_dt(struct device *dev,
+					   struct platform_pwm_backlight_data *data) __noclone;
 
 static int pwm_backlight_parse_dt(struct device *dev,
 				  struct platform_pwm_backlight_data *data)
@@ -354,6 +377,9 @@ static const struct of_device_id pwm_backlight_of_match[] = {
 
 MODULE_DEVICE_TABLE(of, pwm_backlight_of_match);
 #else
+static noinline int pwm_backlight_parse_dt(struct device *dev,
+					   struct platform_pwm_backlight_data *data) __noclone;
+
 static int pwm_backlight_parse_dt(struct device *dev,
 				  struct platform_pwm_backlight_data *data)
 {
@@ -471,6 +497,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
 
 	pb->notify = data->notify;
 	pb->notify_after = data->notify_after;
+	pb->check_fb = data->check_fb;
 	pb->exit = data->exit;
 	pb->dev = &pdev->dev;
 	pb->enabled = false;

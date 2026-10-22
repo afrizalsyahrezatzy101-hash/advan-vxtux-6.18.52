@@ -5,9 +5,9 @@ config WILC1000
 	  Add support for the Atmel WILC1000 802.11 b/g/n SoC.
 	  This provides Wi-FI over an SDIO or SPI interface, and
 	  is usually found in IoT devices.
-
+	
 	  This module only support IEEE 802.11n WiFi.
-
+	
 config WILC1000_SDIO
 	tristate "Atmel WILC1000 SDIO (WiFi only)"
 	depends on CFG80211 && INET && MMC
@@ -21,7 +21,7 @@ config WILC1000_SDIO
 	  within the chip as well as configure the WILC1000 for data DMA.
 	  To use this interface, pin9 (SDIO_SPI_CFG) must be grounded. Select
 	  this if your platform is using the SDIO bus.
-
+	
 config WILC1000_SPI
 	tristate "Atmel WILC1000 SPI (WiFi only)"
 	depends on CFG80211 && INET && SPI
@@ -36,7 +36,7 @@ config WILC1000_SPI
 	  full-duplex slave synchronous serial interface that is available
 	  immediately following reset when pin 9 (SDIO_SPI_CFG) is tied to
 	  VDDIO. Select this if your platform is using the SPI bus.
-
+	
 config WILC1000_HW_OOB_INTR
 	bool "WILC1000 out of band interrupt"
 	depends on WILC1000_SDIO
@@ -46,3 +46,4 @@ config WILC1000_HW_OOB_INTR
 	  mechanism for SDIO host controllers that don't support SDIO interrupt.
 	  Select this option If the SDIO host controller in your platform
 	  doesn't support SDIO time division interrupt.
+	

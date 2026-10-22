@@ -23,12 +23,23 @@
 #include <linux/input.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
+#include <linux/proc_fs.h>
 #include <linux/gpio.h>
+#include <linux/sysfs.h>
+#include <linux/types.h>
 
 
 
 
 #include "nt36xxx_mem_map.h"
+
+/* nt36xxx_compat.c carries these three for the stock blob's API surface. */
+extern char lcd_name[100];
+extern const struct attribute_group novatek_attr_group;
+extern int32_t nvt_suspend_state;
+extern size_t fw_need_write_size;
+extern uint8_t cascade_2nd_header_info;
+
 
 
 
@@ -344,4 +355,35 @@ int32_t nvt_mode_switch(NVT_CUSTOMIZED_MODE mode, uint8_t flag);
 void nvt_read_mdata(uint32_t xdata_addr, uint32_t xdata_btn_addr);
 void nvt_read_mdata_rss(uint32_t xdata_i_addr, uint32_t xdata_q_addr,
 		uint32_t xdata_btn_i_addr, uint32_t xdata_btn_q_addr);
+
+/*
+ * /proc node lifecycle, split across two files in this port:
+ * nvt_extra_proc_init() lives in nt36xxx_ext_proc.c, the pen node and
+ * the teardown live in nt36xxx_pen.c.
+ */
+int32_t nvt_extra_proc_init(void);
+int32_t nvt_pen_proc_init(void);
+void nvt_extra_proc_deinit(void);
+
+/*
+ * The stock blob's proc entry points. The stock was built against 5.4,
+ * where a /proc entry took a struct file_operations; 6.18 replaced that
+ * with struct proc_ops. nt36xxx_compat.c keeps the stock's
+ * struct file_operations tables (nvt_*_fops) and bridges each one to a
+ * proc_ops, which is what the proc_create() sites below use.
+ */
+extern const struct proc_ops nvt_flash_fops_proc_ops;
+extern const struct proc_ops nvt_selftest_fops_proc_ops;
+extern const struct proc_ops nvt_fw_version_fops_proc_ops;
+extern const struct proc_ops nvt_baseline_fops_proc_ops;
+extern const struct proc_ops nvt_raw_fops_proc_ops;
+extern const struct proc_ops nvt_diff_fops_proc_ops;
+extern const struct proc_ops nvt_pen_diff_fops_proc_ops;
+
+/* /proc node names, shared by the creator and the teardown. */
+#define NVT_FW_VERSION	"nvt_fw_version"
+#define NVT_BASELINE	"nvt_baseline"
+#define NVT_RAW		"nvt_raw"
+#define NVT_DIFF	"nvt_diff"
+#define NVT_PEN_DIFF	"nvt_pen_diff"
 #endif /* _LINUX_NVT_TOUCH_H */

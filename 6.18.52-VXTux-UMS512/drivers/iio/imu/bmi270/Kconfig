@@ -16,10 +16,10 @@ config BMI270_I2C
 	help
 	  Enable support for the Bosch BMI270 6-Axis IMU connected to I2C
 	  interface.
-
+	
 	  This driver can also be built as a module. If so, the module will be
 	  called bmi270_i2c.
-
+	
 config BMI270_SPI
 	tristate "Bosch BMI270 SPI driver"
 	depends on SPI
@@ -28,6 +28,7 @@ config BMI270_SPI
 	help
 	  Enable support for the Bosch BMI270 6-Axis IMU connected to SPI
 	  interface.
-
+	
 	  This driver can also be built as a module. If so, the module will be
 	  called bmi270_spi.
+	

@@ -11,6 +11,7 @@
 * GNU General Public License for more details.
 */
 
+#include <linux/berry_compat.h>
 #include <linux/errno.h>
 #include <linux/file.h>
 #include <linux/fs.h>

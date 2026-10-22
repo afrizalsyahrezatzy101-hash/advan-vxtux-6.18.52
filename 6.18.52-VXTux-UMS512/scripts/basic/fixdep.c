@@ -89,10 +89,15 @@
  *  but I don't think the added complexity is worth it)
  */
 
+#define _GNU_SOURCE 1
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+/* VXTux: define O_BINARY for mingw if not already */
+#ifndef O_BINARY
+#define O_BINARY 0x8000
+#endif
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -216,7 +221,7 @@ static void *read_file(const char *filename)
 	int fd;
 	char *buf;
 
-	fd = open(filename, O_RDONLY);
+	fd = open(filename, O_RDONLY | O_BINARY);
 	if (fd < 0) {
 		fprintf(stderr, "fixdep: error opening file: ");
 		perror(filename);

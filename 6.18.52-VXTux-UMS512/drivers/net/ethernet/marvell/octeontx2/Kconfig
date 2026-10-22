@@ -18,7 +18,7 @@ config OCTEONTX2_AF
 	  Unit's admin function manager which manages all RVU HW resources
 	  and provides a medium to other PF/VFs to configure HW. Should be
 	  enabled for other RVU device drivers to work.
-
+	
 config NDC_DIS_DYNAMIC_CACHING
 	bool "Disable caching of dynamic entries in NDC"
 	depends on OCTEONTX2_AF
@@ -27,7 +27,7 @@ config NDC_DIS_DYNAMIC_CACHING
 	  This config option disables caching of dynamic entries such as NIX SQEs
 	  , NPA stack pages etc in NDC. Also locks down NIX SQ/CQ/RQ/RSS and
 	  NPA Aura/Pool contexts.
-
+	
 config OCTEONTX2_PF
 	tristate "Marvell OcteonTX2 NIC Physical Function driver"
 	select OCTEONTX2_MBOX
@@ -40,13 +40,13 @@ config OCTEONTX2_PF
 	depends on MACSEC || !MACSEC
 	help
 	  This driver supports Marvell's OcteonTX2 NIC physical function.
-
+	
 config OCTEONTX2_VF
 	tristate "Marvell OcteonTX2 NIC Virtual Function driver"
 	depends on OCTEONTX2_PF
 	help
 	  This driver supports Marvell's OcteonTX2 NIC virtual function.
-
+	
 config RVU_ESWITCH
 	tristate "Marvell RVU E-Switch support"
 	depends on OCTEONTX2_PF
@@ -54,3 +54,4 @@ config RVU_ESWITCH
 	help
 	  This driver supports Marvell's RVU E-Switch that
 	  provides internal SRIOV packet steering and switching.
+	

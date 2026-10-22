@@ -94,7 +94,8 @@ struct ion_tipc_dev {
 	int			state;		/* +0x00 */
 };
 
-static struct ion_tipc_dev *ion_tipc;
+struct ion_tipc_dev *ion_tipc;
+EXPORT_SYMBOL_GPL(ion_tipc);
 
 /* ------------------------------------------------------------------ */
 /* TIPC callbacks.                                                     */
@@ -133,7 +134,7 @@ static void ion_handle_event(void *cb_arg, int event)
  * what makes the later tipc_chan_put_rxbuf() in ion_tipc_read() correct;
  * returning NULL would let TIPC reclaim it immediately.
  */
-static struct tipc_msg_buf *ion_handle_msg(void *cb_arg,
+ struct tipc_msg_buf *ion_handle_msg(void *cb_arg,
 					   struct tipc_msg_buf *mb, u16 flags)
 {
 	struct ion_tipc_dev *tipc = cb_arg;
@@ -150,6 +151,7 @@ static struct tipc_msg_buf *ion_handle_msg(void *cb_arg,
 	wake_up_interruptible(&tipc->readq);
 	return mb;
 }
+EXPORT_SYMBOL_GPL(ion_handle_msg);
 
 static void ion_handle_release(void *cb_arg)
 {

@@ -13,7 +13,7 @@ menuconfig LIBNVDIMM
 	  namespaces (/dev/pmemX). A PMEM namespace refers to a
 	  memory resource that may span multiple DIMMs and support DAX
 	  (see CONFIG_DAX).
-
+	
 if LIBNVDIMM
 
 config BLK_DEV_PMEM
@@ -32,9 +32,9 @@ config BLK_DEV_PMEM
 	  these persistent memory ranges into block devices that are
 	  capable of DAX (direct-access) file system mappings.  See
 	  Documentation/driver-api/nvdimm/nvdimm.rst for more details.
-
+	
 	  Say Y if you want to use an NVDIMM
-
+	
 config ND_CLAIM
 	bool
 
@@ -53,9 +53,9 @@ config BTT
 	  The BTT manifests itself as an alternate personality for an
 	  NVDIMM namespace, i.e. a namespace can be in raw mode pmemX,
 	  or 'sectored' mode.
-
+	
 	  Select Y if unsure
-
+	
 config ND_PFN
 	tristate
 
@@ -71,9 +71,9 @@ config NVDIMM_PFN
 	  requires a 'struct page' to mediate an I/O request.  This
 	  driver allocates and initializes the infrastructure needed
 	  to support those use cases.
-
+	
 	  Select Y if unsure
-
+	
 config NVDIMM_DAX
 	bool "NVDIMM DAX: Raw access to persistent memory"
 	default LIBNVDIMM
@@ -84,9 +84,9 @@ config NVDIMM_DAX
 	  persistent memory, this capability provides a mechanism to
 	  sub-divide a namespace into character devices that can only be
 	  accessed via DAX (mmap(2)).
-
+	
 	  Select Y if unsure
-
+	
 config OF_PMEM
 	tristate "Device-tree support for persistent memory regions"
 	depends on OF
@@ -94,9 +94,9 @@ config OF_PMEM
 	help
 	  Allows regions of persistent memory to be described in the
 	  device-tree.
-
+	
 	  Select Y if unsure.
-
+	
 config NVDIMM_KEYS
 	def_bool y
 	depends on ENCRYPTED_KEYS
@@ -118,9 +118,9 @@ config NVDIMM_KMSAN
 	  (with the page array stored pmem) created with this build of
 	  the kernel will permanently reserve and strand excess
 	  capacity compared to the CONFIG_KMSAN=n case.
-
+	
 	  Select N if unsure.
-
+	
 config NVDIMM_TEST_BUILD
 	tristate "Build the unit test core"
 	depends on m
@@ -132,7 +132,7 @@ config NVDIMM_TEST_BUILD
 	  otherwise helps catch build errors induced by changes to the
 	  core devm_memremap_pages() implementation and other
 	  infrastructure.
-
+	
 config NVDIMM_SECURITY_TEST
 	bool "Enable NVDIMM security unit tests"
 	depends on NVDIMM_KEYS
@@ -142,7 +142,7 @@ config NVDIMM_SECURITY_TEST
 	  cache maintenance operations around events like secure erase and
 	  overwrite.  Also, when enabled, the NVDIMM subsystem core helps the unit
 	  test implement a mock state machine.
-
+	
 	  Select N if unsure.
-
+	
 endif

@@ -10,14 +10,15 @@ config CRYPTO_DEV_CHELSIO
 	select CRYPTO_AUTHENC
 	help
 	  The Chelsio Crypto Co-processor driver for T6 adapters.
-
+	
 	  For general information about Chelsio and our products, visit
 	  our website at <http://www.chelsio.com>.
-
+	
 	  For customer support, please visit our customer support page at
 	  <http://www.chelsio.com/support.html>.
-
+	
 	  Please send feedback to <linux-bugs@chelsio.com>.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called chcr.
+	

@@ -11,3 +11,4 @@ config SCSI_BNX2X_FCOE
 	select CNIC
 	help
 	This driver supports FCoE offload for the QLogic devices.
+	

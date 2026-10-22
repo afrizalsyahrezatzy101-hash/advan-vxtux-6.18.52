@@ -60,6 +60,7 @@
 
 #define pr_fmt(fmt) "IPv4: " fmt
 
+#include <linux/berry_compat.h>
 #include <linux/module.h>
 #include <linux/bitops.h>
 #include <linux/kernel.h>

@@ -9,7 +9,7 @@ menuconfig TEE
 	help
 	  This implements a generic interface towards a Trusted Execution
 	  Environment (TEE).
-
+	
 if TEE
 
 config TEE_DMABUF_HEAPS

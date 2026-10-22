@@ -37,18 +37,18 @@ choice
 	  MCDT (Multi-channel Data Transfer) punya dua revisi hardware yang
 	  driver-nya tidak bisa hidup bersama. Pilih yang cocok dengan SoC
 	  target; untuk UMS512/T618 jawabannya r1p0.
-
+	
 config SPRD_AUDIO_MCDT_R1P0
 	bool "r1p0 (UMS512/T618 — compatible \"sprd,sharkl5-mcdt\")"
 	help
 	  Varian r1p0 (mcdt_hw.c). Ini yang dipakai papan T1030: node DT fork
 	  memakai compatible "sprd,sharkl5-mcdt" yang cocok dengan mcdt_hw.c.
-
+	
 config SPRD_AUDIO_MCDT_R2P0
 	bool "r2p0 (SoC generasi berikutnya)"
 	help
 	  Varian r2p0 (mcdt_hw_r2p0.c). Belum dipakai papan mana pun di pohon
 	  ini -- tidak ada node DT yang memakai compatible-nya. Dipilih hanya
 	  bila membidik SoC yang memang memakai MCDT r2p0.
-
+	
 endchoice

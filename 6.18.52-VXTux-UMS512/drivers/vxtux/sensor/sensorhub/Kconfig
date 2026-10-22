@@ -14,3 +14,4 @@ config VXTUX_SENSORHUB
 	  (vermagic build v4 identik, ada di Magisk overlay). get_hardware_info_data
 	  tersedia sebagai built-in (kallsyms hardware_info_*). Folder ini hanya
 	  jembatan simbol untuk fuel_gauge/tddi/tp bila dibutuhkan; default n.
+	

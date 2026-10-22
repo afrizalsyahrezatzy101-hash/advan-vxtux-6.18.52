@@ -14,7 +14,7 @@ config WCN_WLAN
 	  Replaces vendor blob sprd_wlan_combo.ko.
 	  Sumber: gpl-source/hadenix_ums512_wcn/drivers/wcn/wlan/sc2355/
 	  Tergantung pada WCN_CORE untuk bus/transport SDIO.
-
+	
 config WCN_WLAN_SC2355
 	tristate "SC2355 specific WiFi support"
 	depends on WCN_WLAN

@@ -12,7 +12,7 @@ config DRM_ANALOGIX_ANX6345
 	  transmitter designed for portable devices. The
 	  ANX6345 transforms the LVTTL RGB output of an
 	  application processor to eDP or DisplayPort.
-
+	
 config DRM_ANALOGIX_ANX78XX
 	tristate "Analogix ANX78XX bridge"
 	select DRM_ANALOGIX_DP
@@ -25,7 +25,7 @@ config DRM_ANALOGIX_ANX78XX
 	  designed for portable devices. The ANX78XX transforms
 	  the HDMI output of an application processor to MyDP
 	  or DisplayPort.
-
+	
 config DRM_ANALOGIX_DP
 	tristate
 	depends on DRM
@@ -43,3 +43,4 @@ config DRM_ANALOGIX_ANX7625
 	  ANX7625 is an ultra-low power 4K mobile HD transmitter
 	  designed for portable devices. It converts MIPI/DPI to
 	  DisplayPort1.3 4K.
+	

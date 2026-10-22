@@ -10,15 +10,15 @@ menuconfig ARCNET
 	  If you have a network card of this type, say Y and check out the
 	  (arguably) beautiful poetry in
 	  <file:Documentation/networking/arcnet.rst>.
-
+	
 	  You need both this driver, and the driver for the particular ARCnet
 	  chipset of your card. If you don't know, then it's probably a
 	  COM90xx type card, so say Y (or M) to "ARCnet COM90xx chipset
 	  support" below.
-
+	
 	  To compile this driver as a module, choose M here. The module will
 	  be called arcnet.
-
+	
 if ARCNET
 
 config ARCNET_1201
@@ -30,7 +30,7 @@ config ARCNET_1201
 	  packet driver or most DOS/Windows ODI drivers.  Please read the
 	  ARCnet documentation in <file:Documentation/networking/arcnet.rst>
 	  for more information about using arc0.
-
+	
 config ARCNET_1051
 	tristate "Enable old ARCNet packet format (RFC 1051)"
 	help
@@ -44,14 +44,14 @@ config ARCNET_1051
 	  automatically as the arc0 device. Please read the ARCnet
 	  documentation in <file:Documentation/networking/arcnet.rst> for more
 	  information about using arc0e and arc0s.
-
+	
 config ARCNET_RAW
 	tristate "Enable raw mode packet interface"
 	help
 	  ARCnet "raw mode" packet encapsulation, no soft headers.  Unlikely
 	  to work unless talking to a copy of the same Linux arcnet driver,
 	  but perhaps marginally faster in that case.
-
+	
 config ARCNET_CAP
 	tristate "Enable CAP mode packet interface"
 	help
@@ -64,22 +64,22 @@ config ARCNET_CAP
 	     0=no hardware acknowledge
 	     1=excessive nak
 	     2=transmission accepted by the receiver hardware
-
+	
 	  Received packets are also stuffed with the extra 4 bytes but it will
 	  be random data.
-
+	
 	  Cap only listens to protocol 1-8.
-
+	
 config ARCNET_COM90xx
 	tristate "ARCnet COM90xx (normal) chipset driver"
 	help
 	  This is the chipset driver for the standard COM90xx cards. If you
 	  have always used the old ARCnet driver without knowing what type of
 	  card you had, this is probably the one for you.
-
+	
 	  To compile this driver as a module, choose M here. The module will
 	  be called com90xx.
-
+	
 config ARCNET_COM90xxIO
 	tristate "ARCnet COM90xx (IO mapped) chipset driver"
 	help
@@ -87,10 +87,10 @@ config ARCNET_COM90xxIO
 	  IO-mapped mode instead of memory-mapped mode. This is slower than
 	  the normal driver. Only use it if your card doesn't support shared
 	  memory.
-
+	
 	  To compile this driver as a module, choose M here. The module will
 	  be called com90io.
-
+	
 config ARCNET_RIM_I
 	tristate "ARCnet COM90xx (RIM I) chipset driver"
 	help
@@ -98,10 +98,10 @@ config ARCNET_RIM_I
 	  time only using memory-mapped mode, and no IO ports at all. This
 	  driver is completely untested, so if you have one of these cards,
 	  please mail <dwmw2@infradead.org>, especially if it works!
-
+	
 	  To compile this driver as a module, choose M here. The module will
 	  be called arc-rimi.
-
+	
 config ARCNET_COM20020
 	tristate "ARCnet COM20020 chipset driver"
 	depends on LEDS_CLASS
@@ -109,10 +109,10 @@ config ARCNET_COM20020
 	  This is the driver for the new COM20020 chipset. It supports such
 	  things as promiscuous mode, so packet sniffing is possible, and
 	  extra diagnostic information.
-
+	
 	  To compile this driver as a module, choose M here. The module will
 	  be called com20020.
-
+	
 config ARCNET_COM20020_ISA
 	tristate "Support for COM20020 on ISA"
 	depends on ARCNET_COM20020 && ISA
@@ -127,8 +127,8 @@ config ARCNET_COM20020_CS
 	help
 	  Say Y here if you intend to attach this type of ARCnet PCMCIA card
 	  to your computer.
-
+	
 	  To compile this driver as a module, choose M here: the module will be
 	  called com20020_cs.  If unsure, say N.
-
+	
 endif # ARCNET

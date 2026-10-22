@@ -193,7 +193,7 @@ static int __nf_conncount_add(struct net *net,
 	}
 
 	if ((u32)jiffies == list->last_gc &&
-	    (list->count - list->last_gc_count) < CONNCOUNT_GC_MAX_COLLECT)
+	    (list->count) < CONNCOUNT_GC_MAX_COLLECT)
 		goto add_new_node;
 
 check_connections:
@@ -242,7 +242,7 @@ check_connections:
 		nf_ct_put(found_ct);
 	}
 	list->last_gc = (u32)jiffies;
-	list->last_gc_count = list->count;
+	/* VXTux 6.18: last_gc_count field removed */
 
 add_new_node:
 	if (WARN_ON_ONCE(list->count > INT_MAX)) {
@@ -290,7 +290,7 @@ void nf_conncount_list_init(struct nf_conncount_list *list)
 	spin_lock_init(&list->list_lock);
 	INIT_LIST_HEAD(&list->head);
 	list->count = 0;
-	list->last_gc_count = 0;
+	list->last_gc = 0;
 	list->last_gc = (u32)jiffies;
 }
 EXPORT_SYMBOL_GPL(nf_conncount_list_init);
@@ -337,7 +337,7 @@ static bool __nf_conncount_gc_list(struct net *net,
 	if (!list->count)
 		ret = true;
 	list->last_gc = (u32)jiffies;
-	list->last_gc_count = list->count;
+	/* VXTux 6.18: last_gc_count field removed */
 
 	return ret;
 }

@@ -240,7 +240,7 @@ static void igmp_gq_start_timer(struct in_device *in_dev)
 		return;
 
 	in_dev->mr_gq_running = 1;
-	if (in_dev_hold_safe(in_dev)) {
+	if (refcount_inc_not_zero(&in_dev->refcnt)) {
 		if (mod_timer(&in_dev->mr_gq_timer, exp))
 			in_dev_put(in_dev);
 	}
@@ -248,7 +248,7 @@ static void igmp_gq_start_timer(struct in_device *in_dev)
 
 static void igmp_ifc_start_timer(struct in_device *in_dev, int delay)
 {
-	if (in_dev_hold_safe(in_dev)) {
+	if (refcount_inc_not_zero(&in_dev->refcnt)) {
 		int tv = get_random_u32_below(delay);
 
 		if (mod_timer(&in_dev->mr_ifc_timer, jiffies + tv + 2))

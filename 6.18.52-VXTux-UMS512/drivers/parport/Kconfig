@@ -11,7 +11,7 @@ config ARCH_MIGHT_HAVE_PC_PARPORT
 	help
 	  Select this config option from the architecture Kconfig if
 	  the architecture might have PC parallel port hardware.
-
+	
 menuconfig PARPORT
 	tristate "Parallel port support"
 	depends on HAS_IOMEM
@@ -23,11 +23,11 @@ menuconfig PARPORT
 	  machines) etc., then you need to say Y here; please read
 	  <file:Documentation/admin-guide/parport.rst> and
 	  <file:drivers/parport/BUGS-parport>.
-
+	
 	  For extensive information about drivers for many devices attaching
 	  to the parallel port see <http://www.torque.net/linux-pp.html> on
 	  the WWW.
-
+	
 	  It is possible to share a single parallel port among several devices
 	  and it is safe to compile all the corresponding drivers into the
 	  kernel. To compile parallel port support as a module, choose M here:
@@ -35,9 +35,9 @@ menuconfig PARPORT
 	  If you have more than one parallel port and want to specify which
 	  port and IRQ to be used by this driver at module load time, take a
 	  look at <file:Documentation/admin-guide/parport.rst>.
-
+	
 	  If unsure, say Y.
-
+	
 if PARPORT
 
 config PARPORT_PC
@@ -49,12 +49,12 @@ config PARPORT_PC
 	  IBM PC compatible computers and some Alphas have PC-style
 	  parallel ports.  PA-RISC owners should only say Y here if they
 	  have a SuperIO parallel port.
-
+	
 	  To compile this driver as a module, choose M here: the
 	  module will be called parport_pc.
-
+	
 	  If unsure, say Y.
-
+	
 config PARPORT_SERIAL
 	tristate "Multi-IO cards (parallel and serial)"
 	depends on SERIAL_8250_PCI && PARPORT_PC && PCI
@@ -62,20 +62,20 @@ config PARPORT_SERIAL
 	  This adds support for multi-IO PCI cards that have parallel and
 	  serial ports.  You should say Y or M here.  If you say M, the module
 	  will be called parport_serial.
-
+	
 config PARPORT_PC_FIFO
 	bool "Use FIFO/DMA if available"
 	depends on PARPORT_PC
 	help
 	  Many parallel port chipsets provide hardware that can speed up
 	  printing. Say Y here if you want to take advantage of that.
-
+	
 	  As well as actually having a FIFO, or DMA capability, the kernel
 	  will need to know which IRQ the parallel port has.  By default,
 	  parallel port interrupts will not be used, and so neither will the
 	  FIFO.  See <file:Documentation/admin-guide/parport.rst> to find out how to
 	  specify which IRQ/DMA to use.
-
+	
 config PARPORT_PC_SUPERIO
 	bool "SuperIO chipset support"
 	depends on ARCH_MIGHT_HAVE_PC_PARPORT && PARPORT_PC && !PARISC
@@ -83,14 +83,14 @@ config PARPORT_PC_SUPERIO
 	  Saying Y here enables some probes for Super-IO chipsets in order to
 	  find out things like base addresses, IRQ lines and DMA channels.  It
 	  is safe to say N.
-
+	
 config PARPORT_PC_PCMCIA
 	tristate "Support for PCMCIA management for PC-style ports"
 	depends on PCMCIA && PARPORT_PC
 	help
 	  Say Y here if you need PCMCIA support for your PC-style parallel
 	  ports. If unsure, say N.
-
+	
 config PARPORT_IP32
 	tristate "SGI IP32 builtin port"
 	depends on SGI_IP32
@@ -99,7 +99,7 @@ config PARPORT_IP32
 	  Say Y here if you need support for the parallel port on
 	  SGI O2 machines. This code is also available as a module (say M),
 	  called parport_ip32.  If in doubt, saying N is the safe plan.
-
+	
 config PARPORT_AMIGA
 	tristate "Amiga builtin port"
 	depends on AMIGA
@@ -108,7 +108,7 @@ config PARPORT_AMIGA
 	  Say Y here if you need support for the parallel port hardware on
 	  Amiga machines. This code is also available as a module (say M),
 	  called parport_amiga. If in doubt, saying N is the safe plan.
-
+	
 config PARPORT_MFC3
 	tristate "Multiface III parallel port"
 	depends on ZORRO
@@ -117,7 +117,7 @@ config PARPORT_MFC3
 	  Say Y here if you need parallel port support for the MFC3 card.
 	  This code is also available as a module (say M), called
 	  parport_mfc3. If in doubt, saying N is the safe plan.
-
+	
 config PARPORT_ATARI
 	tristate "Atari hardware"
 	depends on ATARI
@@ -126,7 +126,7 @@ config PARPORT_ATARI
 	  Say Y here if you need support for the parallel port hardware on
 	  Atari machines. This code is also available as a module (say M),
 	  called parport_atari. If in doubt, saying N is the safe plan.
-
+	
 config PARPORT_GSC
 	tristate
 	default GSC
@@ -140,7 +140,7 @@ config PARPORT_SUNBPP
 	  This driver provides support for the bidirectional parallel port
 	  found on many Sun machines. Note that many of the newer Ultras
 	  actually have pc style hardware instead.
-
+	
 config PARPORT_1284
 	bool "IEEE 1284 transfer modes"
 	help
@@ -149,7 +149,7 @@ config PARPORT_1284
 	  such as EPP and ECP, say Y here to enable advanced IEEE 1284
 	  transfer modes. Also say Y if you want device ID information to
 	  appear in /proc/sys/dev/parport/*/autoprobe*. It is safe to say N.
-
+	
 config PARPORT_NOT_PC
 	bool
 

@@ -21,3 +21,4 @@ config SDMA_VERBOSITY
 	help
 	This is a configuration flag to enable verbose
 	SDMA debug
+	

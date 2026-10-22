@@ -19,3 +19,4 @@ config VXTUX_SPRD_DPU
 	  Consolidation of proven build v4 patches: XR24/XB24 -> RB/UV switch,
 	  primary-only plane guard, FBC enabled=0 sweep, fbdev generic setup.
 	  Target: fork 5.4 patches moved to official structure + ready for 6.18 port.
+	

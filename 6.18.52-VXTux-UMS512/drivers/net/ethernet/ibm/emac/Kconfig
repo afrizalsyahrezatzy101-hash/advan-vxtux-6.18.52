@@ -8,7 +8,7 @@ config IBM_EMAC
 	  This driver supports the IBM EMAC family of Ethernet controllers
 	  typically found on 4xx embedded PowerPC chips, but also on the
 	  Axon southbridge for Cell.
-
+	
 config IBM_EMAC_RXB
 	int "Number of receive buffers"
 	depends on IBM_EMAC

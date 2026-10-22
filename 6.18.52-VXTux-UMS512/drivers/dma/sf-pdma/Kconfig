@@ -5,3 +5,4 @@ config SF_PDMA
 	select DMA_VIRTUAL_CHANNELS
 	help
 	  Support the SiFive PDMA controller.
+	

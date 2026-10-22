@@ -14,7 +14,7 @@ menuconfig SOUNDWIRE
 	  optimized to integrate audio devices in mobile or mobile inspired
 	  systems. Say Y to enable this subsystem, N if you do not have such
 	  a device
-
+	
 if SOUNDWIRE
 
 comment "SoundWire Devices"
@@ -28,7 +28,7 @@ config SOUNDWIRE_AMD
 	  If you have an AMD platform which has a SoundWire Manager then
 	  enable this config option to get the SoundWire support for that
 	  device.
-
+	
 config SOUNDWIRE_CADENCE
 	tristate
 	select CRC8
@@ -46,7 +46,7 @@ config SOUNDWIRE_INTEL
 	  If you have an Intel platform which has a SoundWire Master then
 	  enable this config option to get the SoundWire support for that
 	  device.
-
+	
 config SOUNDWIRE_QCOM
 	tristate "Qualcomm SoundWire Master driver"
 	imply SLIMBUS
@@ -56,7 +56,7 @@ config SOUNDWIRE_QCOM
 	  If you have an Qualcomm platform which has a SoundWire Master then
 	  enable this config option to get the SoundWire support for that
 	  device
-
+	
 config SOUNDWIRE_GENERIC_ALLOCATION
 	tristate
 

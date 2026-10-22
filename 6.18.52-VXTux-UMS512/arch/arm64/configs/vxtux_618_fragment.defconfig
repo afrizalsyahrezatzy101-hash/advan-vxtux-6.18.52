@@ -268,11 +268,11 @@ CONFIG_VXTUX_HYBRIDSWAP_REF=y
 CONFIG_VXTUX_SENSORHUB=y
 
 # --- Dual sistem /systems/* ---
-CONFIG_BTRFS_FS=y
-CONFIG_BTRFS_FS_POSIX_ACL=y
+# CONFIG_BTRFS_FS is not set
+# CONFIG_BTRFS_FS_POSIX_ACL is not set
 # catatan: kompresi zstd = default y di 6.18 (CONFIG_ZSTD_COMPRESS=y)
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_FS_COMPRESSION=y
+# CONFIG_F2FS_FS is not set
+# CONFIG_F2FS_FS_COMPRESSION is not set
 CONFIG_BLK_DEV_LOOP=y
 CONFIG_BLK_DEV_LOOP_MIN_COUNT=8
 CONFIG_OVERLAY_FS=y
@@ -789,8 +789,8 @@ CONFIG_CRYPTO_TWOFISH_COMMON=y
 # =====================================================================
 # MAXIMUM FILESYSTEMS KERNEL-SIDE
 # =====================================================================
-CONFIG_F2FS_FS_LZO=y
-CONFIG_F2FS_FS_ZSTD=y
+# CONFIG_F2FS_FS_LZO is not set
+# CONFIG_F2FS_FS_ZSTD is not set
 CONFIG_OVERLAY_FS_REDIRECT_DIR=y
 CONFIG_OVERLAY_FS_INDEX=y
 CONFIG_OVERLAY_FS_XINO_AUTO=y
@@ -836,7 +836,7 @@ CONFIG_MFD_SYSCON=y
 # every stub collides with the real function in core.c.
 CONFIG_PM=y
 CONFIG_PM_GENERIC_DOMAINS=y
-CONFIG_SPRD_VSP_PW_DOMAIN=m
+# CONFIG_SPRD_VSP_PW_DOMAIN is not set
 
 # --- SPRD_VSP (video-codec@20500000; blob vsp.ko) ---
 # CELAH YANG DITUTUP 2026-10-09: pw-domain di atas TIDAK cukup -- ia library
@@ -856,7 +856,7 @@ CONFIG_SPRD_VSP_PW_DOMAIN=m
 # diekspor di bawah simbol itu; tanpa select, link gagal saat VSP=y.
 # regs[] (tabel syscon) dimiliki vsp_regs.c (EXPORT_SYMBOL) dan DIISI
 # vsp_parse_dt() driver ini saat probe -- bukan duplikat definisi.
-CONFIG_SPRD_VSP=y
+# CONFIG_SPRD_VSP is not set
 
 # --- SPRD_CPP (cpp@62800000; blob sprd_cpp.ko) ---
 # Sumber vendor LENGKAP (13 file: cpp_core, cpp_ioctl, scale/rot/dma_drv +
@@ -1292,3 +1292,9 @@ CONFIG_VIDEO_GC8034=y
 CONFIG_VIDEO_GC5025=y
 CONFIG_VIDEO_S5K4H7YX=y
 # === VXTUX-BRINGUP-END ===
+
+# V17: Disable broken subsystems (source kept intact for future)
+# CONFIG_F2FS_FS is not set
+# CONFIG_BTRFS_FS is not set
+# CONFIG_SPRD_VSP_PW_DOMAIN is not set
+# CONFIG_SPRD_VSP is not set

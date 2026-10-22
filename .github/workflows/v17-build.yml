@@ -1,0 +1,44 @@
+name: Build V17 VXTux Kernel
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, test1, v17-build]
+jobs:
+  build-v17:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: test1
+          fetch-depth: 1
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
+      - name: Fix permissions and apply config
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          find scripts/ -type f -exec chmod +x {} +
+          cp .config .config.original
+          cp ../enhanced_config.cfg .config
+      - name: olddefconfig
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+      - name: Build modules
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules -j$(nproc)
+      - name: Tar .ko tree
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          find . -name '*.ko' | tar -czf /tmp/built_kos.tar.gz -T -
+          ls -lh /tmp/built_kos.tar.gz
+      - name: Upload .ko tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-built-kos
+          path: /tmp/built_kos.tar.gz
+          if-no-files-found: error

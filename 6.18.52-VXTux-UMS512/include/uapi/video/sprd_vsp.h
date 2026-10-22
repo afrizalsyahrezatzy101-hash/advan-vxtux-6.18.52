@@ -15,8 +15,24 @@
 #ifndef _SPRD_VSP_H
 #define _SPRD_VSP_H
 
+#include <linux/types.h>
+
+/* V18: compat types defs - safe inside _SPRD_VSP_H guard */
+#ifndef __SPRD_COMPAT_TYPES_DEFINED__
+#define __SPRD_COMPAT_TYPES_DEFINED__
+typedef __s32 compat_int_t;
+typedef __s64 compat_int64_t;
+typedef __u32 compat_uint_t;
+typedef __u64 compat_uint64_t;
+typedef __u32 compat_ulong_t;
+typedef __s32 compat_long_t;
+typedef __u32 compat_uptr_t;
+typedef __s32 compat_pid_t;
+typedef __u16 compat_mode_t;
+typedef __u32 compat_size_t;
+typedef __s32 compat_ssize_t;
+#endif
 #include <linux/ioctl.h>
-#include <linux/compat.h>
 
 #define SPRD_VSP_MAP_SIZE 0xA000
 #define SPRD_VSP_CLK_LEVEL_NUM 5
@@ -97,7 +113,7 @@ typedef enum {
 
 struct vsp_iommu_map_data {
 	int fd;
-	size_t size;
+	__kernel_size_t size;
 	unsigned long iova_addr;
 };
 

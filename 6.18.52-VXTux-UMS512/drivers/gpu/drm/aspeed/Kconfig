@@ -13,5 +13,6 @@ config DRM_ASPEED_GFX
 	help
 	  Chose this option if you have an ASPEED AST2500 SOC Display
 	  Controller (aka GFX).
-
+	
 	  If M is selected this module will be called aspeed_gfx.
+	

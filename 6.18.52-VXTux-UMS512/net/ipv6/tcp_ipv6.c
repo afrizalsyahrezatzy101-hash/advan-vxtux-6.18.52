@@ -106,14 +106,23 @@ static void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff *skb)
 	}
 }
 
-static union tcp_seq_and_ts_off
-tcp_v6_init_seq_and_ts_off(const struct net *net, const struct sk_buff *skb)
+static u32 tcp_v6_init_ts_off(const struct net *net, const struct sk_buff *skb)
 {
+	if (READ_ONCE(net->ipv4.sysctl_tcp_timestamps) != 1)
+		return 0;
 	return secure_tcpv6_seq_and_ts_off(net,
-					   ipv6_hdr(skb)->daddr.s6_addr32,
-					   ipv6_hdr(skb)->saddr.s6_addr32,
-					   tcp_hdr(skb)->dest,
-					   tcp_hdr(skb)->source);
+				  ipv6_hdr(skb)->saddr.s6_addr32,
+				  ipv6_hdr(skb)->daddr.s6_addr32,
+				  0, 0).off.ts_off;
+}
+
+static u32 tcp_v6_init_seq(const struct sk_buff *skb)
+{
+	return secure_tcpv6_seq_and_ts_off(&init_net,
+				ipv6_hdr(skb)->saddr.s6_addr32,
+				ipv6_hdr(skb)->daddr.s6_addr32,
+				tcp_hdr(skb)->dest,
+				tcp_hdr(skb)->source).off.seq;
 }
 
 static int tcp_v6_pre_connect(struct sock *sk, struct sockaddr *uaddr,
@@ -316,16 +325,10 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 	sk_set_txhash(sk);
 
 	if (likely(!tp->repair)) {
-		union tcp_seq_and_ts_off st;
-
-		st = secure_tcpv6_seq_and_ts_off(net,
-						 np->saddr.s6_addr32,
-						 sk->sk_v6_daddr.s6_addr32,
-						 inet->inet_sport,
-						 inet->inet_dport);
 		if (!tp->write_seq)
-			WRITE_ONCE(tp->write_seq, st.seq);
-		tp->tsoffset = st.ts_off;
+			WRITE_ONCE(tp->write_seq,
+				   secure_tcpv6_seq_and_ts_off(net, np->saddr.s6_addr32, sk->sk_v6_daddr.s6_addr32, inet->inet_sport, inet->inet_dport).off.seq);
+		tp->tsoffset = secure_tcpv6_seq_and_ts_off(net, np->saddr.s6_addr32, sk->sk_v6_daddr.s6_addr32, 0, 0).off.ts_off;
 	}
 
 	if (tcp_fastopen_defer_connect(sk, &err))
@@ -859,7 +862,8 @@ const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops = {
 	.cookie_init_seq =	cookie_v6_init_sequence,
 #endif
 	.route_req	=	tcp_v6_route_req,
-	.init_seq_and_ts_off	= tcp_v6_init_seq_and_ts_off,
+	.init_seq	=	tcp_v6_init_seq,
+	.init_ts_off	=	tcp_v6_init_ts_off,
 	.send_synack	=	tcp_v6_send_synack,
 };
 
@@ -1364,7 +1368,7 @@ static void tcp_v6_mapped_child_init(struct sock *newsk, const struct sock *sk)
 	struct ipv6_pinfo *newnp;
 
 	newinet->pinet6 = newnp = tcp_inet6_sk(newsk);
-	newinet->ipv6_fl_list = NULL;
+	newnp->ipv6_fl_list = NULL;
 
 	memcpy(newnp, tcp_inet6_sk(sk), sizeof(struct ipv6_pinfo));
 
@@ -1444,7 +1448,7 @@ static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *
 
 	newinet = inet_sk(newsk);
 	newinet->pinet6 = tcp_inet6_sk(newsk);
-	newinet->ipv6_fl_list = NULL;
+	inet6_sk(newsk)->ipv6_fl_list = NULL;
 	newinet->inet_opt = NULL;
 
 	newtp = tcp_sk(newsk);
@@ -1895,7 +1899,6 @@ process:
 	th = (const struct tcphdr *)skb->data;
 	hdr = ipv6_hdr(skb);
 	tcp_v6_fill_cb(skb, hdr, th);
-	TCP_SKB_CB(skb)->tcp_tw_isn = isn;
 
 	skb->dev = NULL;
 

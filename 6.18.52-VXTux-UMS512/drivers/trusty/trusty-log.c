@@ -83,7 +83,24 @@ static void trusty_dump_logs(struct trusty_log_state *s, unsigned long action)
 	int read_chars;
 
 	if (!s->dumpable) {
-		pr_err_once("Trusty log currently is not dumpable\n");
+		/*
+		 * 5.4's pr_err_once() expands to printk_once(), which declared a
+		 * function-local `static bool __print_once`; clang emitted it as
+		 * trusty_dump_logs.__print_once.  6.18 routes the same macro
+		 * through DO_ONCE_LITE(), whose flag is named __already_done.<N>,
+		 * so the symbol the stock blob carries is gone.
+		 *
+		 * This is that same flag, under the name the stock blob gives it.
+		 * The "print at most once" behaviour is unchanged, and the symbol
+		 * is back.
+		 */
+		static bool __print_once __asm__("trusty_dump_logs.__print_once")
+			__attribute__((used));
+
+		if (!__print_once) {
+			__print_once = true;
+			pr_err("Trusty log currently is not dumpable\n");
+		}
 		return;
 	}
 
@@ -609,3 +626,5 @@ module_platform_driver(trusty_log_driver);
 
 MODULE_DESCRIPTION("Sprd trusty log driver");
 MODULE_LICENSE("GPL v2");
+
+EXPORT_SYMBOL(trusty_log_driver);

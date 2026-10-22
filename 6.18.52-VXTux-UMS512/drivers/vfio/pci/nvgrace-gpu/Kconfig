@@ -6,5 +6,6 @@ config NVGRACE_GPU_VFIO_PCI
 	help
 	  VFIO support for the GPU in the NVIDIA Grace Hopper Superchip is
 	  required to assign the GPU device to userspace using KVM/qemu/etc.
-
+	
 	  If you don't know what to do here, say N.
+	

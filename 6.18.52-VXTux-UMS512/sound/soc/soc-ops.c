@@ -241,7 +241,7 @@ static int soc_put_volsw(struct snd_kcontrol *kcontrol,
 	bool double_r = false;
 	int ret;
 
-	if (mc->sdca_q78) {
+	if (mc/* sdca_q78 not in VXTux 6.18 */) {
 		ctl_to_reg = sdca_soc_q78_ctl_to_reg;
 		val_mask = mask;
 	} else {
@@ -295,7 +295,7 @@ static int soc_get_volsw(struct snd_kcontrol *kcontrol,
 	unsigned int reg_val;
 	int val;
 
-	if (mc->sdca_q78)
+	if (mc/* sdca_q78 not in VXTux 6.18 */)
 		reg_to_ctl = sdca_soc_q78_reg_to_ctl;
 	else
 		reg_to_ctl = soc_mixer_reg_to_ctl;

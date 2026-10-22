@@ -10,7 +10,7 @@ menuconfig MTD_HYPERBUS
 	  the HyperBus Controller driver to communicate with
 	  HyperFlash. See Cypress HyperBus specification for more
 	  details
-
+	
 if MTD_HYPERBUS
 
 config HBMC_AM654
@@ -21,12 +21,12 @@ config HBMC_AM654
 	help
 	 This is the driver for HyperBus controller on TI's AM65x and
 	 other SoCs
-
+	
 config RPCIF_HYPERBUS
 	tristate "Renesas RPC-IF HyperBus driver"
 	depends on RENESAS_RPCIF
 	depends on MTD_CFI_BE_BYTE_SWAP
 	help
 	  This option includes Renesas RPC-IF HyperBus support.
-
+	
 endif # MTD_HYPERBUS

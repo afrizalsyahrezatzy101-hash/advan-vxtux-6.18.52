@@ -1529,10 +1529,10 @@ static void l2cap_sock_cleanup_listen(struct sock *parent)
 	}
 }
 
-static int l2cap_sock_new_connection_cb(struct l2cap_chan *chan,
-					struct l2cap_chan *new_chan)
+static int l2cap_sock_new_connection_cb(struct l2cap_chan *pchan,
+					struct l2cap_chan *chan)
 {
-	struct sock *sk, *parent = chan->data;
+	struct sock *sk, *parent = pchan->data;
 
 	if (!parent)
 		return -EINVAL;
@@ -1547,7 +1547,7 @@ static int l2cap_sock_new_connection_cb(struct l2cap_chan *chan,
 	}
 
 	sk = l2cap_sock_alloc(sock_net(parent), NULL, BTPROTO_L2CAP,
-			      GFP_ATOMIC, 0, new_chan);
+			      GFP_ATOMIC, 0, chan);
 	if (!sk) {
 		release_sock(parent);
 		return -ENOMEM;
@@ -1557,7 +1557,7 @@ static int l2cap_sock_new_connection_cb(struct l2cap_chan *chan,
 
 	l2cap_sock_init(sk, parent);
 
-	/* The conn list reference taken by l2cap_new_connection() keeps new_chan
+	/* The conn list reference taken by l2cap_new_connection() keeps chan
 	 * alive once release_sock() lets another task free this socket.
 	 */
 	bt_accept_enqueue(parent, sk, false);

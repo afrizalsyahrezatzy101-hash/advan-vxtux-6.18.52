@@ -11,7 +11,7 @@ config REMOTEPROC
 	help
 	  Support for remote processors (such as DSP coprocessors). These
 	  are mainly used on embedded systems.
-
+	
 if REMOTEPROC
 
 config REMOTEPROC_CDEV
@@ -20,9 +20,9 @@ config REMOTEPROC_CDEV
 	  Say y here to have a character device interface for the remoteproc
 	  framework. Userspace can boot/shutdown remote processors through
 	  this interface.
-
+	
 	  It's safe to say N if you don't want to use this interface.
-
+	
 endif # REMOTEPROC
 
 endmenu

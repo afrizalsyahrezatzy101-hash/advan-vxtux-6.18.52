@@ -13,6 +13,15 @@
 #include <linux/fs_context.h>
 #include <linux/namei.h>
 
+/* V17: simple_remove_by_name decl */
+#include <linux/fs.h>
+#include <linux/dcache.h>
+
+/* Forward decl - 6.18 didn't expose this in headers */
+void simple_remove_by_name(struct dentry *parent, const char *name,
+                           void (*callback)(struct dentry *));
+
+
 #define FUSE_CTL_SUPER_MAGIC 0x65735543
 
 /*

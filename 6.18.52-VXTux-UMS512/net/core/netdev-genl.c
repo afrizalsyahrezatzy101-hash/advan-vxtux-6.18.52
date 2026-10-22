@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 
+#include <linux/berry_compat.h>
 #include <linux/netdevice.h>
 #include <linux/notifier.h>
 #include <linux/pid_namespace.h>

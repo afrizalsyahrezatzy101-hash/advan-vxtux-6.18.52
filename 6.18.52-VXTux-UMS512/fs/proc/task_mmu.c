@@ -29,6 +29,14 @@
 #include <asm/tlbflush.h>
 #include "internal.h"
 
+/* V17 fallbacks */
+#ifndef VM_MAYBE_GUARD
+#define VM_MAYBE_GUARD 0
+#endif
+#ifndef pmd_is_migration_entry
+#define pmd_is_migration_entry(pmd) is_migration_entry(pmd_to_swp_entry(pmd))
+#endif
+
 #define SENTINEL_VMA_END	-1
 #define SENTINEL_VMA_GATE	-2
 

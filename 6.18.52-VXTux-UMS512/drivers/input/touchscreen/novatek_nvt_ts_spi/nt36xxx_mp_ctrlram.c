@@ -46,6 +46,380 @@
 		printk(fmt, ##args);	\
 } while (0)
 
+/*
+ * The pen self-test limit tables. The stock blob carries all 16 in its
+ * .data (200 int32 each, read straight out of the blob); the tree's
+ * nvt_mp_parse_dt() overwrites them from the device tree, so they are
+ * not const here either.
+ */
+int32_t PS_Config_Lmt_PenRingX_FW_Diff_N[200] = {
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenRingX_FW_Diff_P[200] = {
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenRingX_FW_Raw_N[200] = {
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenRingX_FW_Raw_P[200] = {
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenRingY_FW_Diff_N[200] = {
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870
+};
+
+int32_t PS_Config_Lmt_PenRingY_FW_Diff_P[200] = {
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870
+};
+
+int32_t PS_Config_Lmt_PenRingY_FW_Raw_N[200] = {
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570
+};
+
+int32_t PS_Config_Lmt_PenRingY_FW_Raw_P[200] = {
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570
+};
+
+int32_t PS_Config_Lmt_PenTipX_FW_Diff_N[200] = {
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenTipX_FW_Diff_P[200] = {
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenTipX_FW_Raw_N[200] = {
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenTipX_FW_Raw_P[200] = {
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,     0,     0,     0,     0,     0,     0,     0,     0
+};
+
+int32_t PS_Config_Lmt_PenTipY_FW_Diff_N[200] = {
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,
+	 -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870,  -870
+};
+
+int32_t PS_Config_Lmt_PenTipY_FW_Diff_P[200] = {
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870,
+	  870,   870,   870,   870,   870,   870,   870,   870,   870,   870
+};
+
+int32_t PS_Config_Lmt_PenTipY_FW_Raw_N[200] = {
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,
+	 -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570,  -570
+};
+
+int32_t PS_Config_Lmt_PenTipY_FW_Raw_P[200] = {
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570,
+	  570,   570,   570,   570,   570,   570,   570,   570,   570,   570
+};
+
 static uint8_t *RecordResult_Short = NULL;
 static uint8_t *RecordResult_Open = NULL;
 static uint8_t *RecordResult_FWMutual = NULL;
@@ -69,6 +443,60 @@ static int32_t *RawData_Diff_Min = NULL;
 static int32_t *RawData_Diff_Max = NULL;
 static int32_t *RawData_FWMutual = NULL;
 static int32_t *RawData_FW_CC = NULL;
+
+/* Number of pen channels the stock reports per self-test row. */
+#define NVT_PEN_TIP_NUM	4
+
+/*
+ * The pen self-test result buffers. The stock blob keeps them as
+ * separate module bss pointers (RecordResult_PenTipX_Raw and friends,
+ * 8 bytes each - a pointer) and the raw ones (RawData_PenTipX_Raw) as
+ * pointers too, while the TestResult_* ones are plain int32 counters.
+ * The stock allocates the RecordResult_* buffers as byte arrays and
+ * the RawData_* ones as int32 arrays; the sizes and the referencing
+ * functions (c_show_selftest, nvt_selftest_open, nvt_mp_proc_init,
+ * nvt_mp_proc_deinit) are all taken from the blob.
+ */
+static uint8_t *RecordResult_PenTipX_Raw = NULL;
+static uint8_t *RecordResult_PenTipY_Raw = NULL;
+static uint8_t *RecordResult_PenRingX_Raw = NULL;
+static uint8_t *RecordResult_PenRingY_Raw = NULL;
+static uint8_t *RecordResult_PenTipX_DiffMax = NULL;
+static uint8_t *RecordResult_PenTipY_DiffMax = NULL;
+static uint8_t *RecordResult_PenRingX_DiffMax = NULL;
+static uint8_t *RecordResult_PenRingY_DiffMax = NULL;
+static uint8_t *RecordResult_PenTipX_DiffMin = NULL;
+static uint8_t *RecordResult_PenTipY_DiffMin = NULL;
+static uint8_t *RecordResult_PenRingX_DiffMin = NULL;
+static uint8_t *RecordResult_PenRingY_DiffMin = NULL;
+
+static int32_t *RawData_PenTipX_Raw = NULL;
+static int32_t *RawData_PenTipY_Raw = NULL;
+static int32_t *RawData_PenRingX_Raw = NULL;
+static int32_t *RawData_PenRingY_Raw = NULL;
+static int32_t *RawData_PenTipX_DiffMax = NULL;
+static int32_t *RawData_PenTipY_DiffMax = NULL;
+static int32_t *RawData_PenRingX_DiffMax = NULL;
+static int32_t *RawData_PenRingY_DiffMax = NULL;
+static int32_t *RawData_PenTipX_DiffMin = NULL;
+static int32_t *RawData_PenTipY_DiffMin = NULL;
+static int32_t *RawData_PenRingX_DiffMin = NULL;
+static int32_t *RawData_PenRingY_DiffMin = NULL;
+
+static int32_t TestResult_PenTipX_Raw = 0;
+static int32_t TestResult_PenTipY_Raw = 0;
+static int32_t TestResult_PenRingX_Raw = 0;
+static int32_t TestResult_PenRingY_Raw = 0;
+static int32_t TestResult_PenTipX_DiffMax = 0;
+static int32_t TestResult_PenTipY_DiffMax = 0;
+static int32_t TestResult_PenRingX_DiffMax = 0;
+static int32_t TestResult_PenRingY_DiffMax = 0;
+static int32_t TestResult_PenTipX_DiffMin = 0;
+static int32_t TestResult_PenTipY_DiffMin = 0;
+static int32_t TestResult_PenRingX_DiffMin = 0;
+static int32_t TestResult_PenRingY_DiffMin = 0;
+static uint8_t TestResult_Pen_FW_Raw = 0;
+static int32_t TestResult_Pen_Noise = 0;
 
 static struct proc_dir_entry *NVT_proc_selftest_entry = NULL;
 static int8_t nvt_mp_test_result_printed = 0;
@@ -170,6 +598,150 @@ static int nvt_mp_buffer_init(void)
 		return -ENOMEM;
 	}
 
+
+	RecordResult_PenTipX_Raw = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipX_Raw) {
+		NVT_ERR("kzalloc for RecordResult_PenTipX_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenTipY_Raw = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipY_Raw) {
+		NVT_ERR("kzalloc for RecordResult_PenTipY_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingX_Raw = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingX_Raw) {
+		NVT_ERR("kzalloc for RecordResult_PenRingX_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingY_Raw = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingY_Raw) {
+		NVT_ERR("kzalloc for RecordResult_PenRingY_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenTipX_DiffMax = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipX_DiffMax) {
+		NVT_ERR("kzalloc for RecordResult_PenTipX_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenTipY_DiffMax = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipY_DiffMax) {
+		NVT_ERR("kzalloc for RecordResult_PenTipY_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingX_DiffMax = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingX_DiffMax) {
+		NVT_ERR("kzalloc for RecordResult_PenRingX_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingY_DiffMax = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingY_DiffMax) {
+		NVT_ERR("kzalloc for RecordResult_PenRingY_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenTipX_DiffMin = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipX_DiffMin) {
+		NVT_ERR("kzalloc for RecordResult_PenTipX_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenTipY_DiffMin = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenTipY_DiffMin) {
+		NVT_ERR("kzalloc for RecordResult_PenTipY_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingX_DiffMin = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingX_DiffMin) {
+		NVT_ERR("kzalloc for RecordResult_PenRingX_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RecordResult_PenRingY_DiffMin = kzalloc(RecordResult_BufSize, GFP_KERNEL);
+	if (!RecordResult_PenRingY_DiffMin) {
+		NVT_ERR("kzalloc for RecordResult_PenRingY_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipX_Raw = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipX_Raw) {
+		NVT_ERR("kzalloc for RawData_PenTipX_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipY_Raw = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipY_Raw) {
+		NVT_ERR("kzalloc for RawData_PenTipY_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingX_Raw = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingX_Raw) {
+		NVT_ERR("kzalloc for RawData_PenRingX_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingY_Raw = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingY_Raw) {
+		NVT_ERR("kzalloc for RawData_PenRingY_Raw failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipX_DiffMax = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipX_DiffMax) {
+		NVT_ERR("kzalloc for RawData_PenTipX_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipY_DiffMax = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipY_DiffMax) {
+		NVT_ERR("kzalloc for RawData_PenTipY_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingX_DiffMax = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingX_DiffMax) {
+		NVT_ERR("kzalloc for RawData_PenRingX_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingY_DiffMax = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingY_DiffMax) {
+		NVT_ERR("kzalloc for RawData_PenRingY_DiffMax failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipX_DiffMin = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipX_DiffMin) {
+		NVT_ERR("kzalloc for RawData_PenTipX_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenTipY_DiffMin = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenTipY_DiffMin) {
+		NVT_ERR("kzalloc for RawData_PenTipY_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingX_DiffMin = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingX_DiffMin) {
+		NVT_ERR("kzalloc for RawData_PenRingX_DiffMin failed!\n");
+		return -ENOMEM;
+	}
+
+	RawData_PenRingY_DiffMin = kzalloc(RawData_BufSize, GFP_KERNEL);
+	if (!RawData_PenRingY_DiffMin) {
+		NVT_ERR("kzalloc for RawData_PenRingY_DiffMin failed!\n");
+		return -ENOMEM;
+	}
 	return 0;
 }
 
@@ -182,6 +754,126 @@ return:
 *******************************************************/
 static void nvt_mp_buffer_deinit(void)
 {
+	if (RecordResult_PenTipX_Raw) {
+		kfree(RecordResult_PenTipX_Raw);
+		RecordResult_PenTipX_Raw = NULL;
+	}
+
+	if (RecordResult_PenTipY_Raw) {
+		kfree(RecordResult_PenTipY_Raw);
+		RecordResult_PenTipY_Raw = NULL;
+	}
+
+	if (RecordResult_PenRingX_Raw) {
+		kfree(RecordResult_PenRingX_Raw);
+		RecordResult_PenRingX_Raw = NULL;
+	}
+
+	if (RecordResult_PenRingY_Raw) {
+		kfree(RecordResult_PenRingY_Raw);
+		RecordResult_PenRingY_Raw = NULL;
+	}
+
+	if (RecordResult_PenTipX_DiffMax) {
+		kfree(RecordResult_PenTipX_DiffMax);
+		RecordResult_PenTipX_DiffMax = NULL;
+	}
+
+	if (RecordResult_PenTipY_DiffMax) {
+		kfree(RecordResult_PenTipY_DiffMax);
+		RecordResult_PenTipY_DiffMax = NULL;
+	}
+
+	if (RecordResult_PenRingX_DiffMax) {
+		kfree(RecordResult_PenRingX_DiffMax);
+		RecordResult_PenRingX_DiffMax = NULL;
+	}
+
+	if (RecordResult_PenRingY_DiffMax) {
+		kfree(RecordResult_PenRingY_DiffMax);
+		RecordResult_PenRingY_DiffMax = NULL;
+	}
+
+	if (RecordResult_PenTipX_DiffMin) {
+		kfree(RecordResult_PenTipX_DiffMin);
+		RecordResult_PenTipX_DiffMin = NULL;
+	}
+
+	if (RecordResult_PenTipY_DiffMin) {
+		kfree(RecordResult_PenTipY_DiffMin);
+		RecordResult_PenTipY_DiffMin = NULL;
+	}
+
+	if (RecordResult_PenRingX_DiffMin) {
+		kfree(RecordResult_PenRingX_DiffMin);
+		RecordResult_PenRingX_DiffMin = NULL;
+	}
+
+	if (RecordResult_PenRingY_DiffMin) {
+		kfree(RecordResult_PenRingY_DiffMin);
+		RecordResult_PenRingY_DiffMin = NULL;
+	}
+
+	if (RawData_PenTipX_Raw) {
+		kfree(RawData_PenTipX_Raw);
+		RawData_PenTipX_Raw = NULL;
+	}
+
+	if (RawData_PenTipY_Raw) {
+		kfree(RawData_PenTipY_Raw);
+		RawData_PenTipY_Raw = NULL;
+	}
+
+	if (RawData_PenRingX_Raw) {
+		kfree(RawData_PenRingX_Raw);
+		RawData_PenRingX_Raw = NULL;
+	}
+
+	if (RawData_PenRingY_Raw) {
+		kfree(RawData_PenRingY_Raw);
+		RawData_PenRingY_Raw = NULL;
+	}
+
+	if (RawData_PenTipX_DiffMax) {
+		kfree(RawData_PenTipX_DiffMax);
+		RawData_PenTipX_DiffMax = NULL;
+	}
+
+	if (RawData_PenTipY_DiffMax) {
+		kfree(RawData_PenTipY_DiffMax);
+		RawData_PenTipY_DiffMax = NULL;
+	}
+
+	if (RawData_PenRingX_DiffMax) {
+		kfree(RawData_PenRingX_DiffMax);
+		RawData_PenRingX_DiffMax = NULL;
+	}
+
+	if (RawData_PenRingY_DiffMax) {
+		kfree(RawData_PenRingY_DiffMax);
+		RawData_PenRingY_DiffMax = NULL;
+	}
+
+	if (RawData_PenTipX_DiffMin) {
+		kfree(RawData_PenTipX_DiffMin);
+		RawData_PenTipX_DiffMin = NULL;
+	}
+
+	if (RawData_PenTipY_DiffMin) {
+		kfree(RawData_PenTipY_DiffMin);
+		RawData_PenTipY_DiffMin = NULL;
+	}
+
+	if (RawData_PenRingX_DiffMin) {
+		kfree(RawData_PenRingX_DiffMin);
+		RawData_PenRingX_DiffMin = NULL;
+	}
+
+	if (RawData_PenRingY_DiffMin) {
+		kfree(RawData_PenRingY_DiffMin);
+		RawData_PenRingY_DiffMin = NULL;
+	}
+
 	if (RecordResult_Short) {
 		kfree(RecordResult_Short);
 		RecordResult_Short = NULL;
@@ -935,6 +1627,7 @@ void print_selftest_result(struct seq_file *m, int32_t TestResult, uint8_t Recor
 	}
 	nvt_mp_seq_printf(m, "\n");
 }
+EXPORT_SYMBOL_GPL(print_selftest_result);
 
 /*******************************************************
 Description:
@@ -986,6 +1679,96 @@ static int32_t c_show_selftest(struct seq_file *m, void *v)
 			nvt_mp_seq_printf(m, "FW Diff Min");
 			print_selftest_result(m, TestResult_FW_DiffMin, RecordResult_FW_DiffMin, RawData_Diff_Min, X_Channel, Y_Channel);
 		}
+	}
+
+	nvt_mp_seq_printf(m, "Pen FW Rawdata Test");
+	if ((TestResult_Pen_FW_Raw == 0) || (TestResult_Pen_FW_Raw == 1)) {
+		print_selftest_result(m, TestResult_Pen_FW_Raw,
+				     RecordResult_PenTipX_Raw, RawData_PenTipX_Raw,
+				     NVT_PEN_TIP_NUM, 1);
+	} else {
+		nvt_mp_seq_printf(m, " FAIL!\n");
+		if (TestResult_PenTipX_Raw == -1) {
+			nvt_mp_seq_printf(m, "Pen TipX Raw");
+			print_selftest_result(m, TestResult_PenTipX_Raw,
+					     RecordResult_PenTipX_Raw, RawData_PenTipX_Raw,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenTipY_Raw == -1) {
+			nvt_mp_seq_printf(m, "Pen TipY Raw");
+			print_selftest_result(m, TestResult_PenTipY_Raw,
+					     RecordResult_PenTipY_Raw, RawData_PenTipY_Raw,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingX_Raw == -1) {
+			nvt_mp_seq_printf(m, "Pen RingX Raw");
+			print_selftest_result(m, TestResult_PenRingX_Raw,
+					     RecordResult_PenRingX_Raw, RawData_PenRingX_Raw,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingY_Raw == -1) {
+			nvt_mp_seq_printf(m, "Pen RingY Raw");
+			print_selftest_result(m, TestResult_PenRingY_Raw,
+					     RecordResult_PenRingY_Raw, RawData_PenRingY_Raw,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenTipX_DiffMax == -1) {
+			nvt_mp_seq_printf(m, "Pen TipX Diff Max");
+			print_selftest_result(m, TestResult_PenTipX_DiffMax,
+					     RecordResult_PenTipX_DiffMax, RawData_PenTipX_DiffMax,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenTipY_DiffMax == -1) {
+			nvt_mp_seq_printf(m, "Pen TipY Diff Max");
+			print_selftest_result(m, TestResult_PenTipY_DiffMax,
+					     RecordResult_PenTipY_DiffMax, RawData_PenTipY_DiffMax,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingX_DiffMax == -1) {
+			nvt_mp_seq_printf(m, "Pen RingX Diff Max");
+			print_selftest_result(m, TestResult_PenRingX_DiffMax,
+					     RecordResult_PenRingX_DiffMax, RawData_PenRingX_DiffMax,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingY_DiffMax == -1) {
+			nvt_mp_seq_printf(m, "Pen RingY Diff Max");
+			print_selftest_result(m, TestResult_PenRingY_DiffMax,
+					     RecordResult_PenRingY_DiffMax, RawData_PenRingY_DiffMax,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenTipX_DiffMin == -1) {
+			nvt_mp_seq_printf(m, "Pen TipX Diff Min");
+			print_selftest_result(m, TestResult_PenTipX_DiffMin,
+					     RecordResult_PenTipX_DiffMin, RawData_PenTipX_DiffMin,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenTipY_DiffMin == -1) {
+			nvt_mp_seq_printf(m, "Pen TipY Diff Min");
+			print_selftest_result(m, TestResult_PenTipY_DiffMin,
+					     RecordResult_PenTipY_DiffMin, RawData_PenTipY_DiffMin,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingX_DiffMin == -1) {
+			nvt_mp_seq_printf(m, "Pen RingX Diff Min");
+			print_selftest_result(m, TestResult_PenRingX_DiffMin,
+					     RecordResult_PenRingX_DiffMin, RawData_PenRingX_DiffMin,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+		if (TestResult_PenRingY_DiffMin == -1) {
+			nvt_mp_seq_printf(m, "Pen RingY Diff Min");
+			print_selftest_result(m, TestResult_PenRingY_DiffMin,
+					     RecordResult_PenRingY_DiffMin, RawData_PenRingY_DiffMin,
+					     NVT_PEN_TIP_NUM, 1);
+		}
+	}
+
+	nvt_mp_seq_printf(m, "Pen Noise Test");
+	if ((TestResult_Pen_Noise == 0) || (TestResult_Pen_Noise == 1)) {
+		print_selftest_result(m, TestResult_Pen_Noise,
+				     RecordResult_PenTipX_DiffMax, RawData_PenTipX_DiffMax,
+				     NVT_PEN_TIP_NUM, 1);
+	} else {
+		nvt_mp_seq_printf(m, " FAIL!\n");
 	}
 
 	nvt_mp_test_result_printed = 1;
@@ -1044,6 +1827,7 @@ const struct seq_operations nvt_selftest_seq_ops = {
 	.stop   = c_stop,
 	.show   = c_show_selftest
 };
+EXPORT_SYMBOL_GPL(nvt_selftest_seq_ops);
 
 /*******************************************************
 Description:
@@ -1065,6 +1849,20 @@ int32_t nvt_selftest_open(struct inode *inode, struct file *file)
 	TestResult_Noise = 0;
 	TestResult_FW_DiffMax = 0;
 	TestResult_FW_DiffMin = 0;
+	TestResult_PenTipX_Raw = 0;
+	TestResult_PenTipY_Raw = 0;
+	TestResult_PenRingX_Raw = 0;
+	TestResult_PenRingY_Raw = 0;
+	TestResult_PenTipX_DiffMax = 0;
+	TestResult_PenTipY_DiffMax = 0;
+	TestResult_PenRingX_DiffMax = 0;
+	TestResult_PenRingY_DiffMax = 0;
+	TestResult_PenTipX_DiffMin = 0;
+	TestResult_PenTipY_DiffMin = 0;
+	TestResult_PenRingX_DiffMin = 0;
+	TestResult_PenRingY_DiffMin = 0;
+	TestResult_Pen_FW_Raw = 0;
+	TestResult_Pen_Noise = 0;
 
 	NVT_LOG("++\n");
 
@@ -1257,6 +2055,7 @@ int32_t nvt_mp_parse_ain(struct device_node *np, const char *name, uint8_t *arra
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_ain);
 
 /*******************************************************
 Description:
@@ -1281,6 +2080,7 @@ int32_t nvt_mp_parse_u32(struct device_node *np, const char *name, int32_t *para
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_u32);
 
 /*******************************************************
 Description:
@@ -1326,6 +2126,7 @@ int32_t nvt_mp_parse_array(struct device_node *np, const char *name, int32_t *ar
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_array);
 
 /*******************************************************
 Description:
@@ -1428,10 +2229,59 @@ int32_t nvt_mp_parse_dt(struct device_node *root, const char *node_compatible)
 	if (nvt_mp_parse_u32(np, "PS_Config_Diff_Test_Frame", &PS_Config_Diff_Test_Frame))
 		return -1;
 
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipX_FW_Raw_P", PS_Config_Lmt_PenTipX_FW_Raw_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipX_FW_Raw_N", PS_Config_Lmt_PenTipX_FW_Raw_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipX_FW_Diff_P", PS_Config_Lmt_PenTipX_FW_Diff_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipX_FW_Diff_N", PS_Config_Lmt_PenTipX_FW_Diff_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipY_FW_Raw_P", PS_Config_Lmt_PenTipY_FW_Raw_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipY_FW_Raw_N", PS_Config_Lmt_PenTipY_FW_Raw_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipY_FW_Diff_P", PS_Config_Lmt_PenTipY_FW_Diff_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenTipY_FW_Diff_N", PS_Config_Lmt_PenTipY_FW_Diff_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingX_FW_Raw_P", PS_Config_Lmt_PenRingX_FW_Raw_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingX_FW_Raw_N", PS_Config_Lmt_PenRingX_FW_Raw_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingX_FW_Diff_P", PS_Config_Lmt_PenRingX_FW_Diff_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingX_FW_Diff_N", PS_Config_Lmt_PenRingX_FW_Diff_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingY_FW_Raw_P", PS_Config_Lmt_PenRingY_FW_Raw_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingY_FW_Raw_N", PS_Config_Lmt_PenRingY_FW_Raw_N, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingY_FW_Diff_P", PS_Config_Lmt_PenRingY_FW_Diff_P, 200))
+		return -1;
+
+	if (nvt_mp_parse_array(np, "PS_Config_Lmt_PenRingY_FW_Diff_N", PS_Config_Lmt_PenRingY_FW_Diff_N, 200))
+		return -1;
+
 	NVT_LOG("Parse mp criteria done!\n");
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(nvt_mp_parse_dt);
 #endif /* #ifdef CONFIG_OF */
 
 /*******************************************************
@@ -1444,7 +2294,7 @@ return:
 *******************************************************/
 int32_t nvt_mp_proc_init(void)
 {
-	NVT_proc_selftest_entry = proc_create("nvt_selftest", 0444, NULL, &nvt_selftest_pops);
+	NVT_proc_selftest_entry = proc_create("nvt_selftest", 0444, NULL, &nvt_selftest_fops_proc_ops);
 	if (NVT_proc_selftest_entry == NULL) {
 		NVT_ERR("create /proc/nvt_selftest Failed!\n");
 		return -1;
@@ -1459,6 +2309,7 @@ int32_t nvt_mp_proc_init(void)
 		return 0;
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_mp_proc_init);
 
 /*******************************************************
 Description:
@@ -1478,4 +2329,5 @@ void nvt_mp_proc_deinit(void)
 		NVT_LOG("Removed /proc/%s\n", "nvt_selftest");
 	}
 }
+EXPORT_SYMBOL_GPL(nvt_mp_proc_deinit);
 #endif /* #if NVT_TOUCH_MP */

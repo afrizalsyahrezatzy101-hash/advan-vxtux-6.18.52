@@ -10,11 +10,11 @@ config VIDEO_ATOMISP_OV2722
 	help
 	  This is a Video4Linux2 sensor-level driver for the OVT
 	  OV2722 raw camera.
-
+	
 	  OVT is a 2M raw sensor.
-
+	
 	  It currently only works with the atomisp driver.
-
+	
 config VIDEO_ATOMISP_GC2235
 	tristate "Galaxy gc2235 sensor support"
 	depends on ACPI
@@ -22,7 +22,8 @@ config VIDEO_ATOMISP_GC2235
 	help
 	  This is a Video4Linux2 sensor-level driver for the OVT
 	  GC2235 raw camera.
-
+	
 	  GC2235 is a 2M raw sensor.
-
+	
 	  It currently only works with the atomisp driver.
+	

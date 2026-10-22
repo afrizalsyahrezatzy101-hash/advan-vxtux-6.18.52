@@ -377,16 +377,7 @@ static struct dquot *__dqgrab(struct dquot *dquot)
  * dquot has to be active and the caller has to make sure it cannot get
  * deactivated under our hands.
  */
-struct dquot *dqgrab(struct dquot *dquot)
-{
-	spin_lock(&dq_list_lock);
-	WARN_ON_ONCE(!dquot_active(dquot));
-	dquot = __dqgrab(dquot);
-	spin_unlock(&dq_list_lock);
-
-	return dquot;
-}
-EXPORT_SYMBOL_GPL(dqgrab);
+/* V17: dqgrab now in quotaops.h as static inline - removed local definition */
 
 static inline int dquot_dirty(struct dquot *dquot)
 {

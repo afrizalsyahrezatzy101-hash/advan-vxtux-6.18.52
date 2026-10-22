@@ -17,10 +17,10 @@ config AMD_ATL
 	  This library includes support for implementation-specific
 	  address translation procedures needed for various error
 	  handling cases.
-
+	
 	  Enable this option if using DRAM ECC on Zen-based systems
 	  and OS-based error handling.
-
+	
 config AMD_ATL_PRM
 	depends on AMD_ATL && ACPI_PRMT
 	def_bool y

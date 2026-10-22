@@ -9,12 +9,12 @@ config NET_VENDOR_META
 	help
 	  If you have a network (Ethernet) card designed by Meta, say Y.
 	  That's Meta as in the parent company of Facebook.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Meta cards. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_META
 
 config FBNIC
@@ -30,8 +30,8 @@ config FBNIC
 	select PLDMFW
 	help
 	  This driver supports Meta Platforms Host Network Interface.
-
+	
 	  To compile this driver as a module, choose M here. The module
 	  will be called fbnic.  MSI-X interrupt support is required.
-
+	
 endif # NET_VENDOR_META

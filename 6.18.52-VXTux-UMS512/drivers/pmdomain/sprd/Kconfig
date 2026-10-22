@@ -11,7 +11,7 @@ config SPRD_VSP_PW_DOMAIN
 	help
 	  Power-domain control for the Unisoc VSP video block. Replaces the
 	  sprd-vsp-pw-domain vendor blob.
-
+	
 config SPRD_GPU_PW_DOMAIN
 	tristate "Unisoc T618 GPU power-domain gate"
 	# PM is a HARD requirement, not a convenience (audit 2026-10-08).
@@ -39,7 +39,7 @@ config SPRD_GPU_PW_DOMAIN
 	  so that the GPU driver releases it before probing and asserts it
 	  again when detached. Replaces the power-control half of the removed
 	  mali_gondul DDK; carries no Mali code.
-
+	
 config SPRD_CAMSYS_PW_DOMAIN
 	tristate "Unisoc camera/MMSYS power domain"
 	depends on COMMON_CLK && MFD_SYSCON && HAS_IOMEM
@@ -52,3 +52,4 @@ config SPRD_CAMSYS_PW_DOMAIN
 	  multimedia subsystem. Replaces the sprd_camsys_pw_domain vendor blob
 	  and provides the sprd_cam_pw_* / sprd_glb_mm_pw_*_cfg helpers that
 	  sprd_camera and mmdvfs call.
+	

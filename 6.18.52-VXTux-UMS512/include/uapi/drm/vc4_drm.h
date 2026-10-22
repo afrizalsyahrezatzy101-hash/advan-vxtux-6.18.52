@@ -1,3 +1,4 @@
+#include <linux/types.h>
 /*
  * Copyright © 2014-2015 Broadcom
  *

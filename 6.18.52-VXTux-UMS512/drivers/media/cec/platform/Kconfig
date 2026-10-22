@@ -13,7 +13,7 @@ config CEC_CROS_EC
 	  ChromeOS Embedded Controller's CEC.
 	  The CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_MESON_AO
 	tristate "Amlogic Meson AO CEC driver"
 	depends on ARCH_MESON || COMPILE_TEST
@@ -23,7 +23,7 @@ config CEC_MESON_AO
 	  This is a driver for Amlogic Meson SoCs AO CEC interface. It uses the
 	  generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
-
+	
 config CEC_MESON_G12A_AO
 	tristate "Amlogic Meson G12A AO CEC driver"
 	depends on ARCH_MESON || COMPILE_TEST
@@ -39,7 +39,7 @@ config CEC_MESON_G12A_AO
 	  It uses the generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_GPIO
 	tristate "Generic GPIO-based CEC driver"
 	depends on PREEMPTION || COMPILE_TEST
@@ -51,7 +51,7 @@ config CEC_GPIO
 	  This is a generic GPIO-based CEC driver.
 	  The CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_SAMSUNG_S5P
 	tristate "Samsung S5P CEC driver"
 	depends on ARCH_EXYNOS || COMPILE_TEST
@@ -62,7 +62,7 @@ config CEC_SAMSUNG_S5P
 	  generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_STI
 	tristate "STMicroelectronics STiH4xx HDMI CEC driver"
 	depends on ARCH_STI || COMPILE_TEST
@@ -73,7 +73,7 @@ config CEC_STI
 	  generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_STM32
 	tristate "STMicroelectronics STM32 HDMI CEC driver"
 	depends on ARCH_STM32 || COMPILE_TEST
@@ -85,7 +85,7 @@ config CEC_STM32
 	  generic CEC framework interface.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_TEGRA
 	tristate "Tegra HDMI CEC driver"
 	depends on ARCH_TEGRA || COMPILE_TEST
@@ -96,7 +96,7 @@ config CEC_TEGRA
 	  generic CEC framework interface.
 	  The CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_SECO
 	tristate "SECO Boards HDMI CEC driver"
 	depends on X86 || (COMPILE_TEST && HAS_IOPORT)
@@ -108,7 +108,7 @@ config CEC_SECO
 	  Selecting it will enable support for this device.
 	  CEC bus is present in the HDMI connector and enables communication
 	  between compatible devices.
-
+	
 config CEC_SECO_RC
 	bool "SECO Boards IR RC5 support"
 	depends on CEC_SECO
@@ -118,3 +118,4 @@ config CEC_SECO_RC
 	  SECO Boards Consumer-IR in seco-cec driver.
 	  The embedded controller supports RC5 protocol only, default mapping
 	  is set to rc-hauppauge.
+	

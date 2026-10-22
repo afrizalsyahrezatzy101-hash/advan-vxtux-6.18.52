@@ -10,7 +10,7 @@
 # di sana jalurnya `drivers/wcn/bluetooth/driver/`, dan `drivers/wcn/` adalah
 # padanan dari `drivers/vxtux/net/wireless/sprdwcn/` di port ini.
 
-obj-$(CONFIG_WCN_BLUETOOTH) += driver/
+obj-$(CONFIG_SPRD_LEGACY_WCN_BLUETOOTH) += driver/
 
 # Vendor header include paths (NOT upstream).
 # The sprdwcn port kept the vendor drivers/vxtux layout: headers live in

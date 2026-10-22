@@ -9,13 +9,13 @@ config VIRTIO_VFIO_PCI
 	  SR-IOV PF device to support specific VIRTIO extensions,
 	  otherwise this driver provides no additional functionality
 	  beyond vfio-pci.
-
+	
 	  Migration support in this driver relies on dirty page tracking
 	  provided by the IOMMU hardware and exposed through IOMMUFD, any
 	  other use cases are dis-recommended.
-
+	
 	  If you don't know what to do here, say N.
-
+	
 config VIRTIO_VFIO_PCI_ADMIN_LEGACY
 	bool "Legacy I/O support for VIRTIO NET PCI VF devices"
 	depends on VIRTIO_VFIO_PCI && VIRTIO_PCI_ADMIN_LEGACY
@@ -27,5 +27,6 @@ config VIRTIO_VFIO_PCI_ADMIN_LEGACY
 	  device to support and enable specific VIRTIO extensions,
 	  otherwise this driver provides no additional functionality
 	  beyond vfio-pci.
-
+	
 	  If you don't know what to do here, say N.
+	

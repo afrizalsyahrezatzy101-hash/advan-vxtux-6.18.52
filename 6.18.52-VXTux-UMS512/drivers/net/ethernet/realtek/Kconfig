@@ -9,12 +9,12 @@ config NET_VENDOR_REALTEK
 	depends on PCI || (PARPORT && X86)
 	help
 	  If you have a network (Ethernet) card belonging to this class, say Y.
-
+	
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
 	  the questions about Realtek devices. If you say Y, you will be asked for
 	  your specific card in the following questions.
-
+	
 if NET_VENDOR_REALTEK
 
 config ATP
@@ -27,10 +27,10 @@ config ATP
 	  if you want to use this.  If you intend to use this driver, you
 	  should have said N to the "Parallel printer support", because the two
 	  drivers don't like each other.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called atp.
-
+	
 config 8139CP
 	tristate "RealTek RTL-8139 C+ PCI Fast Ethernet Adapter support"
 	depends on PCI
@@ -39,10 +39,10 @@ config 8139CP
 	help
 	  This is a driver for the Fast Ethernet PCI network cards based on
 	  the RTL8139C+ chips. If you have one of those, say Y here.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called 8139cp.  This is recommended.
-
+	
 config 8139TOO
 	tristate "RealTek RTL-8129/8130/8139 PCI Fast Ethernet Adapter support"
 	depends on PCI
@@ -51,10 +51,10 @@ config 8139TOO
 	help
 	  This is a driver for the Fast Ethernet PCI network cards based on
 	  the RTL 8129/8130/8139 chips. If you have one of those, say Y here.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called 8139too.  This is recommended.
-
+	
 config 8139TOO_PIO
 	bool "Use PIO instead of MMIO"
 	default y
@@ -64,7 +64,7 @@ config 8139TOO_PIO
 	  of PCI shared memory (MMIO).  This can possibly solve some problems
 	  in case your mainboard has memory consistency issues.  If unsure,
 	  say N.
-
+	
 config 8139TOO_TUNE_TWISTER
 	bool "Support for uncommon RTL-8139 rev. K (automatic channel equalization)"
 	depends on 8139TOO
@@ -75,7 +75,7 @@ config 8139TOO_TUNE_TWISTER
 	  to match the transceiver to the cable characteristics. This is
 	  experimental since hardly documented by the manufacturer.
 	  If unsure, say Y.
-
+	
 config 8139TOO_8129
 	bool "Support for older RTL-8129/8130 boards"
 	depends on 8139TOO
@@ -84,7 +84,7 @@ config 8139TOO_8129
 	  RTL-8130 chips, which support MII via an external transceiver,
 	  instead of an internal one.  Disabling this option will save some
 	  memory by making the code size smaller.  If unsure, say Y.
-
+	
 config 8139_OLD_RX_RESET
 	bool "Use older RX-reset method"
 	depends on 8139TOO
@@ -94,7 +94,7 @@ config 8139_OLD_RX_RESET
 	  RX-reset method should be adequate for all boards.  But if you
 	  experience problems, you can enable this option to restore the
 	  old RX-reset behavior.  If unsure, say N.
-
+	
 config R8169
 	tristate "Realtek 8169/8168/8101/8125 ethernet support"
 	depends on PCI
@@ -109,10 +109,10 @@ config R8169
 	  RTL8168 Gigabit Ethernet
 	  RTL8101 Fast Ethernet
 	  RTL8125 2.5GBit Ethernet
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called r8169.  This is recommended.
-
+	
 config R8169_LEDS
 	bool "Support for controlling the NIC LEDs"
 	depends on R8169 && LEDS_TRIGGER_NETDEV
@@ -120,7 +120,7 @@ config R8169_LEDS
 	help
 	  Optional support for controlling the NIC LED's with the netdev
 	  LED trigger.
-
+	
 config RTASE
 	tristate "Realtek Automotive Switch 9054/9068/9072/9075/9068/9071 PCIe Interface support"
 	depends on PCI
@@ -136,8 +136,8 @@ config RTASE
 	  RTL9075 5GBit Ethernet
 	  RTL9068 5GBit Ethernet
 	  RTL9071 5GBit Ethernet
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called rtase. This is recommended.
-
+	
 endif # NET_VENDOR_REALTEK

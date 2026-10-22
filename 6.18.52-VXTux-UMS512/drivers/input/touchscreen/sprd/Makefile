@@ -5,4 +5,3 @@
 # `make clean` died on a missing Makefile here.
 
 obj-$(CONFIG_TOUCHSCREEN_CHIPONE)		+= chipone_tddi/
-obj-$(CONFIG_TOUCHSCREEN_HIMAX_COMMON)	+= hx83102e/

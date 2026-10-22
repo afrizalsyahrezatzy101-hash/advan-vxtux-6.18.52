@@ -33,3 +33,4 @@ config SPRD_VSP
 	  conversion for camera and video paths. Misc device /dev/sprd_vsp
 	  with the uapi in include/uapi/video/sprd_vsp.h. Replaces the
 	  sprd-vsp vendor blob (vendor_dlkm vsp.ko, 115 KB).
+	

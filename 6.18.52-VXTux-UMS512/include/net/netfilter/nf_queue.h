@@ -1,3 +1,4 @@
+#include <linux/rhashtable.h>
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _NF_QUEUE_H
 #define _NF_QUEUE_H
@@ -20,6 +21,8 @@ struct nf_queue_entry {
 #endif
 	struct nf_hook_state	state;
 	u16			size; /* sizeof(entry) + saved route keys */
+	/* VXTux 6.18 backport: missing fields from upstream 6.18 */
+	struct rhash_head	hash_node; /* for nfnetlink_queue hash table */
 
 	/* extra space to store route keys */
 };

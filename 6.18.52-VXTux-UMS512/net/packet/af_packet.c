@@ -1725,7 +1725,7 @@ static int fanout_add(struct sock *sk, struct fanout_args *args)
 	if (type == PACKET_FANOUT_ROLLOVER ||
 	    (type_flags & PACKET_FANOUT_FLAG_ROLLOVER)) {
 		err = -ENOMEM;
-		rollover = kzalloc(sizeof(*rollover), GFP_KERNEL);
+		rollover = kzalloc(sizeof(*rollover, GFP_KERNEL), GFP_KERNEL);
 		if (!rollover)
 			goto out;
 		atomic_long_set(&rollover->num, 0);
@@ -2022,7 +2022,7 @@ retry:
 		goto out_unlock;
 
 	if (!skb) {
-		size_t reserved = LL_RESERVED_SPACE_EX(dev, hard_header_len);
+		size_t reserved = LL_RESERVED_SPACE(dev);
 		int tlen = dev->needed_tailroom;
 		unsigned int hhlen = dev->header_ops ? hard_header_len : 0;
 
@@ -2842,7 +2842,7 @@ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
 			goto tpacket_error;
 
 		status = TP_STATUS_SEND_REQUEST;
-		hlen = LL_RESERVED_SPACE_EX(dev, hard_header_len);
+		hlen = LL_RESERVED_SPACE(dev);
 		tlen = dev->needed_tailroom;
 		if (vnet_hdr_sz) {
 			data += vnet_hdr_sz;
@@ -3045,7 +3045,7 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
 		goto out_unlock;
 
 	err = -ENOBUFS;
-	hlen = LL_RESERVED_SPACE_EX(dev, hard_header_len);
+	hlen = LL_RESERVED_SPACE(dev);
 	tlen = dev->needed_tailroom;
 	linear = __virtio16_to_cpu(vio_le(), vnet_hdr.hdr_len);
 	linear = max(linear, min_t(int, len, hard_header_len));
@@ -4489,13 +4489,13 @@ static struct pgv *alloc_pg_vec(struct tpacket_req *req, int order, bool tx_ring
 			goto out_free_pgvec;
 
 		if (tx_ring && !vec->deferred &&
-		    is_vmalloc_addr(pg_vec[i].buffer)) {
-			vec->deferred = kzalloc_obj(*vec->deferred,
-						    GFP_KERNEL | __GFP_NOWARN);
-			if (!vec->deferred)
-				goto out_free_pgvec;
-			vec->deferred->vec = vec;
-			INIT_DELAYED_WORK(&vec->deferred->work,
+				    is_vmalloc_addr(pg_vec[i].buffer)) {
+					vec->deferred = kzalloc(sizeof(*vec->deferred),
+								GFP_KERNEL | __GFP_NOWARN);
+					if (!vec->deferred)
+						goto out_free_pgvec;
+					vec->deferred->vec = vec;
+					INIT_DELAYED_WORK(&vec->deferred->work,
 					  packet_free_pg_vec_work);
 		}
 	}

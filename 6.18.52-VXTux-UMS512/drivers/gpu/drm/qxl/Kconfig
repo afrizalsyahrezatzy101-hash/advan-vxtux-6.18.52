@@ -12,3 +12,4 @@ config DRM_QXL
 	  QXL virtual GPU for Spice virtualization desktop integration.
 	  Do not enable this driver unless your distro ships a corresponding
 	  X.org QXL driver that can handle kernel modesetting.
+	

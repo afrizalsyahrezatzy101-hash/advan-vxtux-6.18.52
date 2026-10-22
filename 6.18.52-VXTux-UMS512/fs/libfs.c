@@ -349,7 +349,7 @@ void simple_offset_remove(struct offset_ctx *octx, struct dentry *dentry)
  * Caller must have grabbed a slot for new_dentry in the maple_tree
  * associated with new_dir, even if dentry is negative.
  */
-void simple_offset_rename(struct inode *old_dir, struct dentry *old_dentry,
+int simple_offset_rename(struct inode *old_dir, struct dentry *old_dentry,
 			  struct inode *new_dir, struct dentry *new_dentry)
 {
 	struct offset_ctx *old_ctx = old_dir->i_op->get_offset_ctx(old_dir);
@@ -357,11 +357,11 @@ void simple_offset_rename(struct inode *old_dir, struct dentry *old_dentry,
 	long new_offset = dentry2offset(new_dentry);
 
 	if (WARN_ON(!new_offset))
-		return;
+		return -EINVAL;
 
 	simple_offset_remove(old_ctx, old_dentry);
 	offset_set(new_dentry, 0);
-	WARN_ON(simple_offset_replace(new_ctx, old_dentry, new_offset));
+	return simple_offset_replace(new_ctx, old_dentry, new_offset);
 }
 
 /**

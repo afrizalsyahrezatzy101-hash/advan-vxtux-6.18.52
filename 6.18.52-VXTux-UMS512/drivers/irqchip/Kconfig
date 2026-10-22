@@ -83,7 +83,7 @@ config ARM_VIC_NR
 	help
 	  The maximum number of VICs available in the system, for
 	  power management.
-
+	
 config IRQ_MSI_LIB
 	bool
 	select GENERIC_MSI_IRQ
@@ -110,7 +110,7 @@ config AL_FIC
 	select IRQ_DOMAIN
 	help
 	  Support Amazon's Annapurna Labs Fabric Interrupt Controller.
-
+	
 config ATMEL_AIC_IRQ
 	bool
 	select GENERIC_IRQ_CHIP
@@ -140,9 +140,9 @@ config BCM2712_MIP
 	  Enable support for the Broadcom BCM2712 MSI-X target peripheral
 	  (MIP) needed by brcmstb PCIe to handle MSI-X interrupts on
 	  Raspberry Pi 5.
-
+	
 	  If unsure say n.
-
+	
 config BCM6345_L1_IRQ
 	bool
 	select GENERIC_IRQ_CHIP
@@ -215,10 +215,10 @@ config LAN966X_OIC
 	  Enable support for the LAN966x Outbound Interrupt Controller.
 	  This controller is present on the Microchip LAN966x PCI device and
 	  maps the internal interrupts sources to PCIe interrupt.
-
+	
 	  To compile this driver as a module, choose M here: the module
 	  will be called irq-lan966x-oic.
-
+	
 config MADERA_IRQ
 	tristate
 
@@ -263,7 +263,7 @@ config JCORE_AIC
 	select IRQ_DOMAIN
 	help
 	  Support for the J-Core integrated AIC.
-
+	
 config RDA_INTC
 	bool
 	select IRQ_DOMAIN
@@ -274,7 +274,7 @@ config RENESAS_INTC_IRQPIN
 	help
 	  Enable support for the Renesas Interrupt Controller for external
 	  interrupt pins, as found on SH/R-Mobile and R-Car Gen1 SoCs.
-
+	
 config RENESAS_IRQC
 	bool "Renesas R-Mobile APE6, R-Car Gen{2,3} and RZ/G{1,2} IRQC support" if COMPILE_TEST
 	select GENERIC_IRQ_CHIP
@@ -282,14 +282,14 @@ config RENESAS_IRQC
 	help
 	  Enable support for the Renesas Interrupt Controller for external
 	  devices, as found on R-Mobile APE6, R-Car Gen{2,3} and RZ/G{1,2} SoCs.
-
+	
 config RENESAS_RZA1_IRQC
 	bool "Renesas RZ/A1 IRQC support" if COMPILE_TEST
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
 	  to 8 external interrupts with configurable sense select.
-
+	
 config RENESAS_RZG2L_IRQC
 	bool "Renesas RZ/G2L (and alike SoC) IRQC support" if COMPILE_TEST
 	select GENERIC_IRQ_CHIP
@@ -297,14 +297,14 @@ config RENESAS_RZG2L_IRQC
 	help
 	  Enable support for the Renesas RZ/G2L (and alike SoC) Interrupt Controller
 	  for external devices.
-
+	
 config RENESAS_RZV2H_ICU
 	bool "Renesas RZ/V2H(P) ICU support" if COMPILE_TEST
 	select GENERIC_IRQ_CHIP
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Enable support for the Renesas RZ/V2H(P) Interrupt Control Unit (ICU)
-
+	
 config SL28CPLD_INTC
 	bool "Kontron sl28cpld IRQ controller"
 	depends on MFD_SL28CPLD=y || COMPILE_TEST
@@ -312,14 +312,14 @@ config SL28CPLD_INTC
 	help
 	  Interrupt controller driver for the board management controller
 	  found on the Kontron sl28 CPLD.
-
+	
 config ST_IRQCHIP
 	bool
 	select REGMAP
 	select MFD_SYSCON
 	help
 	  Enables SysCfg Controlled IRQs on STi based platforms.
-
+	
 config SUN4I_INTC
 	bool
 
@@ -344,7 +344,7 @@ config TS4800_IRQ
 	depends on SOC_IMX51 || COMPILE_TEST
 	help
 	  Support for the TS-4800 FPGA IRQ controller
-
+	
 config VERSATILE_FPGA_IRQ
 	bool
 	select IRQ_DOMAIN
@@ -367,7 +367,7 @@ config XILINX_INTC
 	  Support for the Xilinx Interrupt Controller IP core.
 	  This is used as a primary controller with MicroBlaze and can also
 	  be used as a secondary chained controller on other platforms.
-
+	
 config IRQ_CROSSBAR
 	bool
 	help
@@ -375,14 +375,14 @@ config IRQ_CROSSBAR
 	  The primary irqchip invokes the crossbar's callback which inturn allocates
 	  a free irq and configures the IP. Thus the peripheral interrupts are
 	  routed to one of the free irqchip interrupt lines.
-
+	
 config KEYSTONE_IRQ
 	tristate "Keystone 2 IRQ controller IP"
 	depends on ARCH_KEYSTONE
 	help
 		Support for Texas Instruments Keystone 2 IRQ controller IP which
 		is part of the Keystone 2 IPC mechanism
-
+	
 config MIPS_GIC
 	bool
 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
@@ -404,15 +404,15 @@ config INGENIC_TCU_IRQ
 	help
 	  Support for interrupts in the Timer/Counter Unit (TCU) of the Ingenic
 	  JZ47xx SoCs.
-
+	
 	  If unsure, say N.
-
+	
 config IMX_GPCV2
 	bool
 	select IRQ_DOMAIN
 	help
 	  Enables the wakeup IRQs for IMX platforms with GPCv2 block
-
+	
 config IRQ_MXS
 	def_bool y if MACH_ASM9260 || ARCH_MXS
 	select IRQ_DOMAIN
@@ -462,7 +462,7 @@ config STM32MP_EXTI
 	select GENERIC_IRQ_CHIP
 	help
 	  Support STM32MP EXTI (extended interrupts and event) controller.
-
+	
 config STM32_EXTI
 	bool
 	select IRQ_DOMAIN
@@ -475,7 +475,7 @@ config QCOM_IRQ_COMBINER
 	help
 	  Say yes here to add support for the IRQ combiner devices embedded
 	  in Qualcomm Technologies chips.
-
+	
 config IRQ_UNIPHIER_AIDET
 	bool "UniPhier AIDET support" if COMPILE_TEST
 	depends on ARCH_UNIPHIER || COMPILE_TEST
@@ -483,7 +483,7 @@ config IRQ_UNIPHIER_AIDET
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support for the UniPhier AIDET (ARM Interrupt Detector).
-
+	
 config MESON_IRQ_GPIO
        tristate "Meson GPIO Interrupt Multiplexer"
        depends on ARCH_MESON || COMPILE_TEST
@@ -491,7 +491,7 @@ config MESON_IRQ_GPIO
        select IRQ_DOMAIN_HIERARCHY
        help
          Support Meson SoC Family GPIO Interrupt Multiplexer
-
+	
 config GOLDFISH_PIC
        bool "Goldfish programmable interrupt controller"
        depends on MIPS && (GOLDFISH || COMPILE_TEST)
@@ -500,7 +500,7 @@ config GOLDFISH_PIC
        help
          Say yes here to enable Goldfish interrupt controller driver used
          for Goldfish based virtual platforms.
-
+	
 config QCOM_PDC
 	tristate "QCOM PDC"
 	depends on ARCH_QCOM
@@ -508,7 +508,7 @@ config QCOM_PDC
 	help
 	  Power Domain Controller driver to manage and configure wakeup
 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
-
+	
 config QCOM_MPM
 	tristate "QCOM MPM"
 	depends on ARCH_QCOM
@@ -517,7 +517,7 @@ config QCOM_MPM
 	help
 	  MSM Power Manager driver to manage and configure wakeup
 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
-
+	
 config CSKY_MPINTC
 	bool
 	depends on CSKY
@@ -526,7 +526,7 @@ config CSKY_MPINTC
 	  for C-SKY SMP system.
 	  In fact it's not mmio map in hardware and it uses ld/st to visit the
 	  controller's register inside CPU.
-
+	
 config CSKY_APB_INTC
 	bool "C-SKY APB Interrupt Controller"
 	depends on CSKY
@@ -534,7 +534,7 @@ config CSKY_APB_INTC
 	  Say yes here to enable C-SKY APB interrupt controller driver used
 	  by C-SKY single core SOC system. It uses mmio map apb-bus to visit
 	  the controller's register.
-
+	
 config IMX_IRQSTEER
 	bool "i.MX IRQSTEER support"
 	depends on ARCH_MXC || COMPILE_TEST
@@ -542,14 +542,14 @@ config IMX_IRQSTEER
 	select IRQ_DOMAIN
 	help
 	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
-
+	
 config IMX_INTMUX
 	bool "i.MX INTMUX support" if COMPILE_TEST
 	default y if ARCH_MXC
 	select IRQ_DOMAIN
 	help
 	  Support for the i.MX INTMUX interrupt multiplexer.
-
+	
 config IMX_MU_MSI
 	tristate "i.MX MU used as MSI controller"
 	depends on OF && HAS_IOMEM
@@ -564,9 +564,9 @@ config IMX_MU_MSI
 	  Provide a driver for the i.MX Messaging Unit block used as a
 	  CPU-to-CPU MSI controller. This requires a specially crafted DT
 	  to make use of this driver.
-
+	
 	  If unsure, say N
-
+	
 config LS1X_IRQ
 	bool "Loongson-1 Interrupt Controller"
 	depends on MACH_LOONGSON32
@@ -575,7 +575,7 @@ config LS1X_IRQ
 	select GENERIC_IRQ_CHIP
 	help
 	  Support for the Loongson-1 platform Interrupt Controller.
-
+	
 config TI_SCI_INTR_IRQCHIP
 	tristate "TI SCI INTR Interrupt Controller"
 	depends on TI_SCI_PROTOCOL
@@ -586,7 +586,7 @@ config TI_SCI_INTR_IRQCHIP
 	  over TI System Control Interface available on some new TI's SoCs.
 	  If you wish to use interrupt router irq resources managed by the
 	  TI System Controller, say Y here. Otherwise, say N.
-
+	
 config TI_SCI_INTA_IRQCHIP
 	tristate "TI SCI INTA Interrupt Controller"
 	depends on TI_SCI_PROTOCOL
@@ -598,7 +598,7 @@ config TI_SCI_INTA_IRQCHIP
 	  over TI System Control Interface available on some new TI's SoCs.
 	  If you wish to use interrupt aggregator irq resources managed by the
 	  TI System Controller, say Y here. Otherwise, say N.
-
+	
 config TI_PRUSS_INTC
 	tristate
 	depends on TI_PRUSS
@@ -609,7 +609,7 @@ config TI_PRUSS_INTC
 	  present within a PRU-ICSS subsystem present on various TI SoCs.
 	  The PRUSS INTC enables various interrupts to be routed to multiple
 	  different processors within the SoC.
-
+	
 config RISCV_INTC
 	bool
 	depends on RISCV
@@ -655,9 +655,9 @@ config STARFIVE_JH8100_INTC
 	help
 	  This enables support for the INTC chip found in StarFive JH8100
 	  SoC.
-
+	
 	  If you don't know what to do here, say Y.
-
+	
 config ACLINT_SSWI
 	bool "RISC-V ACLINT S-mode IPI Interrupt Controller"
 	depends on RISCV
@@ -669,9 +669,9 @@ config ACLINT_SSWI
 	  Supported variants are:
 	  - T-HEAD, with compatible "thead,c900-aclint-sswi"
 	  - MIPS P8700, with compatible "mips,p8700-aclint-sswi"
-
+	
 	  If you don't know what to do here, say Y.
-
+	
 # Backwards compatibility so oldconfig does not drop it.
 config THEAD_C900_ACLINT_SSWI
 	bool
@@ -683,7 +683,7 @@ config EXYNOS_IRQ_COMBINER
 	help
 	  Say yes here to add support for the IRQ combiner devices embedded
 	  in Samsung Exynos chips.
-
+	
 config IRQ_LOONGARCH_CPU
 	bool
 	select GENERIC_IRQ_CHIP
@@ -699,7 +699,7 @@ config IRQ_LOONGARCH_CPU
 	  Support for the LoongArch CPU Interrupt Controller. For details of
 	  irq chip hierarchy on LoongArch platforms please read the document
 	  Documentation/arch/loongarch/irq-chip-model.rst.
-
+	
 config LOONGSON_LIOINTC
 	bool "Loongson Local I/O Interrupt Controller"
 	depends on MACH_LOONGSON64
@@ -708,7 +708,7 @@ config LOONGSON_LIOINTC
 	select GENERIC_IRQ_CHIP
 	help
 	  Support for the Loongson Local I/O Interrupt Controller.
-
+	
 config LOONGSON_EIOINTC
 	bool "Loongson Extend I/O Interrupt Controller"
 	depends on LOONGARCH
@@ -718,7 +718,7 @@ config LOONGSON_EIOINTC
 	select GENERIC_IRQ_CHIP
 	help
 	  Support for the Loongson3 Extend I/O Interrupt Vector Controller.
-
+	
 config LOONGSON_HTPIC
 	bool "Loongson3 HyperTransport PIC Controller"
 	depends on MACH_LOONGSON64 && MIPS
@@ -727,7 +727,7 @@ config LOONGSON_HTPIC
 	select GENERIC_IRQ_CHIP
 	help
 	  Support for the Loongson-3 HyperTransport PIC Controller.
-
+	
 config LOONGSON_HTVEC
 	bool "Loongson HyperTransport Interrupt Vector Controller"
 	depends on MACH_LOONGSON64
@@ -735,7 +735,7 @@ config LOONGSON_HTVEC
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support for the Loongson HyperTransport Interrupt Vector Controller.
-
+	
 config LOONGSON_PCH_PIC
 	bool "Loongson PCH PIC Controller"
 	depends on MACH_LOONGSON64
@@ -744,7 +744,7 @@ config LOONGSON_PCH_PIC
 	select IRQ_FASTEOI_HIERARCHY_HANDLERS
 	help
 	  Support for the Loongson PCH PIC Controller.
-
+	
 config LOONGSON_PCH_MSI
 	bool "Loongson PCH MSI Controller"
 	depends on MACH_LOONGSON64
@@ -755,7 +755,7 @@ config LOONGSON_PCH_MSI
 	select PCI_MSI
 	help
 	  Support for the Loongson PCH MSI Controller.
-
+	
 config LOONGSON_PCH_LPC
 	bool "Loongson PCH LPC Controller"
 	depends on LOONGARCH
@@ -764,7 +764,7 @@ config LOONGSON_PCH_LPC
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support for the Loongson PCH LPC Controller.
-
+	
 config MST_IRQ
 	bool "MStar Interrupt Controller"
 	depends on ARCH_MEDIATEK || ARCH_MSTARV7 || COMPILE_TEST
@@ -773,13 +773,13 @@ config MST_IRQ
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support MStar Interrupt Controller.
-
+	
 config WPCM450_AIC
 	bool "Nuvoton WPCM450 Advanced Interrupt Controller"
 	depends on ARCH_WPCM450
 	help
 	  Support for the interrupt controller in the Nuvoton WPCM450 BMC SoC.
-
+	
 config IRQ_IDT3243X
 	bool
 	select GENERIC_IRQ_CHIP
@@ -793,7 +793,7 @@ config APPLE_AIC
 	help
 	  Support for the Apple Interrupt Controller found on Apple Silicon SoCs,
 	  such as the M1.
-
+	
 config MCHP_EIC
 	bool "Microchip External Interrupt Controller"
 	depends on ARCH_AT91 || COMPILE_TEST
@@ -801,7 +801,7 @@ config MCHP_EIC
 	select IRQ_DOMAIN_HIERARCHY
 	help
 	  Support for Microchip External Interrupt Controller.
-
+	
 config SOPHGO_SG2042_MSI
 	bool "Sophgo SG2042 MSI Controller"
 	depends on ARCH_SOPHGO || COMPILE_TEST
@@ -813,7 +813,7 @@ config SOPHGO_SG2042_MSI
 	  Support for the Sophgo SG2042 MSI Controller.
 	  This on-chip interrupt controller enables MSI sources to be
 	  routed to the primary PLIC controller on SoC.
-
+	
 config SUNPLUS_SP7021_INTC
 	bool "Sunplus SP7021 interrupt controller" if COMPILE_TEST
 	default SOC_SP7021
@@ -822,5 +822,5 @@ config SUNPLUS_SP7021_INTC
 	  SP7021 SoC has 2 Chips: C-Chip & P-Chip. This is used as a
 	  chained controller, routing all interrupt source in P-Chip to
 	  the primary controller on C-Chip.
-
+	
 endmenu

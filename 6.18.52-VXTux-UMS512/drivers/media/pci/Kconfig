@@ -7,7 +7,7 @@ menuconfig MEDIA_PCI_SUPPORT
 	help
 	  Enable media drivers for PCI/PCIe bus.
 	  If you have such devices, say Y.
-
+	
 if MEDIA_PCI_SUPPORT
 
 if MEDIA_CAMERA_SUPPORT
@@ -72,7 +72,7 @@ config VIDEO_PCI_SKELETON
 	help
 	  Enable build of the skeleton PCI driver, used as a reference
 	  when developing new drivers.
-
+	
 source "drivers/media/pci/intel/Kconfig"
 
 endif #MEDIA_PCI_SUPPORT

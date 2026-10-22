@@ -14,6 +14,7 @@ config VIDEO_INTEL_IPU7
 	help
 	  This is the 7th Gen Intel Image Processing Unit, found in Intel SoCs
 	  and used for capturing images and video from camera sensors.
-
+	
 	  To compile this driver, say Y here! It contains 2 modules -
 	  intel_ipu7 and intel_ipu7_isys.
+	

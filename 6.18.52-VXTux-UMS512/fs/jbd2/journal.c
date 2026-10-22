@@ -1529,7 +1529,7 @@ static journal_t *journal_init_common(struct block_device *bdev,
 	if (!journal)
 		return ERR_PTR(-ENOMEM);
 
-	lockdep_register_key(&journal->jbd2_trans_commit_key);
+	lockdep_register_key(&journal->j_trans_commit_key);
 	journal->j_blocksize = blocksize;
 	journal->j_dev = bdev;
 	journal->j_fs_dev = fs_dev;
@@ -1560,7 +1560,7 @@ static journal_t *journal_init_common(struct block_device *bdev,
 	journal->j_max_batch_time = 15000; /* 15ms */
 	atomic_set(&journal->j_reserved_credits, 0);
 	lockdep_init_map(&journal->j_trans_commit_map, "jbd2_handle",
-			 &journal->jbd2_trans_commit_key, 0);
+			 &journal->j_trans_commit_key, 0);
 
 	/* The journal is marked for error until we succeed with recovery! */
 	journal->j_flags = JBD2_ABORT;
@@ -1611,7 +1611,7 @@ err_cleanup:
 	kfree(journal->j_wbuf);
 	jbd2_journal_destroy_revoke(journal);
 	journal_fail_superblock(journal);
-	lockdep_unregister_key(&journal->jbd2_trans_commit_key);
+	lockdep_unregister_key(&journal->j_trans_commit_key);
 	kfree(journal);
 	return ERR_PTR(err);
 }
@@ -2188,7 +2188,7 @@ int jbd2_journal_destroy(journal_t *journal)
 		jbd2_journal_destroy_revoke(journal);
 	kfree(journal->j_fc_wbuf);
 	kfree(journal->j_wbuf);
-	lockdep_unregister_key(&journal->jbd2_trans_commit_key);
+	lockdep_unregister_key(&journal->j_trans_commit_key);
 	kfree(journal);
 
 	return err;

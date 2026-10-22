@@ -13,7 +13,7 @@ config ROCKCHIP_PM_DOMAINS
 	  In order to meet high performance and low power requirements, a power
 	  management unit is designed or saving power when RK3288 in low power
 	  mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
-
+	
 	  If unsure, say N.
-
+	
 endif

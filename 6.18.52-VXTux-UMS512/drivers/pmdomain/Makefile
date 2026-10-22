@@ -8,4 +8,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 obj-y					+= core.o governor.o
 
-obj-$(CONFIG_SPRD_VSP_PW_DOMAIN) += sprd/
+# sprd/ carries the VSP power-domain module (sprd-vsp-pw-domain.ko,
+# which replaces the stock blob) and its register table. It has to be
+# descended into, otherwise the module is never built.
+obj-y					+= sprd/

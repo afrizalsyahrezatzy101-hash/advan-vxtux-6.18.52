@@ -1,4 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+
+#include <linux/types.h>
 /*
  * include/uapi/linux/ethtool_netlink.h - netlink interface for ethtool
  *
