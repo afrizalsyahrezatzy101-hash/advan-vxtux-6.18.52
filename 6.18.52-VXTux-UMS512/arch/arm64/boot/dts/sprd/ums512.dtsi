@@ -52,6 +52,10 @@
 			reg = <0x0 0x0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CORE_PD>;
+			/* TICK11: FDT stok memberi #cooling-cells hanya di pemimpin
+			 * cluster (cpu@0 dan cpu@600) supaya cooling-map soc-thmzone
+			 * bisa merujuk cpu sebagai cooling-device cpufreq. */
+			#cooling-cells = <2>;
 		};
 
 		CPU1: cpu@100 {
@@ -100,6 +104,7 @@
 			reg = <0x0 0x600>;
 			enable-method = "psci";
 			cpu-idle-states = <&CORE_PD>;
+			#cooling-cells = <2>; /* TICK11: pemimpin cluster1, sama seperti stok */
 		};
 
 		CPU7: cpu@700 {

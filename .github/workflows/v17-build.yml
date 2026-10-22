@@ -27,6 +27,11 @@ jobs:
         run: |
           cd 6.18.52-VXTux-UMS512
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+      - name: Build DTB (verifikasi DTS thermal/efuse chain)
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- ums512-1h10-vxtux.dtb -j$(nproc)
+          ls -l arch/arm64/boot/dts/sprd/ums512-1h10-vxtux.dtb
       - name: Build modules
         run: |
           cd 6.18.52-VXTux-UMS512
@@ -41,4 +46,10 @@ jobs:
         with:
           name: v17-built-kos
           path: /tmp/built_kos.tar.gz
+          if-no-files-found: error
+      - name: Upload DTB
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-dtb
+          path: 6.18.52-VXTux-UMS512/arch/arm64/boot/dts/sprd/ums512-1h10-vxtux.dtb
           if-no-files-found: error
