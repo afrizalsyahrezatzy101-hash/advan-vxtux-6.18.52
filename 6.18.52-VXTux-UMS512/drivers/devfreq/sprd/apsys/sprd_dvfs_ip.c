@@ -915,11 +915,10 @@ static const void *roc1_dvfs_ops = (void *)0;
 static const void *sharkl5pro_dvfs_ops = (void *)0;
 static const void *sprd_dvfs_of_match = (void *)0;
 static __typeof__(ip_dvfs_notify_callback) dpu_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
-static __typeof__(get_dvfs_table_info_show) get_dvfs_table_info_show __attribute__((alias("get_dvfs_table_info_show")));
 static __typeof__(ip_dvfs_notify_callback) gsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(ip_dvfs_notify_callback) vdsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(vsp_gov_event_handler) vsp_dvfs_gov_event_handler __attribute__((alias("vsp_gov_event_handler")));
-static __typeof__(vsp_gov_get_target) vsp_dvfs_gov_get_target __attribute__((alias("vsp_gov_get_target"));
+static __typeof__(vsp_gov_get_target) vsp_dvfs_gov_get_target __attribute__((alias("vsp_gov_get_target"))));
 static __typeof__(ip_dvfs_notify_callback) vsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 
 static int __init sprd_apsys_dvfs_init(void)
