@@ -8,7 +8,9 @@
 
 #include <linux/ioctl.h>
 #include <linux/types.h>
-#include <stdbool.h>
+#ifndef bool
+#define bool _Bool
+#endif
 #include "gsp_cfg.h"
 
 #define R6P0_IMGL_NUM 2
