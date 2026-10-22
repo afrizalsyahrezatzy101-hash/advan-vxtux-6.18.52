@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: test1
+          ref: ${{ github.ref_name }}
           fetch-depth: 1
       - name: Install deps
         run: |
