@@ -524,7 +524,7 @@ static ssize_t get_dvfs_table_show(struct device *dev,
 /**
  * get_dvfs_table_info_show - print the IP's frequency map, level by level
  */
-static ssize_t get_dvfs_table_info_show(struct device *dev,
+__used static ssize_t get_dvfs_table_info_show(struct device *dev,
 					struct device_attribute *attr,
 			   char *buf)
 {
@@ -733,13 +733,13 @@ static ssize_t set_dvfs_enable_store(struct device *dev,
  * the VDSP and the GSP.  Their bodies are the shared ones.
  */
 #define IP_DVFS_ENABLE_PAIR(ip)						\
-static ssize_t ip##_dvfs_enable_show(struct device *dev,		\
+__used static ssize_t ip##_dvfs_enable_show(struct device *dev,		\
 			      struct device_attribute *attr,	\
 			      char *buf)				\
 {										\
 	return get_dvfs_enable_show(dev, attr, buf);				\
 }										\
-static ssize_t ip##_dvfs_enable_store(struct device *dev,			\
+__used static ssize_t ip##_dvfs_enable_store(struct device *dev,			\
 				       struct device_attribute *attr,	\
 				       const char *buf, size_t count)	\
 {										\
