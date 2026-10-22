@@ -430,13 +430,4 @@ __used static int sprd_mbox_disable(void) { return 0; }
 __used static int sprd_mbox_index_xlate(void) { return 0; }
 __used static int sprd_mbox_process_rx_fifo(void) { return 0; }
 
-__asm__(".section .data
-"
-        ".align 8
-"
-        "sprd_mbox_phy_outbox_isr._rs:
-"
-        ".quad 0
-"
-        ".previous
-");
+__asm__(".section .data\n.align 8\nsprd_mbox_phy_outbox_isr._rs:\n.quad 0\n.previous\n");
