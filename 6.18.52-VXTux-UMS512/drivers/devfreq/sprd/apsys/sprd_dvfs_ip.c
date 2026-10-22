@@ -909,17 +909,17 @@ static struct devfreq_governor *sprd_apsys_dvfs_governors[] = {
 
 
 /* --- per-IP symbol aliases (ip.c targets) --- */
-static unsigned long clk_pll;
-static void *map_table = (void *)0;
-static const void *roc1_dvfs_ops = (void *)0;
-static const void *sharkl5pro_dvfs_ops = (void *)0;
-static const void *sprd_dvfs_of_match = (void *)0;
-static __typeof__(ip_dvfs_notify_callback) dpu_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
-static __typeof__(ip_dvfs_notify_callback) gsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
-static __typeof__(ip_dvfs_notify_callback) vdsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
-static __typeof__(vsp_gov_event_handler) vsp_dvfs_gov_event_handler __attribute__((alias("vsp_gov_event_handler")));
-static __typeof__(vsp_gov_get_target) vsp_dvfs_gov_get_target __attribute__((alias("vsp_gov_get_target")));
-static __typeof__(ip_dvfs_notify_callback) vsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
+__used static unsigned long clk_pll;
+__used static void *map_table = (void *)0;
+__used static const void *roc1_dvfs_ops = (void *)0;
+__used static const void *sharkl5pro_dvfs_ops = (void *)0;
+__used static const void *sprd_dvfs_of_match = (void *)0;
+__used static __typeof__(ip_dvfs_notify_callback) dpu_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
+__used static __typeof__(ip_dvfs_notify_callback) gsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
+__used static __typeof__(ip_dvfs_notify_callback) vdsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
+__used static __typeof__(vsp_gov_event_handler) vsp_dvfs_gov_event_handler __attribute__((alias("vsp_gov_event_handler")));
+__used static __typeof__(vsp_gov_get_target) vsp_dvfs_gov_get_target __attribute__((alias("vsp_gov_get_target")));
+__used static __typeof__(ip_dvfs_notify_callback) vsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 
 static int __init sprd_apsys_dvfs_init(void)
 {
