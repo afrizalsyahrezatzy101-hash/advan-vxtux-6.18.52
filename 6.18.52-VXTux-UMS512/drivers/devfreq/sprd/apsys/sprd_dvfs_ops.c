@@ -693,4 +693,4 @@ __used static __typeof__(ip_hw_dfs_en) vdsp_hw_dfs_en __attribute__((alias("ip_h
 __used static __typeof__(ip_dvfs_init) vsp_dvfs_init __attribute__((alias("ip_dvfs_init")));
 __used static __typeof__(ip_dvfs_parse_dt) vsp_dvfs_parse_dt __attribute__((alias("ip_dvfs_parse_dt")));
 
-__used static __typeof__(ip_hw_dfs_en) vsp_hw_dfs_en __attribute__((alias("ip_hw_dfs_en")));
+__used static __typeof__(ip_hw_dfs_en) vsp_hw_dvfs_en __attribute__((alias("ip_hw_dfs_en")));
