@@ -30,7 +30,7 @@ jobs:
       - name: Build DTB (verifikasi DTS thermal/efuse chain)
         run: |
           cd 6.18.52-VXTux-UMS512
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- ums512-1h10-vxtux.dtb -j$(nproc)
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sprd/ums512-1h10-vxtux.dtb -j$(nproc)
           ls -l arch/arm64/boot/dts/sprd/ums512-1h10-vxtux.dtb
       - name: Build modules
         run: |

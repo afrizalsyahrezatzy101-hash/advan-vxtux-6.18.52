@@ -656,6 +656,8 @@ Driver yang dipakai Advan Tab VX Lite (T1030) dari vendor_ramdisk_stock.cpio, di
 
 ### 8.1 CRITICAL (block thermal chain)
 
+> **UPDATE TICK11 (2026-10-22, commit `efa7348c2` di `test1`):** butir 1–3 dari daftar ini SELESAI ditulis. 3 modul efuse sudah ada di tree (`nvmem-sprd-efuse.c` + `sc27xx-efuse.c` di `drivers/nvmem/`, `sprd_cache_efuse.c` di `drivers/vxtux/soc/cache_efuse/`, config `NVMEM_SPRD_EFUSE=m` + `NVMEM_SC27XX_EFUSE=m` + `NVMEM_SPRD_CACHE_EFUSE=m`). Thermal DT chain 3/4 lengkap: `ap_efuse@32240000`, `ap_thm0/1/2` + 12 sensor, `virtual-sensor@0` (`SPRD_SOC_THM=m`), 13 zona thermal, cooling-devices cluster0/1 + gpu-cooling0, 13 sel kalibrasi PMIC `efuse@300` (8 ditambah). Sisa TICK12: verifikasi boot di hardware + insmod.
+
 1. **Port `nvmem_sprd_efuse.ko` + `nvmem_sprd_cache_efuse.ko` + `nvmem-sc27xx-efuse.ko`** (3 .ko) — wajib untuk TICK11 thermal DT chain (ap_efuse + 13 sel kalibrasi).
 2. **Port `ap_efuse` node DT** (efuse@32240000) + **13 sel kalibrasi** + **3 `ap_thm0/1/2` nodes** + **`virtual_sensor` node** — thermal DT chain 2/4, 3/4, 4/4.
 3. **Bangun `sprd_thermal.ko` BUILTIN** (=y) — saat ini BUILTIN tapi node DT belum lengkap, jadi driver exit early di `sprd_thm_cal_read()`.
