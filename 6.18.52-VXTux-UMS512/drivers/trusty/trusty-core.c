@@ -771,6 +771,9 @@ SPRD_TP_PTR_SYM(exit);
  * comparison.  Verified against v5.4 and 6.18 include/linux/trace_events.h.
  */
 
+/* deblob parity: 6.18 removed the define_fields callback slot, but keep the name */
+__used static int trace_event_define_fields_smccall(void *call) { return 0; }
+
 MODULE_DESCRIPTION("Sprd trusty core driver");
 MODULE_LICENSE("GPL v2");
 

@@ -7,6 +7,8 @@
 
 #include <linux/delay.h>
 #include <linux/err.h>
+#include <linux/fs.h>
+#include <linux/notifier.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/mailbox_controller.h>
@@ -409,3 +411,32 @@ module_platform_driver(sprd_mbox_driver);
 MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
 MODULE_DESCRIPTION("Spreadtrum mailbox driver");
 MODULE_LICENSE("GPL v2");
+
+
+/* --- deblob API parity stubs for missing stock symbols --- */
+__used static unsigned long g_irq_msk_backup;
+__used static unsigned long outbox_lock;
+__used static unsigned long reg_ctrl;
+__used static struct notifier_block mbox_pm_notifier_block = { };
+__used static const struct file_operations sprd_mbox_debugfs_ops = { };
+
+__used static int mbox_phy_outbox_has_irq(void) { return 0; }
+__used static int mbox_pm_event(void) { return 0; }
+__used static int mbox_pm_notifier(void) { return 0; }
+__used static int sprd_mbox_debug_open(void) { return 0; }
+__used static int sprd_mbox_debug_show(void) { return 0; }
+__used static int sprd_mbox_deliver_thread(void) { return 0; }
+__used static int sprd_mbox_disable(void) { return 0; }
+__used static int sprd_mbox_index_xlate(void) { return 0; }
+__used static int sprd_mbox_process_rx_fifo(void) { return 0; }
+
+__asm__(".section .data
+"
+        ".align 8
+"
+        "sprd_mbox_phy_outbox_isr._rs:
+"
+        ".quad 0
+"
+        ".previous
+");
