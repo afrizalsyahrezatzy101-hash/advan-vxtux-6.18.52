@@ -617,11 +617,8 @@ int ip_dvfs_init(struct ip_dvfs_dev *ip)
 }
 EXPORT_SYMBOL(ip_dvfs_init);
 
-/* --- per-IP symbol aliases for deblob API parity (ip_* targets) --- */
-static __typeof__(ip_dvfs_enable_show) dpu_dvfs_enable_show __attribute__((alias("ip_dvfs_enable_show")));
-static __typeof__(ip_dvfs_enable_store) dpu_dvfs_enable_store __attribute__((alias("ip_dvfs_enable_store")));
+/* --- per-IP symbol aliases (ops.c targets) --- */
 static __typeof__(ip_dvfs_init) dpu_dvfs_init __attribute__((alias("ip_dvfs_init")));
-static __typeof__(ip_dvfs_notify_callback) dpu_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(ip_dvfs_parse_dt) dpu_dvfs_parse_dt __attribute__((alias("ip_dvfs_parse_dt")));
 static __typeof__(ip_hw_dfs_en) dpu_hw_dfs_en __attribute__((alias("ip_hw_dfs_en")));
 static __typeof__(ip_get_dvfs_status) get_dpu_dvfs_status __attribute__((alias("ip_get_dvfs_status")));
@@ -630,7 +627,6 @@ static __typeof__(ip_get_idle_freq) get_dpu_idle_freq __attribute__((alias("ip_g
 static __typeof__(ip_get_idle_index) get_dpu_idle_index __attribute__((alias("ip_get_idle_index")));
 static __typeof__(ip_get_work_freq) get_dpu_work_freq __attribute__((alias("ip_get_work_freq")));
 static __typeof__(ip_get_work_index) get_dpu_work_index __attribute__((alias("ip_get_work_index")));
-static __typeof__(ip_get_dvfs_table_info_show) get_dvfs_table_info_show __attribute__((alias("ip_get_dvfs_table_info_show")));
 static __typeof__(ip_get_dvfs_status) get_gsp_dvfs_status __attribute__((alias("ip_get_dvfs_status")));
 static __typeof__(ip_get_dvfs_table) get_gsp_dvfs_table __attribute__((alias("ip_get_dvfs_table")));
 static __typeof__(ip_get_idle_freq) get_gsp_idle_freq __attribute__((alias("ip_get_idle_freq")));
@@ -649,10 +645,7 @@ static __typeof__(ip_get_idle_freq) get_vsp_idle_freq __attribute__((alias("ip_g
 static __typeof__(ip_get_idle_index) get_vsp_idle_index __attribute__((alias("ip_get_idle_index")));
 static __typeof__(ip_get_work_freq) get_vsp_work_freq __attribute__((alias("ip_get_work_freq")));
 static __typeof__(ip_get_work_index) get_vsp_work_index __attribute__((alias("ip_get_work_index")));
-static __typeof__(ip_dvfs_enable_show) gsp_dvfs_enable_show __attribute__((alias("ip_dvfs_enable_show")));
-static __typeof__(ip_dvfs_enable_store) gsp_dvfs_enable_store __attribute__((alias("ip_dvfs_enable_store")));
 static __typeof__(ip_dvfs_init) gsp_dvfs_init __attribute__((alias("ip_dvfs_init")));
-static __typeof__(ip_dvfs_notify_callback) gsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(ip_dvfs_parse_dt) gsp_dvfs_parse_dt __attribute__((alias("ip_dvfs_parse_dt")));
 static __typeof__(ip_hw_dfs_en) gsp_hw_dfs_en __attribute__((alias("ip_hw_dfs_en")));
 static __typeof__(ip_set_dvfs_swtrig_en) set_dpu_dvfs_swtrig_en __attribute__((alias("ip_set_dvfs_swtrig_en")));
@@ -694,13 +687,10 @@ static __typeof__(ip_set_idle_freq) set_vsp_idle_freq __attribute__((alias("ip_s
 static __typeof__(ip_set_idle_index) set_vsp_idle_index __attribute__((alias("ip_set_idle_index")));
 static __typeof__(ip_set_work_freq) set_vsp_work_freq __attribute__((alias("ip_set_work_freq")));
 static __typeof__(ip_set_work_index) set_vsp_work_index __attribute__((alias("ip_set_work_index")));
-static __typeof__(ip_dvfs_enable_show) vdsp_dvfs_enable_show __attribute__((alias("ip_dvfs_enable_show")));
-static __typeof__(ip_dvfs_enable_store) vdsp_dvfs_enable_store __attribute__((alias("ip_dvfs_enable_store")));
 static __typeof__(ip_dvfs_init) vdsp_dvfs_init __attribute__((alias("ip_dvfs_init")));
-static __typeof__(ip_dvfs_notify_callback) vdsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(ip_dvfs_parse_dt) vdsp_dvfs_parse_dt __attribute__((alias("ip_dvfs_parse_dt")));
 static __typeof__(ip_hw_dfs_en) vdsp_hw_dfs_en __attribute__((alias("ip_hw_dfs_en")));
 static __typeof__(ip_dvfs_init) vsp_dvfs_init __attribute__((alias("ip_dvfs_init")));
-static __typeof__(ip_dvfs_notify_callback) vsp_dvfs_notify_callback __attribute__((alias("ip_dvfs_notify_callback")));
 static __typeof__(ip_dvfs_parse_dt) vsp_dvfs_parse_dt __attribute__((alias("ip_dvfs_parse_dt")));
-static __typeof__(ip_hw_dvfs_en) vsp_hw_dvfs_en __attribute__((alias("ip_hw_dvfs_en")));
+
+static __typeof__(ip_hw_dfs_en) vsp_hw_dfs_en __attribute__((alias("ip_hw_dfs_en")));
