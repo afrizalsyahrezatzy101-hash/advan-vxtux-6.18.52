@@ -1,0 +1,195 @@
+#!/usr/bin/env python3
+"""Audit status porting: 129 .ko vendor Advan vs tree 6.18.52-VXTux-UMS512.
+
+Klasifikasi tiap driver vendor:
+  KO       : sudah ter-build jadi .ko di CI (artifact v17-built-kos)
+  Y        : sumber ada + simbol Kconfig di-set =y di enhanced_config.cfg (built-in vmlinux)
+  OFF      : sumber + simbol Kconfig ADA, tapi belum di-enable  -> bisa langsung di-port
+  NOSRC    : tidak ada entri Makefile untuk modul ini -> butuh tulis driver baru
+  NOSYM    : Makefile pakai obj-y (selalu built-in) / tidak pakai CONFIG_
+
+Pakai:
+  python donors/port_audit.py --tree 6.18.52-VXTux-UMS512 \
+      --config enhanced_config.cfg --doc docs/DRIVERS_VENDOR_CROSSCHECK.md \
+      --kos /tmp/built_kos.txt --out docs/PORT-AUDIT.md
+"""
+import argparse
+import os
+import re
+import subprocess
+import sys
+
+MOD_RE = re.compile(r"^obj-\$\((CONFIG_[A-Z0-9_]+)\)\s*\+?=\s*(.*)$")
+JSON = json_dump = None
+
+
+def vendor_list(doc):
+    names = []
+    for line in open(doc, encoding="utf-8"):
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 2 or not cells[0].isdigit():
+            continue
+        m = re.search(r"`([A-Za-z0-9_.+-]+\.ko)`", cells[1])
+        if not m:
+            continue
+        src = cells[2].strip("`") if len(cells) > 2 else ""
+        names.append((m.group(1), src))
+    return names
+
+
+def makefile_map(tree):
+    """base module name -> list of (CONFIG_ symbol, dir)."""
+    out = subprocess.run(
+        ["grep", "-rn", "obj-$(CONFIG_", "--include=Makefile", "."],
+        cwd=tree, capture_output=True, text=True).stdout
+    m = {}
+    for line in out.splitlines():
+        parts = line.split(":", 2)
+        if len(parts) != 3:
+            continue
+        path, _lineno, rest = parts
+        d = os.path.dirname(path)
+        mo = MOD_RE.match(rest.strip())
+        if not mo:
+            continue
+        sym, targets = mo.group(1), mo.group(2)
+        for t in targets.split():
+            base = t.strip()
+            if not base.endswith(".o"):
+                continue
+            base = base[:-2]
+            m.setdefault(base, []).append((sym, d))
+    # obj-y entries (always built-in)
+    out_y = subprocess.run(
+        ["grep", "-rn", "obj-y", "--include=Makefile", "."],
+        cwd=tree, capture_output=True, text=True).stdout
+    ymap = {}
+    for line in out_y.splitlines():
+        parts = line.split(":", 2)
+        if len(parts) != 3:
+            continue
+        path, _lineno, rest = parts
+        rest = rest.strip()
+        if not rest.startswith("obj-y"):
+            continue
+        _, _, targets = rest.partition("=")
+        for t in targets.split():
+            if t.endswith(".o"):
+                ymap.setdefault(t[:-2], []).append(os.path.dirname(path))
+    return m, ymap
+
+
+def kconfig_symbols(tree):
+    # catatan: grep di mesin ini BUKAN GNU (\s tidak jalan) -> pakai kelas POSIX.
+    out = subprocess.run(
+        ["grep", "-rhE",
+         r"^[[:space:]]*(menu)?config[[:space:]]+[A-Z0-9_]+",
+         "--include=Kconfig*", "."],
+        cwd=tree, capture_output=True, text=True).stdout
+    return {m.group(1) for m in re.finditer(r"config\s+([A-Z0-9_]+)", out)}
+
+
+def config_state(cfg):
+    state = {}
+    for line in open(cfg, encoding="utf-8"):
+        line = line.strip()
+        m_off = re.match(r"#\s*(CONFIG_[A-Z0-9_]+) is not set$", line)
+        if m_off:
+            state[m_off.group(1)] = "n"
+            continue
+        if not line.startswith("CONFIG_"):
+            continue
+        mo = re.match(r"(CONFIG_[A-Z0-9_]+)=(.*)", line)
+        if mo:
+            state[mo.group(1)] = mo.group(2)
+        else:
+            state[line] = "y"  # bare CONFIG_FOO => y
+    return state
+
+
+def variants(base):
+    """Nama modul vendor pakai '_' kadang tree pakai '-'."""
+    return {base, base.replace("_", "-"), base.replace("-", "_")}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tree", required=True)
+    ap.add_argument("--config", required=True)
+    ap.add_argument("--doc", required=True)
+    ap.add_argument("--kos", required=True)
+    ap.add_argument("--out", required=True)
+    a = ap.parse_args()
+
+    ven = vendor_list(a.doc)
+    mk, ymap = makefile_map(a.tree)
+    syms = kconfig_symbols(a.tree)
+    cfg = config_state(a.config)
+    built = {l.strip() for l in open(a.kos, encoding="utf-8") if l.strip()}
+
+    rows = []
+    for ko, src in ven:
+        base = ko[:-3]
+        hit = None
+        for v in variants(base):
+            if v in mk:
+                hit = mk[v]
+                break
+        status, sym, path = None, "", src
+        if ko in built:
+            status = "KO"
+            if hit:
+                sym, path = hit[0][0], hit[0][1]
+        elif hit:
+            sym, path = hit[0]
+            st = cfg.get(sym, "")
+            if st == "y":
+                status = "Y"
+            elif st == "n":
+                status = "OFF-DESIGN"  # sengaja dimatikan di config
+            elif st in ("m",):
+                status = "CONF-m"  # =m tapi tak muncul di artifact (cek!)
+            else:
+                # Kconfig mendefinisikan nama tanpa prefix CONFIG_
+                status = "OFF" if sym.replace("CONFIG_", "", 1) in syms else "NOKCONFIG"
+        else:
+            y = None
+            for v in variants(base):
+                if v in ymap:
+                    y = ymap[v]
+                    break
+            status = "OBJ-Y" if y else "NOSRC"
+            if y:
+                path = y[0]
+        rows.append((ko, status, sym, path))
+
+    order = {"KO": 0, "Y": 1, "OBJ-Y": 2, "OFF": 3, "NOKCONFIG": 4, "CONF-m": 5,
+             "OFF-DESIGN": 6, "NOSRC": 7}
+    rows.sort(key=lambda r: (order.get(r[1], 9), r[0]))
+    tally = {}
+    for r in rows:
+        tally[r[1]] = tally.get(r[1], 0) + 1
+
+    with open(a.out, "w", encoding="utf-8") as f:
+        f.write("# PORT AUDIT — 129 .ko vendor Advan vs tree 6.18.52-VXTux-UMS512\n\n")
+        f.write("Dibuat otomatis oleh `donors/port_audit.py` (jangan edit manual).\n\n")
+        f.write("Status: **KO** = ter-build .ko · **Y** = sumber ada + `=y` (built-in) · ")
+        f.write("**OBJ-Y** = selalu built-in · **OFF** = sumber + Kconfig ada, belum diaktifkan · ")
+        f.write("**NOKCONFIG** = Makefile pakai CONFIG_ tapi entri Kconfig hilang · ")
+        f.write("**OFF-DESIGN** = sengaja `# ... is not set` · ")
+        f.write("**NOSRC** = sumber driver tidak ada di tree (butuh port kode baru)\n\n")
+        f.write("## Ringkasan\n\n| Status | Jumlah |\n|---|---:|\n")
+        for k in sorted(tally, key=lambda k: order.get(k, 9)):
+            f.write(f"| {k} | {tally[k]} |\n")
+        f.write(f"| **total** | **{len(rows)}** |\n\n")
+        f.write("## Tabel\n\n| # | Driver | Status | Simbol | Sumber |\n|---:|---|---|---|---|\n")
+        for i, (ko, st, sym, path) in enumerate(rows, 1):
+            f.write(f"| {i} | `{ko}` | {st} | `{sym}` | `{path}` |\n")
+    print(tally)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

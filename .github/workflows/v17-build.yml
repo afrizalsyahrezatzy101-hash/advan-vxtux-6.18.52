@@ -17,16 +17,54 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential gcc-aarch64-linux-gnu libncurses-dev flex bison bc libssl-dev libelf-dev
-      - name: Fix permissions and apply config
+      - name: Fix permissions
         run: |
           cd 6.18.52-VXTux-UMS512
           find scripts/ -type f -exec chmod +x {} +
-          cp .config .config.original
-          cp ../enhanced_config.cfg .config
-      - name: olddefconfig
+          cp .config .config.device
+          # Kedua file disimpan CRLF di repo; kconfig/merge_config lebih aman LF.
+          sed -i 's/\r$//' .config.device ../enhanced_config.cfg
+      # PENTING: fragmen di-MERGE di atas .config device, bukan menggantikannya.
+      # Dulu `cp ../enhanced_config.cfg .config` membuang ~6000 baris config
+      # device, sehingga build CI hanya menghasilkan 222 .ko sementara build
+      # device sesungguhnya 1.424 .ko — verifikasi CI jadi tidak mewakili device.
+      - name: Merge enhanced_config.cfg di atas .config device
         run: |
           cd 6.18.52-VXTux-UMS512
+          scripts/kconfig/merge_config.sh -m -O . .config.device ../enhanced_config.cfg
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+      # Guard: setiap simbol di fragmen harus SELAMAT setelah olddefconfig.
+      # Simbol yang dependensinya kurang dibuang tanpa peringatan (kelas bug
+      # SC27XX_TSENSOR_THERMAL) — lebih baik gagal cepat di sini daripada
+      # menemukan .ko hilang di akhir build.
+      - name: Guard — simbol fragmen harus selamat dari olddefconfig
+        run: |
+          cd 6.18.52-VXTux-UMS512
+          rc=0
+          while IFS= read -r line; do
+            line=${line%$'\r'}
+            case "$line" in
+              CONFIG_*=*) sym=${line%%=*}; val=${line#*=} ;;
+              *) continue ;;
+            esac
+            if ! grep -qx "$sym=$val" .config; then
+              got=$(grep -m1 "^$sym=" .config || true)
+              [ -z "$got" ] && got="$sym is not set"
+              echo "DROPPED: mau $sym=$val -> dapat ${got#*=}"
+              rc=1
+            fi
+          done < ../enhanced_config.cfg
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::Fragmen punya simbol yang dibuang olddefconfig (dependensi kurang)"
+          fi
+          exit $rc
+      - name: Upload effective .config
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-config
+          path: 6.18.52-VXTux-UMS512/.config
+          if-no-files-found: warn
       - name: Build DTB (verifikasi DTS thermal/efuse chain)
         run: |
           cd 6.18.52-VXTux-UMS512
