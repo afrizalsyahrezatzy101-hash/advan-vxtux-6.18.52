@@ -121,13 +121,25 @@ def main():
     ap.add_argument("--doc", required=True)
     ap.add_argument("--kos", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--design", help="fragmen config: baris '# CONFIG_X is not set' = sengaja dimatikan")
     a = ap.parse_args()
 
     ven = vendor_list(a.doc)
     mk, ymap = makefile_map(a.tree)
     syms = kconfig_symbols(a.tree)
     cfg = config_state(a.config)
-    built = {l.strip() for l in open(a.kos, encoding="utf-8") if l.strip()}
+    # daftar .ko boleh berupa path relatif (find) atau nama saja -> pakai basename.
+    # Nama modul dinormalisasi '-' == '_' (vendor: sprd_systimer.ko, tree: sprd-systimer.ko).
+    def modkey(name):
+        return name.replace("-", "_")
+
+    built = {modkey(os.path.basename(l.strip())) for l in open(a.kos, encoding="utf-8") if l.strip()}
+    design = set()
+    if a.design:
+        for line in open(a.design, encoding="utf-8"):
+            m = re.match(r"#\s*(CONFIG_[A-Z0-9_]+) is not set\s*$", line.strip())
+            if m:
+                design.add(m.group(1))
 
     rows = []
     for ko, src in ven:
@@ -138,7 +150,7 @@ def main():
                 hit = mk[v]
                 break
         status, sym, path = None, "", src
-        if ko in built:
+        if modkey(ko) in built:
             status = "KO"
             if hit:
                 sym, path = hit[0][0], hit[0][1]
@@ -147,6 +159,8 @@ def main():
             st = cfg.get(sym, "")
             if st == "y":
                 status = "Y"
+            elif sym in design and st == "":
+                status = "OFF-DESIGN"  # dimatikan eksplisit di fragmen, simbolnya tak muncul di .config
             elif st == "n":
                 status = "OFF-DESIGN"  # sengaja dimatikan di config
             elif st in ("m",):
