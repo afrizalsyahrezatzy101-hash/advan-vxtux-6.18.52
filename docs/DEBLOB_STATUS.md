@@ -52,6 +52,29 @@ akan probe, jadi stack USB tidak hidup.
 
 Yang benar-benar tersisa untuk 100%: 12 blob `PERLU-PORT`.
 
+## TICK13 — build hijau lagi, PHY masuk, 228 `.ko`
+
+Codespace kehilangan seluruh toolchain cross (bukan cuma PATH: `dpkg -l |
+grep aarch64` = 0). Dipulihkan **tanpa sudo**: tarball ARM GNU 13.2.rel1 ke
+`$HOME/tc`, `flex`/`bc`/`m4`/`libelf-dev` lewat `apt-get download` +
+`dpkg -x`, dan clone bersih (pohon `/workspaces` penuh artefak root sehingga
+`make O=` menolak). Resep lengkap: `docs/BUILD-ENV.md`.
+
+Hasil `make modules` di pohon bersih:
+
+```
+rc=0      228 .ko      sebelumnya 227
+```
+
+`CONFIG_PHY_SPRD_UMS512_USB2=m` yang baru dinyalakan **lolos `olddefconfig`**
+(dependensi `OF` + `REGULATOR` terpenuhi) dan menghasilkan
+`drivers/phy/sprd/phy-sprd-ums512.ko` = **433.584 B**. Jadi blob stok
+`phy-sprd-sharkl5Pro.ko` sekarang punya padanan yang benar-benar ter-build,
+bukan cuma simbol yang menyala di config.
+
+Bukti: `docs/evidence-20261023/ko_list_tick13.txt` (228 baris) dan
+`config_tick13.txt`.
+
 ## TICK12c — dossier RE + node DT yang hilang
 
 `donors/port_dossier.py` menghasilkan `docs/RE-PORT-DOSSIER.md` untuk ke-12
