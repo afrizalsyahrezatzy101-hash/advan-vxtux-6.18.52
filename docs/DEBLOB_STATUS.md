@@ -19,6 +19,39 @@ Catatan: angka LEVEL 2 (API) dan LEVEL 3 (DEPS) di bawah berasal dari
 run 2026-10-21 dan **belum** diukur ulang untuk 227 `.ko` ini — lihat
 bagian batas jujur di README TICK12.
 
+## TICK12b — triage 33 blob "NOSRC" (2026-10-23)
+
+PORT-AUDIT menandai 33 blob `NOSRC` karena tidak menemukan pemetaan
+Makefile→modul, bukan karena sumbernya hilang. `donors/nosrc_triage.py`
+membaca blob stok (`nm`+`strings`) dan pohon 6.18.52, lalu mengklasifikasi
+ulang. Hasil lengkap: `docs/NOSRC-TRIAGE.md`.
+
+| Verdict | Jumlah | Arti |
+|---|---:|---|
+| BUILT-IN | 12 | sumber ada, simbol `=y` → kode ikut `Image` |
+| SUPERSEDED | 2 | fungsinya sudah ada di build lewat jalur lain |
+| SIAP-COBA | 6 | sumber + Makefile ada, simbol CONFIG belum menyala |
+| PERLU-PORT | 12 | sumber memang tidak ada di pohon |
+| BLOB-HILANG | 1 | `sprd_vdsp.ko` tidak ada di `vendor_boot_a` |
+
+Bukti per blob: `docs/NOSRC-TRIAGE.md` (kolom sumber, simbol, state config,
+overlap simbol EXPORT terhadap `donors/all_syms.txt`).
+
+Dua temuan yang menutup celah tanpa kode baru:
+
+- `snd-soc-sprd-card.ko` — 33/33 simbol EXPORT-nya sudah ada di build
+  (100% overlap).
+- `sha1-ce.ko` — `lib/crypto/sha1.c` meng-include `$(SRCARCH)/sha1.h`, dan
+  `lib/crypto/arm64/sha1.h` memanggil `__sha1_ce_transform` di bawah
+  `kernel_neon_begin()` saat CPU punya fitur SHA1. Shash `sha1` bawaan
+  `crypto/sha1.c` sudah memakai Crypto Extensions.
+
+Satu simbol yang tadinya mati dinyalakan di fragmen: `CONFIG_PHY_SPRD_UMS512_USB2=m`
+(padanan `phy-sprd-sharkl5Pro.ko`). Tanpa PHY ini `musb_sprd_vxtux` tidak
+akan probe, jadi stack USB tidak hidup.
+
+Yang benar-benar tersisa untuk 100%: 12 blob `PERLU-PORT`.
+
 ## Riwayat 2026-10-21
 
 Previously: same-name replacement for **24** of them, and **18** of those
