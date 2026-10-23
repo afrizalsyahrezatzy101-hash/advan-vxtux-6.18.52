@@ -52,6 +52,25 @@ akan probe, jadi stack USB tidak hidup.
 
 Yang benar-benar tersisa untuk 100%: 12 blob `PERLU-PORT`.
 
+## TICK12c — dossier RE + node DT yang hilang
+
+`donors/port_dossier.py` menghasilkan `docs/RE-PORT-DOSSIER.md` untuk ke-12
+blob itu: EXPORT, UNDEFINED (penentu subsistem), penanda antarmuka, dan
+graf dependensi. Tiga hal yang langsung terlihat:
+
+1. **Klaster dependensi** — `sprd-cpufreq-v2`, `sprd_pdbg`, dan
+   `sprd_power_stat` semuanya `depends: sprd_sip_svc`. Blob `sprd_sip_svc`
+   sendiri kecil (5 simbol tak terdefinisi, 1 EXPORT `sprd_sip_svc_get_handle`),
+   jadi ia harus di-port lebih dulu; tiga modul lain mengikuti.
+2. **Node DT-nya ikut hilang.** `compatible` milik blob-blob ini (mis.
+   `sprd,cpufreq-v2`, `sprd,debugstat`, `unisoc,sc2730-audio-codec`)
+   semuanya **ada di DTB stok** tetapi **tidak ada** di DTS vxtux. Artinya
+   port kode saja tidak akan pernah probe — node DT-nya juga harus di-port.
+   Ini mengubah definisi "selesai" untuk 12 blob itu: kode + DT.
+3. **Kontrak EXPORT** yang wajib dipertahankan: `mmc_swcq_*`,
+   `stat_info_register/unregister`, `sprd_pdbg_msg_print`,
+   `sprd_cpufreq_update_opp`, `sprd_sip_svc_get_handle`.
+
 ## Riwayat 2026-10-21
 
 Previously: same-name replacement for **24** of them, and **18** of those
