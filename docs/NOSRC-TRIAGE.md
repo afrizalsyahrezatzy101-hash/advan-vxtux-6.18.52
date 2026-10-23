@@ -19,10 +19,10 @@ PORT-AUDIT menyebut blob **NOSRC** kalau tidak ada Makefile yang memetakan simbo
 |---|---:|
 | BUILT-IN | 12 |
 | SUPERSEDED | 2 |
-| SIAP-COBA | 6 |
+| SIAP-COBA | 5 |
 | PERLU-PORT | 12 |
 | BLOB-HILANG | 1 |
-| **total** | **33** |
+| **total** | **32** |
 
 ## Tabel
 
@@ -43,24 +43,23 @@ PORT-AUDIT menyebut blob **NOSRC** kalau tidak ada Makefile yang memetakan simbo
 | 13 | `snd-soc-sprd-card.ko` | 131502 | ASoC SPRD Sound Card Utils - Hooks | 90 | 33 | 33 (100%) | `—` | `—` | — | SUPERSEDED |
 | 14 | `sha1-ce.ko` | 19558 | SHA1 secure hash using ARMv8 Crypto Extensions | 10 | 0 | 0 (—) | `lib/crypto/arm64/sha1-ce-core.S` | `—` | — | SUPERSEDED |
 | 15 | `jpg.ko` | 82918 | SPRD JPG Driver | 15 | 0 | 0 (—) | `drivers/misc/sprd_jpg/sprd_jpg_main.c` | `—` | absent | SIAP-COBA |
-| 16 | `phy-sprd-sharkl5Pro.ko` | 29038 | UNISOC USB PHY driver | 7 | 0 | 0 (—) | `drivers/phy/sprd/phy-sprd-ums512.c` | `CONFIG_PHY_SPRD_UMS512_USB2` | n | SIAP-COBA |
-| 17 | `snd-soc-sprd-vbc-fe.ko` | 49134 | SPRD ASoC FRONT END CPU DAI | 5 | 0 | 0 (—) | `drivers/vxtux/sound/asoc/dai_v4/vbc-dai.c` | `—` | absent | SIAP-COBA |
-| 18 | `sprd-compr-2stage-dma.ko` | 85462 | ASoC Spreadtrum Compress Platform driver | 13 | 0 | 0 (—) | `sound/soc/sprd/sprd-pcm-compress.c` | `—` | absent | SIAP-COBA |
-| 19 | `sprd_cpp.ko` | 192670 | CPP Driver | 56 | 0 | 0 (—) | `drivers/media/platform/sprd/cpp/cpp_core.c` | `—` | absent | SIAP-COBA |
-| 20 | `vsp.ko` | 115318 | - | 19 | 0 | 0 (—) | `drivers/media/platform/sprd/vsp/sprd_vsp_main.c` | `—` | absent | SIAP-COBA |
-| 21 | `bq2560x-charger.ko` | 60766 | BQ2560X Charger Driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 22 | `mmc_swcq.ko` | 72670 | MMC Host Software Queue support | 24 | 5 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
-| 23 | `snd-soc-sprd-codec-sc2730-power-dev.ko` | 29886 | SPRD audio power regulator device | 4 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 24 | `snd-soc-sprd-codec-sc2730-power.ko` | 57542 | SPRD audio power regulator driver | 7 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 25 | `sprd-cpufreq-public.ko` | 17334 | - | 8 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
-| 26 | `sprd-cpufreq-v2.ko` | 56030 | sprd cpufreq v2 driver | 10 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 27 | `sprd_7sreset.ko` | 23350 | Unisoc sc27xx 7SReset Driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 28 | `sprd_iq.ko` | 32566 | SPRD IQ driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 29 | `sprd_manufacturer_model.ko` | 16902 | - | 5 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
-| 30 | `sprd_pdbg.ko` | 40854 | sprd power debug driver | 8 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
-| 31 | `sprd_power_stat.ko` | 42670 | sprd debug stat driver | 15 | 2 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
-| 32 | `sprd_sip_svc.ko` | 30326 | sprd implementation-specific services | 6 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
-| 33 | `sprd_vdsp.ko` | 0 | (blob tidak ada) | 0 | 0 | 0 (—) | `—` | `—` | — | BLOB-HILANG |
+| 16 | `snd-soc-sprd-vbc-fe.ko` | 49134 | SPRD ASoC FRONT END CPU DAI | 5 | 0 | 0 (—) | `drivers/vxtux/sound/asoc/dai_v4/vbc-dai.c` | `—` | absent | SIAP-COBA |
+| 17 | `sprd-compr-2stage-dma.ko` | 85462 | ASoC Spreadtrum Compress Platform driver | 13 | 0 | 0 (—) | `sound/soc/sprd/sprd-pcm-compress.c` | `—` | absent | SIAP-COBA |
+| 18 | `sprd_cpp.ko` | 192670 | CPP Driver | 56 | 0 | 0 (—) | `drivers/media/platform/sprd/cpp/cpp_core.c` | `—` | absent | SIAP-COBA |
+| 19 | `vsp.ko` | 115318 | - | 19 | 0 | 0 (—) | `drivers/media/platform/sprd/vsp/sprd_vsp_main.c` | `—` | absent | SIAP-COBA |
+| 20 | `bq2560x-charger.ko` | 60766 | BQ2560X Charger Driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 21 | `mmc_swcq.ko` | 72670 | MMC Host Software Queue support | 24 | 5 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
+| 22 | `snd-soc-sprd-codec-sc2730-power-dev.ko` | 29886 | SPRD audio power regulator device | 4 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 23 | `snd-soc-sprd-codec-sc2730-power.ko` | 57542 | SPRD audio power regulator driver | 7 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 24 | `sprd-cpufreq-public.ko` | 17334 | - | 8 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
+| 25 | `sprd-cpufreq-v2.ko` | 56030 | sprd cpufreq v2 driver | 10 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 26 | `sprd_7sreset.ko` | 23350 | Unisoc sc27xx 7SReset Driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 27 | `sprd_iq.ko` | 32566 | SPRD IQ driver | 6 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 28 | `sprd_manufacturer_model.ko` | 16902 | - | 5 | 0 | 0 (—) | `—` | `—` | — | PERLU-PORT |
+| 29 | `sprd_pdbg.ko` | 40854 | sprd power debug driver | 8 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
+| 30 | `sprd_power_stat.ko` | 42670 | sprd debug stat driver | 15 | 2 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
+| 31 | `sprd_sip_svc.ko` | 30326 | sprd implementation-specific services | 6 | 1 | 0 (0%) | `—` | `—` | — | PERLU-PORT |
+| 32 | `sprd_vdsp.ko` | 0 | (blob tidak ada) | 0 | 0 | 0 (—) | `—` | `—` | — | BLOB-HILANG |
 
 ## Kasus yang sudah tertutup lewat jalur lain
 

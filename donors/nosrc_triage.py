@@ -36,6 +36,10 @@ NM = (r"C:\Users\Administrator\scoop\apps\gcc-aarch64-none-linux-gnu"
 STRINGS = (r"C:\Users\Administrator\scoop\apps\gcc-aarch64-none-linux-gnu"
            r"\15.2.rel1\bin\aarch64-none-linux-gnu-strings.exe")
 
+# Blob stok -> nama modul pengganti kalau beda.
+RENAMES = {"phy-sprd-sharkl5Pro.ko": "phy-sprd-ums512.ko"}
+BUILT_LIST = os.path.join(ROOT, "docs", "evidence-20261023", "ko_list_tick13.txt")
+
 RANK = {"KO": 0, "OBJ-Y": 1, "Y": 2, "OFF": 3, "OFF-DESIGN": 4,
         "NOKCONFIG": 5, "NOSRC": 6}
 
@@ -281,9 +285,13 @@ def config_state(sym, final):
     return "absent", ""
 
 
-def verdict(srcs, exp, universe, final, makes, ko=""):
+def verdict(srcs, exp, universe, final, makes, ko="", built=frozenset()):
     if ko in NOTES:
         return NOTES[ko][0], "", ""
+    if RENAMES.get(ko, "") in built:
+        return "KO-RENAME", "", ""
+    if ko in built:
+        return "KO", "", ""
     if not srcs:
         if exp and len(exp & universe) / len(exp) >= 0.60:
             return "SUPERSEDED", "", ""
@@ -304,6 +312,10 @@ def main():
     show = "--print" in sys.argv
     universe = {l.strip() for l in open(BUILT, encoding="utf-8") if l.strip()}
     final = open(CONFIG_FINAL, encoding="utf-8").read()
+    built = set()
+    if os.path.exists(BUILT_LIST):
+        built = {l.strip().rsplit("/", 1)[-1]
+                 for l in open(BUILT_LIST, encoding="utf-8") if l.strip()}
     print("index pohon...", file=sys.stderr)
     files, makes = tree_index()
     print(f"{len(files)} file .c/.S, {len(makes)} Makefile", file=sys.stderr)
@@ -319,14 +331,15 @@ def main():
         glob, loc, exp = symbols(path)
         info = modinfo(path)
         srcs = resolve(ko, files, makes)
-        v, sym, st = verdict(srcs, exp, universe, final, makes, ko)
+        v, sym, st = verdict(srcs, exp, universe, final, makes, ko, built)
         rows.append(dict(ko=ko, size=os.path.getsize(path),
                          desc=info.get("description", "-"),
                          ng=len(glob), nl=len(loc), ne=len(exp),
                          nh=len(exp & universe),
                          srcs=srcs, v=v, sym=sym, cs=st))
 
-    order = {"BUILT-IN": 0, "MODUL": 1, "SUPERSEDED": 2, "SIAP-COBA": 3,
+    order = {"KO": 0, "KO-RENAME": 0, "BUILT-IN": 0, "MODUL": 1,
+             "SUPERSEDED": 2, "SIAP-COBA": 3,
              "PERLU-WIRING": 4, "PERLU-PORT": 5, "BLOB-HILANG": 6}
     rows.sort(key=lambda r: (order.get(r["v"], 9), -r["nh"]))
     tally = {}
@@ -356,8 +369,8 @@ def main():
              "kumpulan simbol build (`donors/all_syms.txt`).\n\n")
 
     L.append("## Ringkasan\n\n| Verdict | Jumlah |\n|---|---:|\n")
-    for k in ("BUILT-IN", "MODUL", "SUPERSEDED", "SIAP-COBA", "PERLU-WIRING",
-              "PERLU-PORT", "BLOB-HILANG"):
+    for k in ("KO", "KO-RENAME", "BUILT-IN", "MODUL", "SUPERSEDED", "SIAP-COBA",
+              "PERLU-WIRING", "PERLU-PORT", "BLOB-HILANG"):
         if k in tally:
             L.append(f"| {k} | {tally[k]} |\n")
     L.append(f"| **total** | **{len(rows)}** |\n\n")
@@ -390,8 +403,8 @@ def main():
         with open(OUT, "w", encoding="utf-8") as f:
             f.write(text)
         print(f"tulis {OUT}")
-        for k in ("BUILT-IN", "MODUL", "SUPERSEDED", "SIAP-COBA", "PERLU-WIRING",
-                  "PERLU-PORT", "BLOB-HILANG"):
+        for k in ("KO", "KO-RENAME", "BUILT-IN", "MODUL", "SUPERSEDED",
+                  "SIAP-COBA", "PERLU-WIRING", "PERLU-PORT", "BLOB-HILANG"):
             if k in tally:
                 print(f"  {k:12s} {tally[k]}")
     return 0

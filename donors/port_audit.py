@@ -19,6 +19,12 @@ import re
 import subprocess
 import sys
 
+# Blob stok -> nama modul pengganti di tree, kalau berbeda.
+# phy-sprd-sharkl5Pro.ko (5.4) di-port sebagai phy-sprd-ums512.c (6.18).
+RENAMES = {
+    "phy-sprd-sharkl5Pro.ko": "phy-sprd-ums512.ko",
+}
+
 MOD_RE = re.compile(r"^obj-\$\((CONFIG_[A-Z0-9_]+)\)\s*\+?=\s*(.*)$")
 JSON = json_dump = None
 
@@ -150,7 +156,7 @@ def main():
                 hit = mk[v]
                 break
         status, sym, path = None, "", src
-        if modkey(ko) in built:
+        if modkey(ko) in built or modkey(RENAMES.get(ko, "")) in built:
             status = "KO"
             if hit:
                 sym, path = hit[0][0], hit[0][1]
