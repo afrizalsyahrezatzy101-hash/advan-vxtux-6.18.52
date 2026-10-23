@@ -75,6 +75,64 @@ bukan cuma simbol yang menyala di config.
 Bukti: `docs/evidence-20261023/ko_list_tick13.txt` (228 baris) dan
 `config_tick13.txt`.
 
+## TICK14 — bedah total undefined symbol (`symreach.py`)
+
+Pertanyaan yang dijawab: untuk **setiap** referensi `SHN_UNDEF` di 129 blob
+stok 5.4.210, apakah build 6.18.52 kita bisa memenuhinya, dan kalau tidak, apa
+yang harus dilakukan. Alat: `donors/symreach.py`; keluaran:
+`docs/UNDEF-REACHABILITY.md`, `docs/evidence-20261023/symreach.json`,
+dan daftar alat di `docs/TOOLING-SYMBOLS.md`.
+
+Sumber kebenaran yang dipakai (bukan tebakan):
+
+| Bukti | Isi |
+|---|---|
+| `donors/symvers_tick13.txt` | 15.215 ekspor: vmlinux + 163 modul |
+| `donors/vmlinux_o_syms.txt` | `nm --defined-only vmlinux.o`, 140.469 nama + tipe |
+| `stock_vendor_modules_all/*.ko` | 129 blob, `.symtab` + `__versions` |
+
+Kelengkapan daftar vmlinux diuji: **14.290 dari 14.291** ekspor vmlinux di
+`Module.symvers` ada di `vmlinux.o`. Satu yang tidak ada adalah `jiffies` —
+simbol linker-script yang dipakai `EXPORT_SYMBOL` tanpa entri di `vmlinux.o`,
+bukan celah data.
+
+| Kelas | Referensi | Arti |
+|---|---:|---|
+| `ok` | **4.434** (79,6%) | diekspor build kita |
+| `ekspor` | 23 | global, ada di vmlinux.o, tinggal `EXPORT_SYMBOL` |
+| `rename` | 219 | padanan 6.18 terverifikasi (mekanis + `REMAP`) |
+| `makro` | 476 | definisi ada di pohon: inline/makro/**config mati** |
+| `port` | 24 | hanya disediakan blob stok lain |
+| `instr` | 298 | `__cfi_*`/`__ubsan_*` runtime Clang stok |
+| `hilang` | 98 | tidak ada di mana pun (62 simbol unik) |
+| **total** | **5.572** | 1.488 simbol unik |
+
+Empat temuan yang mengubah prioritas:
+
+1. **`CONFIG_VXTUX_VENDOR_ABI` mati** di `config_tick13`. Padahal penyedia
+   5 simbol terbesar (`cpu_hwcaps` ×35, `cpu_hwcap_keys` ×47,
+   `arm64_const_caps_ready` ×47, `kimage_vaddr` ×11, `cpu_number` ×6 —
+   total **146 referensi**) sudah ada di
+   `drivers/misc/sprd/vendor_abi/vendor_abi_arm64.c`. Jadi sebagian besar
+   kelas `makro` bukan "API hilang", tapi satu config yang belum menyala.
+2. **19 simbol global ada di vmlinux.o tapi tidak diekspor** — mis.
+   `irq_to_desc`, `cma_alloc`/`cma_release`, `blk_alloc_queue`,
+   `__alloc_disk_node`. Untuk ini "perbaikan"-nya satu baris
+   `EXPORT_SYMBOL[_GPL]`, bukan port driver.
+3. **`sprd_sip_svc.ko` sudah 100% terklasifikasi** tanpa port apa pun:
+   2 `ok` (`__arm_smccc_smc`, `__stack_chk_fail`), 1 `rename`
+   (`printk` → `_printk`), 2 `instr`. Artinya leverage-nya (membuka 3
+   referensi `sprd-cpufreq-v2`/`sprd_pdbg`/`sprd_power_stat`) bisa dipakai
+   tanpa menambah simbol kernel baru.
+4. **CRC modversion beda 3.223 dari 4.434** referensi `ok`. Nama simbol
+   cocok, tapi genksyms 5.4 vs 6.18 menghasilkan CRC berbeda — indikasi
+   drift ABI, bukan vonis per simbol (lihat batas jujur di dokumen alat).
+
+Dampak ke hitungan port: **82 dari 129 blob** tidak lagi menunggu modul
+stok lain dan tidak punya simbol `hilang`. Sisa `hilang` yang benar-benar
+perlu kode cuma 62 simbol unik, dipimpin `init_timer_key` (18 blob),
+`kmalloc_order_trace` (6), `__ioremap` (5), `fpsimd_context_busy` (4).
+
 ## TICK12c — dossier RE + node DT yang hilang
 
 `donors/port_dossier.py` menghasilkan `docs/RE-PORT-DOSSIER.md` untuk ke-12
