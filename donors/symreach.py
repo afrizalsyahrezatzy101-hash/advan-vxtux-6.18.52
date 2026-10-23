@@ -341,6 +341,30 @@ def main():
     A(f"| Blob tanpa port | **{len(siap)}/{len(blobs)}** | tidak menunggu modul stok |\n")
     A(f"| Blob tanpa undefined (export-only) | {len(tanpa_undef)} | |\n\n")
 
+    vendor_abi = ["cpu_hwcaps", "cpu_hwcap_keys", "arm64_const_caps_ready",
+                  "kimage_vaddr", "cpu_number"]
+    va_refs = sum(len(per_sym_blobs.get(n, ())) for n in vendor_abi)
+    va_cfg = ""
+    try:
+        with open(os.path.join(ROOT, "docs", "evidence-20261023",
+                               "config_tick13.txt"), encoding="utf-8",
+                  errors="replace") as f:
+            for line in f:
+                if ("CONFIG_VXTUX_VENDOR_ABI" in line
+                        and "CFG80211" not in line):
+                    va_cfg = line.strip()
+                    break
+    except OSError:
+        pass
+    if va_refs:
+        A(f"> **Catatan config.** {va_refs} referensi di kelas `makro` di atas "
+          "adalah " + ", ".join(f"`{n}`" for n in vendor_abi) +
+          ". Penyedianya sudah ada di pohon "
+          "(`drivers/misc/sprd/vendor_abi/vendor_abi_arm64.c`), tetapi "
+          f"`CONFIG_VXTUX_VENDOR_ABI` di `config_tick13` masih `{va_cfg or 'tidak diketahui'}`. "
+          "Jadi untuk lima simbol ini yang kurang bukan kode "
+          "dan bukan API: satu config.\n\n")
+
     A("## Blob yang tidak butuh port\n\n")
     A("| blob | undef | ok | ekspor | rename | makro | instr |\n"
       "|---|---:|---:|---:|---:|---:|---:|\n")

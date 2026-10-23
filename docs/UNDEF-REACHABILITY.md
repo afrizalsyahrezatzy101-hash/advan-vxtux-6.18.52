@@ -20,6 +20,8 @@ Angka = **referensi** (`SHN_UNDEF` di `.symtab`), bukan simbol unik: satu simbol
 | Blob tanpa port | **82/129** | tidak menunggu modul stok |
 | Blob tanpa undefined (export-only) | 0 | |
 
+> **Catatan config.** 146 referensi di kelas `makro` di atas adalah `cpu_hwcaps`, `cpu_hwcap_keys`, `arm64_const_caps_ready`, `kimage_vaddr`, `cpu_number`. Penyedianya sudah ada di pohon (`drivers/misc/sprd/vendor_abi/vendor_abi_arm64.c`), tetapi `CONFIG_VXTUX_VENDOR_ABI` di `config_tick13` masih `# CONFIG_VXTUX_VENDOR_ABI is not set`. Jadi untuk lima simbol ini yang kurang bukan kode dan bukan API: satu config.
+
 ## Blob yang tidak butuh port
 
 | blob | undef | ok | ekspor | rename | makro | instr |
