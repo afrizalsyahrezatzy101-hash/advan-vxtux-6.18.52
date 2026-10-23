@@ -1,9 +1,28 @@
-# Deblob status — 2026-10-21
+# Deblob status — 2026-10-23 (TICK12)
 
-The stock ROM ships **31 vendor .ko** in `/lib/modules`. The VXTux build
-now produces a module with the same file name for **24** of them, and
-**18** of those carry the same API (the stock blob's own functions,
-locals included).
+The stock ROM ships **31 vendor .ko** in `/lib/modules`. The TICK12 build
+(codespace, container ubuntu 22.04, `gcc-aarch64-linux-gnu` 11.4, konfig
+fragmen di-merge di atas `.config` device) produces **227 `.ko`**, and
+**29/31** stock module names now have a replacement module:
+
+```
+NAME 29/31   — yang belum berbentuk .ko: sprd-vsp-pw-domain, twofish_common
+               (keduanya BUILT-IN `=y` di config, jadi fungsi 31/31 ada)
+```
+
+Six modules that previously could not be built at all now exist:
+`sprdwl.ko` (WiFi SC2355), `sc27xx_typec.ko`, `novatek_ts_spi.ko`,
+`sensorhub.ko`, `sprd_battery_info.ko`, `sprd-systimer.ko`.
+Evidence: `docs/evidence-20261023/ko_list.txt` + `config.final`.
+
+Catatan: angka LEVEL 2 (API) dan LEVEL 3 (DEPS) di bawah berasal dari
+run 2026-10-21 dan **belum** diukur ulang untuk 227 `.ko` ini — lihat
+bagian batas jujur di README TICK12.
+
+## Riwayat 2026-10-21
+
+Previously: same-name replacement for **24** of them, and **18** of those
+carry the same API (the stock blob's own functions, locals included).
 
 The measurement is `donors/verify_deblob2.py`; it writes
 `docs/DEBLOB_VERIFICATION.md`.
